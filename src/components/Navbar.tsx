@@ -16,7 +16,9 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
-import { LogoIcon } from "./Icons";
+import {OsiriLogo} from "./Logo";
+
+
 
 interface RouteProps {
   href: string;
@@ -54,7 +56,7 @@ export const Navbar = () => {
               href="/"
               className="ml-2 font-bold text-xl flex"
             >
-              <LogoIcon />
+              <OsiriLogo />
               Osiri
             </a>
           </NavigationMenuItem>
