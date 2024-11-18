@@ -14,6 +14,7 @@ import { Sponsors } from "./components/Sponsors";
 import { Team } from "./components/Team";
 import { Testimonials } from "./components/Testimonials";
 import "./App.css";
+import "./i18n-config";
 
 function App() {
   return (

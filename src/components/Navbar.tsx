@@ -16,9 +16,9 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
-import {OsiriLogo} from "./Logo";
-
-
+import { OsiriLogo } from "./Logo";
+import { useTranslation } from "react-i18next";
+import { LanguageSelector } from "./LangSelector";
 
 interface RouteProps {
   href: string;
@@ -45,7 +45,14 @@ const routeList: RouteProps[] = [
 ];
 
 export const Navbar = () => {
+  const { t, i18n } = useTranslation("common");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleLanguageChange = (langCode: string) => {
+    console.log("i18n", i18n);
+    i18n.changeLanguage(langCode);
+    document.documentElement.lang = langCode;
+  };
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
       <NavigationMenu className="mx-auto">
@@ -57,7 +64,7 @@ export const Navbar = () => {
               className="ml-2 font-bold text-xl flex"
             >
               <OsiriLogo />
-              Osiri
+              {t("hello")}
             </a>
           </NavigationMenuItem>
 
@@ -71,14 +78,14 @@ export const Navbar = () => {
                   className="flex md:hidden h-5 w-5"
                   onClick={() => setIsOpen(true)}
                 >
-                  <span className="sr-only">Menu Icon</span>
+                  <span className="sr-only">{t("Menu Icon")}</span>
                 </Menu>
               </SheetTrigger>
 
               <SheetContent side={"left"}>
                 <SheetHeader>
                   <SheetTitle className="font-bold text-xl">
-                    Shadcn/React
+                    {t("drag & drop here")}
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
@@ -126,6 +133,10 @@ export const Navbar = () => {
           </nav>
 
           <div className="hidden md:flex gap-2">
+            <LanguageSelector
+              currentLang={i18n.language}
+              onLanguageChange={handleLanguageChange}
+            />
             <a
               rel="noreferrer noopener"
               href="https://github.com/leoMirandaa/shadcn-landing-page.git"
