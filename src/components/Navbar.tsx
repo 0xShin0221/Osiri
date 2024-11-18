@@ -7,6 +7,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -85,8 +86,9 @@ export const Navbar = () => {
               <SheetContent side={"left"}>
                 <SheetHeader>
                   <SheetTitle className="font-bold text-xl">
-                    {t("drag & drop here")}
+                    {t("Menu here")}
                   </SheetTitle>
+                  <SheetDescription>{t("Menu description")}</SheetDescription>
                 </SheetHeader>
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
                   {routeList.map(({ href, label }: RouteProps) => (
@@ -100,6 +102,11 @@ export const Navbar = () => {
                       {label}
                     </a>
                   ))}
+                  <LanguageSelector
+                    currentLang={i18n.language}
+                    onLanguageChange={handleLanguageChange}
+                    variant="mobile"
+                  />
                   <a
                     rel="noreferrer noopener"
                     href="https://github.com/leoMirandaa/shadcn-landing-page.git"

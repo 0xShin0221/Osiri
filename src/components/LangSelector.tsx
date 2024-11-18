@@ -9,11 +9,13 @@ import { Globe } from "lucide-react";
 interface LanguageSelectorProps {
   currentLang: string;
   onLanguageChange: (langCode: string) => void;
+  variant?: "default" | "mobile";
 }
 
 export const LanguageSelector = ({
   currentLang,
   onLanguageChange,
+  variant = "default",
 }: LanguageSelectorProps) => {
   const languages = [
     { code: "ja", label: "日本語" },
@@ -23,10 +25,16 @@ export const LanguageSelector = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="group inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 
-          text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground 
-          focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 
-          disabled:pointer-events-none disabled:opacity-50 dark:focus:ring-offset-slate-900"
+        className={`
+          group inline-flex items-center justify-center gap-1.5 rounded-md
+          text-sm font-medium transition-colors
+          ${
+            variant === "mobile"
+              ? "px-4 py-2 w-full hover:bg-accent hover:text-accent-foreground" // フォーカスリングを削除
+              : "px-3 py-1.5 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+          }
+          disabled:pointer-events-none disabled:opacity-50
+        `}
       >
         <Globe className="h-4 w-4" />
         <span>
@@ -35,9 +43,10 @@ export const LanguageSelector = ({
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align="end"
-        sideOffset={5}
-        className="w-[150px] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-2"
+        align={variant === "mobile" ? "center" : "end"}
+        side={variant === "mobile" ? "top" : "bottom"}
+        sideOffset={variant === "mobile" ? 8 : 5}
+        className="w-[150px] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2"
       >
         {languages.map((lang) => (
           <DropdownMenuItem
