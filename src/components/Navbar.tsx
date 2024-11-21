@@ -46,14 +46,9 @@ const routeList: RouteProps[] = [
 ];
 
 export const Navbar = () => {
-  const { t, i18n } = useTranslation("common");
+  const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const handleLanguageChange = (langCode: string) => {
-    console.log("i18n", i18n);
-    i18n.changeLanguage(langCode);
-    document.documentElement.lang = langCode;
-  };
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
       <NavigationMenu className="mx-auto">
@@ -102,11 +97,7 @@ export const Navbar = () => {
                       {label}
                     </a>
                   ))}
-                  <LanguageSelector
-                    currentLang={i18n.language}
-                    onLanguageChange={handleLanguageChange}
-                    variant="mobile"
-                  />
+                  <LanguageSelector variant="mobile" />
                   <a
                     rel="noreferrer noopener"
                     href="https://github.com/leoMirandaa/shadcn-landing-page.git"
@@ -140,10 +131,7 @@ export const Navbar = () => {
           </nav>
 
           <div className="hidden md:flex gap-2">
-            <LanguageSelector
-              currentLang={i18n.language}
-              onLanguageChange={handleLanguageChange}
-            />
+            <LanguageSelector />
             <a
               rel="noreferrer noopener"
               href="https://github.com/leoMirandaa/shadcn-landing-page.git"
