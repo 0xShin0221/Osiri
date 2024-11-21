@@ -1,4 +1,6 @@
-export default {
+const { LANGUAGES } = require("./src/i18n-config");
+
+module.exports = {
   presets: [
     "@babel/preset-env",
     "@babel/preset-typescript",
@@ -14,8 +16,8 @@ export default {
     [
       "i18next-extract",
       {
-        locales: ["en", "ja", "fr"],
-        keyAsDefaultValue: ["en"],
+        locales: LANGUAGES.SUPPORTED.map((l) => l.code),
+        keyAsDefaultValue: LANGUAGES.DEFAULT.code,
         outputPath: "./public/i18n/{{locale}}/{{ns}}.json",
         defaultNS: "common",
       },

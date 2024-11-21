@@ -2,5 +2,11 @@
   "Menu Icon": "Menu Icon",
   "Menu description": "Menu description",
   "Menu here": "Menu here",
-  "hello": "hello"
+  "hello": "hello",
+  "home": {
+    "seo": {
+      "description": "description",
+      "title": "title"
+    }
+  }
 }

@@ -1,40 +1,66 @@
-import { About } from "./components/About";
-import { Cta } from "./components/Cta";
-import { FAQ } from "./components/FAQ";
-import { Features } from "./components/Features";
-import { Footer } from "./components/Footer";
-import { Hero } from "./components/Hero";
-import { HowItWorks } from "./components/HowItWorks";
-import { Navbar } from "./components/Navbar";
-import { Newsletter } from "./components/Newsletter";
-import { Pricing } from "./components/Pricing";
-import { ScrollToTop } from "./components/ScrollToTop";
-import { Services } from "./components/Services";
-import { Sponsors } from "./components/Sponsors";
-import { Team } from "./components/Team";
-import { Testimonials } from "./components/Testimonials";
 import "./App.css";
 import "./i18n-config";
+import { useTranslation } from "react-i18next";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { LanguageRedirect } from "./components/LanguadgeRedirect";
+import { LANGUAGES } from "./i18n-config";
+import { HelmetProvider } from "react-helmet-async";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { Home } from "@/pages/Home";
 
-function App() {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      <Hero />
-      <Sponsors />
-      <About />
-      <HowItWorks />
-      <Features />
-      <Services />
-      <Cta />
-      <Testimonials />
-      <Team />
-      <Pricing />
-      <Newsletter />
-      <FAQ />
+      <main>{children}</main>
       <Footer />
       <ScrollToTop />
     </>
+  );
+}
+
+function LocalizedRoutes() {
+  return (
+    <Layout>
+      <Routes>
+        <Route index element={<Home />} />
+        {/* <Route path="about" element={<About />} />
+        <Route path="features" element={<Features />} />
+        <Route path="pricing" element={<Pricing />} />
+        <Route path="*" element={<Navigate to="/" replace />} /> */}
+      </Routes>
+    </Layout>
+  );
+}
+
+function App() {
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.resolvedLanguage || LANGUAGES.DEFAULT;
+  }, [i18n.resolvedLanguage]);
+
+  return (
+    <BrowserRouter>
+      <HelmetProvider>
+        <Routes>
+          <Route path="/" element={<LanguageRedirect />} />
+
+          {LANGUAGES.SUPPORTED.map(({ code }) => (
+            <Route
+              key={code}
+              path={`/${code}/*`}
+              element={<LocalizedRoutes />}
+            />
+          ))}
+
+          <Route path="*" element={<LanguageRedirect />} />
+        </Routes>
+      </HelmetProvider>
+    </BrowserRouter>
   );
 }
 

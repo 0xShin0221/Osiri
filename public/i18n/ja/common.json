@@ -3,5 +3,11 @@
   "Menu description": "",
   "Menu here": "",
   "drag & drop here": "こちらにドラッグ＆ドロップしてください",
-  "hello": ""
+  "hello": "こんにちわ",
+  "home": {
+    "seo": {
+      "description": "",
+      "title": ""
+    }
+  }
 }

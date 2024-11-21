@@ -5,68 +5,57 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { Globe } from "lucide-react";
-
-interface LanguageSelectorProps {
-  currentLang: string;
-  onLanguageChange: (langCode: string) => void;
-  variant?: "default" | "mobile";
-}
+import { useLanguage } from "@/hooks/useLanguage";
 
 export const LanguageSelector = ({
-  currentLang,
-  onLanguageChange,
   variant = "default",
-}: LanguageSelectorProps) => {
-  const languages = [
-    { code: "ja", label: "日本語" },
-    { code: "en", label: "English" },
-    { code: "fr", label: "Français" },
-  ];
+}: {
+  variant?: "default" | "mobile";
+}) => {
+  const { currentLanguage, changeLanguage, languages } = useLanguage();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className={`
-          group inline-flex items-center justify-center gap-1.5 rounded-md
-          text-sm font-medium transition-colors
-          ${
-            variant === "mobile"
-              ? "px-4 py-2 w-full hover:bg-accent hover:text-accent-foreground" // フォーカスリングを削除
-              : "px-3 py-1.5 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-slate-900"
-          }
-          disabled:pointer-events-none disabled:opacity-50
-        `}
+        group inline-flex items-center justify-center gap-1.5 rounded-md
+        text-sm font-medium transition-colors
+        ${
+          variant === "mobile"
+            ? "px-4 py-2 w-full hover:bg-accent hover:text-accent-foreground"
+            : "px-3 py-1.5 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+        }
+      `}
       >
         <Globe className="h-4 w-4" />
         <span>
-          {languages.find((lang) => lang.code === currentLang)?.label ||
+          {languages.find((lang) => lang.code === currentLanguage)?.label ||
             "Language"}
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align={variant === "mobile" ? "center" : "end"}
         side={variant === "mobile" ? "top" : "bottom"}
-        sideOffset={variant === "mobile" ? 8 : 5}
-        className="w-[150px] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2"
+        className="w-[150px] bg-background"
       >
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => onLanguageChange(lang.code)}
-            className={`relative flex cursor-pointer select-none items-center px-3 py-2.5 text-sm outline-none
+            onClick={() => changeLanguage(lang.code)}
+            className={`relative flex cursor-pointer select-none items-center px-3 py-2.5 text-sm
               ${
-                currentLang === lang.code
+                currentLanguage === lang.code
                   ? "bg-accent text-accent-foreground"
-                  : "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-              }
-              transition-colors`}
+                  : ""
+              }`}
           >
             <span className="flex items-center gap-2">
-              {currentLang === lang.code && (
+              {currentLanguage === lang.code && (
                 <span className="absolute left-0 flex h-full items-center pl-2 text-primary">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 </span>
               )}
-              <span className={currentLang === lang.code ? "pl-4" : ""}>
+              <span className={currentLanguage === lang.code ? "pl-4" : ""}>
                 {lang.label}
               </span>
             </span>
