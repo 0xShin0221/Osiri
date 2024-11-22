@@ -13,24 +13,22 @@ export const Hero = () => {
           <h1 className="inline">
             <span className="inline bg-gradient-to-r from-[#4F46E5] to-[#2563EB] text-transparent bg-clip-text">
               {t("hero.title")}
-            </span>
+            </span>{" "}
           </h1>
           <h2 className="inline">
             <span className="inline bg-gradient-to-r from-[#EC4899] via-[#D946EF] to-[#8B5CF6] text-transparent bg-clip-text">
-              Summarized by AI
+              {t("hero.subtitle")}
             </span>
           </h2>
         </main>
 
         <p className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
-          Stay ahead with AI-powered summaries of global startup news. Get
-          instant insights in your preferred language, curated for busy
-          professionals.
+          {t("hero.description")}
         </p>
 
         <div className="space-y-4 md:space-y-0 md:space-x-4">
           <Button className="w-full md:w-1/3">
-            Start Free Trial
+            {t("hero.cta")}
             <Globe2 className="ml-2 w-5 h-5" />
           </Button>
 
@@ -40,7 +38,7 @@ export const Hero = () => {
               variant: "outline",
             })}`}
           >
-            Explore Features
+            {t("hero.learnMore")}
             <Newspaper className="ml-2 w-5 h-5" />
           </a>
         </div>

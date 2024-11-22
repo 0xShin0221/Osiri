@@ -1,14 +1,22 @@
 {
-  "Menu Icon": "",
-  "Menu description": "",
-  "Menu here": "",
+  "Start Free Trial": "Commencer l'essai gratuit",
   "hero": {
-    "title": ""
+    "cta": "Commencer maintenant",
+    "description": "Osiri synthétise les actualités des startups internationales avec l'IA, vous permettant de rester informé des dernières innovations en français.",
+    "learnMore": "En savoir plus",
+    "subtitle": "Propulsé par l'IA",
+    "title": "Flux d'actualités des startups mondiales"
   },
   "home": {
     "seo": {
-      "description": "",
-      "title": ""
+      "description": "Restez à la pointe avec Osiri : actualités des startups mondiales, résumées et traduites en français par IA. Innovations tech, levées de fonds, et tendances du marché en temps réel.",
+      "title": "Osiri | Lecteur d'Actualités Startups avec Synthèse IA | Tech & Innovation"
     }
+  },
+  "menu": {
+    "faq": "FAQ",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "testimonials": "Témoignages"
   }
 }

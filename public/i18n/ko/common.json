@@ -1,14 +1,22 @@
 {
-  "Menu Icon": "",
-  "Menu description": "",
-  "Menu here": "",
+  "Start Free Trial": "무료 체험 시작",
   "hero": {
-    "title": ""
+    "cta": "시작하기",
+    "description": "Osiri는 AI 요약 기능으로 해외 스타트업 뉴스를 한국어로 쉽게 확인할 수 있게 해주는 서비스입니다.",
+    "learnMore": "자세히 알아보기",
+    "subtitle": "AI 기반 요약",
+    "title": "글로벌 스타트업 뉴스피드"
   },
   "home": {
     "seo": {
-      "description": "",
-      "title": ""
+      "description": "AI가 요약하는 글로벌 스타트업 뉴스를 한국어로 받아보세요. 테크 혁신, 투자 소식, 시장 트렌드를 실시간으로 확인하고 글로벌 정보를 손쉽게 얻으세요.",
+      "title": "Osiri | AI 기반 글로벌 스타트업 뉴스 요약 | 테크 산업 최신 정보"
     }
+  },
+  "menu": {
+    "faq": "자주 묻는 질문",
+    "features": "주요 기능",
+    "pricing": "요금제",
+    "testimonials": "이용후기"
   }
 }

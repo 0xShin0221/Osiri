@@ -20,7 +20,6 @@ export function Home() {
         title={t("home.seo.title")}
         description={t("home.seo.description")}
       />
-      ;
       <Hero />
       <Sponsors />
       <About />

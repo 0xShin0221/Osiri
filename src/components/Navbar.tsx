@@ -26,24 +26,27 @@ interface RouteProps {
   label: string;
 }
 
-const routeList: RouteProps[] = [
-  {
-    href: "#features",
-    label: "Features",
-  },
-  {
-    href: "#testimonials",
-    label: "Testimonials",
-  },
-  {
-    href: "#pricing",
-    label: "Pricing",
-  },
-  {
-    href: "#faq",
-    label: "FAQ",
-  },
-];
+const routeList = (): RouteProps[] => {
+  const { t } = useTranslation("common");
+  return [
+    {
+      href: "#features",
+      label: t("menu.features"),
+    },
+    {
+      href: "#testimonials",
+      label: t("menu.testimonials"),
+    },
+    {
+      href: "#pricing",
+      label: t("menu.pricing"),
+    },
+    {
+      href: "#faq",
+      label: t("menu.faq"),
+    },
+  ];
+};
 
 export const Navbar = () => {
   const { t } = useTranslation("common");
@@ -74,19 +77,17 @@ export const Navbar = () => {
                   className="flex md:hidden h-5 w-5"
                   onClick={() => setIsOpen(true)}
                 >
-                  <span className="sr-only">{t("Menu Icon")}</span>
+                  {/* <span className="sr-only">{t("Menu Icon")}</span> */}
                 </Menu>
               </SheetTrigger>
 
               <SheetContent side={"left"}>
                 <SheetHeader>
-                  <SheetTitle className="font-bold text-xl">
-                    {t("Menu here")}
-                  </SheetTitle>
-                  <SheetDescription>{t("Menu description")}</SheetDescription>
+                  <SheetTitle className="font-bold text-xl">Osiri</SheetTitle>
+                  <SheetDescription>{""}</SheetDescription>
                 </SheetHeader>
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
-                  {routeList.map(({ href, label }: RouteProps) => (
+                  {routeList().map(({ href, label }: RouteProps) => (
                     <a
                       rel="noreferrer noopener"
                       key={label}
@@ -116,7 +117,7 @@ export const Navbar = () => {
 
           {/* desktop */}
           <nav className="hidden md:flex gap-2">
-            {routeList.map((route: RouteProps, i) => (
+            {routeList().map((route: RouteProps, i) => (
               <a
                 rel="noreferrer noopener"
                 href={route.href}
