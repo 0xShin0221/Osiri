@@ -60,7 +60,7 @@ export const Navbar = () => {
               className="ml-2 font-bold text-xl flex"
             >
               <OsiriLogo />
-              {t("hello")}
+              Osiri
             </a>
           </NavigationMenuItem>
 

@@ -1,7 +1,6 @@
+import { LANGUAGES } from "@/lib/i18n/languages";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LANGUAGES } from "@/i18n-config";
-
 export function useLanguage() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();

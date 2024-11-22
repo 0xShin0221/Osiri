@@ -1,10 +1,10 @@
 import "./App.css";
-import "./i18n-config";
+import "./lib/i18n/config";
 import { useTranslation } from "react-i18next";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import { LanguageRedirect } from "./components/LanguadgeRedirect";
-import { LANGUAGES } from "./i18n-config";
+import { LANGUAGES } from "./lib/i18n/languages";
 import { HelmetProvider } from "react-helmet-async";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";

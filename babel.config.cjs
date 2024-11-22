@@ -1,4 +1,15 @@
-const { LANGUAGES } = require("./src/i18n-config");
+const esbuild = require("esbuild");
+
+const result = esbuild.buildSync({
+  entryPoints: ["./src/lib/i18n/languages.ts"],
+  write: false,
+  bundle: true,
+  format: "cjs",
+  target: "node14",
+});
+
+// biome-ignore lint/security/noGlobalEval: <explanation>
+const { LANGUAGES } = eval(result.outputFiles[0].text);
 
 module.exports = {
   presets: [
@@ -17,7 +28,7 @@ module.exports = {
       "i18next-extract",
       {
         locales: LANGUAGES.SUPPORTED.map((l) => l.code),
-        keyAsDefaultValue: LANGUAGES.DEFAULT.code,
+        keyAsDefaultValue: LANGUAGES.DEFAULT,
         outputPath: "./public/i18n/{{locale}}/{{ns}}.json",
         defaultNS: "common",
       },

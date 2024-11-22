@@ -2,8 +2,9 @@
   "Menu Icon": "",
   "Menu description": "",
   "Menu here": "",
-  "drag & drop here": "こちらにドラッグ＆ドロップしてください",
-  "hello": "こんにちわ",
+  "hero": {
+    "title": ""
+  },
   "home": {
     "seo": {
       "description": "",

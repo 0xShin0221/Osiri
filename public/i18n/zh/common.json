@@ -2,7 +2,9 @@
   "Menu Icon": "",
   "Menu description": "",
   "Menu here": "",
-  "hello": "",
+  "hero": {
+    "title": ""
+  },
   "home": {
     "seo": {
       "description": "",

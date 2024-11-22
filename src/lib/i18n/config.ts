@@ -2,24 +2,14 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
-
-export const LANGUAGES = {
-  DEFAULT: "en",
-  SUPPORTED: [
-    { code: "en", label: "English", dir: "ltr" },
-    { code: "ja", label: "日本語", dir: "ltr" },
-    { code: "zh", label: "中文", dir: "ltr" },
-    { code: "ko", label: "한국어", dir: "ltr" },
-    { code: "fr", label: "Français", dir: "ltr" },
-  ] as const,
-} as const;
+import { LANGUAGES } from "./languages";
 
 i18n
   .use(LanguageDetector)
   .use(Backend)
   .use(initReactI18next)
   .init({
-    supportedLngs: LANGUAGES.SUPPORTED.map((l) => l.code),
+    supportedLngs: LANGUAGES.SUPPORTED.map((l: { code: string }) => l.code),
     backend: {
       // for all available options read the backend's repository readme file
       loadPath: "/i18n/{{lng}}/{{ns}}.json",
