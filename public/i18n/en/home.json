@@ -1,23 +1,23 @@
 {
   "howItWorks": {
+    "title": {
+      "main": "Global Updates",
+      "highlight": "Made Easy"
+    },
+    "subtitle": "Stay effortlessly informed about global startup & tech trends in your native language",
     "steps": {
-      "analyze": {
-        "description": "",
-        "title": ""
-      },
       "collect": {
-        "description": "",
-        "title": ""
+        "title": "Automated Global Collection",
+        "description": "Get real-time updates from 200+ international sources covering startups, technology, and investments - automatically refreshed every hour."
+      },
+      "analyze": {
+        "title": "AI-Powered Clarity",
+        "description": "Our AI analyzes and prioritizes content, evaluating importance, trends, and relevance to deliver only what truly matters to you."
       },
       "personalize": {
-        "description": "",
-        "title": ""
+        "title": "Personalized Experience",
+        "description": "Receive priority updates for topics you care about. Follow global trends as easily as reading your local news feed."
       }
-    },
-    "subtitle": "",
-    "title": {
-      "highlight": "",
-      "main": ""
     }
   },
   "media": {
