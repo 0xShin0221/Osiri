@@ -18,29 +18,5 @@
     "features": "機能",
     "pricing": "料金",
     "testimonials": "ユーザーの声"
-  },
-  "personas": {
-    "image": {
-      "alt": ""
-    },
-    "list": {
-      "founder": {
-        "description": "",
-        "title": ""
-      },
-      "investor": {
-        "description": "",
-        "title": ""
-      },
-      "product": {
-        "description": "",
-        "title": ""
-      }
-    },
-    "subtitle": "",
-    "title": {
-      "highlight": "",
-      "main": ""
-    }
   }
 }
