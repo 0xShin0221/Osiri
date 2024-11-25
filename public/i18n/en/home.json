@@ -1,4 +1,25 @@
 {
+  "howItWorks": {
+    "steps": {
+      "analyze": {
+        "description": "",
+        "title": ""
+      },
+      "collect": {
+        "description": "",
+        "title": ""
+      },
+      "personalize": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
   "media": {
     "subtitle": "Curating insights from leading tech media, engineering blogs from companies, startup founders' perspectives, and cutting-edge research publications - all in one place.",
     "title": {
@@ -7,27 +28,27 @@
     }
   },
   "personas": {
+    "image": {
+      "alt": "AI-powered news reader"
+    },
+    "list": {
+      "founder": {
+        "description": "Track market trends, competitor movements, and emerging technologies. Get insights for strategic decision-making and stay ahead in the fast-paced tech ecosystem.",
+        "title": "Startup Founders & CEOs"
+      },
+      "investor": {
+        "description": "Monitor emerging startups, funding rounds, and market signals. Access comprehensive analysis of tech trends and potential investment opportunities.",
+        "title": "Tech Investors & VCs"
+      },
+      "product": {
+        "description": "Follow product innovations, design trends, and successful launches. Learn from industry leaders and inform your product development strategy.",
+        "title": "Product Leaders & Managers"
+      }
+    },
+    "subtitle": "Get actionable insights and stay ahead in the rapidly evolving tech landscape. Our AI-powered platform delivers personalized content for your specific role.",
     "title": {
       "highlight": "Tailored For",
       "main": "Tech Leaders"
-    },
-    "subtitle": "Get actionable insights and stay ahead in the rapidly evolving tech landscape. Our AI-powered platform delivers personalized content for your specific role.",
-    "list": {
-      "founder": {
-        "title": "Startup Founders & CEOs",
-        "description": "Track market trends, competitor movements, and emerging technologies. Get insights for strategic decision-making and stay ahead in the fast-paced tech ecosystem."
-      },
-      "investor": {
-        "title": "Tech Investors & VCs",
-        "description": "Monitor emerging startups, funding rounds, and market signals. Access comprehensive analysis of tech trends and potential investment opportunities."
-      },
-      "product": {
-        "title": "Product Leaders & Managers",
-        "description": "Follow product innovations, design trends, and successful launches. Learn from industry leaders and inform your product development strategy."
-      }
-    },
-    "image": {
-      "alt": "AI-powered news reader"
     }
   }
 }
