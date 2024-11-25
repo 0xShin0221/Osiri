@@ -21,5 +21,29 @@
     "features": "Features",
     "pricing": "Pricing",
     "testimonials": "Testimonials"
+  },
+  "personas": {
+    "image": {
+      "alt": ""
+    },
+    "list": {
+      "founder": {
+        "description": "",
+        "title": ""
+      },
+      "investor": {
+        "description": "",
+        "title": ""
+      },
+      "product": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
   }
 }

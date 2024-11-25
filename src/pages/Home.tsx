@@ -1,7 +1,7 @@
 import { About } from "@/components/About";
 import { Hero } from "@/components/Hero";
 import { SEOHead } from "@/components/SEOHead";
-import { Sponsors } from "@/components/Sponsors";
+import { Medias } from "@/components/Medias";
 import { useTranslation } from "react-i18next";
 import { Cta } from "@/components/Cta";
 import { FAQ } from "@/components/FAQ";
@@ -11,7 +11,7 @@ import { Newsletter } from "@/components/Newsletter";
 import { Pricing } from "@/components/Pricing";
 import { Team } from "@/components/Team";
 import { Testimonials } from "@/components/Testimonials";
-import { Services } from "@/components/Services";
+import { Personas } from "@/components/Personas";
 export function Home() {
   const { t } = useTranslation();
   return (
@@ -21,11 +21,11 @@ export function Home() {
         description={t("home.seo.description")}
       />
       <Hero />
-      <Sponsors />
+      <Medias />
+      <Personas />
       <About />
       <HowItWorks />
       <Features />
-      <Services />
       <Cta />
       <Testimonials />
       <Team />

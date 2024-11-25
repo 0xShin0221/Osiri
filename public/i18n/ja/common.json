@@ -3,7 +3,7 @@
   "hero": {
     "cta": "無料で始める",
     "description": "Osiriは、AIによる要約機能で、日本語で読める最新の海外スタートアップのニュースを簡単にチェックできます。",
-    "learnMore": "特徴を見る",
+    "learnMore": "機能を見る",
     "subtitle": "by AI要約",
     "title": "海外スタートアップのNewsFeed"
   },
@@ -15,8 +15,32 @@
   },
   "menu": {
     "faq": "よくある質問",
-    "features": "特徴",
+    "features": "機能",
     "pricing": "料金",
     "testimonials": "ユーザーの声"
+  },
+  "personas": {
+    "image": {
+      "alt": ""
+    },
+    "list": {
+      "founder": {
+        "description": "",
+        "title": ""
+      },
+      "investor": {
+        "description": "",
+        "title": ""
+      },
+      "product": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
   }
 }

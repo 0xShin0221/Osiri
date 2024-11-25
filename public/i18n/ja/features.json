@@ -1,0 +1,36 @@
+{
+  "features": {
+    "cards": {
+      "ai_insights": {
+        "description": "最新のGPT技術で長文記事を簡潔な要約に変換。数時間かかる情報収集を数秒で完了できます。",
+        "title": "AI搭載の要約機能"
+      },
+      "effortless_discovery": {
+        "description": "母国語で世界のトレンドをキャッチアップ。言語の壁を超えて、現地の生の情報にアクセス - 海外ニュースを地元ニュースのように簡単に。",
+        "title": "効率的な情報収集"
+      },
+      "global_intelligence": {
+        "description": "世界中のスタートアップエコシステムをあなたの手元に。Tech News、VC投資、プロダクトデザインなど、幅広い情報を自動で収集・配信します。",
+        "title": "グローバルスタートアップ情報"
+      }
+    },
+    "categories": {
+      "ai_ml": "AI・機械学習",
+      "engineering": "エンジニアリングブログ",
+      "founder_insights": "創業者の洞察",
+      "future_work": "働き方の未来",
+      "growth": "グロース・マーケティング",
+      "innovation": "イノベーション・研究",
+      "product_design": "プロダクトデザイン",
+      "saas_enterprise": "SaaS・エンタープライズ",
+      "startup_stories": "スタートアップストーリー",
+      "tech_news": "テックニュース",
+      "vc_investments": "VC・投資",
+      "web3_fintech": "Web3・フィンテック"
+    },
+    "section": {
+      "highlight": "機能",
+      "title": "メイン"
+    }
+  }
+}

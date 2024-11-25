@@ -1,0 +1,15 @@
+{
+  "about": {
+    "description": "Osiri transforms how you stay informed about the global tech landscape. We continuously monitor and analyze content from over 200 trusted sources, delivering AI-powered summaries in your preferred language. From startup innovations to engineering breakthroughs, get crystal-clear insights within minutes of publication.",
+    "stats": {
+      "languages": "Languages",
+      "sources": "Content Sources",
+      "summary": "Summary Time",
+      "updates": "Monitoring"
+    },
+    "title": {
+      "highlight": "Global",
+      "main": "Tech Intelligence"
+    }
+  }
+}
