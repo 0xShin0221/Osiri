@@ -49,7 +49,6 @@ const routeList = (): RouteProps[] => {
 };
 
 export const Navbar = () => {
-  const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
