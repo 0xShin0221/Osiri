@@ -19,8 +19,8 @@ i18n
     returnEmptyString: false,
 
     // have a common namespace used around the full app
-    ns: ["common"],
-    defaultNS: "common",
+    ns: ["home"],
+    defaultNS: "home",
 
     // keySeparator: false, // we use content as keys
 

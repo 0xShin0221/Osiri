@@ -10,24 +10,21 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { Newsletter } from "@/components/Newsletter";
 import { Pricing } from "@/components/Pricing";
 import { Team } from "@/components/Team";
-import { Testimonials } from "@/components/Testimonials";
+// import { Testimonials } from "@/components/Testimonials";
 import { Personas } from "@/components/Personas";
 export function Home() {
   const { t } = useTranslation();
   return (
     <>
-      <SEOHead
-        title={t("home.seo.title")}
-        description={t("home.seo.description")}
-      />
+      <SEOHead title={t("seo.title")} description={t("seo.description")} />
       <Hero />
       <Medias />
       <Personas />
       <About />
       <HowItWorks />
-      <Features />
       <Cta />
-      <Testimonials />
+      <Features />
+      {/* <Testimonials /> */}
       <Team />
       <Pricing />
       <Newsletter />

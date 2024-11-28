@@ -30,7 +30,7 @@ module.exports = {
         locales: LANGUAGES.SUPPORTED.map((l) => l.code),
         keyAsDefaultValue: LANGUAGES.DEFAULT,
         outputPath: "./public/i18n/{{locale}}/{{ns}}.json",
-        defaultNS: "common",
+        defaultNS: "home",
       },
     ],
   ],

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 export const Statistics = () => {
-  const { t } = useTranslation("about");
+  const { t } = useTranslation("home");
   interface statsProps {
     quantity: string;
     description: string;

@@ -1,23 +1,137 @@
 {
-  "howItWorks": {
-    "title": {
-      "main": "Global Updates",
-      "highlight": "Made Easy"
+  "Start Free Trial": "Start Free Trial",
+  "about": {
+    "description": "Osiri transforms how you stay informed about the global tech landscape. We continuously monitor and analyze content from over 200 trusted sources, delivering AI-powered summaries in your preferred language. From startup innovations to engineering breakthroughs, get crystal-clear insights within minutes of publication.",
+    "stats": {
+      "languages": "Languages",
+      "sources": "Content Sources",
+      "summary": "Summary Time",
+      "updates": "Monitoring"
     },
-    "subtitle": "Stay effortlessly informed about global startup & tech trends in your native language",
-    "steps": {
-      "collect": {
-        "title": "Automated Global Collection",
-        "description": "Get real-time updates from 200+ international sources covering startups, technology, and investments - automatically refreshed every hour."
+    "title": {
+      "highlight": "Global",
+      "main": "Tech Intelligence"
+    }
+  },
+  "cta": {
+    "buttons": {
+      "primary": "Start Free Trial",
+      "secondary": "View Features"
+    },
+    "description": "Access worldwide tech & startup insights as easily as reading local news. Try our 7-day free trial and experience a smarter way to stay globally informed.",
+    "title": {
+      "highlight": "Global Tech Intelligence",
+      "main": "Transform Your"
+    }
+  },
+  "faq": {
+    "contact": {
+      "link": "Contact us",
+      "text": "Still have questions?"
+    },
+    "items": {
+      "cancel": {
+        "answer": "You can cancel your subscription anytime from the 'Plan' menu in your app settings.",
+        "question": "How do I cancel my subscription?"
       },
+      "trial": {
+        "answer": "Yes, we offer a 7-day free trial. If you cancel within 7 days, you can use all features for free during the trial period.",
+        "question": "Is there a free trial?"
+      }
+    },
+    "title": {
+      "highlight": "Questions",
+      "main": "Frequently Asked"
+    }
+  },
+  "features": {
+    "cards": {
+      "ai_insights": {
+        "description": "Cutting-edge GPT technology transforms lengthy articles into crystal-clear summaries. Capture key insights in seconds, not hours.",
+        "title": "AI-Powered Insights"
+      },
+      "effortless_discovery": {
+        "description": "Stay ahead of global trends in your native language. Access authentic local insights without language barriers - making international startup news as accessible as local headlines.",
+        "title": "Effortless Discovery"
+      },
+      "global_intelligence": {
+        "description": "Your window into the world's startup ecosystem. From Tech News to VC Investments, Product Design, and beyond - all automatically curated and delivered to you.",
+        "title": "Global Startup Intelligence"
+      }
+    },
+    "categories": {
+      "ai_ml": "AI & Machine Learning",
+      "engineering": "Engineering Blogs",
+      "founder_insights": "Founder Insights",
+      "future_work": "Future of Work",
+      "growth": "Growth & Marketing",
+      "innovation": "Innovation & Research",
+      "product_design": "Product Design",
+      "saas_enterprise": "SaaS & Enterprise",
+      "startup_stories": "Startup Stories",
+      "tech_news": "Tech News",
+      "vc_investments": "VC & Investments",
+      "web3_fintech": "Web3 & Fintech"
+    },
+    "section": {
+      "highlight": "Great Features",
+      "title": "Many"
+    }
+  },
+  "hero": {
+    "cta": "Start Free Trial",
+    "description": "Stay ahead with AI-powered summaries of global startup news. Getinstant insights in your preferred language, curated for busy professionals.",
+    "learnMore": "Learn More",
+    "subtitle": "Summarized by AI",
+    "title": "Global Startup News"
+  },
+  "heroCard": {
+    "feature": {
+      "description": "Access worldwide tech insights as easily as reading local news. Real-time updates delivered in your preferred language.",
+      "title": "Your Window to Global Insight"
+    },
+    "news": {
+      "badge": "TRENDING",
+      "summary": "Latest AI breakthrough transforms how businesses leverage language models. Real-time analysis of key developments.",
+      "title": "Anthropic Releases Claude 3 Series"
+    },
+    "pricing": {
+      "badge": "Most Popular",
+      "description": "Experience all features with no money",
+      "feature": {
+        "feed": "Personalized Feed",
+        "sources": "200+ Premium Sources",
+        "summaries": "AI-Powered Summaries"
+      },
+      "period": "/7 days",
+      "plan": "Free Trial",
+      "price": "$0"
+    },
+    "testimonial": {
+      "name": "Sarah Chen",
+      "quote": "Perfect for busy founders!",
+      "role": "Startup Founder"
+    }
+  },
+  "howItWorks": {
+    "steps": {
       "analyze": {
-        "title": "AI-Powered Clarity",
-        "description": "Our AI analyzes and prioritizes content, evaluating importance, trends, and relevance to deliver only what truly matters to you."
+        "description": "Our AI analyzes and prioritizes content, evaluating importance, trends, and relevance to deliver only what truly matters to you.",
+        "title": "AI-Powered Clarity"
+      },
+      "collect": {
+        "description": "Get real-time updates from 200+ international sources covering startups, technology, and investments - automatically refreshed every hour.",
+        "title": "Automated Global Collection"
       },
       "personalize": {
-        "title": "Personalized Experience",
-        "description": "Receive priority updates for topics you care about. Follow global trends as easily as reading your local news feed."
+        "description": "Receive priority updates for topics you care about. Follow global trends as easily as reading your local news feed.",
+        "title": "Personalized Experience"
       }
+    },
+    "subtitle": "Stay effortlessly informed about global startup & tech trends in your native language",
+    "title": {
+      "highlight": "Made Easy",
+      "main": "Global Updates"
     }
   },
   "media": {
@@ -25,6 +139,22 @@
     "title": {
       "main": "Tech Leaders & Publications",
       "prefix": "200+"
+    }
+  },
+  "menu": {
+    "faq": "FAQ",
+    "features": "Features",
+    "pricing": "Pricing",
+    "testimonials": "Testimonials"
+  },
+  "newsletter": {
+    "button": "Subscribe",
+    "description": "Get daily updates on new features and curated tech news delivered straight to your inbox.",
+    "emailLabel": "Email address",
+    "placeholder": "Enter your email",
+    "title": {
+      "highlight": "Newsletter",
+      "main": "Osiri Updates"
     }
   },
   "personas": {
@@ -49,6 +179,77 @@
     "title": {
       "highlight": "Tailored For",
       "main": "Tech Leaders"
+    }
+  },
+  "pricing": {
+    "period": "/ month",
+    "plans": {
+      "enterprise": {
+        "benefit1": "All Pro Features",
+        "benefit2": "API Access",
+        "benefit3": "Custom Integration",
+        "benefit4": "Dedicated Support",
+        "benefit5": "Team Management",
+        "button": "Contact Us",
+        "description": "For teams that need advanced features and dedicated support",
+        "price": "Custom",
+        "title": "Enterprise"
+      },
+      "pro": {
+        "benefit1": "All Trial Features",
+        "benefit2": "Advanced AI Analysis",
+        "benefit3": "10+ Languages",
+        "benefit4": "Priority Support",
+        "benefit5": "Custom Feed",
+        "button": "Get Started",
+        "description": "Ideal for professionals who need comprehensive global insights",
+        "price": "$10",
+        "title": "Pro"
+      },
+      "trial": {
+        "benefit1": "200+ Global Sources",
+        "benefit2": "Basic AI Summaries",
+        "benefit3": "1 Language",
+        "benefit4": "Email Support",
+        "benefit5": "7 Days Access",
+        "button": "Start Free Trial",
+        "description": "Perfect for trying out and experiencing our core features",
+        "price": "$0",
+        "title": "Free Trial"
+      }
+    },
+    "popularBadge": "Most popular",
+    "subtitle": "Start with our free trial and upgrade anytime to access premium features",
+    "title": {
+      "end": "Today",
+      "highlight": "Started",
+      "main": "Get"
+    }
+  },
+  "seo": {
+    "description": "Stay informed with AI-powered global startup news. Get instant translations and summaries of tech news from around the world.",
+    "title": "Osiri - Global News Reader with AI Translation"
+  },
+  "team": {
+    "members": {
+      "leo": {
+        "description": "Highly motivated Frontend Developer with a passion for crafting exceptional user experiences.",
+        "name": "Leopoldo Miranda",
+        "position": "Tech Lead"
+      },
+      "shin": {
+        "description": "3x founder, 10yrs+ full stack dev. Focused on making global tech insights accessible to everyone.",
+        "name": "Shin",
+        "position": "Product Owner"
+      }
+    },
+    "social": {
+      "icon": "icon"
+    },
+    "subtitle": "Building the future of global tech intelligence with a passionate team of developers and AI experts",
+    "title": {
+      "highlight": "Our Dedicated",
+      "main": "Crew"
     }
   }
 }

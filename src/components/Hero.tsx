@@ -5,7 +5,7 @@ import { Globe2, Newspaper } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const Hero = () => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("home");
   return (
     <section className="container grid lg:grid-cols-2 place-items-center py-20 md:py-32 gap-10">
       <div className="text-center lg:text-start space-y-6">

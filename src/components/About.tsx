@@ -3,7 +3,7 @@ import pilot from "../assets/pilot.png";
 import { useTranslation } from "react-i18next";
 
 export const About = () => {
-  const { t } = useTranslation("about");
+  const { t } = useTranslation("home");
 
   return (
     <section id="about" className="container py-24 sm:py-32">

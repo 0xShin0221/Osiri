@@ -27,7 +27,7 @@ interface RouteProps {
 }
 
 const routeList = (): RouteProps[] => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("home");
   return [
     {
       href: "#features",
