@@ -68,7 +68,7 @@ export const HeroCards = () => {
       <Card className="absolute w-[340px] -top-[15px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader className="flex flex-row items-center gap-4 pb-2">
           <Avatar>
-            <AvatarImage alt="" src="/avatars/tech-founder.jpg" />
+            <AvatarImage alt="" src="https://i.pravatar.cc/150?img=30" />
             <AvatarFallback>TF</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
