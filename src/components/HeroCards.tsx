@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { Check, Globe, Languages, Clock } from "lucide-react";
+import { Check, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 interface HeroFeaturesProps {
   title: string;
