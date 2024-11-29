@@ -78,20 +78,21 @@
     }
   },
   "footer": {
+    "product": {
+      "faq": "よくある質問",
+      "features": "機能",
+      "personas": "対象ユーザー",
+      "pricing": "料金プラン",
+      "title": "About"
+    },
     "social": {
       "title": "Follow Us"
     },
-    "product": {
-      "title": "About",
-      "features": "機能",
-      "pricing": "料金プラン",
-      "faq": "よくある質問"
-    },
     "support": {
-      "title": "Support",
       "help": "ヘルプセンター",
+      "privacy": "プライバシーポリシー",
       "terms": "利用規約",
-      "privacy": "プライバシーポリシー"
+      "title": "Support"
     }
   },
   "hero": {
@@ -165,8 +166,8 @@
     "faq": "よくある質問",
     "features": "機能",
     "login": "ログイン",
-    "pricing": "料金",
-    "testimonials": "ユーザーの声"
+    "personas": "対象ユーザー",
+    "pricing": "料金"
   },
   "newsletter": {
     "button": "購読する",

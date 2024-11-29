@@ -29,12 +29,12 @@ const routeList = (): RouteProps[] => {
   const { t } = useTranslation("home");
   return [
     {
-      href: "#features",
-      label: t("menu.features"),
+      href: "#personas",
+      label: t("menu.personas"),
     },
     {
-      href: "#testimonials",
-      label: t("menu.testimonials"),
+      href: "#features",
+      label: t("menu.features"),
     },
     {
       href: "#pricing",

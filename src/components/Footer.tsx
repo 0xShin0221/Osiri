@@ -35,6 +35,10 @@ const getFooterSections = (): FooterSection[] => {
       title: t("footer.product.title"),
       links: [
         {
+          label: t("footer.product.personas"),
+          href: "#personas",
+        },
+        {
           label: t("footer.product.features"),
           href: "#features",
         },
