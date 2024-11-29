@@ -61,6 +61,8 @@ export const HeroCards = () => {
   const news = heroFeatures[1];
   const pricing = heroFeatures[2];
   const feature = heroFeatures[3];
+  const { i18n } = useTranslation();
+  const currentLang = i18n.resolvedLanguage;
 
   return (
     <div className="hidden lg:flex flex-row flex-wrap gap-8 relative w-[700px] h-[500px]">
@@ -108,7 +110,9 @@ export const HeroCards = () => {
           <CardDescription>{pricing.description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button className="w-full">{t("Start Free Trial")}</Button>
+          <a href={`/${currentLang}/coming-soon`} className="w-full">
+            <Button className="w-full">{t("Start Free Trial")}</Button>
+          </a>
         </CardContent>
         <hr className="w-4/5 m-auto mb-4" />
         <CardFooter>

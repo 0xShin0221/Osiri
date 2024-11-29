@@ -1,0 +1,26 @@
+{
+  "badge": "早期割引",
+  "button": "ウェイトリストに登録",
+  "description": "無料で試せる機会をお見逃しなく",
+  "incentives": {
+    "earlyAccess": {
+      "description": "先着登録者は3か月間50%オフ！",
+      "title": "50%割引"
+    },
+    "earlyAccessAnnually": {
+      "description": "通常月額980円のところ、先着登録者は3か月無料！",
+      "title": "年間3000円以上お得"
+    },
+    "earlyAccessLifetime": {
+      "description": "すべてのプレミアム機能を割引価格で利用可能",
+      "title": "フルアクセス"
+    }
+  },
+  "input": {
+    "placeholder": "メールアドレスを入力してください"
+  },
+  "rating": "{{count}}人以上のアーリーアダプターが登録しています",
+  "rating_plural": "",
+  "subtitle": "無料クーポンをゲット！",
+  "title": "リリース前に"
+}

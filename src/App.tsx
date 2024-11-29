@@ -12,6 +12,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { Home } from "@/pages/Home";
 import { Terms } from "./pages/Terms";
 import { Privacy } from "./pages/Privacy";
+import { ComingSoon } from "./pages/ComingSoon";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -29,6 +30,7 @@ function LocalizedRoutes() {
     <Layout>
       <Routes>
         <Route index element={<Home />} />
+        <Route path="coming-soon" element={<ComingSoon />} />
         <Route path="terms" element={<Terms />} />
         <Route path="privacy" element={<Privacy />} />
         {/* <Route path="about" element={<About />} />

@@ -1,0 +1,26 @@
+{
+  "badge": "Limited Time Offer",
+  "button": "Join the Waitlist",
+  "description": "Be among the first to experience the future of global tech insights",
+  "incentives": {
+    "earlyAccess": {
+      "description": "First subscribers get 50% off for the 3 months",
+      "title": "50% Discount"
+    },
+    "earlyAccessAnnually": {
+      "description": "Regular $9/mo, early birds get 3 times free",
+      "title": "Save $27/year"
+    },
+    "earlyAccessLifetime": {
+      "description": "All premium features included in the discount",
+      "title": "Full Access"
+    }
+  },
+  "input": {
+    "placeholder": "Enter your email"
+  },
+  "rating": "Registered by {{count}}+ early adopters",
+  "rating_plural": "",
+  "subtitle": "Get your free coupon!",
+  "title": "Get Early Access"
+}

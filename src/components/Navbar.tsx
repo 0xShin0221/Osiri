@@ -49,7 +49,8 @@ const routeList = (): RouteProps[] => {
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const { i18n } = useTranslation();
+  const currentLang = i18n.resolvedLanguage;
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
       <NavigationMenu className="mx-auto">
@@ -99,7 +100,7 @@ export const Navbar = () => {
                   <LanguageSelector variant="mobile" />
                   <a
                     rel="noreferrer noopener"
-                    href="https://github.com/leoMirandaa/shadcn-landing-page.git"
+                    href={`/${currentLang}/coming-soon`}
                     target="_blank"
                     className={`w-[110px] border ${buttonVariants({
                       variant: "secondary",
@@ -133,7 +134,7 @@ export const Navbar = () => {
             <LanguageSelector />
             <a
               rel="noreferrer noopener"
-              href="https://github.com/leoMirandaa/shadcn-landing-page.git"
+              href={`/${currentLang}/coming-soon`}
               target="_blank"
               className={`border ${buttonVariants({ variant: "secondary" })}`}
             >

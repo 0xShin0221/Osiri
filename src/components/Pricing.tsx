@@ -75,6 +75,8 @@ const getPricingList = (): PricingProps[] => {
 
 export const Pricing = () => {
   const { t } = useTranslation("home");
+  const { i18n } = useTranslation();
+  const currentLang = i18n.resolvedLanguage;
   const pricingList = getPricingList();
 
   return (
@@ -120,16 +122,15 @@ export const Pricing = () => {
             </CardHeader>
 
             <CardContent>
-              <Button
-                className="w-full"
-                variant={
-                  pricing.buttonTextKey === t("pricing.plans.trial.button")
-                    ? "default"
-                    : "outline"
-                }
-              >
-                {pricing.buttonTextKey}
-              </Button>
+              {pricing.buttonTextKey === t("pricing.plans.trial.button") ? (
+                <a href={`/${currentLang}/coming-soon`} className="w-full">
+                  <Button className="w-full">{pricing.buttonTextKey}</Button>
+                </a>
+              ) : (
+                <Button className="w-full" variant="outline">
+                  {pricing.buttonTextKey}
+                </Button>
+              )}
             </CardContent>
 
             <hr className="w-4/5 m-auto mb-4" />
