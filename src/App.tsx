@@ -10,6 +10,8 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Home } from "@/pages/Home";
+import { Terms } from "./pages/Terms";
+import { Privacy } from "./pages/Privacy";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,6 +29,8 @@ function LocalizedRoutes() {
     <Layout>
       <Routes>
         <Route index element={<Home />} />
+        <Route path="terms" element={<Terms />} />
+        <Route path="privacy" element={<Privacy />} />
         {/* <Route path="about" element={<About />} />
         <Route path="features" element={<Features />} />
         <Route path="pricing" element={<Pricing />} />

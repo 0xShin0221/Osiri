@@ -78,6 +78,22 @@
       "title": "Many"
     }
   },
+  "footer": {
+    "social": {
+      "title": "Follow Us"
+    },
+    "product": {
+      "title": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ"
+    },
+    "support": {
+      "title": "Support",
+      "help": "Help Center",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    },,
   "hero": {
     "cta": "Start Free Trial",
     "description": "Stay ahead with AI-powered summaries of global startup news. Getinstant insights in your preferred language, curated for busy professionals.",
@@ -144,6 +160,7 @@
   "menu": {
     "faq": "FAQ",
     "features": "Features",
+    "login": "login",
     "pricing": "Pricing",
     "testimonials": "Testimonials"
   },

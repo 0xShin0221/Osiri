@@ -15,11 +15,12 @@ import {
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "./ui/button";
-import { Menu } from "lucide-react";
+import { LogIn, Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { OsiriLogo } from "./Logo";
 import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "./LangSelector";
+import { t } from "i18next";
 
 interface RouteProps {
   href: string;
@@ -106,8 +107,8 @@ export const Navbar = () => {
                       variant: "secondary",
                     })}`}
                   >
-                    <GitHubLogoIcon className="mr-2 w-5 h-5" />
-                    Github
+                    <LogIn className="mr-2 w-5 h-5" />
+                    {t("menu.login")}
                   </a>
                 </nav>
               </SheetContent>
@@ -138,8 +139,8 @@ export const Navbar = () => {
               target="_blank"
               className={`border ${buttonVariants({ variant: "secondary" })}`}
             >
-              <GitHubLogoIcon className="mr-2 w-5 h-5" />
-              Github
+              <LogIn className="mr-2 w-5 h-5" />
+              {t("menu.login")}
             </a>
 
             <ModeToggle />

@@ -77,6 +77,23 @@
       "title": "メイン"
     }
   },
+  "footer": {
+    "social": {
+      "title": "Follow Us"
+    },
+    "product": {
+      "title": "About",
+      "features": "機能",
+      "pricing": "料金プラン",
+      "faq": "よくある質問"
+    },
+    "support": {
+      "title": "Support",
+      "help": "ヘルプセンター",
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシー"
+    }
+  },
   "hero": {
     "cta": "無料で始める",
     "description": "1日3分でグローバルな効率的情報収集。最新の海外のニュースをAI要約の日本語で簡単にチェック！",
@@ -147,6 +164,7 @@
   "menu": {
     "faq": "よくある質問",
     "features": "機能",
+    "login": "ログイン",
     "pricing": "料金",
     "testimonials": "ユーザーの声"
   },
