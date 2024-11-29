@@ -69,7 +69,6 @@ const getFooterSections = (): FooterSection[] => {
 };
 
 export const Footer = () => {
-  const { t } = useTranslation("home");
   const footerSections = getFooterSections();
 
   return (
