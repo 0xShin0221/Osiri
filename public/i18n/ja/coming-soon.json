@@ -20,6 +20,7 @@
     "placeholder": "メールアドレスを入力してください"
   },
   "rating": "{{count}}人以上のアーリーアダプターが登録しています",
+  "rating_0": "",
   "rating_plural": "",
   "subtitle": "無料クーポンをゲット！",
   "title": "リリース前に"

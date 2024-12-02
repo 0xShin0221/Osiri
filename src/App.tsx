@@ -13,6 +13,7 @@ import { Home } from "@/pages/Home";
 import { Terms } from "./pages/Terms";
 import { Privacy } from "./pages/Privacy";
 import { ComingSoon } from "./pages/ComingSoon";
+import { NotFound } from "./pages/NotFound";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,6 +37,7 @@ function LocalizedRoutes() {
         <Route path={`/${currentLang}/coming-soon`} element={<ComingSoon />} />
         <Route path={`/${currentLang}/terms`} element={<Terms />} />
         <Route path={`/${currentLang}/privacy`} element={<Privacy />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
   );
