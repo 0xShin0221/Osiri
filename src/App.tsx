@@ -64,7 +64,10 @@ function App() {
             />
           ))}
 
-          <Route path="*" element={<LanguageRedirect />} />
+      <Route
+            path="*"
+            element={<LanguageRedirect fallback={<NotFound />} />}
+          />
         </Routes>
       </HelmetProvider>
     </BrowserRouter>
