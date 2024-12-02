@@ -27,21 +27,18 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function LocalizedRoutes() {
-  const { i18n } = useTranslation();
-  const currentLang = i18n.resolvedLanguage;
-
-  return (
-    <Layout>
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path={`/${currentLang}/coming-soon`} element={<ComingSoon />} />
-        <Route path={`/${currentLang}/terms`} element={<Terms />} />
-        <Route path={`/${currentLang}/privacy`} element={<Privacy />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Layout>
-  );
-}
+    return (
+      <Layout>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="coming-soon" element={<ComingSoon />} />
+          <Route path="terms" element={<Terms />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Layout>
+    );
+  }
 
 function App() {
   const { i18n } = useTranslation();
