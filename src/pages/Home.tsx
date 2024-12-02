@@ -12,7 +12,16 @@ import { Pricing } from "@/components/Pricing";
 import { Team } from "@/components/Team";
 // import { Testimonials } from "@/components/Testimonials";
 import { Personas } from "@/components/Personas";
+import { useEffect } from "react";
 export function Home() {
+  useEffect(() => {
+    if (window.location.hash) {
+      const element = document.querySelector(window.location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, []);
   const { t } = useTranslation();
   return (
     <>
