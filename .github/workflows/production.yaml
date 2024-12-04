@@ -41,7 +41,7 @@ jobs:
       - run: terraform init
       - run: terraform apply -auto-approve -no-color
 
-    deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     env:
