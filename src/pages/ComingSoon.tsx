@@ -76,7 +76,9 @@ export const ComingSoon = () => {
           "Content-Type": "application/json",
         },
       });
-
+      if (data) {
+        console.log(data);
+      }
       if (error) throw error;
 
       // toast.success(t("success"));
