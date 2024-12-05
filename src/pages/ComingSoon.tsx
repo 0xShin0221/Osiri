@@ -61,6 +61,19 @@ export const ComingSoon = () => {
     setIsSubmitting(true);
 
     try {
+      console.log('Payload being sent:', {
+        to: form.email,
+        template: 'early-access',
+        language: i18n.language,
+        data: {
+          name: form.name,
+          role: form.role,
+          company: form.company,
+        },
+      });
+      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('Supabase ANON KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY);
+
       const { data, error } = await supabase.functions.invoke('emails', {
         body:({
           to: form.email,
