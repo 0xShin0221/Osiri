@@ -74,6 +74,7 @@ export const ComingSoon = () => {
         }),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
       });
       if (data) {
