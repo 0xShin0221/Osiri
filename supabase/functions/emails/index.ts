@@ -27,24 +27,22 @@ Deno.serve(async (req) => {
 
   try {
     const { to, template, language, data } = await req.json() as EmailPayload;
+    if (!to || !template || !language) {
+      throw new Error("Missing required fields in request body");
+    }
 
     const emailContent = getTemplateContent(template, language, data);
     const result = await sendEmail(to, emailContent.subject, emailContent.html);
 
-    return new Response(
-      JSON.stringify(result),
-      {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    },
-    );
+
+    return new Response(JSON.stringify(result), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   } catch (error) {
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      },
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 });
 
