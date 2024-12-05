@@ -25,7 +25,7 @@
     "supabase:start": "supabase start",
     "supabase:dev": "supabase functions serve --no-verify-jwt --env-file .env",
     "supabase:stop": "supabase stop",
-    "supabase-functions-test": "deno test --allow-all supabase/functions/tests/deno-test.ts"
+    "supabase-functions-test": "cd supabase/functions&&deno task test"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
