@@ -1,0 +1,20 @@
+name: Pull Request Text Generator Workflow
+
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  generate-pr-text:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate PR Description
+        uses: vblagoje/pr-auto@v1
+        id: pr_auto
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Update PR description
+        uses: vblagoje/update-pr@v1
+        with:
+          pr-body: ${{ steps.pr_auto.outputs.pr-text }}
