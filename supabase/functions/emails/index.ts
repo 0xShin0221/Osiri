@@ -6,11 +6,16 @@ import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
 const getTemplateContent = (template: string, language: string, data?: Record<string, any>) => {
   switch (template) {
     case 'early-access':
-      return getEarlyAccessTemplate(language);
+      return getEarlyAccessTemplate(language, data);
     default:
       throw new Error(`Unknown template: ${template}`);
   }
 };
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 Deno.serve(async (req) => {
   try {
@@ -21,14 +26,16 @@ Deno.serve(async (req) => {
 
     return new Response(
       JSON.stringify(result),
-      { headers: { "Content-Type": "application/json" } },
+      {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    },
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message }),
       {
         status: 400,
-        headers: { "Content-Type": "application/json" }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       },
     );
   }
