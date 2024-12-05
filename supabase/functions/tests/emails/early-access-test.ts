@@ -1,9 +1,9 @@
 // Import required libraries and modules
 import { assert, assertEquals } from 'https://deno.land/std@0.192.0/testing/asserts.ts'
-import { createClient, SupabaseClient } from 'jsr:@supabase/supabase-js@2'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 import 'https://deno.land/x/dotenv@v3.2.2/load.ts'
-import { getEarlyAccessTemplate } from '../../emails/templates/early-access';
+import { getEarlyAccessTemplate } from '../../emails/templates/early-access/index.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';

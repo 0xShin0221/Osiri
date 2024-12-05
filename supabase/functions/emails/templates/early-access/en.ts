@@ -24,7 +24,7 @@ export const enTemplate = {
              <div class="benefit-item">
                <span class="benefit-icon">✨</span>
                <div>
-                 <strong>50% Lifetime Discount</strong>
+                 <strong>50% off Discount</strong>
                  <p>Get half off our regular price for a full year</p>
                </div>
              </div>
