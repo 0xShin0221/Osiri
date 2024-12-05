@@ -62,7 +62,7 @@ export const ComingSoon = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('emails', {
-        body: JSON.stringify({
+        body:({
           to: form.email,
           template: 'early-access',
           language: i18n.language,
