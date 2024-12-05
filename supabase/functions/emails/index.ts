@@ -17,7 +17,7 @@ const getTemplateContent = (template: string, language: string, data?: Record<st
 };
 
 
-serve(handleWithCors(async (req) => {
+Deno.serve(handleWithCors(async (req) => {
   try {
     const { to, template, language, data } = await req.json() as EmailPayload;
     console.info('Request payload:', { to, template, language, data });
