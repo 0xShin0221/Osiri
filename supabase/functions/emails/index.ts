@@ -2,33 +2,20 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { EmailPayload } from './utils/types.ts';
 import { sendEmail } from "./utils/resend.ts";
 import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
+import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
 
 const getTemplateContent = (template: string, language: string, data?: Record<string, any>) => {
+  console.info('getTemplateContent Input:', { template, language, data });
+
   switch (template) {
     case 'early-access':
       return getEarlyAccessTemplate(language, data);
     default:
+      console.error(`Unknown template: ${template}`);
       throw new Error(`Unknown template: ${template}`);
   }
 };
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-client-info, apikey',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-}
-
-const handleWithCors = (
-  handler: (req: Request) => Promise<Response>
-) => {
-  return (req: Request) => {
-    if (req.method === "OPTIONS") {
-      return new Response("ok", { headers: corsHeaders })
-    }
-
-    return handler(req)
-  }
-}
 
 serve(handleWithCors(async (req) => {
   try {
