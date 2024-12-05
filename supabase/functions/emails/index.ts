@@ -20,7 +20,7 @@ const getTemplateContent = (template: string, language: string, data?: Record<st
 Deno.serve(handleWithCors(async (req) => {
   try {
 
-    const { to, template, language, data } = await req.json();
+    const { to, template, language, data } = await req.json() as EmailPayload;
     console.info('Request payload:', { to, template, language, data });
     if (!to || !template || !language) {
       throw new Error("Missing required fields in request body");
