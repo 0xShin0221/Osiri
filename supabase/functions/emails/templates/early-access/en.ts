@@ -1,7 +1,7 @@
 import { emailStyles } from './styles.ts';
 
 export const enTemplate = {
-  subject: '[Osiri] Thanks for joining Early Access',
+  subject: '[Osiri App] Thanks for joining Early Access',
   html: `
     <!DOCTYPE html>
     <html>
