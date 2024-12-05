@@ -42,7 +42,8 @@ serve(handleWithCors(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
-});
+})
+);
 
 /* To invoke locally:
   curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/emails' \
