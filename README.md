@@ -33,4 +33,4 @@ For support or inquiries, please email: support@osiri.xyz
 
 ---
 
-Developed with ❤️ by [DigDaTech](https://osiri.xyz
+Developed with ❤️ by [DigDaTech](https://osiri.xyz)
