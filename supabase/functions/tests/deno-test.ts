@@ -2,7 +2,6 @@ import './emails/early-access-test.ts';
 
 
 const setup = async () => {
-
  console.log('Test setup completed');
 };
 

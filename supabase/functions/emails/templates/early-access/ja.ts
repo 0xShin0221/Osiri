@@ -1,7 +1,9 @@
 import { emailStyles } from './styles.ts';
 
-export const jaTemplate = {
-  subject: '【Osiri App】アーリーアクセスへのご登録ありがとうございます',
+export const jaTemplate = (data?: Record<string, any>) => {
+  const { name} = data || {};
+  return {
+  subject: `Osiriでの早期アーリーアクセス登録| 無料クーポン取得`,
   html: `
     <!DOCTYPE html>
     <html>
@@ -13,12 +15,14 @@ export const jaTemplate = {
       <body>
              <div class="container">
          <div class="header">
+
            <h1 class="title">Osiriアーリーアクセスへようこそ</h1>
-           <p class="subtitle">グローバルなテックインテリジェンスプラットフォームへの特別アクセス権を獲得しました</p>
+           <p class="subtitle">グローバルなAIニュースフィードOsiri Appの特別クーポンを獲得しました</p>
+           <p>(クーポン送付はベータ版リリース前に、送付されます。) </p>
          </div>
          
          <div class="content">
-           <p>アーリーアクセスプログラムにご登録いただき、ありがとうございます。最初期のメンバーとして、以下の特典をご用意しております：</p>
+           <p>${name}さん、アーリーアクセスプログラムにご登録いただき、ありがとうございます。一番初めに目をかけてくだっさお礼として、以下のクーポンをご用意しております：</p>
            
            <div class="benefits">
              <div class="benefit-item">
@@ -46,7 +50,7 @@ export const jaTemplate = {
              </div>
            </div>
 
-           <p>サービス開始時に改めてご連絡させていただきます。今しばらくお待ちください。</p>
+           <p>ベータ版サービス開始時に改めてご連絡させていただきます。今しばらくお待ちください。</p>
            
            <a href="https://osiri.xyz" class="cta-button">ウェブサイトを見る</a>
            
@@ -59,4 +63,5 @@ export const jaTemplate = {
       </body>
     </html>
   `
+  };
 };

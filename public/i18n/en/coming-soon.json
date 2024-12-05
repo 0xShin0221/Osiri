@@ -1,7 +1,7 @@
 {
   "badge": "Limited Time Offer",
-  "button": "Join the Waitlist",
   "description": "Be among the first to experience the future of global tech insights",
+  "getCoupon": "Get a coupon",
   "incentives": {
     "earlyAccess": {
       "description": "First subscribers get 50% off for the 3 months",
@@ -17,6 +17,9 @@
     }
   },
   "input": {
+    "company": "Company",
+    "email": "Email",
+    "name": "Name",
     "placeholder": "Enter your email"
   },
   "rating": "Registered by {{count}}+ early adopters",

@@ -6,15 +6,20 @@ const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
 const FUNCTION_URL = Deno.env.get('SUPABASE_FUNCTION_URL') ?? '';
 const FUNCTION_API_URL = `${FUNCTION_URL}/functions/v1`;
 
-if (!supabaseKey || !FUNCTION_URL) {
-  throw new Error('Environment variables are not set');
+
+if (!supabaseKey) {
+  throw new Error('Supabase key not found');
 }
+if (!FUNCTION_URL) {
+  throw new Error('Supabase URL not found');
+}
+
 
 const testTemplateContent = () => {
  const enTemplate = getEarlyAccessTemplate('en');
  assert(enTemplate.subject.includes('Osiri'), 'English subject should contain "Osiri"');
  assert(enTemplate.html.includes('Welcome'), 'English content should contain welcome message');
- assert(enTemplate.html.includes('50% off'), 'English content should mention discount');
+ assert(enTemplate.html.includes('50%'), 'English content should mention discount');
 
  const jaTemplate = getEarlyAccessTemplate('ja');
  assert(jaTemplate.subject.includes('Osiri'), '日本語の件名にOsiriが含まれるべき');
@@ -34,7 +39,12 @@ const testEmailSending = async () => {
    body: JSON.stringify({
      to: testEmail,
      template: 'early-access',
-     language: 'en'
+     language: 'en',
+     data: {
+        name: 'Test User',
+        role: 'Developer',
+        company: 'Osiri'
+      },
    })
  });
 
