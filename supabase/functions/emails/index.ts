@@ -2,37 +2,48 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { EmailPayload } from './utils/types.ts';
 import { sendEmail } from "./utils/resend.ts";
 import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
+import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
 
 const getTemplateContent = (template: string, language: string, data?: Record<string, any>) => {
+  console.info('getTemplateContent Input:', { template, language, data });
+
   switch (template) {
     case 'early-access':
-      return getEarlyAccessTemplate(language);
+      return getEarlyAccessTemplate(language, data);
     default:
+      console.error(`Unknown template: ${template}`);
       throw new Error(`Unknown template: ${template}`);
   }
 };
 
-Deno.serve(async (req) => {
+
+Deno.serve(handleWithCors(async (req) => {
   try {
+
     const { to, template, language, data } = await req.json() as EmailPayload;
-
+    console.info('Request payload:', { to, template, language, data });
+    if (!to || !template || !language) {
+      throw new Error("Missing required fields in request body");
+    }
     const emailContent = getTemplateContent(template, language, data);
+    console.info('Email content:', emailContent);
     const result = await sendEmail(to, emailContent.subject, emailContent.html);
+    console.info('Email sent:', result);
 
-    return new Response(
-      JSON.stringify(result),
-      { headers: { "Content-Type": "application/json" } },
-    );
+
+    return new Response(JSON.stringify(result), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
   } catch (error) {
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" }
-      },
-    );
+    console.error('Error sending email:', error.message);
+    return new Response(JSON.stringify({ error: error }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
-});
+})
+);
 
 /* To invoke locally:
   curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/emails' \
