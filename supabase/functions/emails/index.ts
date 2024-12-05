@@ -18,11 +18,19 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 }
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+const handleWithCors = (
+  handler: (req: Request) => Promise<Response>
+) => {
+  return (req: Request) => {
+    if (req.method === "OPTIONS") {
+      return new Response("ok", { headers: corsHeaders })
+    }
 
+    return handler(req)
+  }
+}
+
+serve(handleWithCors(async (req) => {
   try {
     const { to, template, language, data } = await req.json() as EmailPayload;
     console.log('Request payload:', { to, template, language, data });
