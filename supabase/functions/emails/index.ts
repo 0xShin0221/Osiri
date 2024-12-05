@@ -14,14 +14,15 @@ const getTemplateContent = (template: string, language: string, data?: Record<st
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-client-info, apikey',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 }
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: req.headers, status: 200 });
+    return new Response(null, { headers: corsHeaders });
   }
+
   try {
     const { to, template, language, data } = await req.json() as EmailPayload;
     console.log('Request payload:', { to, template, language, data });
