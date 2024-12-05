@@ -2,6 +2,7 @@ import { assert } from "std/testing/asserts.ts";
 import 'https://deno.land/x/dotenv@v3.2.2/load.ts';
 import { getEarlyAccessTemplate } from '../../emails/templates/early-access/index.ts';
 
+// These keys are used on the gh actions.Pls don't change it  
 const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
 const FUNCTION_URL = Deno.env.get('SUPABASE_FUNCTION_URL') ?? '';
 const FUNCTION_API_URL = `${FUNCTION_URL}/functions/v1`;
