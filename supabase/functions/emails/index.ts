@@ -19,11 +19,6 @@ const corsHeaders = {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: corsHeaders,
-    });
-  }
 
   try {
     const { to, template, language, data } = await req.json() as EmailPayload;
