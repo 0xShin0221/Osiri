@@ -27,6 +27,7 @@ Deno.serve(async (req) => {
 
   try {
     const { to, template, language, data } = await req.json() as EmailPayload;
+    console.log('Request payload:', { to, template, language, data });
     if (!to || !template || !language) {
       throw new Error("Missing required fields in request body");
     }
