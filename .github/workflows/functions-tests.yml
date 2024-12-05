@@ -11,4 +11,4 @@ jobs:
         with:
           version: latest
       - run: supabase start
-      - run: deno test --allow-all deno-test.ts --env-file .env.local
+      - run: deno test --allow-all supabase/functions/tests/deno-test.ts --env-file .env.local
