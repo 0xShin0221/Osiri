@@ -2,9 +2,13 @@ import { assert } from "std/testing/asserts.ts";
 import 'https://deno.land/x/dotenv@v3.2.2/load.ts';
 import { getEarlyAccessTemplate } from '../../emails/templates/early-access/index.ts';
 
-const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
-const FUNCTION_URL = `${supabaseUrl}/functions/v1`;
+const FUNCTION_URL = Deno.env.get('SUPABASE_FUNCTION_URL') ?? '';
+const FUNCTION_API_URL = `${FUNCTION_URL}/functions/v1`;
+
+if (!supabaseKey || !FUNCTION_URL) {
+  throw new Error('Environment variables are not set');
+}
 
 const testTemplateContent = () => {
  const enTemplate = getEarlyAccessTemplate('en');
@@ -21,7 +25,7 @@ const testTemplateContent = () => {
 const testEmailSending = async () => {
  const testEmail = 'test@osiri.xyz';
  
- const response = await fetch(`${FUNCTION_URL}/emails`, {
+ const response = await fetch(`${FUNCTION_API_URL}/emails`, {
    method: 'POST',
    headers: {
      'Content-Type': 'application/json',
