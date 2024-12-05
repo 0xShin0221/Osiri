@@ -1,59 +1,36 @@
-# Shadcn/UI Landing Page Template
+# Osiri - AI-Powered Global Tech News Reader
 
-## <a href="https://ui.shadcn.com/" target="_blank">ShadcnUI</a> + <a href="https://react.dev/" target="_blank">React</a> + <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a> + <a href="https://tailwindcss.com/" target="_blank">Tailwind</a>.
+![Osiri Logo](public/assets/og-image.jpg)
 
-![shadch-landing-page](https://github.com/leoMirandaa/shadcn-landing-page/assets/61714687/3ba7b51f-9589-4541-800a-5ab7cecad1b5)
+Stay updated with global startup and tech trends in your native language. Osiri provides AI-powered summaries from 200+ trusted sources, updated hourly.
 
-Build your React landing page effortlessly with the required sections to your project. <a href="https://shadcn-landing-page.vercel.app/" target="_blank">Live Demo</a>
+## 🌟 Features
 
-## Sections
+- **Global Intelligence**: Access worldwide startup ecosystem news, tech updates, VC investments, and product design insights - all automatically curated and delivered to you
+- **AI-Powered Insights**: Convert long articles into concise summaries using the latest GPT technology
+- **Effortless Discovery**: Break through language barriers and access local information in your native language
 
-- [x] Navbar
-- [x] Sidebar(mobile)
-- [x] Hero
-- [x] Sponsors
-- [x] About
-- [x] Stats
-- [x] How It Works
-- [x] Features
-- [x] Services
-- [x] Call-to-Action (CTA)
-- [x] Testimonials
-- [x] Team
-- [x] Pricing
-- [x] Newsletter
-- [x] Frequently Asked Questions(FAQ)
-- [x] Footer
 
-## Features
+## 🌐 Supported Languages
 
-- [x] Fully Responsive Design
-- [x] User Friendly Navigation
-- [x] Dark Mode
-- [x] Meta tags
+- English (Default)
+- Japanese (日本語)
 
-## How to install
+## 📄 License
 
-1. Clone this repository:
+MIT License - see the [LICENSE](LICENSE) file for details
 
-```bash
-git clone https://github.com/leoMirandaa/shadcn-landing-page.git
-```
+## 🔗 Links
 
-2. Go into project
+- Website: [osiri.xyz](https://osiri.xyz)
+- Twitter: [@OsiriApp](https://twitter.com/OsiriApp)
+- LinkedIn: [Osiri](https://www.linkedin.com/company/osiri)
+- GitHub: [osiriapp](https://github.com/osiriapp)
 
-```bash
-cd shadcn-landing-page
-```
+## 📫 Contact
 
-3. Install dependencies
+For support or inquiries, please email: support@osiri.xyz
 
-```bash
-npm install
-```
+---
 
-4. Run project
-
-```bash
-npm run dev
-```
+Developed with ❤️ by [DigDaTech](https://osiri.xyz)

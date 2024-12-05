@@ -1,7 +1,7 @@
 import { emailStyles } from './styles.ts';
 
 export const enTemplate = {
-  subject: '[Osiri] Thanks for joining Early Access',
+  subject: '[Osiri App] Thanks for joining Early Access',
   html: `
     <!DOCTYPE html>
     <html>
@@ -24,7 +24,7 @@ export const enTemplate = {
              <div class="benefit-item">
                <span class="benefit-icon">✨</span>
                <div>
-                 <strong>50% Lifetime Discount</strong>
+                 <strong>50% off Discount</strong>
                  <p>Get half off our regular price for a full year</p>
                </div>
              </div>
