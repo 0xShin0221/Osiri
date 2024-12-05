@@ -1,7 +1,7 @@
 import { emailStyles } from './styles.ts';
 
 export const jaTemplate = {
-  subject: '【Osiri】アーリーアクセスへのご登録ありがとうございます',
+  subject: '【Osiri App】アーリーアクセスへのご登録ありがとうございます',
   html: `
     <!DOCTYPE html>
     <html>
