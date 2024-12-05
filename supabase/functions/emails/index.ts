@@ -33,20 +33,23 @@ const handleWithCors = (
 serve(handleWithCors(async (req) => {
   try {
     const { to, template, language, data } = await req.json() as EmailPayload;
-    console.log('Request payload:', { to, template, language, data });
+    console.info('Request payload:', { to, template, language, data });
     if (!to || !template || !language) {
       throw new Error("Missing required fields in request body");
     }
 
     const emailContent = getTemplateContent(template, language, data);
+    console.info('Email content:', emailContent);
     const result = await sendEmail(to, emailContent.subject, emailContent.html);
+    console.info('Email sent:', result);
 
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+      status: 200,
+    })
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending email:', error.message);
     return new Response(JSON.stringify({ error: error }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
