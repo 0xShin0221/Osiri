@@ -24,17 +24,20 @@ Deno.serve(handleWithCors(async (req) => {
     if (!to || !template || !language) {
       throw new Error("Missing required fields in request body");
     }
-
-    const emailContent = getTemplateContent(template, language, data);
-    console.info('Email content:', emailContent);
-    const result = await sendEmail(to, emailContent.subject, emailContent.html);
-    console.info('Email sent:', result);
-
-
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })
+    // const emailContent = getTemplateContent(template, language, data);
+    // console.info('Email content:', emailContent);
+    // const result = await sendEmail(to, emailContent.subject, emailContent.html);
+    // console.info('Email sent:', result);
+
+
+    // return new Response(JSON.stringify(result), {
+    //   headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    //   status: 200,
+    // })
   } catch (error) {
     console.error('Error sending email:', error.message);
     return new Response(JSON.stringify({ error: error }), {
