@@ -24,7 +24,8 @@
     "i18next-extract": "babel 'src/**/*.{js,jsx,ts,tsx}' --config-file ./babel.config.cjs --extensions '.js,.jsx,.ts,.tsx' --out-file /dev/null",
     "supabase:start": "supabase start",
     "supabase:dev": "supabase functions serve --no-verify-jwt --env-file .env",
-    "supabase:stop": "supabase stop"
+    "supabase:stop": "supabase stop",
+    "supabase-functions-test": "deno test --allow-all supabase/functions/tests/deno-test.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
