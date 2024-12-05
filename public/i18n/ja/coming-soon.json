@@ -1,7 +1,7 @@
 {
   "badge": "早期割引",
-  "button": "ウェイトリストに登録",
   "description": "無料で試せる機会をお見逃しなく",
+  "getCoupon": "クーポンを取得する",
   "incentives": {
     "earlyAccess": {
       "description": "先着登録者は3か月間50%オフ！",
@@ -17,6 +17,9 @@
     }
   },
   "input": {
+    "company": "会社名",
+    "email": "メールアドレス",
+    "name": "お名前",
     "placeholder": "メールアドレスを入力してください"
   },
   "rating": "{{count}}人以上のアーリーアダプターが登録しています",
