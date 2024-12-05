@@ -21,7 +21,10 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "i18next-extract": "babel 'src/**/*.{js,jsx,ts,tsx}' --config-file ./babel.config.cjs --extensions '.js,.jsx,.ts,.tsx' --out-file /dev/null"
+    "i18next-extract": "babel 'src/**/*.{js,jsx,ts,tsx}' --config-file ./babel.config.cjs --extensions '.js,.jsx,.ts,.tsx' --out-file /dev/null",
+    "supabase:start": "supabase start",
+    "supabase:dev": "supabase functions serve --no-verify-jwt --env-file .env",
+    "supabase:stop": "supabase stop"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
