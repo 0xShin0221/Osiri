@@ -5,10 +5,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_FUNCTION_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
+      SUPABASE_ANON_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
     steps:
       - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
       - uses: supabase/setup-cli@v1
         with:
           version: latest
       - run: supabase start
-      - run: deno test --allow-all deno-test.ts --env-file .env.local
+      - run: |
+          cd supabase/functions
+          deno task test
