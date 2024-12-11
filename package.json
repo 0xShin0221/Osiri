@@ -23,7 +23,7 @@
     "preview": "vite preview",
     "i18next-extract": "babel 'src/**/*.{js,jsx,ts,tsx}' --config-file ./babel.config.cjs --extensions '.js,.jsx,.ts,.tsx' --out-file /dev/null",
     "supabase:start": "supabase start",
-    "supabase:dev": "supabase functions serve --no-verify-jwt --env-file .env",
+    "supabase:dev": "supabase functions serve --no-verify-jwt --env-file .env --debug",
     "supabase:stop": "supabase stop",
     "supabase-functions-local-serve": "supabase functions serve",
     "supabase-functions-test": "cd supabase/functions&&deno task test"

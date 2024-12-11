@@ -3,6 +3,7 @@ import { EmailPayload } from './utils/types.ts';
 import { sendEmail } from "./utils/resend.ts";
 import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
+import { saveToWaitlist } from "../_shared/db.ts";
 
 const getTemplateContent = (template: string, language: string, data?: Record<string, any>) => {
   console.info('getTemplateContent Input:', { template, language, data });
@@ -25,6 +26,9 @@ Deno.serve(handleWithCors(async (req) => {
     if (!to || !template || !language) {
       throw new Error("Missing required fields in request body");
     }
+
+    await saveToWaitlist(to, language, data);
+
     const emailContent = getTemplateContent(template, language, data);
     console.info('Email content:', emailContent);
     const result = await sendEmail(to, emailContent.subject, emailContent.html);
