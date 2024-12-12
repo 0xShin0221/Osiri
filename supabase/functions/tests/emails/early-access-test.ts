@@ -4,7 +4,7 @@ import { getEarlyAccessTemplate } from '../../emails/templates/early-access/inde
 
 // These keys are used on the gh actions.Pls don't change it  
 const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
-const FUNCTION_URL = Deno.env.get('SUPABASE_FUNCTION_URL') ?? '';
+const FUNCTION_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const FUNCTION_API_URL = `${FUNCTION_URL}/functions/v1`;
 
 
