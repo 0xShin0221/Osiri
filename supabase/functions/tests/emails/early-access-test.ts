@@ -30,7 +30,6 @@ const testTemplateContent = () => {
 
 const testEmailSending = async () => {
  const testEmail = 'test@osiri.xyz';
- 
  const response = await fetch(`${FUNCTION_API_URL}/emails`, {
    method: 'POST',
    headers: {

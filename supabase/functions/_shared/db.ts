@@ -9,8 +9,8 @@ interface WaitlistEntry {
 }
 
 const supabase = createClient(
-  Deno.env.get('LOCAL_SUPABASE_FUNCTION_URL') ?? '',
-  Deno.env.get('LOCAL_SUPABASE_ANON_KEY') ?? ''
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_ANON_KEY') ?? ''
 );
 
 export const saveToWaitlist = async (
