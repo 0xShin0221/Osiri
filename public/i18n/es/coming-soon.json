@@ -1,0 +1,30 @@
+{
+  "badge": "Descuento anticipado",
+  "description": "No pierdas la oportunidad de probarlo gratis",
+  "getCoupon": "Obtener cupón",
+  "incentives": {
+    "earlyAccess": {
+      "description": "¡Los primeros en registrarse obtienen un 50% de descuento durante 3 meses!",
+      "title": "50% de descuento"
+    },
+    "earlyAccessAnnually": {
+      "description": "Normalmente $980/mes, ¡los primeros registrados obtienen 3 meses gratis!",
+      "title": "Ahorra más de $3000 al año"
+    },
+    "earlyAccessLifetime": {
+      "description": "Accede a todas las funciones premium a un precio especial",
+      "title": "Acceso completo"
+    }
+  },
+  "input": {
+    "company": "Nombre de la empresa",
+    "email": "Dirección de correo electrónico",
+    "name": "Tu nombre",
+    "placeholder": "Introduce tu dirección de correo electrónico"
+  },
+  "rating": "Más de {{count}} usuarios tempranos ya se han registrado",
+  "rating_0": "",
+  "rating_plural": "",
+  "subtitle": "¡Consigue tu cupón especial!",
+  "title": "Antes del lanzamiento"
+}

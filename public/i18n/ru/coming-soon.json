@@ -1,0 +1,29 @@
+{
+  "badge": "",
+  "description": "",
+  "getCoupon": "",
+  "incentives": {
+    "earlyAccess": {
+      "description": "",
+      "title": ""
+    },
+    "earlyAccessAnnually": {
+      "description": "",
+      "title": ""
+    },
+    "earlyAccessLifetime": {
+      "description": "",
+      "title": ""
+    }
+  },
+  "input": {
+    "company": "",
+    "email": "",
+    "name": ""
+  },
+  "rating_0": "",
+  "rating_1": "",
+  "rating_2": "",
+  "subtitle": "",
+  "title": ""
+}
