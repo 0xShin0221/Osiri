@@ -1,0 +1,273 @@
+{
+  "Start Free Trial": "",
+  "about": {
+    "description": "",
+    "stats": {
+      "languages": "",
+      "sources": "",
+      "updates": ""
+    },
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "cta": {
+    "buttons": {
+      "primary": "",
+      "secondary": ""
+    },
+    "description": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "faq": {
+    "contact": {
+      "link": "",
+      "text": ""
+    },
+    "items": {
+      "cancel": {
+        "answer": "",
+        "question": ""
+      },
+      "trial": {
+        "answer": "",
+        "question": ""
+      }
+    },
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "features": {
+    "cards": {
+      "ai_insights": {
+        "description": "",
+        "title": ""
+      },
+      "effortless_discovery": {
+        "description": "",
+        "title": ""
+      },
+      "global_intelligence": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "categories": {
+      "ai_ml": "",
+      "engineering": "",
+      "founder_insights": "",
+      "future_work": "",
+      "growth": "",
+      "innovation": "",
+      "product_design": "",
+      "saas_enterprise": "",
+      "startup_stories": "",
+      "tech_news": "",
+      "vc_investments": "",
+      "web3_fintech": ""
+    },
+    "section": {
+      "highlight": "",
+      "title": ""
+    }
+  },
+  "footer": {
+    "product": {
+      "faq": "",
+      "features": "",
+      "personas": "",
+      "pricing": "",
+      "title": ""
+    },
+    "social": {
+      "title": ""
+    },
+    "support": {
+      "help": "",
+      "privacy": "",
+      "terms": "",
+      "title": ""
+    }
+  },
+  "hero": {
+    "cta": "",
+    "description": "",
+    "learnMore": "",
+    "subtitle": "",
+    "title": ""
+  },
+  "heroCard": {
+    "feature": {
+      "description": "",
+      "title": ""
+    },
+    "news": {
+      "badge": "",
+      "summary": "",
+      "title": ""
+    },
+    "pricing": {
+      "badge": "",
+      "description": "",
+      "feature": {
+        "feed": "",
+        "sources": "",
+        "summaries": ""
+      },
+      "period": "",
+      "plan": "",
+      "price": ""
+    },
+    "testimonial": {
+      "name": "",
+      "quote": "",
+      "role": ""
+    }
+  },
+  "howItWorks": {
+    "steps": {
+      "analyze": {
+        "description": "",
+        "title": ""
+      },
+      "collect": {
+        "description": "",
+        "title": ""
+      },
+      "personalize": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "media": {
+    "subtitle": "",
+    "title": {
+      "main": "",
+      "prefix": ""
+    }
+  },
+  "menu": {
+    "faq": "",
+    "features": "",
+    "login": "",
+    "personas": "",
+    "pricing": ""
+  },
+  "newsletter": {
+    "button": "",
+    "description": "",
+    "emailLabel": "",
+    "placeholder": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "personas": {
+    "image": {
+      "alt": ""
+    },
+    "list": {
+      "founder": {
+        "description": "",
+        "title": ""
+      },
+      "investor": {
+        "description": "",
+        "title": ""
+      },
+      "product": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "pricing": {
+    "period": "",
+    "plans": {
+      "enterprise": {
+        "benefit1": "",
+        "benefit2": "",
+        "benefit3": "",
+        "benefit4": "",
+        "benefit5": "",
+        "button": "",
+        "description": "",
+        "price": "",
+        "title": ""
+      },
+      "pro": {
+        "benefit1": "",
+        "benefit2": "",
+        "benefit3": "",
+        "benefit4": "",
+        "benefit5": "",
+        "button": "",
+        "description": "",
+        "price": "",
+        "title": ""
+      },
+      "trial": {
+        "benefit1": "",
+        "benefit2": "",
+        "benefit3": "",
+        "benefit4": "",
+        "benefit5": "",
+        "button": "",
+        "description": "",
+        "price": "",
+        "title": ""
+      }
+    },
+    "popularBadge": "",
+    "subtitle": "",
+    "title": {
+      "end": "",
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "seo": {
+    "description": "",
+    "title": ""
+  },
+  "team": {
+    "members": {
+      "leo": {
+        "description": "",
+        "name": "",
+        "position": ""
+      },
+      "shin": {
+        "description": "",
+        "name": "",
+        "position": ""
+      }
+    },
+    "social": {
+      "icon": ""
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  }
+}

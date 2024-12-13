@@ -1,5 +1,6 @@
 {
   "badge": "早鸟优惠",
+  "description": "",
   "getCoupon": "获取优惠券",
   "incentives": {
     "earlyAccess": {

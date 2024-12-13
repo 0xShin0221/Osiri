@@ -1,0 +1,277 @@
+{
+  "Start Free Trial": "Comenzar gratis",
+  "about": {
+    "description": "Recopilamos y analizamos las tendencias de la industria tecnológica global cada hora, con resúmenes generados por IA en tu idioma. Obtén información en tiempo real de más de 200 fuentes confiables sobre startups, ingeniería y productos.",
+    "stats": {
+      "languages": "Más de 10 idiomas",
+      "sources": "Más de 200 fuentes",
+      "updates": "Actualizaciones por hora"
+    },
+    "title": {
+      "highlight": "global",
+      "main": "Información tech de forma inteligente"
+    }
+  },
+  "cta": {
+    "buttons": {
+      "primary": "Comenzar gratis",
+      "secondary": "Ver características"
+    },
+    "description": "Mantente informado sobre tecnología y startups globales en español, de manera simple. Prueba gratis durante 7 días y descubre una nueva forma de seguir las noticias.",
+    "title": {
+      "highlight": "más inteligente",
+      "main": "Una forma"
+    }
+  },
+  "faq": {
+    "contact": {
+      "link": "contáctanos.",
+      "text": "Para cualquier otra pregunta,"
+    },
+    "items": {
+      "cancel": {
+        "answer": "Puedes cancelar tu suscripción en la aplicación a través de Configuración > Plan > Cancelar suscripción.",
+        "question": "¿Cómo puedo cancelar mi suscripción?"
+      },
+      "trial": {
+        "answer": "Sí, ofrecemos una prueba gratuita de 7 días. Si cancelas después de 7 días, el uso durante el período de prueba sigue siendo gratuito.",
+        "question": "¿Hay un período de prueba gratuito?"
+      }
+    },
+    "title": {
+      "highlight": "frecuentes",
+      "main": "Preguntas"
+    }
+  },
+  "features": {
+    "cards": {
+      "ai_insights": {
+        "description": "Convierte artículos largos en resúmenes concisos con la última tecnología GPT. Reduce horas de lectura a segundos.",
+        "title": "Resúmenes impulsados por IA"
+      },
+      "effortless_discovery": {
+        "description": "Sigue las tendencias globales en tu idioma. Supera la barrera del idioma para acceder a información local - lee noticias internacionales tan fácilmente como las locales.",
+        "title": "Descubrimiento sin esfuerzo"
+      },
+      "global_intelligence": {
+        "description": "El ecosistema global de startups al alcance de tu mano. Recopilación y difusión automática de información sobre Tech News, inversiones VC, diseño de productos y más.",
+        "title": "Inteligencia global"
+      }
+    },
+    "categories": {
+      "ai_ml": "IA y Machine Learning",
+      "engineering": "Blogs de ingeniería",
+      "founder_insights": "Perspectivas de fundadores",
+      "future_work": "Futuro del trabajo",
+      "growth": "Crecimiento y Marketing",
+      "innovation": "Innovación e Investigación",
+      "product_design": "Diseño de Producto",
+      "saas_enterprise": "SaaS y Empresa",
+      "startup_stories": "Historias de startups",
+      "tech_news": "Noticias Tech",
+      "vc_investments": "VC e Inversiones",
+      "web3_fintech": "Web3 y Fintech"
+    },
+    "section": {
+      "highlight": "características",
+      "title": "Principales"
+    }
+  },
+  "footer": {
+    "product": {
+      "faq": "Preguntas frecuentes",
+      "features": "Características",
+      "personas": "Usuarios objetivo",
+      "pricing": "Precios",
+      "title": "Acerca de"
+    },
+    "social": {
+      "title": "Síguenos"
+    },
+    "support": {
+      "help": "Centro de ayuda",
+      "privacy": "Política de privacidad",
+      "terms": "Términos de uso",
+      "title": "Soporte"
+    }
+  },
+  "hero": {
+    "cta": "Comenzar gratis",
+    "description": "Lee eficientemente en español en 3 minutos al día. ¡Consulta fácilmente las últimas noticias internacionales con resúmenes de IA!",
+    "feature": {
+      "description": "Las últimas noticias tech globales en tu idioma.",
+      "title": "La herramienta definitiva de información"
+    },
+    "learnMore": "Ver características",
+    "subtitle": "AI NewsFeed",
+    "title": "Startups internacionales"
+  },
+  "heroCard": {
+    "feature": {
+      "description": "Las últimas noticias tech globales en tu idioma.",
+      "title": "La herramienta definitiva de información"
+    },
+    "news": {
+      "badge": "Noticias destacadas",
+      "summary": "El último avance en IA transforma el uso de modelos de lenguaje en negocios. Análisis en tiempo real de desarrollos importantes.",
+      "title": "Anthropic anuncia Claude 3 enhans"
+    },
+    "pricing": {
+      "badge": "Plan popular",
+      "description": "Prueba todas las funciones gratis",
+      "feature": {
+        "feed": "Feed personalizado",
+        "sources": "Más de 200 fuentes seleccionadas",
+        "summaries": "Resúmenes IA"
+      },
+      "period": "/ 7 días",
+      "plan": "Prueba gratuita",
+      "price": "€0"
+    },
+    "testimonial": {
+      "name": "Sara Chen",
+      "quote": "¡Perfecto para fundadores ocupados!",
+      "role": "thisicon.com"
+    }
+  },
+  "howItWorks": {
+    "steps": {
+      "analyze": {
+        "description": "La IA analiza y prioriza la importancia de los artículos. Evalúa el valor, tendencia y relevancia de la información para seleccionar solo lo esencial.",
+        "title": "Resúmenes legibles por IA"
+      },
+      "collect": {
+        "description": "Recopilación automática de las últimas noticias locales sobre startups, tecnología e inversiones de más de 200 medios internacionales cada hora.",
+        "title": "Recopilación global automatizada"
+      },
+      "personalize": {
+        "description": "Distribución prioritaria de información en tus áreas de interés. Sigue las últimas tendencias internacionales tan fácilmente como las noticias locales.",
+        "title": "Personalización a medida"
+      }
+    },
+    "subtitle": "Sigue fácilmente las tendencias de startups y tech globales en tu idioma",
+    "title": {
+      "highlight": "fácilmente",
+      "main": "Información global"
+    }
+  },
+  "media": {
+    "subtitle": "Una fuente única de información seleccionada, desde grandes medios tech hasta blogs de ingeniería, desde insights de fundadores hasta investigación de vanguardia",
+    "title": {
+      "main": "Fuentes de medios y blogs reconocidos",
+      "prefix": "200+"
+    }
+  },
+  "menu": {
+    "faq": "Preguntas frecuentes",
+    "features": "Características",
+    "login": "Iniciar sesión",
+    "personas": "Usuarios objetivo",
+    "pricing": "Precios"
+  },
+  "newsletter": {
+    "button": "Suscribirse",
+    "description": "Recibe por email las nuevas funcionalidades y las últimas noticias tech diariamente.",
+    "emailLabel": "Correo electrónico",
+    "placeholder": "Ingresa tu correo electrónico",
+    "title": {
+      "highlight": "actualizaciones",
+      "main": "App Osiri"
+    }
+  },
+  "personas": {
+    "image": {
+      "alt": "Lector de noticias personalizado con IA"
+    },
+    "list": {
+      "founder": {
+        "description": "Sigue en tiempo real las tendencias del mercado, movimientos de competidores y tecnologías emergentes. Recibe los insights necesarios para la toma de decisiones estratégicas directamente desde el frente de innovación tech.",
+        "title": "Para fundadores y directivos"
+      },
+      "investor": {
+        "description": "Monitorea constantemente startups prometedoras, información de financiamiento y señales del mercado. Accede a un análisis completo de tendencias tecnológicas y oportunidades de inversión.",
+        "title": "Para inversores y VCs"
+      },
+      "product": {
+        "description": "Captura las últimas innovaciones de producto, tendencias de diseño y casos de éxito. Aprende de los líderes del sector y evoluciona tu estrategia de producto.",
+        "title": "Para líderes y managers de producto"
+      }
+    },
+    "subtitle": "Soporte de recopilación eficiente para personas ocupadas. La IA selecciona información optimizada para tu rol.",
+    "title": {
+      "highlight": "usuarios",
+      "main": "¿Para qué"
+    }
+  },
+  "pricing": {
+    "period": "/ mes",
+    "plans": {
+      "enterprise": {
+        "benefit1": "Todas las funciones Pro",
+        "benefit2": "Acceso API",
+        "benefit3": "Integraciones personalizadas",
+        "benefit4": "Soporte dedicado",
+        "benefit5": "Gestión de equipo",
+        "button": "Contactar",
+        "description": "Para equipos que necesitan uso a gran escala y personalización",
+        "price": "Consultar",
+        "title": "Empresa"
+      },
+      "pro": {
+        "benefit1": "Todas las funciones de prueba",
+        "benefit2": "Análisis IA avanzado",
+        "benefit3": "Búsqueda histórica/Favoritos",
+        "benefit4": "Soporte prioritario",
+        "benefit5": "Feed personalizado",
+        "button": "Comenzar",
+        "description": "Para profesionales que desean todas las funciones",
+        "price": "€9",
+        "title": "Pro"
+      },
+      "trial": {
+        "benefit1": "Más de 200 fuentes",
+        "benefit2": "Resúmenes IA",
+        "benefit3": "Soporte en español",
+        "benefit4": "Soporte por email",
+        "benefit5": "Acceso 7 días",
+        "button": "Comenzar gratis",
+        "description": "Prueba Osiri durante 7 días",
+        "price": "€0",
+        "title": "Prueba gratuita"
+      }
+    },
+    "popularBadge": "Plan popular",
+    "subtitle": "Comienza con la prueba gratuita. Las funciones que necesitas, cuando las necesitas.",
+    "title": {
+      "end": "comenzar",
+      "highlight": "precios",
+      "main": "Planes de"
+    }
+  },
+  "seo": {
+    "description": "Las últimas noticias de startups internacionales resumidas en español por IA. Sigue tendencias tech, financiamiento e innovación. Prueba gratuita disponible.",
+    "title": "Osiri | Noticias de startups internacionales resumidas por IA | Última información tech"
+  },
+  "team": {
+    "members": {
+      "leo": {
+        "description": "Desarrollador freelance full-stack y contribuidor de código abierto.",
+        "name": "Leopold Miranda",
+        "position": "Lead Tech"
+      },
+      "shin": {
+        "description": "3 experiencias emprendedoras y más de 10 años de experiencia full-stack. Hacer accesible la información tech global para todos.",
+        "name": "Shin",
+        "position": "Product Owner"
+      }
+    },
+    "social": {
+      "icon": "Ícono"
+    },
+    "subtitle": "Un equipo de ingenieros experimentados de nivel CTO/VP comprometido con Osiri.",
+    "title": {
+      "highlight": "equipo",
+      "main": "Nuestro"
+    }
+  }
+}
