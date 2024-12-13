@@ -1,10 +1,6 @@
 name: Create a pull request to main
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - develop
   push:
     branches:
       - develop
@@ -31,5 +27,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GIT_PR_RELEASE_BRANCH_PRODUCTION: main
           GIT_PR_RELEASE_BRANCH_STAGING: develop
+          GIT_PR_RELEASE_LABELS: release
           NPM_VERSION: v${{ steps.package-version.outputs.current-version}}
-          GIT_PR_RELEASE_TEMPLATE: .git-pr-release-template
+          GIT_PR_RELEASE_TEMPLATE: .github/PULL_REQUEST_TEMPLATE/.git-pr-template

@@ -31,4 +31,4 @@ jobs:
           GIT_PR_RELEASE_BRANCH_STAGING: main
           GIT_PR_RELEASE_LABELS: release
           NPM_VERSION: v${{ steps.package-version.outputs.current-version}}
-          GIT_PR_RELEASE_TEMPLATE: .git-pr-template
+          GIT_PR_RELEASE_TEMPLATE: .github/PULL_REQUEST_TEMPLATE/.git-pr-template
