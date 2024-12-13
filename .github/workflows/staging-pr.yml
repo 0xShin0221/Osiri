@@ -22,36 +22,24 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-      - name: Check for existing PR
-        id: check-pr
-        uses: actions/github-script@v6
+      - name: Find existing PR
+        id: find-pr
+        uses: jwalton/gh-find-current-pr@v1.3.3
         with:
-          script: |
-            const { data: pullRequests } = await github.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head: `develop`,
-              base: `main`,
-              state: 'open',
-            });
-            if (pullRequests.length > 0) {
-              core.setOutput('pr_number', pullRequests[0].number);
-            } else {
-              core.setOutput('pr_number', '');
-            }
+          state: open
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update existing PR
-        if: ${{ steps.check-pr.outputs.pr_number != '' }}
+        if: ${{ steps.find-pr.outputs.number }}
         run: |
-          echo "Updating existing PR #${{ steps.check-pr.outputs.pr_number }}"
-          gh pr comment ${{ steps.check-pr.outputs.pr_number }} --body "New updates pushed to develop. Review changes!"
+          echo "Updating existing PR #${{ steps.find-pr.outputs.number }}"
+          gh pr comment ${{ steps.find-pr.outputs.number }} --body "New updates pushed to develop. Review changes!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create a new PR
-        if: ${{ steps.check-pr.outputs.pr_number == '' }}
+        if: ${{ !steps.find-pr.outputs.number }}
         run: |
           echo "Creating a new PR"
           gh pr create --base main --head develop --title "Sync develop to main" --body "This PR merges changes from develop into main."
