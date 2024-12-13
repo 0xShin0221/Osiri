@@ -1,32 +1,53 @@
-name: Create a pull request to main
+name: Sync develop to main
 
 on:
   push:
     branches:
       - develop
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+
 jobs:
-  create-main-pr:
+  sync-develop-to-main:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
+      - name: Set up GitHub CLI
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - run: npm install -g @actions/github-script
 
-      - name: echo-npm-version
-        id: echo-version
+      - name: Configure Git
         run: |
-          echo v${{ steps.package-version.outputs.current-version}}
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
-      - name: Create a main pull request
-        uses: bakunyo/git-pr-release-action@master
+      - name: Check for existing PR
+        id: check-pr
+        run: |
+          PR=$(gh pr list --base main --head develop --json number --jq '.[].number')
+          echo "PR_NUMBER=$PR" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
-          GIT_PR_RELEASE_BRANCH_STAGING: develop
-          GIT_PR_RELEASE_LABELS: release
-          NPM_VERSION: v${{ steps.package-version.outputs.current-version}}
-          GIT_PR_RELEASE_TEMPLATE: .github/PULL_REQUEST_TEMPLATE/.git-pr-template
+
+      - name: Update existing PR
+        if: env.PR_NUMBER != ''
+        run: |
+          echo "Updating existing PR #${PR_NUMBER}."
+          gh pr comment $PR_NUMBER --body "New updates pushed to develop. Review changes!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create a new PR
+        if: env.PR_NUMBER == ''
+        run: |
+          echo "No existing PR found. Creating a new one."
+          gh pr create --base main --head develop --title "Sync develop to main" --body "This PR merges changes from develop into main."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
