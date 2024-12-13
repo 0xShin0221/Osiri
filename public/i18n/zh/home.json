@@ -1,273 +1,135 @@
 {
-  "Start Free Trial": "",
+  "Start Free Trial": "免费开始",
   "about": {
-    "description": "",
+    "description": "每小时收集和分析全球科技行业动态，AI为您提供母语摘要。从200多个可靠信息源实时提供有关初创企业、工程、产品等领域的见解。",
     "stats": {
-      "languages": "",
-      "sources": "",
-      "updates": ""
+      "languages": "10多种语言",
+      "sources": "200多个信息源",
+      "updates": "每小时更新"
     },
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "全球",
+      "main": "智能获取科技资讯"
     }
   },
   "cta": {
     "buttons": {
-      "primary": "",
-      "secondary": ""
+      "primary": "免费开始",
+      "secondary": "查看详细功能"
     },
-    "description": "",
+    "description": "轻松获取全球科技和创业资讯，支持中文阅读。立即体验7天免费试用，探索全新的信息获取方式。",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "更智能地",
+      "main": "获取资讯"
     }
   },
   "faq": {
     "contact": {
-      "link": "",
-      "text": ""
+      "link": "请联系我们。",
+      "text": "如有其他问题，随时"
     },
     "items": {
       "cancel": {
-        "answer": "",
-        "question": ""
+        "answer": "您可以在应用内的"设置">"套餐"中选择"取消套餐"来完成取消。",
+        "question": "如何取消订阅？"
       },
       "trial": {
-        "answer": "",
-        "question": ""
+        "answer": "是的，我们提供7天免费试用。如果在7天后取消，试用期间的使用完全免费。",
+        "question": "有免费试用吗？"
       }
     },
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "问题",
+      "main": "常见"
     }
   },
   "features": {
     "cards": {
       "ai_insights": {
-        "description": "",
-        "title": ""
+        "description": "使用最新的GPT技术将长文转化为简洁摘要。将需要数小时的信息收集压缩至数秒完成。",
+        "title": "AI驱动的摘要功能"
       },
       "effortless_discovery": {
-        "description": "",
-        "title": ""
+        "description": "用母语把握全球趋势。跨越语言障碍，轻松获取当地第一手信息 - 像读本地新闻一样轻松阅读国际新闻。",
+        "title": "高效信息获取"
       },
       "global_intelligence": {
-        "description": "",
-        "title": ""
+        "description": "将全球创业生态系统尽在掌握。自动收集和推送科技新闻、风投投资、产品设计等广泛信息。",
+        "title": "全球创业资讯"
       }
     },
     "categories": {
-      "ai_ml": "",
-      "engineering": "",
-      "founder_insights": "",
-      "future_work": "",
-      "growth": "",
-      "innovation": "",
-      "product_design": "",
-      "saas_enterprise": "",
-      "startup_stories": "",
-      "tech_news": "",
-      "vc_investments": "",
-      "web3_fintech": ""
+      "ai_ml": "AI・机器学习",
+      "engineering": "工程博客",
+      "founder_insights": "创始人见解",
+      "future_work": "未来工作方式",
+      "growth": "增长・营销",
+      "innovation": "创新・研究",
+      "product_design": "产品设计",
+      "saas_enterprise": "SaaS・企业服务",
+      "startup_stories": "创业故事",
+      "tech_news": "科技新闻",
+      "vc_investments": "风投・投资",
+      "web3_fintech": "Web3・金融科技"
     },
     "section": {
-      "highlight": "",
-      "title": ""
+      "highlight": "功能",
+      "title": "主要"
     }
   },
   "footer": {
     "product": {
-      "faq": "",
-      "features": "",
-      "personas": "",
-      "pricing": "",
-      "title": ""
+      "faq": "常见问题",
+      "features": "功能",
+      "personas": "目标用户",
+      "pricing": "价格方案",
+      "title": "关于"
     },
     "social": {
-      "title": ""
+      "title": "关注我们"
     },
     "support": {
-      "help": "",
-      "privacy": "",
-      "terms": "",
-      "title": ""
+      "help": "帮助中心",
+      "privacy": "隐私政策",
+      "terms": "使用条款",
+      "title": "支持"
     }
   },
   "hero": {
-    "cta": "",
-    "description": "",
-    "learnMore": "",
-    "subtitle": "",
-    "title": ""
+    "cta": "免费开始",
+    "description": "每天3分钟，轻松用中文高效阅读。通过AI摘要轻松查看最新国际新闻！",
+    "feature": {
+      "description": "用您的语言传递全球最新科技资讯。",
+      "title": "最强大的信息获取工具"
+    },
+    "learnMore": "查看功能",
+    "subtitle": "AI新闻聚合",
+    "title": "国际创业"
   },
   "heroCard": {
     "feature": {
-      "description": "",
-      "title": ""
+      "description": "用您的语言传递全球最新科技资讯。",
+      "title": "最强大的信息获取工具"
     },
     "news": {
-      "badge": "",
-      "summary": "",
-      "title": ""
+      "badge": "焦点新闻",
+      "summary": "最新AI突破改变企业语言模型应用。实时分析重要进展。",
+      "title": "Anthropic发布Claude 3 enhans"
     },
     "pricing": {
-      "badge": "",
-      "description": "",
+      "badge": "热门方案",
+      "description": "0元体验所有功能",
       "feature": {
-        "feed": "",
-        "sources": "",
-        "summaries": ""
+        "feed": "定制信息流",
+        "sources": "200多个精选来源",
+        "summaries": "AI摘要功能"
       },
-      "period": "",
-      "plan": "",
-      "price": ""
-    },
-    "testimonial": {
-      "name": "",
-      "quote": "",
-      "role": ""
+      "period": "/ 7天",
+      "plan": "免费试用",
+      "price": "¥0"
     }
   },
-  "howItWorks": {
-    "steps": {
-      "analyze": {
-        "description": "",
-        "title": ""
-      },
-      "collect": {
-        "description": "",
-        "title": ""
-      },
-      "personalize": {
-        "description": "",
-        "title": ""
-      }
-    },
-    "subtitle": "",
-    "title": {
-      "highlight": "",
-      "main": ""
-    }
-  },
-  "media": {
-    "subtitle": "",
-    "title": {
-      "main": "",
-      "prefix": ""
-    }
-  },
-  "menu": {
-    "faq": "",
-    "features": "",
-    "login": "",
-    "personas": "",
-    "pricing": ""
-  },
-  "newsletter": {
-    "button": "",
-    "description": "",
-    "emailLabel": "",
-    "placeholder": "",
-    "title": {
-      "highlight": "",
-      "main": ""
-    }
-  },
-  "personas": {
-    "image": {
-      "alt": ""
-    },
-    "list": {
-      "founder": {
-        "description": "",
-        "title": ""
-      },
-      "investor": {
-        "description": "",
-        "title": ""
-      },
-      "product": {
-        "description": "",
-        "title": ""
-      }
-    },
-    "subtitle": "",
-    "title": {
-      "highlight": "",
-      "main": ""
-    }
-  },
-  "pricing": {
-    "period": "",
-    "plans": {
-      "enterprise": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
-      },
-      "pro": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
-      },
-      "trial": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
-      }
-    },
-    "popularBadge": "",
-    "subtitle": "",
-    "title": {
-      "end": "",
-      "highlight": "",
-      "main": ""
-    }
-  },
-  "seo": {
-    "description": "",
-    "title": ""
-  },
-  "team": {
-    "members": {
-      "leo": {
-        "description": "",
-        "name": "",
-        "position": ""
-      },
-      "shin": {
-        "description": "",
-        "name": "",
-        "position": ""
-      }
-    },
-    "social": {
-      "icon": ""
-    },
-    "subtitle": "",
-    "title": {
-      "highlight": "",
-      "main": ""
-    }
-  }
+  "backHome": "返回首页",
+  "description": "抱歉，找不到您要访问的页面。该页面可能已被删除或URL有误。",
+  "title": "页面未找到",
 }
