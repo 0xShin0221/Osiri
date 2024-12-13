@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    branches:
+      - develop
+    types: [closed]
 jobs:
   create-release-pr:
     runs-on: ubuntu-latest
