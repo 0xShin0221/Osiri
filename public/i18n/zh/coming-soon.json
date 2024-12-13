@@ -1,0 +1,30 @@
+{
+  "badge": "早鸟优惠",
+  "description": "",
+  "getCoupon": "获取优惠券",
+  "incentives": {
+    "earlyAccess": {
+      "description": "前期注册用户可享受3个月50%折扣！",
+      "title": "50%折扣"
+    },
+    "earlyAccessAnnually": {
+      "description": "原价每月980日元，前期注册用户可享受3个月免费！",
+      "title": "年省3000日元以上"
+    },
+    "earlyAccessLifetime": {
+      "description": "所有高级功能均可享受优惠价格",
+      "title": "完整访问权限"
+    }
+  },
+  "input": {
+    "company": "公司名称",
+    "email": "电子邮箱",
+    "name": "姓名",
+    "placeholder": "请输入您的电子邮箱"
+  },
+  "rating": "已有{{count}}名早期用户注册",
+  "rating_0": "",
+  "rating_plural": "",
+  "subtitle": "获取优惠券！",
+  "title": "产品发布前"
+}

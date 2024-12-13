@@ -1,0 +1,30 @@
+{
+  "badge": "Desconto antecipado",
+  "description": "Não perca a oportunidade de experimentar gratuitamente",
+  "getCoupon": "Obter cupom",
+  "incentives": {
+    "earlyAccess": {
+      "description": "Os primeiros inscritos recebem 50% de desconto por 3 meses!",
+      "title": "50% de desconto"
+    },
+    "earlyAccessAnnually": {
+      "description": "Normalmente R$980/mês, os primeiros inscritos recebem 3 meses grátis!",
+      "title": "Economize mais de R$3000 por ano"
+    },
+    "earlyAccessLifetime": {
+      "description": "Acesse todos os recursos premium com um preço especial",
+      "title": "Acesso total"
+    }
+  },
+  "input": {
+    "company": "Nome da empresa",
+    "email": "Endereço de e-mail",
+    "name": "Seu nome",
+    "placeholder": "Digite seu endereço de e-mail"
+  },
+  "rating": "Mais de {{count}} early adopters já se inscreveram",
+  "rating_0": "",
+  "rating_plural": "",
+  "subtitle": "Garanta seu cupom especial!",
+  "title": "Antes do lançamento"
+}

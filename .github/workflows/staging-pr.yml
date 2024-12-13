@@ -1,0 +1,47 @@
+name: Sync develop to main
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+
+jobs:
+  sync-develop-to-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Find existing PR
+        id: find-pr
+        uses: jwalton/gh-find-current-pr@v1.3.3
+        with:
+          state: open
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update existing PR
+        if: ${{ steps.find-pr.outputs.number }}
+        run: |
+          echo "Updating existing PR #${{ steps.find-pr.outputs.number }}"
+          gh pr comment ${{ steps.find-pr.outputs.number }} --body "New updates pushed to develop. Review changes!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create a new PR
+        if: ${{ !steps.find-pr.outputs.number }}
+        run: |
+          echo "Creating a new PR"
+          gh pr create --base main --head develop --title "Sync develop to main" --body "This PR merges changes from develop into main."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,277 @@
+{
+  "Start Free Trial": "무료로 시작하기",
+  "about": {
+    "description": "전 세계 기술 산업 동향을 1시간마다 수집·분석하여 AI가 당신의 언어로 요약해 제공합니다. 스타트업, 엔지니어링, 제품 등 200개 이상의 신뢰할 수 있는 정보원에서 실시간으로 인사이트를 제공합니다.",
+    "stats": {
+      "languages": "10개 이상의 언어",
+      "sources": "200개 이상의 정보원",
+      "updates": "1시간마다 업데이트"
+    },
+    "title": {
+      "highlight": "글로벌",
+      "main": "테크 정보를 스마트하게 인풋"
+    }
+  },
+  "cta": {
+    "buttons": {
+      "primary": "무료로 시작하기",
+      "secondary": "기능 자세히 보기"
+    },
+    "description": "전 세계 테크 및 스타트업 정보를 한국어로 쉽고 빠르게 인풋하세요. 7일 무료 체험으로 새로운 정보 수집 방식을 경험해보세요.",
+    "title": {
+      "highlight": "더 스마트하게",
+      "main": "정보 수집을"
+    }
+  },
+  "faq": {
+    "contact": {
+      "link": "문의해 주세요.",
+      "text": "기타 문의사항은 언제든지"
+    },
+    "items": {
+      "cancel": {
+        "answer": "해지는 앱 내 '설정' '플랜'에서 '플랜 취소'로 가능합니다.",
+        "question": "해지 방법을 알려주세요"
+      },
+      "trial": {
+        "answer": "네, 7일간의 무료 체험을 제공하고 있습니다. 7일 후 해지하시면 그동안의 이용료는 무료로 사용하실 수 있습니다.",
+        "question": "무료 체험이 있나요?"
+      }
+    },
+    "title": {
+      "highlight": "문의사항",
+      "main": "자주 묻는"
+    }
+  },
+  "features": {
+    "cards": {
+      "ai_insights": {
+        "description": "최신 GPT 기술로 긴 글을 간단한 요약으로 변환. 몇 시간이 걸리는 정보 수집을 몇 초 만에 완료할 수 있습니다.",
+        "title": "AI 탑재 요약 기능"
+      },
+      "effortless_discovery": {
+        "description": "모국어로 세계의 트렌드를 캐치업. 언어의 장벽을 넘어 현지의 생생한 정보에 접근 - 해외 뉴스를 로컬 뉴스처럼 쉽게.",
+        "title": "효율적인 정보 수집"
+      },
+      "global_intelligence": {
+        "description": "전 세계 스타트업 생태계를 당신의 손안에. Tech News, VC 투자, 제품 디자인 등 폭넓은 정보를 자동으로 수집·배포합니다.",
+        "title": "글로벌 스타트업 정보"
+      }
+    },
+    "categories": {
+      "ai_ml": "AI·기계학습",
+      "engineering": "엔지니어링 블로그",
+      "founder_insights": "창업자의 인사이트",
+      "future_work": "미래의 일하는 방식",
+      "growth": "그로스·마케팅",
+      "innovation": "혁신·연구",
+      "product_design": "제품 디자인",
+      "saas_enterprise": "SaaS·엔터프라이즈",
+      "startup_stories": "스타트업 스토리",
+      "tech_news": "테크 뉴스",
+      "vc_investments": "VC·투자",
+      "web3_fintech": "Web3·핀테크"
+    },
+    "section": {
+      "highlight": "기능",
+      "title": "메인"
+    }
+  },
+  "footer": {
+    "product": {
+      "faq": "자주 묻는 질문",
+      "features": "기능",
+      "personas": "대상 사용자",
+      "pricing": "요금제",
+      "title": "About"
+    },
+    "social": {
+      "title": "Follow Us"
+    },
+    "support": {
+      "help": "고객센터",
+      "privacy": "개인정보 처리방침",
+      "terms": "이용약관",
+      "title": "Support"
+    }
+  },
+  "hero": {
+    "cta": "무료로 시작하기",
+    "description": "하루 3분으로 한국어로 효율적으로 읽을 수 있습니다. 최신 해외 뉴스를 AI 요약으로 쉽게 체크!",
+    "feature": {
+      "description": "해외 최신 테크 정보를 당신의 언어로 전달.",
+      "title": "최강의 정보 수집 도구"
+    },
+    "learnMore": "기능 보기",
+    "subtitle": "AI NewsFeed",
+    "title": "해외 스타트업의"
+  },
+  "heroCard": {
+    "feature": {
+      "description": "해외 최신 테크 정보를 당신의 언어로 전달.",
+      "title": "최강의 정보 수집 도구"
+    },
+    "news": {
+      "badge": "주목할 뉴스",
+      "summary": "최신 AI 브레이크스루가 비즈니스의 언어 모델 활용을 혁신. 중요한 진전을 실시간으로 분석.",
+      "title": "Anthropic이 Claude 3 enhans 발표"
+    },
+    "pricing": {
+      "badge": "인기 플랜",
+      "description": "0원으로 모든 기능을 체험할 수 있습니다",
+      "feature": {
+        "feed": "커스터마이즈 피드",
+        "sources": "200개 이상의 엄선된 소스",
+        "summaries": "AI 요약 기능"
+      },
+      "period": "/ 7일",
+      "plan": "무료 체험",
+      "price": "₩0"
+    },
+    "testimonial": {
+      "name": "사라 첸",
+      "quote": "바쁜 창업자에게 최적입니다!",
+      "role": "thisicon.com"
+    }
+  },
+  "howItWorks": {
+    "steps": {
+      "analyze": {
+        "description": "AI 기술로 기사의 중요도를 분석하고 우선순위를 지정. 정보의 가치, 트렌드성, 관련성을 평가하여 정말 중요한 정보만을 선별합니다.",
+        "title": "AI로 읽기 쉽게 요약"
+      },
+      "collect": {
+        "description": "200개 이상의 해외 미디어에서 스타트업, 기술, 투자 등 현지의 최신 정보를 1시간마다 자동으로 수집합니다.",
+        "title": "글로벌 정보 자동 수집"
+      },
+      "personalize": {
+        "description": "관심 있는 분야의 정보를 우선적으로 제공. 해외의 최신 동향을 마치 로컬 뉴스를 읽는 것처럼 쉽게 확인할 수 있습니다.",
+        "title": "취향에 맞게 커스터마이즈"
+      }
+    },
+    "subtitle": "세계의 스타트업·테크 산업 동향을 모국어로 쉽게 캐치업",
+    "title": {
+      "highlight": "쉽게 인풋",
+      "main": "해외의 최신 정보를"
+    }
+  },
+  "media": {
+    "subtitle": "주요 테크 미디어, 테크 기업의 엔지니어링 블로그, 스타트업 창업자의 인사이트, 최첨단 연구까지, 엄선된 정보를 원스톱으로 제공",
+    "title": {
+      "main": "해외 미디어와 유명 블로그 소스 수",
+      "prefix": "200+"
+    }
+  },
+  "menu": {
+    "faq": "자주 묻는 질문",
+    "features": "기능",
+    "login": "로그인",
+    "personas": "대상 사용자",
+    "pricing": "요금제"
+  },
+  "newsletter": {
+    "button": "구독하기",
+    "description": "개발의 새로운 기능 안내와 최신 테크 뉴스를 매일 이메일로 전달해 드립니다.",
+    "emailLabel": "이메일 주소",
+    "placeholder": "이메일 주소를 입력하세요",
+    "title": {
+      "highlight": "업데이트 정보",
+      "main": "Osiri 앱의"
+    }
+  },
+  "personas": {
+    "image": {
+      "alt": "AI 퍼스널라이즈 뉴스리더"
+    },
+    "list": {
+      "founder": {
+        "description": "시장 동향, 경쟁사의 움직임, 신기술을 실시간으로 파악. 전략적 의사결정에 필요한 인사이트를 테크 산업의 최전선에서 전달합니다.",
+        "title": "스타트업 창업자·경영자용"
+      },
+      "investor": {
+        "description": "유망한 스타트업, 자금조달 정보, 시장 신호를 상시 모니터링. 기술 트렌드와 투자 기회의 포괄적인 분석에 언제든지 접근.",
+        "title": "투자자·VC용"
+      },
+      "product": {
+        "description": "최신 제품 혁신, 디자인 트렌드, 성공 사례를 캐치. 업계 리더의 지식을 배워 자사의 제품 전략 발전에 활용할 수 있습니다.",
+        "title": "제품 리더·매니저용"
+      }
+    },
+    "subtitle": "바쁜 분들을 위한 효율적인 정보 수집을 지원. AI가 당신의 역할에 최적화된 정보를 엄선하여 전달합니다.",
+    "title": {
+      "highlight": "어떤 분이",
+      "main": "대상 사용자인가요?"
+    }
+  },
+  "pricing": {
+    "period": "/ 월",
+    "plans": {
+      "enterprise": {
+        "benefit1": "프로의 모든 기능",
+        "benefit2": "API 이용",
+        "benefit3": "커스텀 연동",
+        "benefit4": "전담 지원",
+        "benefit5": "팀 관리 기능",
+        "button": "문의하기",
+        "description": "대규모 팀 사용·커스터마이징이 필요한 분들을 위한",
+        "price": "협의",
+        "title": "엔터프라이즈"
+      },
+      "pro": {
+        "benefit1": "트라이얼의 모든 기능",
+        "benefit2": "고급 AI 분석",
+        "benefit3": "과거 기사 검색/즐겨찾기 기능",
+        "benefit4": "우선 지원",
+        "benefit5": "커스텀 피드",
+        "button": "이용 시작하기",
+        "description": "모든 기능을 사용하고 싶은 전문가용",
+        "price": "₩900",
+        "title": "프로"
+      },
+      "trial": {
+        "benefit1": "200개 이상의 정보 소스",
+        "benefit2": "AI 요약 기능",
+        "benefit3": "한국어 지원",
+        "benefit4": "이메일 지원",
+        "benefit5": "7일간 접근",
+        "button": "무료로 시작하기",
+        "description": "Osiri의 기능을 7일간 체험할 수 있습니다",
+        "price": "₩0",
+        "title": "무료 체험"
+      }
+    },
+    "popularBadge": "인기 플랜",
+    "subtitle": "무료 체험으로 시작. 필요한 기능을 필요할 때에.",
+    "title": {
+      "end": "으로 시작하기",
+      "highlight": "요금제",
+      "main": "심플한"
+    }
+  },
+  "seo": {
+    "description": "해외 스타트업의 최신 뉴스를 AI가 한국어로 요약. 테크 산업의 트렌드, 자금조달, 혁신 정보 체크. 무료 체험 진행 중.",
+    "title": "Osiri | AI 요약으로 읽는 해외 스타트업 뉴스｜테크 산업의 최신 정보"
+  },
+  "team": {
+    "members": {
+      "leo": {
+        "description": "프리랜서 엔지니어로서 풀스택 개발, OSS 컨트리뷰터.",
+        "name": "레오폴드 미란다",
+        "position": "테크 리드"
+      },
+      "shin": {
+        "description": "3번의 창업 경험과 10년 이상의 풀스택 개발 경험. 글로벌 테크 정보를 누구나 쉽게.",
+        "name": "신",
+        "position": "프로덕트 오너"
+      }
+    },
+    "social": {
+      "icon": "아이콘"
+    },
+    "subtitle": "경험 풍부한 CTO/VP 레벨의 엔지니어 팀이 Osiri에 전념하고 있습니다.",
+    "title": {
+      "highlight": "팀",
+      "main": "소개"
+    }
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "Start Free Trial": "免费开始",
+  "about": {
+    "description": "每小时收集和分析全球科技行业动态，AI为您提供母语摘要。从200多个可靠信息源实时提供有关初创企业、工程、产品等领域的见解。",
+    "stats": {
+      "languages": "10多种语言",
+      "sources": "200多个信息源",
+      "updates": "每小时更新"
+    },
+    "title": {
+      "highlight": "全球",
+      "main": "智能获取科技资讯"
+    }
+  },
+  "cta": {
+    "buttons": {
+      "primary": "免费开始",
+      "secondary": "查看详细功能"
+    },
+    "description": "轻松获取全球科技和创业资讯，支持中文阅读。立即体验7天免费试用，探索全新的信息获取方式。",
+    "title": {
+      "highlight": "更智能地",
+      "main": "获取资讯"
+    }
+  },
+  "faq": {
+    "contact": {
+      "link": "请联系我们。",
+      "text": "如有其他问题，随时"
+    },
+    "items": {
+      "cancel": {
+        "answer": "您可以在应用内的 设置> 套餐 中选择 取消套餐 来完成取消。",
+        "question": "如何取消订阅？"
+      },
+      "trial": {
+        "answer": "是的，我们提供7天免费试用。如果在7天后取消，试用期间的使用完全免费。",
+        "question": "有免费试用吗？"
+      }
+    },
+    "title": {
+      "highlight": "问题",
+      "main": "常见"
+    }
+  },
+  "features": {
+    "cards": {
+      "ai_insights": {
+        "description": "使用最新的GPT技术将长文转化为简洁摘要。将需要数小时的信息收集压缩至数秒完成。",
+        "title": "AI驱动的摘要功能"
+      },
+      "effortless_discovery": {
+        "description": "用母语把握全球趋势。跨越语言障碍，轻松获取当地第一手信息 - 像读本地新闻一样轻松阅读国际新闻。",
+        "title": "高效信息获取"
+      },
+      "global_intelligence": {
+        "description": "将全球创业生态系统尽在掌握。Tech News、风投投资、产品设计等广泛信息自动收集和推送。",
+        "title": "全球创业资讯"
+      }
+    },
+    "categories": {
+      "ai_ml": "AI·机器学习",
+      "engineering": "工程博客",
+      "founder_insights": "创始人见解",
+      "future_work": "未来工作方式",
+      "growth": "增长·营销",
+      "innovation": "创新·研究",
+      "product_design": "产品设计",
+      "saas_enterprise": "SaaS·企业服务",
+      "startup_stories": "创业故事",
+      "tech_news": "科技新闻",
+      "vc_investments": "风投·投资",
+      "web3_fintech": "Web3·金融科技"
+    },
+    "section": {
+      "highlight": "功能",
+      "title": "主要"
+    }
+  },
+  "footer": {
+    "product": {
+      "faq": "常见问题",
+      "features": "功能",
+      "personas": "目标用户",
+      "pricing": "价格方案",
+      "title": "关于"
+    },
+    "social": {
+      "title": "关注我们"
+    },
+    "support": {
+      "help": "帮助中心",
+      "privacy": "隐私政策",
+      "terms": "使用条款",
+      "title": "支持"
+    }
+  },
+  "hero": {
+    "cta": "免费开始",
+    "description": "每天3分钟，轻松用中文高效阅读。通过AI摘要轻松查看最新国际新闻！",
+    "feature": {
+      "description": "用您的语言传递全球最新科技资讯。",
+      "title": "最强大的信息获取工具"
+    },
+    "learnMore": "查看功能",
+    "subtitle": "AI NewsFeed",
+    "title": "国际创业的"
+  },
+  "heroCard": {
+    "feature": {
+      "description": "用您的语言传递全球最新科技资讯。",
+      "title": "最强大的信息获取工具"
+    },
+    "news": {
+      "badge": "焦点新闻",
+      "summary": "最新AI突破改变企业语言模型应用。实时分析重要进展。",
+      "title": "Anthropic发布Claude 3 enhans"
+    },
+    "pricing": {
+      "badge": "热门方案",
+      "description": "免费体验所有功能",
+      "feature": {
+        "feed": "定制信息流",
+        "sources": "200多个精选来源",
+        "summaries": "AI摘要功能"
+      },
+      "period": "/ 7天",
+      "plan": "免费试用",
+      "price": "¥0"
+    },
+    "testimonial": {
+      "name": "莎拉·陈",
+      "quote": "对忙碌的创始人来说非常完美！",
+      "role": "thisicon.com"
+    }
+  },
+  "howItWorks": {
+    "steps": {
+      "analyze": {
+        "description": "AI技术分析文章重要性并排序。评估信息价值、趋势性、相关性，只为您筛选真正重要的信息。",
+        "title": "AI智能摘要"
+      },
+      "collect": {
+        "description": "从200多个海外媒体自动收集创业、技术、投资等领域的最新资讯，每小时更新。",
+        "title": "全球信息自动采集"
+      },
+      "personalize": {
+        "description": "优先推送您感兴趣领域的信息。像浏览本地新闻一样轻松获取国际最新动态。",
+        "title": "个性化定制"
+      }
+    },
+    "subtitle": "轻松用母语掌握全球创业和科技行业动态",
+    "title": {
+      "highlight": "轻松获取",
+      "main": "海外最新资讯"
+    }
+  },
+  "media": {
+    "subtitle": "一站式提供精选资讯，涵盖主流科技媒体、科技公司工程博客、创业者见解及前沿研究",
+    "title": {
+      "main": "海外媒体和知名博客来源数量",
+      "prefix": "200+"
+    }
+  },
+  "menu": {
+    "faq": "常见问题",
+    "features": "功能",
+    "login": "登录",
+    "personas": "目标用户",
+    "pricing": "价格"
+  },
+  "newsletter": {
+    "button": "订阅",
+    "description": "每日通过邮件为您推送新功能通知和最新科技新闻。",
+    "emailLabel": "邮箱地址",
+    "placeholder": "请输入邮箱地址",
+    "title": {
+      "highlight": "更新信息",
+      "main": "Osiri应用的"
+    }
+  },
+  "personas": {
+    "image": {
+      "alt": "AI个性化新闻阅读器"
+    },
+    "list": {
+      "founder": {
+        "description": "实时掌握市场动态、竞争对手动向和新兴技术。从科技行业前沿为您提供战略决策所需的洞察。",
+        "title": "面向创业者和管理者"
+      },
+      "investor": {
+        "description": "持续监测潜力创业项目、融资信息和市场信号。随时获取科技趋势和投资机会的全面分析。",
+        "title": "面向投资者和风投"
+      },
+      "product": {
+        "description": "捕捉最新产品创新、设计趋势和成功案例。学习行业领袖见解，促进公司产品战略升级。",
+        "title": "面向产品负责人和经理"
+      }
+    },
+    "subtitle": "为繁忙人士提供高效的信息获取支持。AI为您的角色优化筛选最相关的信息。",
+    "title": {
+      "highlight": "哪些人群",
+      "main": "适合使用？"
+    }
+  },
+  "pricing": {
+    "period": "/ 月",
+    "plans": {
+      "enterprise": {
+        "benefit1": "专业版全部功能",
+        "benefit2": "API使用权限",
+        "benefit3": "自定义集成",
+        "benefit4": "专属支持",
+        "benefit5": "团队管理功能",
+        "button": "联系我们",
+        "description": "适合需要大规模团队使用和定制化的用户",
+        "price": "详询",
+        "title": "企业版"
+      },
+      "pro": {
+        "benefit1": "试用版全部功能",
+        "benefit2": "高级AI分析",
+        "benefit3": "历史文章搜索/收藏功能",
+        "benefit4": "优先支持",
+        "benefit5": "自定义信息流",
+        "button": "开始使用",
+        "description": "适合需要使用全部功能的专业用户",
+        "price": "¥900",
+        "title": "专业版"
+      },
+      "trial": {
+        "benefit1": "200多个信息源",
+        "benefit2": "AI摘要功能",
+        "benefit3": "中文支持",
+        "benefit4": "邮件支持",
+        "benefit5": "7天访问权限",
+        "button": "免费开始",
+        "description": "7天体验Osiri全部功能",
+        "price": "¥0",
+        "title": "免费试用"
+      }
+    },
+    "popularBadge": "热门方案",
+    "subtitle": "从免费试用开始。按需使用所需功能。",
+    "title": {
+      "end": "开始使用",
+      "highlight": "价格方案",
+      "main": "简单的"
+    }
+  },
+  "seo": {
+    "description": "AI用中文为您总结国际创业最新资讯。掌握科技行业趋势、融资动态、创新信息。免费试用进行中。",
+    "title": "Osiri | AI摘要阅读国际创业新闻｜科技行业最新资讯"
+  },
+  "team": {
+    "members": {
+      "leo": {
+        "description": "自由职业工程师，全栈开发，开源贡献者。",
+        "name": "利奥波德·米兰达",
+        "position": "技术负责人"
+      },
+      "shin": {
+        "description": "三次创业经验和超过10年全栈开发经验。让全球科技资讯触手可及。",
+        "name": "申",
+        "position": "产品负责人"
+      }
+    },
+    "social": {
+      "icon": "图标"
+    },
+    "subtitle": "经验丰富的CTO/VP级工程团队，专注打造Osiri。",
+    "title": {
+      "highlight": "团队",
+      "main": "关于"
+    }
+  }
+}
