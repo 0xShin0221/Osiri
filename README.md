@@ -13,8 +13,18 @@ Stay updated with global startup and tech trends in your native language. Osiri 
 
 ## 🌐 Supported Languages
 
-- English (Default)
-- Japanese (日本語)
+The following languages are currently supported in our application:
+
+English (Default)
+Japanese (日本語)
+Chinese (中文)
+French (Français)
+Hindi (हिंदी)
+Portuguese (Português)
+Bengali (বাংলা)
+Russian (Русский)
+Indonesian (Bahasa Indonesia)
+German (Deutsch)
 
 ## 📄 License
 
