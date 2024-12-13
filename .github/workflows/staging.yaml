@@ -7,19 +7,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  generate-pr-text:
+  pull-request:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate PR Description
-        uses: vblagoje/pr-auto@v1
-        id: pr_auto
-        with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-
-      - name: Update PR description
-        uses: vblagoje/update-pr@v1
-        with:
-          pr-body: ${{ steps.pr_auto.outputs.pr-text }}
+    - uses: actions/checkout@v3
+    - name: pull-request
+    uses: diillson/auto-pull-request@v1.0.1
+      with:
+        destination_branch: "main"
+        pr_title: "Pulling ${{ github.ref }} into master" # Title of pull request
+        pr_body: |                                        # Full markdown support, requires pr_title to be set
+          :crown: *An automated PR*
   migrate:
     runs-on: ubuntu-latest
     env:
