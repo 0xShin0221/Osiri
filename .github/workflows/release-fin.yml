@@ -24,9 +24,9 @@ jobs:
           draft: false
           prerelease: false
 
-      # - name: Slack Notification
-      #   uses: weseek/ghaction-release-slack-notification@master
-      #   with:
-      #     channel: '#webev-dev'
-      #     url: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     created_tag: '${{ github.event.pull_request.title }}'
+      - name: Slack Notification
+        uses: weseek/ghaction-release-slack-notification@master
+        with:
+          channel: '#oshiri-release'
+          url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          created_tag: '${{ github.event.pull_request.title }}'

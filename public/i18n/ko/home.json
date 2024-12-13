@@ -1,0 +1,277 @@
+{
+  "Start Free Trial": "무료로 시작하기",
+  "about": {
+    "description": "전 세계 기술 산업 동향을 1시간마다 수집·분석하여 AI가 당신의 언어로 요약해 제공합니다. 스타트업, 엔지니어링, 제품 등 200개 이상의 신뢰할 수 있는 정보원에서 실시간으로 인사이트를 제공합니다.",
+    "stats": {
+      "languages": "10개 이상의 언어",
+      "sources": "200개 이상의 정보원",
+      "updates": "1시간마다 업데이트"
+    },
+    "title": {
+      "highlight": "글로벌",
+      "main": "테크 정보를 스마트하게 인풋"
+    }
+  },
+  "cta": {
+    "buttons": {
+      "primary": "무료로 시작하기",
+      "secondary": "기능 자세히 보기"
+    },
+    "description": "전 세계 테크 및 스타트업 정보를 한국어로 쉽고 빠르게 인풋하세요. 7일 무료 체험으로 새로운 정보 수집 방식을 경험해보세요.",
+    "title": {
+      "highlight": "더 스마트하게",
+      "main": "정보 수집을"
+    }
+  },
+  "faq": {
+    "contact": {
+      "link": "문의해 주세요.",
+      "text": "기타 문의사항은 언제든지"
+    },
+    "items": {
+      "cancel": {
+        "answer": "해지는 앱 내 '설정' '플랜'에서 '플랜 취소'로 가능합니다.",
+        "question": "해지 방법을 알려주세요"
+      },
+      "trial": {
+        "answer": "네, 7일간의 무료 체험을 제공하고 있습니다. 7일 후 해지하시면 그동안의 이용료는 무료로 사용하실 수 있습니다.",
+        "question": "무료 체험이 있나요?"
+      }
+    },
+    "title": {
+      "highlight": "문의사항",
+      "main": "자주 묻는"
+    }
+  },
+  "features": {
+    "cards": {
+      "ai_insights": {
+        "description": "최신 GPT 기술로 긴 글을 간단한 요약으로 변환. 몇 시간이 걸리는 정보 수집을 몇 초 만에 완료할 수 있습니다.",
+        "title": "AI 탑재 요약 기능"
+      },
+      "effortless_discovery": {
+        "description": "모국어로 세계의 트렌드를 캐치업. 언어의 장벽을 넘어 현지의 생생한 정보에 접근 - 해외 뉴스를 로컬 뉴스처럼 쉽게.",
+        "title": "효율적인 정보 수집"
+      },
+      "global_intelligence": {
+        "description": "전 세계 스타트업 생태계를 당신의 손안에. Tech News, VC 투자, 제품 디자인 등 폭넓은 정보를 자동으로 수집·배포합니다.",
+        "title": "글로벌 스타트업 정보"
+      }
+    },
+    "categories": {
+      "ai_ml": "AI·기계학습",
+      "engineering": "엔지니어링 블로그",
+      "founder_insights": "창업자의 인사이트",
+      "future_work": "미래의 일하는 방식",
+      "growth": "그로스·마케팅",
+      "innovation": "혁신·연구",
+      "product_design": "제품 디자인",
+      "saas_enterprise": "SaaS·엔터프라이즈",
+      "startup_stories": "스타트업 스토리",
+      "tech_news": "테크 뉴스",
+      "vc_investments": "VC·투자",
+      "web3_fintech": "Web3·핀테크"
+    },
+    "section": {
+      "highlight": "기능",
+      "title": "메인"
+    }
+  },
+  "footer": {
+    "product": {
+      "faq": "자주 묻는 질문",
+      "features": "기능",
+      "personas": "대상 사용자",
+      "pricing": "요금제",
+      "title": "About"
+    },
+    "social": {
+      "title": "팔로우"
+    },
+    "support": {
+      "help": "고객센터",
+      "privacy": "개인정보 처리방침",
+      "terms": "이용약관",
+      "title": "Support"
+    }
+  },
+  "hero": {
+    "cta": "무료로 시작하기",
+    "description": "하루 3분으로 한국어로 효율적으로 읽을 수 있습니다. 최신 해외 뉴스를 AI 요약으로 쉽게 체크!",
+    "feature": {
+      "description": "해외 최신 테크 정보를 당신의 언어로 전달.",
+      "title": "최강의 정보 수집 도구"
+    },
+    "learnMore": "기능 보기",
+    "subtitle": "AI NewsFeed",
+    "title": "해외 스타트업"
+  },
+  "heroCard": {
+    "feature": {
+      "description": "해외 최신 테크 정보를 당신의 언어로 전달.",
+      "title": "최강의 정보 수집 도구"
+    },
+    "news": {
+      "badge": "주목할 뉴스",
+      "summary": "최신 AI 브레이크스루가 비즈니스의 언어 모델 활용을 혁신. 중요한 진전을 실시간으로 분석.",
+      "title": "Anthropic이 Claude 3 enhans 발표"
+    },
+    "pricing": {
+      "badge": "인기 플랜",
+      "description": "0원으로 모든 기능을 체험할 수 있습니다",
+      "feature": {
+        "feed": "커스터마이즈 피드",
+        "sources": "200개 이상의 엄선된 소스",
+        "summaries": "AI 요약 기능"
+      },
+      "period": "/ 7일",
+      "plan": "무료 체험",
+      "price": "₩0"
+    },
+    "testimonial": {
+      "name": "",
+      "quote": "",
+      "role": ""
+    }
+  },
+  "howItWorks": {
+    "steps": {
+      "analyze": {
+        "description": "",
+        "title": ""
+      },
+      "collect": {
+        "description": "",
+        "title": ""
+      },
+      "personalize": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "media": {
+    "subtitle": "",
+    "title": {
+      "main": "",
+      "prefix": ""
+    }
+  },
+  "menu": {
+    "faq": "",
+    "features": "",
+    "login": "",
+    "personas": "",
+    "pricing": ""
+  },
+  "newsletter": {
+    "button": "",
+    "description": "",
+    "emailLabel": "",
+    "placeholder": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "personas": {
+    "image": {
+      "alt": ""
+    },
+    "list": {
+      "founder": {
+        "description": "",
+        "title": ""
+      },
+      "investor": {
+        "description": "",
+        "title": ""
+      },
+      "product": {
+        "description": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "pricing": {
+    "period": "",
+    "plans": {
+      "enterprise": {
+        "benefit1": "",
+        "benefit2": "",
+        "benefit3": "",
+        "benefit4": "",
+        "benefit5": "",
+        "button": "",
+        "description": "",
+        "price": "",
+        "title": ""
+      },
+      "pro": {
+        "benefit1": "",
+        "benefit2": "",
+        "benefit3": "",
+        "benefit4": "",
+        "benefit5": "",
+        "button": "",
+        "description": "",
+        "price": "",
+        "title": ""
+      },
+      "trial": {
+        "benefit1": "",
+        "benefit2": "",
+        "benefit3": "",
+        "benefit4": "",
+        "benefit5": "",
+        "button": "",
+        "description": "",
+        "price": "",
+        "title": ""
+      }
+    },
+    "popularBadge": "",
+    "subtitle": "",
+    "title": {
+      "end": "",
+      "highlight": "",
+      "main": ""
+    }
+  },
+  "seo": {
+    "description": "",
+    "title": ""
+  },
+  "team": {
+    "members": {
+      "leo": {
+        "description": "",
+        "name": "",
+        "position": ""
+      },
+      "shin": {
+        "description": "",
+        "name": "",
+        "position": ""
+      }
+    },
+    "social": {
+      "icon": ""
+    },
+    "subtitle": "",
+    "title": {
+      "highlight": "",
+      "main": ""
+    }
+  }
+}

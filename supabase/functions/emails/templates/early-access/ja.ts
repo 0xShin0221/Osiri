@@ -1,10 +1,10 @@
-import { emailStyles } from './styles.ts';
+import { emailStyles } from "./styles.ts";
 
 export const jaTemplate = (data?: Record<string, any>) => {
-  const { name} = data || {};
+  const { name } = data || {};
   return {
-  subject: `Osiriでの早期アーリーアクセス登録| 無料クーポン取得`,
-  html: `
+    subject: `Osiriでの早期アーリーアクセス登録| 無料クーポン取得`,
+    html: `
     <!DOCTYPE html>
     <html>
       <head>
@@ -62,6 +62,6 @@ export const jaTemplate = (data?: Record<string, any>) => {
        </div>
       </body>
     </html>
-  `
+  `,
   };
 };

@@ -1,0 +1,30 @@
+{
+  "badge": "얼리버드 할인",
+  "description": "",
+  "getCoupon": "쿠폰 받기",
+  "incentives": {
+    "earlyAccess": {
+      "description": "선착순 등록자는 3개월간 50% 할인!",
+      "title": "50% 할인"
+    },
+    "earlyAccessAnnually": {
+      "description": "일반 월 980엔인 곳, 선착순 등록자는 3개월 무료!",
+      "title": "연간 3,000엔 이상 할인"
+    },
+    "earlyAccessLifetime": {
+      "description": "모든 프리미엄 기능을 할인가로 이용 가능",
+      "title": "풀 액세스"
+    }
+  },
+  "input": {
+    "company": "회사명",
+    "email": "이메일 주소",
+    "name": "이름",
+    "placeholder": "이메일 주소를 입력해 주세요"
+  },
+  "rating": "{{count}}명 이상의 얼리 어답터가 등록했습니다",
+  "rating_0": "",
+  "rating_plural": "",
+  "subtitle": "할인 쿠폰을 받으세요!",
+  "title": "출시 전에"
+}
