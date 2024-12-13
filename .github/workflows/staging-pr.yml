@@ -1,10 +1,10 @@
-name: Create a release pull request
+name: Create a pull request to main
 
 on:
   pull_request:
     types: [closed]
     branches:
-      - main
+      - develop
 
 jobs:
   create-release-pr:
@@ -27,8 +27,7 @@ jobs:
         uses: bakunyo/git-pr-release-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_PR_RELEASE_BRANCH_PRODUCTION: release
-          GIT_PR_RELEASE_BRANCH_STAGING: main
-          GIT_PR_RELEASE_LABELS: release
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+          GIT_PR_RELEASE_BRANCH_STAGING: develop
           NPM_VERSION: v${{ steps.package-version.outputs.current-version}}
-          GIT_PR_RELEASE_TEMPLATE: .git-pr-template
+          GIT_PR_RELEASE_TEMPLATE: .git-pr-release-template
