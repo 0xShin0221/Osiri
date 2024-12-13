@@ -25,8 +25,10 @@ jobs:
           prerelease: false
 
       - name: Slack Notification
-        uses: weseek/ghaction-release-slack-notification@master
+        uses: tokorom/action-slack-incoming-webhook@main
+        env:
+          INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
-          channel: '#oshiri-release'
-          url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          created_tag: '${{ github.event.pull_request.title }}'
+          text: '${{ github.event.pull_request.title }}'
+
+
