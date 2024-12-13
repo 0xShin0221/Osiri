@@ -1,11 +1,9 @@
 name: Create a pull request to main
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - develop
-
 jobs:
   create-release-pr:
     runs-on: ubuntu-latest
