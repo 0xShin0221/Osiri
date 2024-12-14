@@ -21,4 +21,6 @@ jobs:
       - run: |
           cd supabase/functions
           deno task test
-      - run: ${{ github.ref == 'refs//heads/develop' }} & supabase db reset 
+      - name: Reset Supabase DB on develop
+        if: github.ref == 'refs/heads/develop'
+        run: supabase db reset
