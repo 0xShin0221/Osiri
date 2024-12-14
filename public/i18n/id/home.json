@@ -1,273 +1,277 @@
 {
-  "Start Free Trial": "",
+  "Start Free Trial": "Mulai Gratis",
   "about": {
-    "description": "",
+    "description": "Mengumpulkan dan menganalisis tren industri teknologi global setiap jam, dengan ringkasan yang dihasilkan AI dalam bahasa Anda. Dapatkan wawasan real-time dari lebih dari 200 sumber terpercaya tentang startup, engineering, dan produk.",
     "stats": {
-      "languages": "",
-      "sources": "",
-      "updates": ""
+      "languages": "10+ bahasa",
+      "sources": "200+ sumber informasi",
+      "updates": "Update setiap jam"
     },
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "global",
+      "main": "Informasi tech secara cerdas"
     }
   },
   "cta": {
     "buttons": {
-      "primary": "",
-      "secondary": ""
+      "primary": "Mulai Gratis",
+      "secondary": "Lihat Fitur"
     },
-    "description": "",
+    "description": "Dapatkan informasi tech & startup global dalam bahasa Indonesia dengan mudah. Coba cara baru mengumpulkan informasi dengan uji coba gratis 7 hari.",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "lebih cerdas",
+      "main": "Kumpulkan informasi"
     }
   },
   "faq": {
     "contact": {
-      "link": "",
-      "text": ""
+      "link": "hubungi kami.",
+      "text": "Untuk pertanyaan lain,"
     },
     "items": {
       "cancel": {
-        "answer": "",
-        "question": ""
+        "answer": "Untuk membatalkan langganan, pilih 'Batalkan Paket' di 'Pengaturan' > 'Paket' dalam aplikasi.",
+        "question": "Bagaimana cara membatalkan langganan?"
       },
       "trial": {
-        "answer": "",
-        "question": ""
+        "answer": "Ya, kami menyediakan uji coba gratis 7 hari. Jika Anda membatalkan setelah 7 hari, penggunaan selama periode uji coba tetap gratis.",
+        "question": "Apakah ada uji coba gratis?"
       }
     },
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "pertanyaan",
+      "main": "Sering ditanya"
     }
   },
   "features": {
     "cards": {
       "ai_insights": {
-        "description": "",
-        "title": ""
+        "description": "Ubah artikel panjang menjadi ringkasan singkat dengan teknologi GPT terbaru. Selesaikan pengumpulan informasi berjam-jam dalam hitungan detik.",
+        "title": "Ringkasan dengan AI"
       },
       "effortless_discovery": {
-        "description": "",
-        "title": ""
+        "description": "Ikuti tren global dalam bahasa Anda. Lewati hambatan bahasa untuk mengakses informasi lokal - baca berita internasional semudah berita lokal.",
+        "title": "Penemuan Tanpa Usaha"
       },
       "global_intelligence": {
-        "description": "",
-        "title": ""
+        "description": "Ekosistem startup global dalam genggaman Anda. Kumpulan dan distribusi otomatis informasi tentang Tech News, investasi VC, desain produk, dan banyak lagi.",
+        "title": "Informasi Startup Global"
       }
     },
     "categories": {
-      "ai_ml": "",
-      "engineering": "",
-      "founder_insights": "",
-      "future_work": "",
-      "growth": "",
-      "innovation": "",
-      "product_design": "",
-      "saas_enterprise": "",
-      "startup_stories": "",
-      "tech_news": "",
-      "vc_investments": "",
-      "web3_fintech": ""
+      "ai_ml": "AI & Machine Learning",
+      "engineering": "Blog Engineering",
+      "founder_insights": "Wawasan Founder",
+      "future_work": "Masa Depan Kerja",
+      "growth": "Growth & Marketing",
+      "innovation": "Inovasi & Riset",
+      "product_design": "Desain Produk",
+      "saas_enterprise": "SaaS & Enterprise",
+      "startup_stories": "Cerita Startup",
+      "tech_news": "Berita Tech",
+      "vc_investments": "VC & Investasi",
+      "web3_fintech": "Web3 & Fintech"
     },
     "section": {
-      "highlight": "",
-      "title": ""
+      "highlight": "fitur",
+      "title": "Utama"
     }
   },
   "footer": {
     "product": {
-      "faq": "",
-      "features": "",
-      "personas": "",
-      "pricing": "",
-      "title": ""
+      "faq": "FAQ",
+      "features": "Fitur",
+      "personas": "Target Pengguna",
+      "pricing": "Harga",
+      "title": "Tentang"
     },
     "social": {
-      "title": ""
+      "title": "Ikuti Kami"
     },
     "support": {
-      "help": "",
-      "privacy": "",
-      "terms": "",
-      "title": ""
+      "help": "Pusat Bantuan",
+      "privacy": "Kebijakan Privasi",
+      "terms": "Ketentuan Layanan",
+      "title": "Dukungan"
     }
   },
   "hero": {
-    "cta": "",
-    "description": "",
-    "learnMore": "",
-    "subtitle": "",
-    "title": ""
+    "cta": "Mulai Gratis",
+    "description": "Baca efisien dalam bahasa Indonesia hanya 3 menit sehari. Cek berita internasional terbaru dengan mudah melalui ringkasan AI!",
+    "feature": {
+      "description": "Informasi tech global terbaru dalam bahasa Anda.",
+      "title": "Alat Pengumpul Informasi Terbaik"
+    },
+    "learnMore": "Lihat Fitur",
+    "subtitle": "AI NewsFeed",
+    "title": "Startup Internasional"
   },
   "heroCard": {
     "feature": {
-      "description": "",
-      "title": ""
+      "description": "Informasi tech global terbaru dalam bahasa Anda.",
+      "title": "Alat Pengumpul Informasi Terbaik"
     },
     "news": {
-      "badge": "",
-      "summary": "",
-      "title": ""
+      "badge": "Berita Utama",
+      "summary": "Terobosan AI terbaru mengubah penggunaan model bahasa dalam bisnis. Analisis perkembangan penting secara real-time.",
+      "title": "Anthropic Mengumumkan Claude 3 enhans"
     },
     "pricing": {
-      "badge": "",
-      "description": "",
+      "badge": "Paket Populer",
+      "description": "Coba semua fitur gratis",
       "feature": {
-        "feed": "",
-        "sources": "",
-        "summaries": ""
+        "feed": "Feed Kustom",
+        "sources": "200+ sumber terpilih",
+        "summaries": "Ringkasan AI"
       },
-      "period": "",
-      "plan": "",
-      "price": ""
+      "period": "/ 7 hari",
+      "plan": "Uji Coba Gratis",
+      "price": "Rp0"
     },
     "testimonial": {
-      "name": "",
-      "quote": "",
-      "role": ""
+      "name": "Sara Chen",
+      "quote": "Sempurna untuk founder yang sibuk!",
+      "role": "thisicon.com"
     }
   },
   "howItWorks": {
     "steps": {
       "analyze": {
-        "description": "",
-        "title": ""
+        "description": "Teknologi AI menganalisis dan memprioritaskan pentingnya artikel. Mengevaluasi nilai, tren, dan relevansi informasi untuk memilih hanya yang penting.",
+        "title": "Ringkasan AI yang Mudah Dibaca"
       },
       "collect": {
-        "description": "",
-        "title": ""
+        "description": "Pengumpulan otomatis berita terbaru tentang startup, teknologi, dan investasi dari 200+ media internasional setiap jam.",
+        "title": "Pengumpulan Informasi Global Otomatis"
       },
       "personalize": {
-        "description": "",
-        "title": ""
+        "description": "Distribusi prioritas informasi di bidang yang Anda minati. Ikuti tren internasional semudah membaca berita lokal.",
+        "title": "Kustomisasi Sesuai Preferensi"
       }
     },
-    "subtitle": "",
+    "subtitle": "Ikuti tren industri startup & tech global dengan mudah dalam bahasa Anda",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "dengan mudah",
+      "main": "Informasi global"
     }
   },
   "media": {
-    "subtitle": "",
+    "subtitle": "Satu sumber informasi terpilih, dari media tech besar hingga blog engineering, dari wawasan founder startup hingga penelitian terdepan",
     "title": {
-      "main": "",
-      "prefix": ""
+      "main": "Sumber media dan blog terkenal",
+      "prefix": "200+"
     }
   },
   "menu": {
-    "faq": "",
-    "features": "",
-    "login": "",
-    "personas": "",
-    "pricing": ""
+    "faq": "FAQ",
+    "features": "Fitur",
+    "login": "Masuk",
+    "personas": "Target Pengguna",
+    "pricing": "Harga"
   },
   "newsletter": {
-    "button": "",
-    "description": "",
-    "emailLabel": "",
-    "placeholder": "",
+    "button": "Berlangganan",
+    "description": "Dapatkan pemberitahuan fitur baru dan berita tech terbaru setiap hari melalui email.",
+    "emailLabel": "Alamat Email",
+    "placeholder": "Masukkan email Anda",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "pembaruan",
+      "main": "Informasi"
     }
   },
   "personas": {
     "image": {
-      "alt": ""
+      "alt": "Pembaca Berita AI Terpersonalisasi"
     },
     "list": {
       "founder": {
-        "description": "",
-        "title": ""
+        "description": "Pantau tren pasar, pergerakan kompetitor, dan teknologi baru secara real-time. Dapatkan wawasan yang diperlukan untuk pengambilan keputusan strategis langsung dari garis depan industri tech.",
+        "title": "Untuk Founder & Eksekutif"
       },
       "investor": {
-        "description": "",
-        "title": ""
+        "description": "Monitor terus-menerus startup potensial, informasi pendanaan, dan sinyal pasar. Akses analisis komprehensif tren teknologi dan peluang investasi.",
+        "title": "Untuk Investor & VC"
       },
       "product": {
-        "description": "",
-        "title": ""
+        "description": "Tangkap inovasi produk terbaru, tren desain, dan kisah sukses. Pelajari dari pemimpin industri dan kembangkan strategi produk Anda.",
+        "title": "Untuk Product Leader & Manager"
       }
     },
-    "subtitle": "",
+    "subtitle": "Dukungan pengumpulan informasi efisien untuk orang sibuk. AI memilih informasi yang dioptimalkan untuk peran Anda.",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "pengguna",
+      "main": "Untuk siapa"
     }
   },
   "pricing": {
-    "period": "",
+    "period": "/ bulan",
     "plans": {
       "enterprise": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
+        "benefit1": "Semua fitur Pro",
+        "benefit2": "Akses API",
+        "benefit3": "Integrasi kustom",
+        "benefit4": "Dukungan dedicated",
+        "benefit5": "Manajemen tim",
+        "button": "Hubungi Kami",
+        "description": "Untuk tim yang membutuhkan penggunaan skala besar dan kustomisasi",
+        "price": "Custom",
+        "title": "Enterprise"
       },
       "pro": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
+        "benefit1": "Semua fitur trial",
+        "benefit2": "Analisis AI lanjutan",
+        "benefit3": "Pencarian artikel/bookmark",
+        "benefit4": "Dukungan prioritas",
+        "benefit5": "Feed kustom",
+        "button": "Mulai",
+        "description": "Untuk profesional yang menginginkan semua fitur",
+        "price": "Rp130.000",
+        "title": "Pro"
       },
       "trial": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
+        "benefit1": "200+ sumber informasi",
+        "benefit2": "Ringkasan AI",
+        "benefit3": "Dukungan bahasa Indonesia",
+        "benefit4": "Dukungan email",
+        "benefit5": "Akses 7 hari",
+        "button": "Mulai Gratis",
+        "description": "Coba Osiri selama 7 hari",
+        "price": "Rp0",
+        "title": "Trial Gratis"
       }
     },
-    "popularBadge": "",
-    "subtitle": "",
+    "popularBadge": "Paket Populer",
+    "subtitle": "Mulai dengan trial gratis. Fitur yang Anda butuhkan, saat Anda membutuhkannya.",
     "title": {
-      "end": "",
-      "highlight": "",
-      "main": ""
+      "end": "mulai",
+      "highlight": "harga",
+      "main": "Paket"
     }
   },
   "seo": {
-    "description": "",
-    "title": ""
+    "description": "Berita terbaru startup internasional diringkas oleh AI dalam bahasa Indonesia. Pantau tren industri tech, pendanaan, dan inovasi. Trial gratis tersedia.",
+    "title": "Osiri | Berita Startup Internasional dengan Ringkasan AI | Informasi Terbaru Industri Tech"
   },
   "team": {
     "members": {
       "leo": {
-        "description": "",
-        "name": "",
-        "position": ""
+        "description": "Sebagai engineer freelance, pengembangan full-stack, kontributor OSS.",
+        "name": "Leopold Miranda",
+        "position": "Tech Lead"
       },
       "shin": {
-        "description": "",
-        "name": "",
-        "position": ""
+        "description": "3 kali pengalaman startup dan lebih dari 10 tahun pengalaman pengembangan full-stack. Membuat informasi tech global dapat diakses oleh semua orang.",
+        "name": "Shin",
+        "position": "Product Owner"
       }
     },
     "social": {
-      "icon": ""
+      "icon": "Ikon"
     },
-    "subtitle": "",
+    "subtitle": "Tim engineering berpengalaman tingkat CTO/VP yang berkomitmen pada Osiri.",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "tim",
+      "main": "Tentang"
     }
   }
 }

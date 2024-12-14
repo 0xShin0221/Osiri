@@ -1,273 +1,277 @@
 {
-  "Start Free Trial": "",
+  "Start Free Trial": "Kostenlos starten",
   "about": {
-    "description": "",
+    "description": "Wir sammeln und analysieren stündlich Trends der globalen Technologiebranche mit KI-generierten Zusammenfassungen in Ihrer Sprache. Erhalten Sie Echtzeit-Einblicke von über 200 vertrauenswürdigen Quellen über Startups, Engineering und Produkte.",
     "stats": {
-      "languages": "",
-      "sources": "",
-      "updates": ""
+      "languages": "10+ Sprachen",
+      "sources": "200+ Quellen",
+      "updates": "Stündliche Updates"
     },
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "globale",
+      "main": "Tech-Informationen intelligent erfassen"
     }
   },
   "cta": {
     "buttons": {
-      "primary": "",
-      "secondary": ""
+      "primary": "Kostenlos starten",
+      "secondary": "Funktionen ansehen"
     },
-    "description": "",
+    "description": "Erhalten Sie globale Tech- und Startup-Informationen einfach auf Deutsch. Testen Sie eine neue Art der Informationsbeschaffung mit 7 Tagen kostenlosem Test.",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "intelligenter",
+      "main": "Informationen"
     }
   },
   "faq": {
     "contact": {
-      "link": "",
-      "text": ""
+      "link": "kontaktieren Sie uns.",
+      "text": "Bei weiteren Fragen"
     },
     "items": {
       "cancel": {
-        "answer": "",
-        "question": ""
+        "answer": "Sie können das Abonnement in der App unter 'Einstellungen' > 'Plan' > 'Plan kündigen' stornieren.",
+        "question": "Wie kann ich kündigen?"
       },
       "trial": {
-        "answer": "",
-        "question": ""
+        "answer": "Ja, wir bieten eine 7-tägige kostenlose Testversion an. Bei Kündigung nach 7 Tagen bleibt die Nutzung während der Testperiode kostenlos.",
+        "question": "Gibt es eine kostenlose Testversion?"
       }
     },
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "Fragen",
+      "main": "Häufige"
     }
   },
   "features": {
     "cards": {
       "ai_insights": {
-        "description": "",
-        "title": ""
+        "description": "Wandeln Sie lange Artikel mit neuester GPT-Technologie in prägnante Zusammenfassungen um. Reduzieren Sie stundenlange Informationssammlung auf Sekunden.",
+        "title": "KI-gestützte Zusammenfassungen"
       },
       "effortless_discovery": {
-        "description": "",
-        "title": ""
+        "description": "Verfolgen Sie globale Trends in Ihrer Sprache. Überwinden Sie Sprachbarrieren für lokale Informationen - lesen Sie internationale Nachrichten so einfach wie lokale.",
+        "title": "Mühelose Entdeckung"
       },
       "global_intelligence": {
-        "description": "",
-        "title": ""
+        "description": "Globales Startup-Ökosystem in Ihrer Hand. Automatische Sammlung und Verteilung von Informationen über Tech News, VC-Investitionen, Produktdesign und mehr.",
+        "title": "Globale Startup-Informationen"
       }
     },
     "categories": {
-      "ai_ml": "",
-      "engineering": "",
-      "founder_insights": "",
-      "future_work": "",
-      "growth": "",
-      "innovation": "",
-      "product_design": "",
-      "saas_enterprise": "",
-      "startup_stories": "",
-      "tech_news": "",
-      "vc_investments": "",
-      "web3_fintech": ""
+      "ai_ml": "KI & Machine Learning",
+      "engineering": "Engineering Blogs",
+      "founder_insights": "Gründer-Insights",
+      "future_work": "Zukunft der Arbeit",
+      "growth": "Growth & Marketing",
+      "innovation": "Innovation & Forschung",
+      "product_design": "Produktdesign",
+      "saas_enterprise": "SaaS & Enterprise",
+      "startup_stories": "Startup-Stories",
+      "tech_news": "Tech-News",
+      "vc_investments": "VC & Investitionen",
+      "web3_fintech": "Web3 & Fintech"
     },
     "section": {
-      "highlight": "",
-      "title": ""
+      "highlight": "Funktionen",
+      "title": "Hauptfunktionen"
     }
   },
   "footer": {
     "product": {
-      "faq": "",
-      "features": "",
-      "personas": "",
-      "pricing": "",
-      "title": ""
+      "faq": "Häufige Fragen",
+      "features": "Funktionen",
+      "personas": "Zielgruppen",
+      "pricing": "Preise",
+      "title": "Über uns"
     },
     "social": {
-      "title": ""
+      "title": "Folgen Sie uns"
     },
     "support": {
-      "help": "",
-      "privacy": "",
-      "terms": "",
-      "title": ""
+      "help": "Hilfezentrum",
+      "privacy": "Datenschutz",
+      "terms": "Nutzungsbedingungen",
+      "title": "Support"
     }
   },
   "hero": {
-    "cta": "",
-    "description": "",
-    "learnMore": "",
-    "subtitle": "",
-    "title": ""
+    "cta": "Kostenlos starten",
+    "description": "Lesen Sie effizient auf Deutsch in 3 Minuten täglich. Überprüfen Sie die neuesten internationalen Nachrichten einfach mit KI-Zusammenfassungen!",
+    "feature": {
+      "description": "Die neuesten globalen Tech-Informationen in Ihrer Sprache.",
+      "title": "Das beste Informationssammel-Tool"
+    },
+    "learnMore": "Funktionen ansehen",
+    "subtitle": "AI NewsFeed",
+    "title": "Internationale Startups"
   },
   "heroCard": {
     "feature": {
-      "description": "",
-      "title": ""
+      "description": "Die neuesten globalen Tech-Informationen in Ihrer Sprache.",
+      "title": "Das beste Informationssammel-Tool"
     },
     "news": {
-      "badge": "",
-      "summary": "",
-      "title": ""
+      "badge": "Top-News",
+      "summary": "Neuester KI-Durchbruch verändert die Nutzung von Sprachmodellen in Unternehmen. Echtzeit-Analyse wichtiger Entwicklungen.",
+      "title": "Anthropic kündigt Claude 3 enhans an"
     },
     "pricing": {
-      "badge": "",
-      "description": "",
+      "badge": "Beliebter Plan",
+      "description": "Testen Sie alle Funktionen kostenlos",
       "feature": {
-        "feed": "",
-        "sources": "",
-        "summaries": ""
+        "feed": "Personalisierter Feed",
+        "sources": "200+ ausgewählte Quellen",
+        "summaries": "KI-Zusammenfassungen"
       },
-      "period": "",
-      "plan": "",
-      "price": ""
+      "period": "/ 7 Tage",
+      "plan": "Kostenlose Testversion",
+      "price": "€0"
     },
     "testimonial": {
-      "name": "",
-      "quote": "",
-      "role": ""
+      "name": "Sara Chen",
+      "quote": "Perfekt für beschäftigte Gründer!",
+      "role": "thisicon.com"
     }
   },
   "howItWorks": {
     "steps": {
       "analyze": {
-        "description": "",
-        "title": ""
+        "description": "KI-Technologie analysiert und priorisiert die Wichtigkeit von Artikeln. Bewertet Wert, Trends und Relevanz von Informationen, um nur das Wichtigste auszuwählen.",
+        "title": "KI-lesbare Zusammenfassungen"
       },
       "collect": {
-        "description": "",
-        "title": ""
+        "description": "Automatische Sammlung der neuesten Nachrichten über Startups, Technologie und Investitionen von über 200 internationalen Medien stündlich.",
+        "title": "Globale automatische Sammlung"
       },
       "personalize": {
-        "description": "",
-        "title": ""
+        "description": "Priorisierte Bereitstellung von Informationen in Ihren Interessensbereichen. Verfolgen Sie internationale Trends so einfach wie lokale Nachrichten.",
+        "title": "Personalisierung nach Maß"
       }
     },
-    "subtitle": "",
+    "subtitle": "Verfolgen Sie Trends der globalen Startup- und Tech-Branche einfach in Ihrer Sprache",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "einfach",
+      "main": "Globale Informationen"
     }
   },
   "media": {
-    "subtitle": "",
+    "subtitle": "Eine einzige Quelle ausgewählter Informationen, von großen Tech-Medien bis zu Engineering-Blogs, von Startup-Gründer-Insights bis zu Spitzenforschung",
     "title": {
-      "main": "",
-      "prefix": ""
+      "main": "Internationale Medien und bekannte Blogs",
+      "prefix": "200+"
     }
   },
   "menu": {
-    "faq": "",
-    "features": "",
-    "login": "",
-    "personas": "",
-    "pricing": ""
+    "faq": "Häufige Fragen",
+    "features": "Funktionen",
+    "login": "Anmelden",
+    "personas": "Zielgruppen",
+    "pricing": "Preise"
   },
   "newsletter": {
-    "button": "",
-    "description": "",
-    "emailLabel": "",
-    "placeholder": "",
+    "button": "Abonnieren",
+    "description": "Erhalten Sie täglich per E-Mail Benachrichtigungen über neue Funktionen und die neuesten Tech-News.",
+    "emailLabel": "E-Mail-Adresse",
+    "placeholder": "Ihre E-Mail-Adresse eingeben",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "Updates",
+      "main": "Osiri App"
     }
   },
   "personas": {
     "image": {
-      "alt": ""
+      "alt": "KI-personalisierter News-Reader"
     },
     "list": {
       "founder": {
-        "description": "",
-        "title": ""
+        "description": "Verfolgen Sie Markttrends, Wettbewerberbewegungen und aufkommende Technologien in Echtzeit. Erhalten Sie notwendige Insights für strategische Entscheidungen direkt von der Tech-Branchenfront.",
+        "title": "Für Gründer & Führungskräfte"
       },
       "investor": {
-        "description": "",
-        "title": ""
+        "description": "Kontinuierliche Überwachung vielversprechender Startups, Finanzierungsinformationen und Marktsignale. Zugriff auf umfassende Analyse von Technologietrends und Investitionsmöglichkeiten.",
+        "title": "Für Investoren & VCs"
       },
       "product": {
-        "description": "",
-        "title": ""
+        "description": "Erfassen Sie die neuesten Produktinnovationen, Designtrends und Erfolgsgeschichten. Lernen Sie von Branchenführern und entwickeln Sie Ihre Produktstrategie weiter.",
+        "title": "Für Produktleiter & Manager"
       }
     },
-    "subtitle": "",
+    "subtitle": "Effiziente Informationssammlung für Beschäftigte. KI wählt optimierte Informationen für Ihre Rolle aus.",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "Nutzer",
+      "main": "Für welche"
     }
   },
   "pricing": {
-    "period": "",
+    "period": "/ Monat",
     "plans": {
       "enterprise": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
+        "benefit1": "Alle Pro-Funktionen",
+        "benefit2": "API-Zugang",
+        "benefit3": "Individuelle Integration",
+        "benefit4": "Dedizierter Support",
+        "benefit5": "Team-Management",
+        "button": "Kontaktieren",
+        "description": "Für Teams, die Großeinsatz und Anpassung benötigen",
+        "price": "Auf Anfrage",
+        "title": "Enterprise"
       },
       "pro": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
+        "benefit1": "Alle Trial-Funktionen",
+        "benefit2": "Erweiterte KI-Analyse",
+        "benefit3": "Archivsuche/Lesezeichen",
+        "benefit4": "Prioritäts-Support",
+        "benefit5": "Individueller Feed",
+        "button": "Starten",
+        "description": "Für Profis, die alle Funktionen wollen",
+        "price": "€10",
+        "title": "Pro"
       },
       "trial": {
-        "benefit1": "",
-        "benefit2": "",
-        "benefit3": "",
-        "benefit4": "",
-        "benefit5": "",
-        "button": "",
-        "description": "",
-        "price": "",
-        "title": ""
+        "benefit1": "200+ Informationsquellen",
+        "benefit2": "KI-Zusammenfassungen",
+        "benefit3": "Deutscher Support",
+        "benefit4": "E-Mail-Support",
+        "benefit5": "7 Tage Zugang",
+        "button": "Kostenlos starten",
+        "description": "Testen Sie Osiri 7 Tage lang",
+        "price": "€0",
+        "title": "Kostenlose Testversion"
       }
     },
-    "popularBadge": "",
-    "subtitle": "",
+    "popularBadge": "Beliebter Plan",
+    "subtitle": "Starten Sie mit kostenloser Testversion. Die Funktionen, die Sie brauchen, wann Sie sie brauchen.",
     "title": {
-      "end": "",
-      "highlight": "",
-      "main": ""
+      "end": "starten",
+      "highlight": "Preise",
+      "main": "Einfach mit"
     }
   },
   "seo": {
-    "description": "",
-    "title": ""
+    "description": "Die neuesten Nachrichten internationaler Startups von KI auf Deutsch zusammengefasst. Verfolgen Sie Tech-Branchentrends, Finanzierung und Innovation. Kostenlose Testversion verfügbar.",
+    "title": "Osiri | Internationale Startup-Nachrichten mit KI-Zusammenfassungen | Aktuelle Tech-Brancheninformationen"
   },
   "team": {
     "members": {
       "leo": {
-        "description": "",
-        "name": "",
-        "position": ""
+        "description": "Als Freelance-Entwickler, Full-Stack-Entwicklung, OSS-Contributor.",
+        "name": "Leopold Miranda",
+        "position": "Tech Lead"
       },
       "shin": {
-        "description": "",
-        "name": "",
-        "position": ""
+        "description": "3 Startup-Erfahrungen und über 10 Jahre Full-Stack-Entwicklungserfahrung. Globale Tech-Informationen für alle zugänglich machen.",
+        "name": "Shin",
+        "position": "Product Owner"
       }
     },
     "social": {
-      "icon": ""
+      "icon": "Icon"
     },
-    "subtitle": "",
+    "subtitle": "Erfahrenes Engineering-Team auf CTO/VP-Level, das sich Osiri verschrieben hat.",
     "title": {
-      "highlight": "",
-      "main": ""
+      "highlight": "Team",
+      "main": "Unser"
     }
   }
 }

@@ -9,9 +9,9 @@ export const LANGUAGES = {
     { code: "es", label: "Español", dir: "ltr" },
     { code: "hi", label: "हिंदी", dir: "ltr" },
     { code: "pt", label: "Português", dir: "ltr" },
-    // { code: "bn", label: "বাংলা", dir: "ltr" },
-    // { code: "ru", label: "Русский", dir: "ltr" },
-    // { code: "id", label: "Bahasa Indonesia", dir: "ltr" },
-    // { code: "de", label: "Deutsch", dir: "ltr" },
+    { code: "bn", label: "বাংলা", dir: "ltr" },
+    { code: "ru", label: "Русский", dir: "ltr" },
+    { code: "id", label: "Bahasa Indonesia", dir: "ltr" },
+    { code: "de", label: "Deutsch", dir: "ltr" },
   ],
 } as const;
