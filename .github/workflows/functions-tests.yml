@@ -21,3 +21,4 @@ jobs:
       - run: |
           cd supabase/functions
           deno task test
+      - run: supabase db reset
