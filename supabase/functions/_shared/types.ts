@@ -12,7 +12,6 @@ export interface SlackPayload {
   data?: Record<string, any>;
 }
 
-
 export type NotificationTemplate = "early-access" | "contact" | "feedback";
 
 export interface EmailTemplateContent {
@@ -34,8 +33,7 @@ export type TemplateConfigs =
     default: TemplateConfig;
   };
 
-
-  export type SupportedLanguage =
+export type SupportedLanguage =
   | "en" // English
   | "ja" // Japanese
   | "zh" // Chinese
@@ -45,4 +43,6 @@ export type TemplateConfigs =
   | "bn" // Bengali
   | "ru" // Russian
   | "id" // Indonesian
-  | "de"; // German
+  | "de" // German
+  | "es" // Spanish
+  | "ko"; // Korean

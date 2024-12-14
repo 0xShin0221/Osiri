@@ -22,6 +22,7 @@ const getTemplateContent = (
     case "early-access":
       return getEarlyAccessTemplate(language, data);
     case "contact":
+      throw new Error(`Template ${template} not implemented yet`);
     case "feedback":
       throw new Error(`Template ${template} not implemented yet`);
     default:
