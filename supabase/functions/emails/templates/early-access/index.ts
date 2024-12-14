@@ -13,6 +13,7 @@ import { ruTemplate } from "./localized/ru.ts";
 import { idTemplate } from "./localized/id.ts";
 import { deTemplate } from "./localized/de.ts";
 import { esTemplate } from "./localized/es.ts";
+import { koTemplate } from "./localized/ko.ts";
 
 export const getEarlyAccessTemplate = (
   language: SupportedLanguage,
@@ -28,7 +29,7 @@ export const getEarlyAccessTemplate = (
     case "es":
       return esTemplate(data);
     case "ko":
-      return enTemplate(data);
+      return koTemplate(data);
     case "zh":
       return zhTemplate(data);
     case "fr":
