@@ -1,4 +1,5 @@
 import { createClient } from "jsr:@supabase/supabase-js";
+import { SupportedLanguage } from "./types.ts";
 
 interface WaitlistEntry {
   email: string;
@@ -15,7 +16,7 @@ const supabase = createClient(
 
 export const saveToWaitlist = async (
   email: string,
-  language: string,
+  language: SupportedLanguage,
   data?: Record<string, any>,
 ): Promise<void> => {
   const waitlistEntry: WaitlistEntry = {
