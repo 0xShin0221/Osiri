@@ -1,28 +1,30 @@
 {
-  "badge": "",
-  "description": "",
-  "getCoupon": "",
+  "badge": "আর্লি বার্ড ডিসকাউন্ট",
+  "description": "বিনামূল্যে ব্যবহারের সুযোগ মিস করবেন না",
+  "getCoupon": "কুপন পান",
   "incentives": {
     "earlyAccess": {
-      "description": "",
-      "title": ""
+      "description": "প্রথম নিবন্ধনকারীদের জন্য 3 মাস 50% ছাড়!",
+      "title": "50% ছাড়"
     },
     "earlyAccessAnnually": {
-      "description": "",
-      "title": ""
+      "description": "সাধারণ মাসিক ₹750 এর জায়গায়, প্রথম নিবন্ধনকারীদের জন্য 3 মাস ফ্রি!",
+      "title": "বাৎসরিক ₹2,250+ সাশ্রয়"
     },
     "earlyAccessLifetime": {
-      "description": "",
-      "title": ""
+      "description": "সকল প্রিমিয়াম ফিচার ছাড়ের মূল্যে",
+      "title": "পূর্ণ অ্যাক্সেস"
     }
   },
   "input": {
-    "company": "",
-    "email": "",
-    "name": ""
+    "company": "কোম্পানির নাম",
+    "email": "ইমেইল ঠিকানা",
+    "name": "নাম",
+    "placeholder": "আপনার ইমেইল ঠিকানা লিখুন"
   },
-  "rating": "",
+  "rating": "{{count}}+ আর্লি অ্যাডপ্টার ইতিমধ্যে নিবন্ধন করেছেন",
+  "rating_0": "",
   "rating_plural": "",
-  "subtitle": "",
-  "title": ""
+  "subtitle": "আকর্ষণীয় কুপন পান!",
+  "title": "রিলিজের আগে"
 }

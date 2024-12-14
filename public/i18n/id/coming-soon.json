@@ -1,27 +1,30 @@
 {
-  "badge": "",
-  "description": "",
-  "getCoupon": "",
+  "badge": "Diskon Early Bird",
+  "description": "Jangan lewatkan kesempatan untuk mencoba gratis",
+  "getCoupon": "Dapatkan Kupon",
   "incentives": {
     "earlyAccess": {
-      "description": "",
-      "title": ""
+      "description": "Pendaftar pertama mendapat diskon 50% selama 3 bulan!",
+      "title": "Diskon 50%"
     },
     "earlyAccessAnnually": {
-      "description": "",
-      "title": ""
+      "description": "Biasanya Rp130.000 per bulan, pendaftar pertama dapat 3 bulan gratis!",
+      "title": "Hemat Rp390.000+ per tahun"
     },
     "earlyAccessLifetime": {
-      "description": "",
-      "title": ""
+      "description": "Semua fitur premium tersedia dengan harga diskon",
+      "title": "Akses Penuh"
     }
   },
   "input": {
-    "company": "",
-    "email": "",
-    "name": ""
+    "company": "Nama Perusahaan",
+    "email": "Alamat Email",
+    "name": "Nama",
+    "placeholder": "Masukkan alamat email Anda"
   },
+  "rating": "{{count}}+ early adopter telah mendaftar",
   "rating_0": "",
-  "subtitle": "",
-  "title": ""
+  "rating_plural": "",
+  "subtitle": "Dapatkan kupon menarik!",
+  "title": "Sebelum Rilis"
 }
