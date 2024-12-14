@@ -1,4 +1,7 @@
-import { EmailTemplateContent, SupportedLanguage } from "../../../_shared/types.ts";
+import {
+  EmailTemplateContent,
+  SupportedLanguage,
+} from "../../../_shared/types.ts";
 import { enTemplate } from "./localized/en.ts";
 import { frTemplate } from "./localized/fr.ts";
 import { jaTemplate } from "./localized/ja.ts";
@@ -9,6 +12,8 @@ import { bnTemplate } from "./localized/bn.ts";
 import { ruTemplate } from "./localized/ru.ts";
 import { idTemplate } from "./localized/id.ts";
 import { deTemplate } from "./localized/de.ts";
+import { esTemplate } from "./localized/es.ts";
+import { koTemplate } from "./localized/ko.ts";
 
 export const getEarlyAccessTemplate = (
   language: SupportedLanguage,
@@ -21,6 +26,10 @@ export const getEarlyAccessTemplate = (
       return jaTemplate(data);
     case "en":
       return enTemplate(data);
+    case "es":
+      return esTemplate(data);
+    case "ko":
+      return koTemplate(data);
     case "zh":
       return zhTemplate(data);
     case "fr":

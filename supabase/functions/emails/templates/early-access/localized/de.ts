@@ -3,7 +3,8 @@ import { emailStyles } from "../styles.ts";
 export const deTemplate = (data?: Record<string, any>) => {
   const { name } = data || {};
   return {
-    subject: `Frühzeitige Registrierung bei Osiri | Erhalten Sie einen kostenlosen Gutschein`,
+    subject:
+      `Frühzeitige Registrierung bei Osiri | Erhalten Sie einen kostenlosen Gutschein`,
     html: `
     <!DOCTYPE html>
     <html>
