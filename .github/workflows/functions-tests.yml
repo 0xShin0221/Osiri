@@ -22,5 +22,5 @@ jobs:
           cd supabase/functions
           deno task test
       - name: Reset Supabase DB on develop
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/main'
         run: supabase db reset
