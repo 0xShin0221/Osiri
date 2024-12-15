@@ -1,13 +1,13 @@
 export interface EmailPayload {
   to: NotificationTemplate;
   template: NotificationTemplate;
-  language: string;
+  language: SupportedLanguage;
   data?: Record<string, any>;
 }
 
 export interface SlackPayload {
   email?: string;
-  language?: string;
+  language?: SupportedLanguage;
   template?: NotificationTemplate;
   data?: Record<string, any>;
 }
@@ -32,3 +32,17 @@ export type TemplateConfigs =
   & {
     default: TemplateConfig;
   };
+
+export type SupportedLanguage =
+  | "en" // English
+  | "ja" // Japanese
+  | "zh" // Chinese
+  | "fr" // French
+  | "hi" // Hindi
+  | "pt" // Portuguese
+  | "bn" // Bengali
+  | "ru" // Russian
+  | "id" // Indonesian
+  | "de" // German
+  | "es" // Spanish
+  | "ko"; // Korean

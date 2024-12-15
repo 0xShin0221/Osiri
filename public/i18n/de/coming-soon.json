@@ -1,28 +1,30 @@
 {
-  "badge": "",
-  "description": "",
-  "getCoupon": "",
+  "badge": "Early-Bird-Rabatt",
+  "description": "Verpassen Sie nicht die Chance, es kostenlos zu testen",
+  "getCoupon": "Gutschein sichern",
   "incentives": {
     "earlyAccess": {
-      "description": "",
-      "title": ""
+      "description": "Erste Registrierungen erhalten 50% Rabatt für 3 Monate!",
+      "title": "50% Rabatt"
     },
     "earlyAccessAnnually": {
-      "description": "",
-      "title": ""
+      "description": "Statt regulär €10 pro Monat, erhalten erste Registrierungen 3 Monate kostenlos!",
+      "title": "Über €30 Ersparnis pro Jahr"
     },
     "earlyAccessLifetime": {
-      "description": "",
-      "title": ""
+      "description": "Alle Premium-Funktionen zum Vorzugspreis verfügbar",
+      "title": "Vollzugriff"
     }
   },
   "input": {
-    "company": "",
-    "email": "",
-    "name": ""
+    "company": "Firmenname",
+    "email": "E-Mail-Adresse",
+    "name": "Name",
+    "placeholder": "Ihre E-Mail-Adresse eingeben"
   },
-  "rating": "",
+  "rating": "Bereits {{count}}+ Early Adopter registriert",
+  "rating_0": "",
   "rating_plural": "",
-  "subtitle": "",
-  "title": ""
+  "subtitle": "Sichern Sie sich einen attraktiven Gutschein!",
+  "title": "Vor der Veröffentlichung"
 }

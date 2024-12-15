@@ -3,6 +3,7 @@ import {
   EmailPayload,
   EmailTemplateContent,
   NotificationTemplate,
+  SupportedLanguage,
 } from "../_shared/types.ts";
 import { sendEmail } from "./utils/resend.ts";
 import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
@@ -12,7 +13,7 @@ import { slackNotify } from "../_shared/slack.ts";
 
 const getTemplateContent = (
   template: NotificationTemplate,
-  language: string,
+  language: SupportedLanguage,
   data?: Record<string, any>,
 ): EmailTemplateContent => {
   console.info("getTemplateContent Input:", { template, language, data });
@@ -21,11 +22,10 @@ const getTemplateContent = (
     case "early-access":
       return getEarlyAccessTemplate(language, data);
     case "contact":
+      throw new Error(`Template ${template} not implemented yet`);
     case "feedback":
-      // Add other template handlers here
       throw new Error(`Template ${template} not implemented yet`);
     default:
-      console.error(`Unknown template: ${template}`);
       throw new Error(`Unknown template: ${template}`);
   }
 };

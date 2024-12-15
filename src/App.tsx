@@ -14,6 +14,7 @@ import { Terms } from "./pages/Terms";
 import { Privacy } from "./pages/Privacy";
 import { ComingSoon } from "./pages/ComingSoon";
 import { NotFound } from "./pages/NotFound";
+import * as amplitude from '@amplitude/analytics-browser';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -42,6 +43,11 @@ function LocalizedRoutes() {
 
 function App() {
   const { i18n } = useTranslation();
+  const amplitudeKey = import.meta.env.VITE_AMPLITUDE_API_KEY;
+  if(!amplitudeKey) {
+    throw new Error("Amplitude API key is missing");
+  }
+  amplitude.init(amplitudeKey, {"autocapture":true});
 
   useEffect(() => {
     document.documentElement.lang = i18n.resolvedLanguage || LANGUAGES.DEFAULT;

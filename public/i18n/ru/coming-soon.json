@@ -1,29 +1,30 @@
 {
-  "badge": "",
-  "description": "",
-  "getCoupon": "",
+  "badge": "Ранняя скидка",
+  "description": "Не упустите возможность попробовать бесплатно",
+  "getCoupon": "Получить купон",
   "incentives": {
     "earlyAccess": {
-      "description": "",
-      "title": ""
+      "description": "Первым пользователям 50% скидка на 3 месяца!",
+      "title": "Скидка 50%"
     },
     "earlyAccessAnnually": {
-      "description": "",
-      "title": ""
+      "description": "Вместо обычной цены ₽800 в месяц, первые пользователи получают 3 месяца бесплатно!",
+      "title": "Экономия более ₽2,400 в год"
     },
     "earlyAccessLifetime": {
-      "description": "",
-      "title": ""
+      "description": "Все премиум-функции по сниженной цене",
+      "title": "Полный доступ"
     }
   },
   "input": {
-    "company": "",
-    "email": "",
-    "name": ""
+    "company": "Название компании",
+    "email": "Email адрес",
+    "name": "Имя",
+    "placeholder": "Введите ваш email адрес"
   },
+  "rating": "Уже зарегистрировалось {{count}}+ ранних пользователей",
   "rating_0": "",
-  "rating_1": "",
-  "rating_2": "",
-  "subtitle": "",
-  "title": ""
+  "rating_plural": "",
+  "subtitle": "Получите выгодный купон!",
+  "title": "До выпуска"
 }

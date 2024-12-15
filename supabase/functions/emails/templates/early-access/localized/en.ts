@@ -1,4 +1,4 @@
-import { emailStyles } from "./styles.ts";
+import { emailStyles } from "../styles.ts";
 
 export const enTemplate = (data?: Record<string, any>) => {
   const { name } = data || {};
