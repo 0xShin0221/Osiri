@@ -1,4 +1,5 @@
 import "./emails/early-access-test.ts";
+import "./unsubscribe/unsubscribe-test.ts"
 
 const setup = async () => {
   console.log("Test setup completed");
