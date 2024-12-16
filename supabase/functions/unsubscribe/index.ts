@@ -5,7 +5,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
-import { decodeBase64 } from "@std/encoding";
+import { decodeBase64 } from "jsr:@std/encoding";
 import { unsubscribeFromNewsletter } from "../_shared/db.ts";
 console.log("Hello from Functions!")
 
