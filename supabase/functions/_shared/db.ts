@@ -1,6 +1,9 @@
 import { createClient } from "jsr:@supabase/supabase-js";
-import { NewsletterSubscription, SupportedLanguage, WaitlistEntry } from "./types.ts";
-
+import {
+  NewsletterSubscription,
+  SupportedLanguage,
+  WaitlistEntry,
+} from "./types.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
@@ -33,7 +36,7 @@ export const saveToWaitlist = async (
 export const subscribeToNewsletter = async (
   email: string,
   language: SupportedLanguage,
- ): Promise<void> => {
+): Promise<void> => {
   try {
     // Check for existing subscription
     const { data: existingSubscription, error: fetchError } = await supabase
@@ -41,12 +44,12 @@ export const subscribeToNewsletter = async (
       .select("*")
       .eq("email", email)
       .single();
- 
+
     if (fetchError && fetchError.code !== "PGRST116") { // PGRST116 is "no rows returned" error
       console.error("Error checking existing subscription:", fetchError);
       throw fetchError;
     }
- 
+
     if (existingSubscription) {
       if (existingSubscription.status === "unsubscribed") {
         // Reactivate previously unsubscribed user
@@ -57,7 +60,7 @@ export const subscribeToNewsletter = async (
             language: language,
           })
           .eq("email", email);
- 
+
         if (updateError) {
           console.error("Error reactivating subscription:", updateError);
           throw updateError;
@@ -74,34 +77,33 @@ export const subscribeToNewsletter = async (
         language,
         status: "active",
       };
- 
+
       const { error: insertError } = await supabase
         .from("newsletter_subscriptions")
         .insert(subscription);
- 
+
       if (insertError) {
         console.error("Error creating subscription:", insertError);
         throw insertError;
       }
     }
- 
   } catch (error) {
     console.error("Error in subscribeToNewsletter:", error);
     throw error;
   }
- };
- 
- // Optional: Implement unsubscribe functionality 
- export const unsubscribeFromNewsletter = async (
+};
+
+// Optional: Implement unsubscribe functionality
+export const unsubscribeFromNewsletter = async (
   email: string,
- ): Promise<void> => {
+): Promise<void> => {
   const { error } = await supabase
     .from("newsletter_subscriptions")
     .update({ status: "unsubscribed" })
     .eq("email", email);
- 
+
   if (error) {
     console.error("Error unsubscribing from newsletter:", error);
     throw error;
   }
- };
+};

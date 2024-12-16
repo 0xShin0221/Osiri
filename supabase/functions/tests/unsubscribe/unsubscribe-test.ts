@@ -6,7 +6,7 @@ Deno.test("Unsubscribe URL generation and decoding", () => {
   const testEmail = "test@example.com";
 
   // Generate URL
-  const url = generateUnsubscribeUrl(testEmail);
+  const url = generateUnsubscribeUrl(testEmail, "en");
 
   // Extract token from URL
   const token = new URL(url).searchParams.get("token");
@@ -23,10 +23,10 @@ Deno.test("Unsubscribe URL generation and decoding", () => {
 
 Deno.test("URL format", () => {
   const testEmail = "test@example.com";
-  const url = generateUnsubscribeUrl(testEmail);
+  const url = generateUnsubscribeUrl(testEmail, "en");
 
   assert(
-    url.startsWith("https://osiri.xyz/unsubscribe?token="),
+    url.startsWith("https://osiri.xyz/en/unsubscribe?token="),
     "URL should have correct format",
   );
 

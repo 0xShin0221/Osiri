@@ -12,7 +12,11 @@ export interface SlackPayload {
   data?: Record<string, any>;
 }
 
-export type NotificationTemplate = "early-access" | 'newsletter' |  "contact" | "feedback";
+export type NotificationTemplate =
+  | "early-access"
+  | "newsletter"
+  | "contact"
+  | "feedback";
 
 export interface EmailTemplateContent {
   subject: string;
@@ -47,17 +51,16 @@ export type SupportedLanguage =
   | "es" // Spanish
   | "ko"; // Korean
 
-
 export interface WaitlistEntry {
-    email: string;
-    name?: string;
-    company?: string;
-    role?: string;
-    language: string;
-  }
+  email: string;
+  name?: string;
+  company?: string;
+  role?: string;
+  language: string;
+}
 
 export interface NewsletterSubscription {
-    email: string;
-    language: string;
-    status?: string;
-  }
+  email: string;
+  language: string;
+  status?: string;
+}

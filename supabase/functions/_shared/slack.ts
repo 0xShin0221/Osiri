@@ -24,7 +24,7 @@ const TEMPLATE_CONFIGS: TemplateConfigs = {
     showData: true,
     emoji: "💫",
   },
-  'newsletter': {
+  "newsletter": {
     title: "New Newsletter Subscription",
     showData: false,
     emoji: "📮",

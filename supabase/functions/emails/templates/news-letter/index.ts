@@ -17,36 +17,36 @@ import { zhTemplate } from "./localized/zh.ts";
 
 export const getNewsletterTemplate = (
   language: SupportedLanguage,
-  data?: Record<string, any>,
+  data: Record<string, any>,
 ): EmailTemplateContent => {
   console.info("getNewsletterTemplate Input:", { language, data });
 
   switch (language) {
     case "ja":
-      return jaTemplate(data);
+      return jaTemplate(data, language);
     case "en":
-      return enTemplate(data);
+      return enTemplate(data, language);
     case "bn":
-      return bnTemplate(data);
+      return bnTemplate(data, language);
     case "ru":
-      return ruTemplate(data);
+      return ruTemplate(data, language);
     case "id":
-      return idTemplate(data);
+      return idTemplate(data, language);
     case "de":
-      return deTemplate(data);
+      return deTemplate(data, language);
     case "es":
-      return esTemplate(data);
+      return esTemplate(data, language);
     case "fr":
-      return frTemplate(data);
+      return frTemplate(data, language);
     case "hi":
-      return hiTemplate(data);
+      return hiTemplate(data, language);
     case "ko":
-      return koTemplate(data);
+      return koTemplate(data, language);
     case "pt":
-      return ptTemplate(data);
+      return ptTemplate(data, language);
     case "zh":
-      return zhTemplate(data);
+      return zhTemplate(data, language);
     default:
-      return enTemplate(data);
+      return enTemplate(data, language);
   }
 };

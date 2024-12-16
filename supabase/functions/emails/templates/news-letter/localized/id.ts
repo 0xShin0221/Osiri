@@ -1,10 +1,17 @@
+import { SupportedLanguage } from "../../../../_shared/types.ts";
+import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const idTemplate = (data?: Record<string, any>) => {
-    const { email } = data || {};
-    return {
-      subject: "[Osiri] Konfirmasi Langganan Newsletter",
-      html: `
+export const idTemplate = (
+  data: Record<string, any>,
+  language: SupportedLanguage,
+) => {
+  const { email } = data || {};
+  const unsubscribeUrl = generateUnsubscribeUrl(email || "", language);
+
+  return {
+    subject: "[Osiri] Konfirmasi Langganan Newsletter",
+    html: `
       <!DOCTYPE html>
       <html>
         <head>
@@ -55,7 +62,7 @@ export const idTemplate = (data?: Record<string, any>) => {
               
               <div class="footer">
                 <p>© 2024 Osiri by Dig Da Tech LLC. Hak cipta dilindungi undang-undang.</p>
-                <p>Anda dapat berhenti berlangganan kapan saja dengan mengklik tautan di email kami.</p>
+                <p>Jika Anda ingin berhenti berlangganan, <a href="${unsubscribeUrl}">klik di sini</a>.</p>
                 <p>Jika Anda memiliki pertanyaan, silakan hubungi kami di support@osiri.xyz</p>
               </div>
             </div>
@@ -63,6 +70,5 @@ export const idTemplate = (data?: Record<string, any>) => {
         </body>
       </html>
       `,
-    };
   };
-  
+};
