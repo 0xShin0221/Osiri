@@ -7,8 +7,9 @@ import {
 } from "../_shared/types.ts";
 import { sendEmail } from "./utils/resend.ts";
 import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
+import {getNewsletterTemplate} from "./templates/news-letter/index.ts";
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
-import { saveToWaitlist } from "../_shared/db.ts";
+import { saveToWaitlist, subscribeToNewsletter } from "../_shared/db.ts";
 import { slackNotify } from "../_shared/slack.ts";
 
 const getTemplateContent = (
@@ -21,6 +22,8 @@ const getTemplateContent = (
   switch (template) {
     case "early-access":
       return getEarlyAccessTemplate(language, data);
+    case "newsletter":
+        return getNewsletterTemplate(language, data);
     case "contact":
       throw new Error(`Template ${template} not implemented yet`);
     case "feedback":
@@ -39,7 +42,16 @@ Deno.serve(handleWithCors(async (req) => {
       throw new Error("Missing required fields in request body");
     }
 
-    await saveToWaitlist(to, language, data);
+    switch (template) {
+      case "early-access":
+        await saveToWaitlist(to, language, data);
+        break;
+      case "newsletter":
+        await subscribeToNewsletter(to, language);
+        break;
+      default:
+        throw new Error(`Unknown template: ${template}`);
+    }
 
     const emailContent = getTemplateContent(template, language, data);
     console.info("Email content:", emailContent);

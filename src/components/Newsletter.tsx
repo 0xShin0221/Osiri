@@ -1,13 +1,47 @@
+import { createClient } from "@supabase/supabase-js";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import i18n from "@/lib/i18n/config";
 
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 export const Newsletter = () => {
   const { t } = useTranslation("home");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Subscribed!");
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('emails', {
+        body: ({
+          to: email,
+          template: 'newsletter',
+          language: i18n.language,
+          data: {
+            email: email,
+          }
+        }),
+      });
+
+      if (error) throw error;
+
+      setEmail("");
+      // toast.success(t("success"));
+    } catch (error) {
+      console.error('Error:', error);
+      // toast.error(t("error"));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -32,10 +66,18 @@ export const Newsletter = () => {
           <Input
             placeholder={t("newsletter.placeholder")}
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
             className="bg-muted/50 dark:bg-muted/80"
             aria-label={t("newsletter.emailLabel")}
           />
-          <Button>{t("newsletter.button")}</Button>
+         <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
+            {t("newsletter.button")}
+          </Button>
         </form>
       </div>
 
