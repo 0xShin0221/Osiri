@@ -1,9 +1,13 @@
+import { SupportedLanguage } from "../../../../_shared/types.ts";
 import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const jaTemplate = (data?: Record<string, any>) => {
+export const jaTemplate = (
+  data: Record<string, any>,
+  language: SupportedLanguage,
+) => {
   const { email } = data || {};
-  const unsubscribeUrl = generateUnsubscribeUrl(email || '');
+  const unsubscribeUrl = generateUnsubscribeUrl(email || "", language);
 
   return {
     subject: "[Osiri] ニュースレター購読のご確認",

@@ -1,8 +1,12 @@
 // templates/newsletter/localized/ru.ts
+import { SupportedLanguage } from "../../../../_shared/types.ts";
+import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const ruTemplate = (data?: Record<string, any>) => {
+export const ruTemplate = (data: Record<string, any>, language: SupportedLanguage) => {
   const { email } = data || {};
+  const unsubscribeUrl = generateUnsubscribeUrl(email || '', language);
+
   return {
     subject: "[Osiri] Подписка на рассылку подтверждена",
     html: `
@@ -56,7 +60,7 @@ export const ruTemplate = (data?: Record<string, any>) => {
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. Все права защищены.</p>
-              <p>Вы можете отписаться в любое время, нажав на ссылку в наших письмах.</p>
+              <p>Если вы хотите отписаться, <a href="${unsubscribeUrl}">нажмите здесь</a>.</p>
               <p>Если у вас есть вопросы, пожалуйста, свяжитесь с нами по адресу support@osiri.xyz</p>
             </div>
           </div>
@@ -66,4 +70,3 @@ export const ruTemplate = (data?: Record<string, any>) => {
     `,
   };
 };
-

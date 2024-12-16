@@ -1,10 +1,17 @@
+import { SupportedLanguage } from "../../../../_shared/types.ts";
+import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const zhTemplate = (data?: Record<string, any>) => {
-    const { email } = data || {};
-    return {
-      subject: "[Osiri] 订阅通讯确认",
-      html: `
+export const zhTemplate = (
+  data: Record<string, any>,
+  language: SupportedLanguage,
+) => {
+  const { email } = data || {};
+  const unsubscribeUrl = generateUnsubscribeUrl(email || "", language);
+
+  return {
+    subject: "[Osiri] 订阅通讯确认",
+    html: `
       <!DOCTYPE html>
       <html>
         <head>
@@ -46,12 +53,12 @@ export const zhTemplate = (data?: Record<string, any>) => {
               <a href="https://osiri.xyz" class="cta-button">访问我们的网站</a>
               <div class="footer">
                 <p>© 2024 Osiri by Dig Da Tech LLC. 版权所有。</p>
-                <p>您可以随时通过我们邮件中的链接取消订阅。</p>
+               <p>如果您希望取消订阅，请 <a href="${unsubscribeUrl}">点击此处</a>。</p>
                 <p>如有任何问题，请通过 support@osiri.xyz 与我们联系</p>
               </div>
             </div>
           </div>
         </body>
       </html>`,
-    };
   };
+};

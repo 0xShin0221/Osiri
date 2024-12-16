@@ -1,7 +1,14 @@
+import { SupportedLanguage } from "../../../../_shared/types.ts";
+import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const enTemplate = (data?: Record<string, any>) => {
+export const enTemplate = (
+  data: Record<string, any>,
+  language: SupportedLanguage,
+) => {
   const { email } = data || {};
+  const unsubscribeUrl = generateUnsubscribeUrl(email || "", language);
+
   return {
     subject: "[Osiri] Newsletter Subscription Confirmed",
     html: `
@@ -55,7 +62,7 @@ export const enTemplate = (data?: Record<string, any>) => {
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</p>
-              <p>You can unsubscribe at any time by clicking the link in our emails.</p>
+              <p>If you wish to unsubscribe, <a href="${unsubscribeUrl}">click here</a>.</p>
               <p>If you have any questions, please contact us at support@osiri.xyz</p>
             </div>
           </div>

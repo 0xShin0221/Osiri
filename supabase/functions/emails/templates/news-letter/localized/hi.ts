@@ -1,10 +1,17 @@
+import { SupportedLanguage } from "../../../../_shared/types.ts";
+import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const hiTemplate = (data?: Record<string, any>) => {
-    const { email } = data || {};
-    return {
-      subject: "[Osiri] न्यूजलेटर सदस्यता की पुष्टि",
-      html: `
+export const hiTemplate = (
+  data: Record<string, any>,
+  language: SupportedLanguage,
+) => {
+  const { email } = data || {};
+  const unsubscribeUrl = generateUnsubscribeUrl(email || "", language);
+
+  return {
+    subject: "[Osiri] न्यूजलेटर सदस्यता की पुष्टि",
+    html: `
       <!DOCTYPE html>
       <html>
         <head>
@@ -46,12 +53,12 @@ export const hiTemplate = (data?: Record<string, any>) => {
               <a href="https://osiri.xyz" class="cta-button">हमारी वेबसाइट देखें</a>
               <div class="footer">
                 <p>© 2024 Osiri by Dig Da Tech LLC. सर्वाधिकार सुरक्षित।</p>
-                <p>आप हमारे ईमेल में दिए गए लिंक पर क्लिक करके किसी भी समय सदस्यता रद्द कर सकते हैं।</p>
+                <p>यदि आप सदस्यता समाप्त करना चाहते हैं, तो <a href="${unsubscribeUrl}">यहां क्लिक करें</a>।</p>
                 <p>यदि आपके कोई प्रश्न हैं, तो कृपया हमें support@osiri.xyz पर संपर्क करें</p>
               </div>
             </div>
           </div>
         </body>
       </html>`,
-    };
   };
+};
