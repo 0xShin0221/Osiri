@@ -15,14 +15,15 @@ Deno.serve(handleWithCors(async (req) => {
     const email = new TextDecoder().decode(emailBytes);
     await unsubscribeFromNewsletter(email);
 
-    // Redirect to unsubscribe confirmation page
-    return new Response(null, {
-      status: 302,
-      headers: {
-        ...corsHeaders,
-        "Location": "https://osiri.xyz/unsubscribe/success",
-      },
-    });
+    return new Response(
+      JSON.stringify({ success: true }),
+      {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   } catch (error) {
     console.error("Unsubscribe error:", error);
     return new Response(JSON.stringify({ error: "Invalid request" }), {
