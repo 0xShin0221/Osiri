@@ -1,4 +1,4 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
 import { decodeBase64Url } from "jsr:@std/encoding";
 import { unsubscribeFromNewsletter } from "../_shared/db.ts";
@@ -11,7 +11,6 @@ Deno.serve(handleWithCors(async (req) => {
       throw new Error("Invalid unsubscribe token");
     }
 
-
     const emailBytes = decodeBase64Url(token);
     const email = new TextDecoder().decode(emailBytes);
     await unsubscribeFromNewsletter(email);
@@ -21,10 +20,9 @@ Deno.serve(handleWithCors(async (req) => {
       status: 302,
       headers: {
         ...corsHeaders,
-        'Location': 'https://osiri.xyz/unsubscribe/success'
+        "Location": "https://osiri.xyz/unsubscribe/success",
       },
     });
-
   } catch (error) {
     console.error("Unsubscribe error:", error);
     return new Response(JSON.stringify({ error: "Invalid request" }), {
@@ -33,4 +31,3 @@ Deno.serve(handleWithCors(async (req) => {
     });
   }
 }));
-
