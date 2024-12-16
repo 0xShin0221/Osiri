@@ -1,5 +1,8 @@
 {
-  "backToHome": "",
-  "message": "",
-  "title": ""
+  "backToHome": "Back to Home",
+  "errorMessage": "Sorry, there was an error processing your request. Please try again or contact support.",
+  "errorTitle": "Unsubscribe Error",
+  "message": "You have been unsubscribed from our newsletter. We hope to see you again soon.",
+  "processing": "Processing unsubscribe request...",
+  "title": "Successfully Unsubscribed"
 }

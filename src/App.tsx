@@ -14,6 +14,7 @@ import { Terms } from "./pages/Terms";
 import { Privacy } from "./pages/Privacy";
 import { ComingSoon } from "./pages/ComingSoon";
 import { NotFound } from "./pages/NotFound";
+import { Unsubscribe } from "./pages/Unsubscribe";
 import * as amplitude from '@amplitude/analytics-browser';
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -35,6 +36,7 @@ function LocalizedRoutes() {
           <Route path="coming-soon" element={<ComingSoon />} />
           <Route path="terms" element={<Terms />} />
           <Route path="privacy" element={<Privacy />} />
+          <Route path="unsubscribe" element={<Unsubscribe />} /> 
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
