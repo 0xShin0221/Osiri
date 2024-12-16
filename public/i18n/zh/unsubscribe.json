@@ -1,8 +1,8 @@
 {
-  "processing": "正在处理取消订阅请求...",
-  "title": "已成功取消订阅",
-  "message": "您已取消订阅我们的通讯。希望不久后能再次见到您。",
-  "errorTitle": "取消订阅错误",
+  "backToHome": "返回首页",
   "errorMessage": "抱歉，处理您的请求时出现错误。请重试或联系支持团队。",
-  "backToHome": "返回首页"
+  "errorTitle": "取消订阅错误",
+  "message": "您已取消订阅我们的通讯。希望不久后能再次见到您。",
+  "processing": "正在处理取消订阅请求...",
+  "title": "已成功取消订阅"
 }
