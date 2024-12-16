@@ -125,12 +125,12 @@ const testEmailSendingMultiLanguage = async () => {
   for (const lang of testLanguages) {
     const { response, responseText } = await sendTestEmail(
       `${lang}.${baseEmail}`,
-      lang
+      lang,
     );
 
     if (!response.ok) {
       throw new Error(
-        `Email sending failed for ${lang}: ${response.status} ${responseText}`
+        `Email sending failed for ${lang}: ${response.status} ${responseText}`,
       );
     }
 
@@ -177,7 +177,7 @@ const testDuplicateEmailHandlingMultiLanguage = async () => {
       await sendTestEmail(baseEmail, "en");
 
     if (!firstResponse.ok) {
-      console.error('First email response:', firstResponseText);
+      console.error("First email response:", firstResponseText);
     }
 
     assert(firstResponse.ok, "First email should be sent successfully");
@@ -186,24 +186,26 @@ const testDuplicateEmailHandlingMultiLanguage = async () => {
 
     // Test duplicate handling for each language
     for (const lang of testLanguages) {
-      const { response: duplicateResponse, responseText: duplicateResponseText } =
-        await sendTestEmail(baseEmail, lang);
+      const {
+        response: duplicateResponse,
+        responseText: duplicateResponseText,
+      } = await sendTestEmail(baseEmail, lang);
 
       assert(
         !duplicateResponse.ok,
-        `Duplicate email should be rejected for ${lang}`
+        `Duplicate email should be rejected for ${lang}`,
       );
       assert(
         duplicateResponseText.includes("23505"),
-        `Should return unique constraint violation error for ${lang}`
+        `Should return unique constraint violation error for ${lang}`,
       );
       assert(
         duplicateResponseText.includes("duplicate key value"),
-        `Should indicate duplicate email for ${lang}`
+        `Should indicate duplicate email for ${lang}`,
       );
     }
   } catch (error) {
-    console.error('Test error:', error);
+    console.error("Test error:", error);
     throw error;
   }
 };
@@ -235,11 +237,13 @@ const testStyles = () => {
   );
 };
 
-
 Deno.test("Email Template Content Test", testTemplateContent);
 Deno.test("Email Sending Test", testEmailSending);
 Deno.test("Email Sending Multi-Language Test", testEmailSendingMultiLanguage);
 Deno.test("Duplicate Email Handling Test", testDuplicateEmailHandling);
-Deno.test("Duplicate Email Handling Multi-Language Test", testDuplicateEmailHandlingMultiLanguage);
+Deno.test(
+  "Duplicate Email Handling Multi-Language Test",
+  testDuplicateEmailHandlingMultiLanguage,
+);
 Deno.test("HTML Structure Test", testHtmlStructure);
 Deno.test("Email Styles Test", testStyles);
