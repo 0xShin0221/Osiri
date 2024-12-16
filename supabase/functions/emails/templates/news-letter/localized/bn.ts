@@ -1,7 +1,6 @@
 import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-
 export const bnTemplate = (data?: Record<string, any>) => {
   const { email } = data || {};
   const unsubscribeUrl = generateUnsubscribeUrl(email || '');
@@ -58,7 +57,7 @@ export const bnTemplate = (data?: Record<string, any>) => {
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. সর্বস্বত্ব সংরক্ষিত।</p>
-              <p>আপনি যেকোনো সময় আমাদের ইমেইলে থাকা লিঙ্কে ক্লিক করে আনসাবস্ক্রাইব করতে পারেন।</p>
+              <p>আপনি যদি সাবস্ক্রিপশন বাতিল করতে চান, <a href="${unsubscribeUrl}">এখানে ক্লিক করুন</a>।</p>
               <p>কোনো প্রশ্ন থাকলে, support@osiri.xyz-তে যোগাযোগ করুন</p>
             </div>
           </div>
