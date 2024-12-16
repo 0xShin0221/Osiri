@@ -24,6 +24,11 @@ const TEMPLATE_CONFIGS: TemplateConfigs = {
     showData: true,
     emoji: "💫",
   },
+  'newsletter': {
+    title: "New Newsletter Subscription",
+    showData: false,
+    emoji: "📮",
+  },
   "default": {
     title: "New Notification",
     showData: true,
@@ -43,7 +48,7 @@ const getWebhookUrl = (template: NotificationTemplate): string | null => {
 
   const webhookUrl = webhookMap[template];
   if (!webhookUrl) {
-    console.warn(`Slack webhook URL for template "${template}" is not set.`);
+    console.info(`Slack webhook URL for template "${template}" is not set.`);
     return null;
   }
 

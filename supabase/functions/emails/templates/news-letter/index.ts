@@ -1,0 +1,52 @@
+import {
+  EmailTemplateContent,
+  SupportedLanguage,
+} from "../../../_shared/types.ts";
+import { enTemplate } from "./localized/en.ts";
+import { jaTemplate } from "./localized/ja.ts";
+import { bnTemplate } from "./localized/bn.ts";
+import { ruTemplate } from "./localized/ru.ts";
+import { idTemplate } from "./localized/id.ts";
+import { deTemplate } from "./localized/de.ts";
+import { esTemplate } from "./localized/es.ts";
+import { frTemplate } from "./localized/fr.ts";
+import { hiTemplate } from "./localized/hi.ts";
+import { koTemplate } from "./localized/ko.ts";
+import { ptTemplate } from "./localized/pt.ts";
+import { zhTemplate } from "./localized/zh.ts";
+
+export const getNewsletterTemplate = (
+  language: SupportedLanguage,
+  data?: Record<string, any>,
+): EmailTemplateContent => {
+  console.info("getNewsletterTemplate Input:", { language, data });
+
+  switch (language) {
+    case "ja":
+      return jaTemplate(data);
+    case "en":
+      return enTemplate(data);
+    case "bn":
+      return bnTemplate(data);
+    case "ru":
+      return ruTemplate(data);
+    case "id":
+      return idTemplate(data);
+    case "de":
+      return deTemplate(data);
+    case "es":
+      return esTemplate(data);
+    case "fr":
+      return frTemplate(data);
+    case "hi":
+      return hiTemplate(data);
+    case "ko":
+      return koTemplate(data);
+    case "pt":
+      return ptTemplate(data);
+    case "zh":
+      return zhTemplate(data);
+    default:
+      return enTemplate(data);
+  }
+};
