@@ -5,7 +5,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
-import { decodeBase64 } from "jsr:@std/encoding";
+import { decodeBase64Url } from "jsr:@std/encoding";
 import { unsubscribeFromNewsletter } from "../_shared/db.ts";
 console.log("Hello from Functions!")
 
@@ -13,12 +13,15 @@ Deno.serve(handleWithCors(async (req) => {
   try {
     const url = new URL(req.url);
     const token = url.searchParams.get('token');
+    console.log("Url:", url);
+    console.log("Unsubscribe token:", token);
 
     if (!token) {
       throw new Error("Invalid unsubscribe token");
     }
 
-    const email = decodeBase64(token);
+    const emailBytes = decodeBase64Url(token);
+    const email = new TextDecoder().decode(emailBytes);
     await unsubscribeFromNewsletter(email);
 
     // Redirect to unsubscribe confirmation page
