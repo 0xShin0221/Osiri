@@ -1,5 +1,7 @@
 import { testContext } from "./test-helpers.ts";
 
+await import("./emails/early-access-test.ts");
+await import("./unsubscribe/unsubscribe-test.ts");
 
 Deno.test({
   name: "Global Setup",
@@ -14,8 +16,7 @@ Deno.test({
 Deno.test({
   name: "All Function Tests",
   async fn() {
-    await import("./emails/early-access-test.ts");
-    await import("./unsubscribe/unsubscribe-test.ts");
+
   },
   sanitizeOps: false,
   sanitizeResources: false,
