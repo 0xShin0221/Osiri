@@ -1,4 +1,5 @@
 -- supabase/migrations/20240317000000_create_rss_feeds.sql
+create extension if not exists moddatetime schema extensions;
 
 -- Create enum for feed languages
 create type feed_language as enum (
