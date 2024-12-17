@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,6 +20,7 @@ jobs:
           deno-version: v1.x
 
       # Database tests
+      - run: supabase db reset
       - run: supabase db start
       - run: supabase db lint
       - run: supabase test db
@@ -40,12 +42,36 @@ jobs:
           cd supabase/functions
           deno task test
         env:
-          SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
-          SUPABASE_ANON_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
+          SUPABASE_URL: ${{ secrets.STAGING_URL }} 
+          SUPABASE_ANON_KEY: ${{ secrets.STAGING_ANON_KEY }}  
           SLACK_WAITLIST_WEBHOOK_URL: ${{ secrets.SLACK_WAITLIST_WEBHOOK_URL }}
 
+  # mainブランチ用の制限されたテスト
+  main-branch-test:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      # Type check only for main
+      - name: Verify generated types
+        run: |
+          supabase gen types typescript --local > types.gen.ts
+          if ! git diff --ignore-space-at-eol --exit-code --quiet types.gen.ts; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff
+            exit 1
+          fi
+
   db-check:
-    needs: test
+    needs: [test, main-branch-test]  
+    if: always() 
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
