@@ -1,4 +1,6 @@
--- supabase/migrations/20240317000000_create_rss_feeds.sql
+-- migration_name: 20240317000000_create_rss_feeds
+
+-- Install required extension
 create extension if not exists moddatetime schema extensions;
 
 -- Create enum for feed languages
@@ -43,3 +45,12 @@ create policy "Only admins can modify rss feeds"
   on rss_feeds for all
   to authenticated
   using (auth.jwt() ->> 'app_metadata' ->> 'is_admin' = 'true');
+
+-- Table and column comments
+comment on table rss_feeds is 'RSS feed source information';
+comment on column rss_feeds.name is 'Feed name';
+comment on column rss_feeds.description is 'Feed description';
+comment on column rss_feeds.url is 'Feed URL';
+comment on column rss_feeds.language is 'Primary language of the feed';
+comment on column rss_feeds.is_active is 'Active/inactive flag';
+comment on column rss_feeds.last_fetched_at is 'Last fetched timestamp';
