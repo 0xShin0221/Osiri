@@ -1,17 +1,12 @@
-import "./emails/early-access-test.ts";
-import "./unsubscribe/unsubscribe-test.ts";
+import { testContext } from "./test-helpers.ts";
 
-const setup = async () => {
-  console.log("Test setup completed");
-};
-
-const cleanup = async () => {
-  console.log("Test cleanup completed");
-};
 
 Deno.test({
   name: "Global Setup",
-  fn: setup,
+  async fn() {
+    await testContext.cleanup();
+    console.log("Test setup completed");
+  },
   sanitizeOps: false,
   sanitizeResources: false,
 });
@@ -19,6 +14,8 @@ Deno.test({
 Deno.test({
   name: "All Function Tests",
   async fn() {
+    await import("./emails/early-access-test.ts");
+    await import("./unsubscribe/unsubscribe-test.ts");
   },
   sanitizeOps: false,
   sanitizeResources: false,
@@ -26,11 +23,13 @@ Deno.test({
 
 Deno.test({
   name: "Global Cleanup",
-  fn: cleanup,
+  async fn() {
+    await testContext.cleanup();
+    console.log("Test cleanup completed");
+  },
   sanitizeOps: false,
   sanitizeResources: false,
 });
-
 addEventListener("load", () => {
   console.log("\nTest Summary:");
   console.log("--------------");
