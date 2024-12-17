@@ -44,7 +44,7 @@ create policy "Anyone can view rss feeds"
 create policy "Only admins can modify rss feeds"
   on rss_feeds for all
   to authenticated
-  using (auth.jwt() ->> 'app_metadata' ->> 'is_admin' = 'true');
+  using (coalesce((auth.jwt()->'app_metadata'->>'is_admin')::boolean, false));
 
 -- Table and column comments
 comment on table rss_feeds is 'RSS feed source information';
