@@ -57,6 +57,10 @@ jobs:
         with:
           deno-version: v1.x
 
+      # Start Supabase
+      - name: Start Supabase
+        run: supabase start
+
       # Type check only for main
       - name: Verify generated types
         run: |
