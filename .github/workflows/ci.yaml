@@ -20,8 +20,8 @@ jobs:
           deno-version: v1.x
 
       # Database tests
-      - run: supabase db reset
       - run: supabase db start
+      - run: supabase db reset
       - run: supabase db lint
       - run: supabase test db
       
