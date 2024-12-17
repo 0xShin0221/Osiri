@@ -21,7 +21,6 @@ jobs:
 
       # Database tests
       - run: supabase db start
-      - run: supabase db reset
       - run: supabase db lint
       - run: supabase test db
       
@@ -39,6 +38,7 @@ jobs:
       - run: supabase start
       - name: Test Edge Functions
         run: |
+          supabase db reset
           cd supabase/functions
           deno task test
         env:
@@ -46,7 +46,6 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.STAGING_ANON_KEY }}  
           SLACK_WAITLIST_WEBHOOK_URL: ${{ secrets.SLACK_WAITLIST_WEBHOOK_URL }}
 
-  # mainブランチ用の制限されたテスト
   main-branch-test:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
