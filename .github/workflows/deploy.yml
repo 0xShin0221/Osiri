@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_PROJECT_ID || secrets.STAGING_PROJECT_ID }}
+      SUPABASE_DB_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      # Database migration
+      - name: Link project
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID
+      - name: Push database changes
+        run: supabase db push
+
+      # Edge Functions deployment
+      - name: Deploy Edge Functions
+        run: supabase functions deploy --project-ref $SUPABASE_PROJECT_ID
+
+      # Deployment notification
+      - name: Notify Slack
+        if: ${{ env.ENVIRONMENT == 'production' }}
+        uses: tokorom/action-slack-incoming-webhook@main
+        env:
+          INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          text: '🚀 Deployed to production: ${{ github.sha }}'
