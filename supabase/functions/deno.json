@@ -2,7 +2,7 @@
   "imports": {
     "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.0",
     "std/": "https://deno.land/std@0.192.0/",
-    "@std/encoding":"@std/encoding@1.0.5"
+    "@std/encoding": "@std/encoding@1.0.5"
   },
   "tasks": {
     "test": "deno test --allow-all tests/deno-test.ts"

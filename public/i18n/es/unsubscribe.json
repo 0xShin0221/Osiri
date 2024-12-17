@@ -1,5 +1,8 @@
 {
-  "backToHome": "",
-  "message": "",
-  "title": ""
+  "backToHome": "Volver al inicio",
+  "errorMessage": "Lo sentimos, hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo o contacta con soporte.",
+  "errorTitle": "Error de cancelación",
+  "message": "Te has dado de baja de nuestro boletín. Esperamos verte pronto de nuevo.",
+  "processing": "Procesando solicitud de cancelación...",
+  "title": "Cancelación exitosa"
 }

@@ -7,7 +7,7 @@ import {
 } from "../_shared/types.ts";
 import { sendEmail } from "./utils/resend.ts";
 import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
-import {getNewsletterTemplate} from "./templates/news-letter/index.ts";
+import { getNewsletterTemplate } from "./templates/news-letter/index.ts";
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
 import { saveToWaitlist, subscribeToNewsletter } from "../_shared/db.ts";
 import { slackNotify } from "../_shared/slack.ts";
@@ -23,7 +23,7 @@ const getTemplateContent = (
     case "early-access":
       return getEarlyAccessTemplate(language, data);
     case "newsletter":
-        return getNewsletterTemplate(language, data);
+      return getNewsletterTemplate(language, data);
     case "contact":
       throw new Error(`Template ${template} not implemented yet`);
     case "feedback":

@@ -1,10 +1,17 @@
+import { SupportedLanguage } from "../../../../_shared/types.ts";
+import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const koTemplate = (data?: Record<string, any>) => {
-    const { email } = data || {};
-    return {
-      subject: "[Osiri] 뉴스레터 구독 확인",
-      html: `
+export const koTemplate = (
+  data: Record<string, any>,
+  language: SupportedLanguage,
+) => {
+  const { email } = data || {};
+  const unsubscribeUrl = generateUnsubscribeUrl(email || "", language);
+
+  return {
+    subject: "[Osiri] 뉴스레터 구독 확인",
+    html: `
       <!DOCTYPE html>
       <html>
         <head>
@@ -46,12 +53,12 @@ export const koTemplate = (data?: Record<string, any>) => {
               <a href="https://osiri.xyz" class="cta-button">웹사이트 방문하기</a>
               <div class="footer">
                 <p>© 2024 Osiri by Dig Da Tech LLC. 모든 권리 보유.</p>
-                <p>이메일의 링크를 클릭하여 언제든지 구독을 취소할 수 있습니다.</p>
+               <p>구독을 취소하려면 <a href="${unsubscribeUrl}">여기를 클릭하세요</a>.</p>
                 <p>문의사항이 있으시면 support@osiri.xyz로 연락해 주세요</p>
               </div>
             </div>
           </div>
         </body>
       </html>`,
-    };
   };
+};

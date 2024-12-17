@@ -1,5 +1,8 @@
 {
-  "backToHome": "",
-  "message": "",
-  "title": ""
+  "backToHome": "Retour à l'accueil",
+  "errorMessage": "Désolé, une erreur s'est produite lors du traitement de votre demande. Veuillez réessayer ou contacter le support.",
+  "errorTitle": "Erreur de désabonnement",
+  "message": "Vous vous êtes désabonné de notre newsletter. Nous espérons vous revoir bientôt.",
+  "processing": "Traitement de la demande de désabonnement...",
+  "title": "Désabonnement réussi"
 }

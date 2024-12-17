@@ -1,5 +1,8 @@
 {
-  "backToHome": "",
-  "message": "",
-  "title": ""
+  "backToHome": "Kembali ke Beranda",
+  "errorMessage": "Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau hubungi dukungan.",
+  "errorTitle": "Kesalahan Berhenti Berlangganan",
+  "message": "Anda telah berhenti berlangganan newsletter kami. Kami harap dapat bertemu Anda kembali segera.",
+  "processing": "Memproses permintaan berhenti berlangganan...",
+  "title": "Berhasil Berhenti Berlangganan"
 }

@@ -1,5 +1,8 @@
 {
-  "backToHome": "",
-  "message": "",
-  "title": ""
+  "backToHome": "Voltar para a página inicial",
+  "errorMessage": "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente ou entre em contato com o suporte.",
+  "errorTitle": "Erro no cancelamento",
+  "message": "Você cancelou sua inscrição em nossa newsletter. Esperamos vê-lo novamente em breve.",
+  "processing": "Processando solicitação de cancelamento...",
+  "title": "Cancelamento realizado com sucesso"
 }

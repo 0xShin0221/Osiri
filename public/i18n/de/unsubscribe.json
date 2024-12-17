@@ -1,5 +1,8 @@
 {
-  "backToHome": "",
-  "message": "",
-  "title": ""
+  "backToHome": "Zurück zur Startseite",
+  "errorMessage": "Entschuldigung, bei der Verarbeitung Ihrer Anfrage ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
+  "errorTitle": "Abmeldefehler",
+  "message": "Sie wurden erfolgreich von unserem Newsletter abgemeldet. Wir hoffen, Sie bald wiederzusehen.",
+  "processing": "Abmeldung wird verarbeitet...",
+  "title": "Erfolgreich abgemeldet"
 }
