@@ -2,6 +2,7 @@ import { assert } from "std/testing/asserts.ts";
 import "https://deno.land/x/dotenv@v3.2.2/load.ts";
 import { getEarlyAccessTemplate } from "../../emails/templates/early-access/index.ts";
 import { SupportedLanguage } from "../../_shared/types.ts";
+import { testContext } from "../test-helpers.ts";
 
 const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const FUNCTION_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -107,7 +108,8 @@ const sendTestEmail = async (email: string, language: string = "en") => {
 };
 
 const testEmailSending = async () => {
-  const { response, responseText } = await sendTestEmail("test@osiri.xyz");
+  const testEmail = testContext.generateTestEmail("single");
+  const { response, responseText } = await sendTestEmail(testEmail);
 
   if (!response.ok) {
     throw new Error(`Email sending failed: ${response.status} ${responseText}`);
@@ -120,13 +122,10 @@ const testEmailSending = async () => {
 
 const testEmailSendingMultiLanguage = async () => {
   const testLanguages = ["en", "ja", "bn", "ru", "id", "de"];
-  const baseEmail = "test@osiri.xyz";
 
   for (const lang of testLanguages) {
-    const { response, responseText } = await sendTestEmail(
-      `${lang}.${baseEmail}`,
-      lang,
-    );
+    const testEmail = testContext.generateTestEmail(`multi_${lang}`);
+    const { response, responseText } = await sendTestEmail(testEmail, lang);
 
     if (!response.ok) {
       throw new Error(
@@ -141,7 +140,7 @@ const testEmailSendingMultiLanguage = async () => {
 };
 
 const testDuplicateEmailHandling = async () => {
-  const testEmail = "duplicate@osiri.xyz";
+  const testEmail = testContext.generateTestEmail("duplicate");
 
   // First email should succeed
   const { response: firstResponse, responseText: firstResponseText } =
@@ -168,45 +167,30 @@ const testDuplicateEmailHandling = async () => {
 
 const testDuplicateEmailHandlingMultiLanguage = async () => {
   const testLanguages = ["ja", "bn", "ru", "id", "de"];
-  const timestamp = new Date().getTime();
-  const baseEmail = `duplicate${timestamp}@osiri.xyz`;
+  const baseEmail = testContext.generateTestEmail("multi_duplicate");
 
-  try {
-    // First email in English should succeed
-    const { response: firstResponse, responseText: firstResponseText } =
-      await sendTestEmail(baseEmail, "en");
+  // First email in English
+  const { response: firstResponse, responseText: firstResponseText } =
+    await sendTestEmail(baseEmail, "en");
 
-    if (!firstResponse.ok) {
-      console.error("First email response:", firstResponseText);
-    }
+  assert(firstResponse.ok, "First email should be sent successfully");
+  const firstData = JSON.parse(firstResponseText);
+  assert(firstData.id, "First response should contain an email ID");
 
-    assert(firstResponse.ok, "First email should be sent successfully");
-    const firstData = JSON.parse(firstResponseText);
-    assert(firstData.id, "First response should contain an email ID");
+  // Test duplicate handling for each language
+  for (const lang of testLanguages) {
+    const { response: duplicateResponse, responseText: duplicateResponseText } =
+      await sendTestEmail(baseEmail, lang);
 
-    // Test duplicate handling for each language
-    for (const lang of testLanguages) {
-      const {
-        response: duplicateResponse,
-        responseText: duplicateResponseText,
-      } = await sendTestEmail(baseEmail, lang);
-
-      assert(
-        !duplicateResponse.ok,
-        `Duplicate email should be rejected for ${lang}`,
-      );
-      assert(
-        duplicateResponseText.includes("23505"),
-        `Should return unique constraint violation error for ${lang}`,
-      );
-      assert(
-        duplicateResponseText.includes("duplicate key value"),
-        `Should indicate duplicate email for ${lang}`,
-      );
-    }
-  } catch (error) {
-    console.error("Test error:", error);
-    throw error;
+    assert(!duplicateResponse.ok, `Duplicate email should be rejected for ${lang}`);
+    assert(
+      duplicateResponseText.includes("23505"),
+      `Should return unique constraint violation error for ${lang}`,
+    );
+    assert(
+      duplicateResponseText.includes("duplicate key value"),
+      `Should indicate duplicate email for ${lang}`,
+    );
   }
 };
 
