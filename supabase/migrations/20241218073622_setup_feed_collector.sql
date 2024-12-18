@@ -1,3 +1,5 @@
+create extension if not exists pg_cron;
+
 -- Set up cron job for feed collection (every 15 minutes)
 select cron.schedule(
   'collect-feeds-every-15min',
