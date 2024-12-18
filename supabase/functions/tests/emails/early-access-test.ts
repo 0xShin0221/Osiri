@@ -134,8 +134,11 @@ const testEmailSendingMultiLanguage = async () => {
     }
 
     const data = JSON.parse(responseText);
-    assert(data, `Response data should exist for ${lang}`);
-    assert(data.id, `Response should contain an email ID for ${lang}`);
+    assert(data && typeof data === 'object', `Response data should be an object for ${lang}`);
+    assert(
+      typeof data.id === 'string' && data.id.length > 0,
+      `Response should contain a non-empty ID string for ${lang}`
+    );
   }
 };
 
