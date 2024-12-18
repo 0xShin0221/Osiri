@@ -13,6 +13,8 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_PROJECT_ID || secrets.STAGING_PROJECT_ID }}
       SUPABASE_DB_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
       ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+      SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
+      SUPABASE_ANON_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +25,13 @@ jobs:
       # Database migration
       - name: Link project
         run: supabase link --project-ref $SUPABASE_PROJECT_ID
+
+      - name: Configure database settings
+        run: |
+          psql "$DATABASE_URL" -c "alter database postgres set app.base_url = '$SUPABASE_URL';"
+          psql "$DATABASE_URL" -c "alter database postgres set app.service_role_key = '$SUPABASE_ANON_KEY';"
+      
+          
       - name: Push database changes
         run: supabase db push --debug
 
