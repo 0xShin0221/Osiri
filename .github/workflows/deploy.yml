@@ -9,12 +9,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_ID: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_PROJECT_ID || secrets.STAGING_PROJECT_ID }}
-      SUPABASE_DB_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
       ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
-      SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
-      SUPABASE_ANON_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -26,18 +22,6 @@ jobs:
       - name: Link project
         run: supabase link --project-ref $SUPABASE_PROJECT_ID
 
-
-      # Set environment variables before migration
-      - name: Set database parameters
-        run: |
-          PGPASSWORD=$SUPABASE_DB_PASSWORD psql \
-            -h $SUPABASE_PROJECT_ID.supabase.co \
-            -p 5432 \
-            -U postgres \
-            -d postgres \
-            -c "alter system set app.base_url = '$SUPABASE_URL';" \
-            -c "alter system set app.service_role_key = '$SUPABASE_ANON_KEY';" \
-            -c "select pg_reload_conf();"
 
       - name: Push database changes
         run: supabase db push --debug
