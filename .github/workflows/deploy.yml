@@ -26,11 +26,18 @@ jobs:
       - name: Link project
         run: supabase link --project-ref $SUPABASE_PROJECT_ID
 
-      - name: Configure database settings
+
+      # Set environment variables before migration
+      - name: Set database parameters
         run: |
-          DATABASE_URL="postgres://postgres:$SUPABASE_DB_PASSWORD@$SUPABASE_PROJECT_ID.supabase.co:5432/postgres?sslmode=require"
-          psql "$DATABASE_URL" -c "alter database postgres set app.base_url = '$SUPABASE_URL';"
-          psql "$DATABASE_URL" -c "alter database postgres set app.service_role_key = '$SUPABASE_ANON_KEY';"
+          PGPASSWORD=$SUPABASE_DB_PASSWORD psql \
+            -h $SUPABASE_PROJECT_ID.supabase.co \
+            -p 5432 \
+            -U postgres \
+            -d postgres \
+            -c "alter system set app.base_url = '$SUPABASE_URL';" \
+            -c "alter system set app.service_role_key = '$SUPABASE_ANON_KEY';" \
+            -c "select pg_reload_conf();"
 
       - name: Push database changes
         run: supabase db push --debug

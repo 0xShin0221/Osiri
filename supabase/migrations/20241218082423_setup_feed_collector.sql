@@ -4,10 +4,6 @@
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
 
--- Set up environment variables
-alter database postgres set app.base_url = 'replaced-by-ci';
-alter database postgres set app.service_role_key = 'replaced-by-ci';
-
 -- Set up cron job for feed collection (every 15 minutes)
 select cron.schedule(
   'collect-feeds-every-15min',
