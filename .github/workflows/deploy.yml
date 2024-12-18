@@ -28,10 +28,10 @@ jobs:
 
       - name: Configure database settings
         run: |
+          DATABASE_URL="postgres://postgres:$SUPABASE_DB_PASSWORD@$SUPABASE_PROJECT_ID.supabase.co:5432/postgres?sslmode=require"
           psql "$DATABASE_URL" -c "alter database postgres set app.base_url = '$SUPABASE_URL';"
           psql "$DATABASE_URL" -c "alter database postgres set app.service_role_key = '$SUPABASE_ANON_KEY';"
-      
-          
+
       - name: Push database changes
         run: supabase db push --debug
 
