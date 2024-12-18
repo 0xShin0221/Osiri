@@ -23,8 +23,10 @@ jobs:
       # Database migration
       - name: Link project
         run: supabase link --project-ref $SUPABASE_PROJECT_ID
+
+
       - name: Push database changes
-        run: supabase db push
+        run: supabase db push --debug
 
       # Edge Functions deployment
       - name: Deploy Edge Functions

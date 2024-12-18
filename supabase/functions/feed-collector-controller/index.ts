@@ -4,20 +4,59 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
+import { createClient } from "jsr:@supabase/supabase-js";
 
-console.log("Hello from Functions!")
 
-Deno.serve(async (req) => {
-  const { name } = await req.json()
-  const data = {
-    message: `Hello ${name}!`,
+Deno.serve(handleWithCors(async () => {
+  try {
+    // Initialize Supabase client
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+    );
+
+    // Get active RSS feeds
+    const { data: feeds, error: feedError } = await supabaseClient
+      .from('rss_feeds')
+      .select('id, name, url')
+      .eq('is_active', true);
+
+    if (feedError) throw feedError;
+
+    // Log the execution
+    console.log(`Processing ${feeds?.length ?? 0} feeds`);
+
+    // Process feeds (implementation pending)
+    const results = {
+      feedsCount: feeds?.length ?? 0,
+      timestamp: new Date().toISOString(),
+      success: true
+    };
+
+    return new Response(
+      JSON.stringify(results),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      }
+    );
+
+  } catch (error: any) {
+    console.error('Error:', error.message);
+    
+    return new Response(
+      JSON.stringify({
+        error: error.message,
+        timestamp: new Date().toISOString()
+      }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 500,
+      }
+    );
   }
-
-  return new Response(
-    JSON.stringify(data),
-    { headers: { "Content-Type": "application/json" } },
-  )
-})
+}))
 
 /* To invoke locally:
 
