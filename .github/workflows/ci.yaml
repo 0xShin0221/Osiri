@@ -8,8 +8,7 @@ on:
 
 jobs:
   test:
-    if: github.ref != 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # mainブランチの制限を削除
     steps:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
@@ -34,46 +33,19 @@ jobs:
             exit 1
           fi
 
-      # Function tests
+      # Function tests with environment-specific credentials
       - run: supabase start
       - name: Test Edge Functions
         run: |
           cd supabase/functions
           deno task test
         env:
-          SUPABASE_URL: ${{ secrets.STAGING_URL }} 
-          SUPABASE_ANON_KEY: ${{ secrets.STAGING_ANON_KEY }}  
+          SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
+          SUPABASE_ANON_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
           SLACK_WAITLIST_WEBHOOK_URL: ${{ secrets.SLACK_WAITLIST_WEBHOOK_URL }}
 
-  main-branch-test:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
-      # Start Supabase
-      - name: Start Supabase
-        run: supabase start
-
-      # Type check only for main
-      - name: Verify generated types
-        run: |
-          supabase gen types typescript --local > types.gen.ts
-          if ! git diff --ignore-space-at-eol --exit-code --quiet types.gen.ts; then
-            echo "Detected uncommitted changes after build. See status below:"
-            git diff
-            exit 1
-          fi
-
   db-check:
-    needs: [test, main-branch-test]  
-    if: always() 
+    needs: test
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
