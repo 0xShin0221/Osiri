@@ -1,5 +1,5 @@
-create extension pg_cron;
-create extension pg_net;
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
 
 -- Set up cron job for feed collection (every 15 minutes)
 select cron.schedule(
