@@ -6,6 +6,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
 import { createClient } from "jsr:@supabase/supabase-js";
+import { fetchRSSFeed, processFeedItems } from "../_shared/rssProcessor.ts";
 
 
 Deno.serve(handleWithCors(async () => {
@@ -27,15 +28,54 @@ Deno.serve(handleWithCors(async () => {
     // Log the execution
     console.log(`Processing ${feeds?.length ?? 0} feeds`);
 
-    // Process feeds (implementation pending)
-    const results = {
-      feedsCount: feeds?.length ?? 0,
-      timestamp: new Date().toISOString(),
-      success: true
-    };
+    const results = [];
+
+    for (const feed of feeds ?? []) {
+      try {
+        // Fetch RSS items
+        const items = await fetchRSSFeed(feed.url);
+        console.log(`Fetched ${items.length} items from ${feed.name}`);
+
+        // Process and store items
+        const processResults = await processFeedItems(supabaseClient, feed.id, items);
+        
+        results.push({
+          feedId: feed.id,
+          name: feed.name,
+          itemsProcessed: items.length,
+          success: true,
+          results: processResults
+        });
+
+      } catch (error) {
+        results.push({
+          feedId: feed.id,
+          name: feed.name,
+          success: false,
+          error: error.message
+        });
+      }
+    }
+
+    // Update last_fetched_at timestamp for processed feeds
+    const feedIds = results
+      .filter(r => r.success)
+      .map(r => r.feedId);
+    
+    if (feedIds.length > 0) {
+      await supabaseClient
+        .from('rss_feeds')
+        .update({ last_fetched_at: new Date().toISOString() })
+        .in('id', feedIds);
+    }
 
     return new Response(
-      JSON.stringify(results),
+      JSON.stringify({
+        feedsProcessed: feeds?.length ?? 0,
+        timestamp: new Date().toISOString(),
+        results,
+        success: true
+      }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
