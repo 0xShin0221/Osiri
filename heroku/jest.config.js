@@ -4,7 +4,7 @@ module.exports = {
   verbose: true,
   testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],
+  // setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],
   reporters: [
     'default',
     ['jest-junit', {
