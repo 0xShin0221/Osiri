@@ -95,7 +95,7 @@ jobs:
       - name: Run Tests
         working-directory: ./heroku
         run: |
-          pnpm test --verbose --detectOpenHandles
+          pnpm test --verbose
         env:
           NODE_ENV: test
           SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
