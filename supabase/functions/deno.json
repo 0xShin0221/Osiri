@@ -1,11 +1,14 @@
 {
   "imports": {
+    "@openai/openai": "jsr:@openai/openai@^4.75.0",
     "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.0",
+    "axios": "npm:axios@^1.7.9",
+    "puppeteer": "npm:puppeteer@^23.11.1",
     "rss-parser": "npm:rss-parser@^3.13.0",
     "std/": "https://deno.land/std@0.192.0/",
     "@std/encoding": "@std/encoding@1.0.5"
   },
   "tasks": {
-    "test": "deno test --allow-all tests/deno-test.ts"
+    "test": "deno test --allow-all tests/deno-test.ts --failfast --filter '/.*/' --trace-ops --log-level debug"
   }
 }
