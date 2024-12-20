@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import healthRouter from '../../health';
+import healthRouter from '../health';
 
 const app = express();
 app.use('/health', healthRouter);
