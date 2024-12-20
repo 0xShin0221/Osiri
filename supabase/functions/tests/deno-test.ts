@@ -16,7 +16,6 @@ Deno.test({
 Deno.test({
   name: "All Function Tests",
   async fn() {
-
   },
   sanitizeOps: false,
   sanitizeResources: false,

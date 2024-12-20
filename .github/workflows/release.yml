@@ -7,11 +7,21 @@ on:
 
 jobs:
   create-release:
+    # Execute only when PR is merged to release branch
     if: github.event.pull_request.merged == true && github.base_ref == 'release'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
+      # Generate enhanced release notes using OpenAI
+      - name: Generate Release Notes
+        id: release-notes
+        uses: platisd/openai-pr-description@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          
+      # Create GitHub release with both original and AI-enhanced descriptions
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
@@ -19,18 +29,32 @@ jobs:
         with:
           tag_name: ${{ github.event.pull_request.title }}
           release_name: ${{ github.event.pull_request.title }}
-          body: ${{ github.event.pull_request.body }}
+          body: |
+            ## Original Description
+            ${{ github.event.pull_request.body }}
+
+            ## AI Generated Summary
+            ${{ steps.release-notes.outputs.description }}
           draft: false
           prerelease: false
 
+      # Send release notification to Slack with enhanced content
       - name: Notify Slack
         uses: tokorom/action-slack-incoming-webhook@main
         env:
           INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
-          text: '📦 New Release: ${{ github.event.pull_request.title }}'
+          text: |
+            📦 New Release: ${{ github.event.pull_request.title }}
+            
+            *Original Description*
+            ${{ github.event.pull_request.body }}
+            
+            *AI Generated Summary*
+            ${{ steps.release-notes.outputs.description }}
 
   create-release-pr:
+    # Execute only when PR is merged to main branch
     if: github.event.pull_request.merged == true && github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
@@ -38,10 +62,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Generate PR description with AI enhancement
+      - name: Generate PR Description
+        id: pr-description
+        uses: platisd/openai-pr-description@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+
+      # Get current package version
       - name: Get npm version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
 
+      # Create release PR with enhanced description
       - name: Create Release PR
         uses: bakunyo/git-pr-release-action@master
         env:
@@ -51,3 +85,9 @@ jobs:
           GIT_PR_RELEASE_LABELS: release
           NPM_VERSION: v${{ steps.package-version.outputs.current-version}}
           GIT_PR_RELEASE_TEMPLATE: .github/PULL_REQUEST_TEMPLATE/.git-pr-template
+          PR_DESCRIPTION: |
+            ## Original PR Content
+            ${{ github.event.pull_request.body }}
+
+            ## AI Generated Summary
+            ${{ steps.pr-description.outputs.description }}

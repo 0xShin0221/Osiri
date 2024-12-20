@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
 import { decodeBase64Url } from "jsr:@std/encoding";
-import { unsubscribeFromNewsletter } from "../_shared/db.ts";
+import { newsletter } from "../_shared/db/newsletter.ts";
 
 Deno.serve(handleWithCors(async (req) => {
   try {
@@ -13,16 +13,16 @@ Deno.serve(handleWithCors(async (req) => {
 
     const emailBytes = decodeBase64Url(token);
     const email = new TextDecoder().decode(emailBytes);
-    await unsubscribeFromNewsletter(email);
+    await newsletter.unsubscribe(email);
 
     return new Response(
       JSON.stringify({ success: true }),
       {
         headers: {
           ...corsHeaders,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
   } catch (error) {
     console.error("Unsubscribe error:", error);

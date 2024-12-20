@@ -5,26 +5,33 @@ on:
     types: [opened, reopened, synchronize]
   push:
     branches: [develop, main]
+    paths-ignore: ['**'] # Prevent running CI on push for changes that are part of a pull_request
 
 jobs:
-  test:
+  supabase-test:
+    if: github.event_name != 'push' || github.head_ref == ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
+      
+      # Supabase Setup
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
         with:
           version: latest
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v1.x
 
-      # Database tests
-      - run: supabase db start
-      - run: supabase db lint
-      - run: supabase test db
+      # Database Tests & Checks
+      - name: Start Supabase Local Development
+        run: supabase db start
+
+      - name: Run Database Linting
+        run: supabase db lint
+
+      - name: Run Database Tests
+        run: supabase test db
       
-      # Type generation check
-      - name: Verify generated types
+      # Type Check
+      - name: Generate and Verify Types
         run: |
           supabase gen types typescript --local > types.gen.ts
           if ! git diff --ignore-space-at-eol --exit-code --quiet types.gen.ts; then
@@ -33,8 +40,15 @@ jobs:
             exit 1
           fi
 
-      # Function tests with environment-specific credentials
-      - run: supabase start
+      # Edge Function Tests
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v1.x
+
+      - name: Start Supabase Services
+        run: supabase start
+
       - name: Test Edge Functions
         run: |
           cd supabase/functions
@@ -44,17 +58,70 @@ jobs:
           SUPABASE_ANON_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
           SLACK_WAITLIST_WEBHOOK_URL: ${{ secrets.SLACK_WAITLIST_WEBHOOK_URL }}
 
-  db-check:
-    needs: test
+  heroku-test:
+    if: github.event_name != 'push' || github.head_ref == '' 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node.js Setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # PNPM Setup
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Configure PNPM Cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
+      - name: Cache PNPM Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Install & Test
+      - name: Install Dependencies
+        working-directory: ./heroku
+        run: pnpm install
+
+      - name: Run Tests
+        working-directory: ./heroku
+        run: |
+          pnpm test --verbose
+        env:
+          NODE_ENV: test
+          SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
+          SUPABASE_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
+
+  database-validation:
+    if: github.event_name != 'push' || github.head_ref == ''
+    needs: [supabase-test, heroku-test]
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
       SUPABASE_PROJECT_ID: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_PROJECT_ID || secrets.STAGING_PROJECT_ID }}
+    
     steps:
       - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
+      
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
         with:
           version: latest
-      - run: supabase link --project-ref $SUPABASE_PROJECT_ID
-      - run: supabase db push --dry-run
+      
+      - name: Validate Database Changes
+        run: |
+          supabase link --project-ref $SUPABASE_PROJECT_ID
+          supabase db push --dry-run
