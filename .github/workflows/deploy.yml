@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: ./heroku/package-lock.json
+          cache-dependency-path: ./heroku/pnpm-lock.json
 
       - name: Install Heroku dependencies
         working-directory: ./heroku
