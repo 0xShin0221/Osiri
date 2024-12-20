@@ -1,3 +1,9 @@
+export interface RSSItem {
+  title: string;
+  content: string;
+  link: string;
+}
+
 export interface EmailPayload {
   to: NotificationTemplate;
   template: NotificationTemplate;
@@ -63,4 +69,34 @@ export interface NewsletterSubscription {
   email: string;
   language: string;
   status?: string;
+}
+
+export interface ProcessResult {
+  url: string;
+  success: boolean;
+  error?: string;
+}
+
+export interface RSSFeed {
+  id: string;
+  name: string;
+  url: string;
+  is_active: boolean;
+  last_fetched_at?: string;
+}
+
+export interface RSSFeedUpdateResult {
+  feedId: string;
+  itemsProcessed: number;
+  results: ProcessResult[];
+  success: boolean;
+}
+
+interface ArticleData {
+  feed_id: string;
+  title: string;
+  content: string;
+  url: string;
+  created_at: string;
+  updated_at: string;
 }

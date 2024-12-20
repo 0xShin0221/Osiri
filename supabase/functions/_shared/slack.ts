@@ -44,6 +44,7 @@ const getWebhookUrl = (template: NotificationTemplate): string | null => {
     "early-access": Deno.env.get("SLACK_WAITLIST_WEBHOOK_URL"),
     "contact": Deno.env.get("SLACK_CONTACT_WEBHOOK_URL"),
     "feedback": Deno.env.get("SLACK_FEEDBACK_WEBHOOK_URL"),
+    "newsletter": Deno.env.get("SLACK_NEWSLETTER_WEBHOOK_URL"),
   };
 
   const webhookUrl = webhookMap[template];

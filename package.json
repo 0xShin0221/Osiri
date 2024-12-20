@@ -14,7 +14,7 @@
     "multilingual"
   ],
   "private": true,
-  "version": "0.1.2.0",
+  "version": "0.1.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -25,7 +25,6 @@
     "supabase:start": "supabase start",
     "supabase:dev": "supabase functions serve --no-verify-jwt --env-file .env --debug",
     "supabase:stop": "supabase stop",
-    "supabase-functions-local-serve": "supabase functions serve",
     "supabase-functions-test": "cd supabase/functions&&deno task test"
   },
   "dependencies": {

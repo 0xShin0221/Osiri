@@ -41,3 +41,20 @@ comment on column articles.feed_id is 'Reference to the source feed';
 comment on column articles.title is 'Article title';
 comment on column articles.content is 'Article content';
 comment on column articles.url is 'Article URL';
+
+-- migration_name: 20240317000004_update_articles_policy
+
+-- Remove any existing policies
+drop policy if exists "Anyone can view articles" on articles;
+drop policy if exists "Only admins can modify articles" on articles;
+drop policy if exists "Edge Function can insert articles" on articles;
+
+-- Create basic policies
+create policy "Anyone can view articles"
+  on articles for select
+  to authenticated, anon
+  using (true);
+
+create policy "Service role can insert articles"
+  on articles for insert
+  with check (true);
