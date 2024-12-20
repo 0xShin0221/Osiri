@@ -5,9 +5,11 @@ on:
     types: [opened, reopened, synchronize]
   push:
     branches: [develop, main]
+    paths-ignore: ['**'] # Prevent running CI on push for changes that are part of a pull_request
 
 jobs:
   supabase-test:
+    if: github.event_name != 'push' || github.head_ref == ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,6 +59,7 @@ jobs:
           SLACK_WAITLIST_WEBHOOK_URL: ${{ secrets.SLACK_WAITLIST_WEBHOOK_URL }}
 
   heroku-test:
+    if: github.event_name != 'push' || github.head_ref == '' 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -102,6 +105,7 @@ jobs:
           SUPABASE_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
 
   database-validation:
+    if: github.event_name != 'push' || github.head_ref == ''
     needs: [supabase-test, heroku-test]
     runs-on: ubuntu-latest
     env:
