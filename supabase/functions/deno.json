@@ -10,6 +10,6 @@
     "@std/encoding": "@std/encoding@1.0.5"
   },
   "tasks": {
-    "test": "deno test --allow-all tests/deno-test.ts --failfast --filter '/.*/' --strace-ops --log-level debug"
+    "test": "deno test --allow-all tests/deno-test.ts --failfast --filter '/.*/' --log-level debug"
   }
 }
