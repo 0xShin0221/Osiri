@@ -3,9 +3,12 @@ import { SupportedLanguage } from "../../../../_shared/types.ts";
 import { generateUnsubscribeUrl } from "../../../../_shared/utils/unsubscribe.ts";
 import { emailStyles } from "../styles.ts";
 
-export const ruTemplate = (data: Record<string, any>, language: SupportedLanguage) => {
+export const ruTemplate = (
+  data: Record<string, any>,
+  language: SupportedLanguage,
+) => {
   const { email } = data || {};
-  const unsubscribeUrl = generateUnsubscribeUrl(email || '', language);
+  const unsubscribeUrl = generateUnsubscribeUrl(email || "", language);
 
   return {
     subject: "[Osiri] Подписка на рассылку подтверждена",

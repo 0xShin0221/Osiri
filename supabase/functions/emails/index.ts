@@ -9,8 +9,10 @@ import { sendEmail } from "./utils/resend.ts";
 import { getEarlyAccessTemplate } from "./templates/early-access/index.ts";
 import { getNewsletterTemplate } from "./templates/news-letter/index.ts";
 import { corsHeaders, handleWithCors } from "../_shared/cors.ts";
-import { saveToWaitlist, subscribeToNewsletter } from "../_shared/db.ts";
+
 import { slackNotify } from "../_shared/slack.ts";
+import { waitlist } from "../_shared/db/waitlist.ts";
+import { newsletter } from "../_shared/db/newsletter.ts";
 
 const getTemplateContent = (
   template: NotificationTemplate,
@@ -44,10 +46,10 @@ Deno.serve(handleWithCors(async (req) => {
 
     switch (template) {
       case "early-access":
-        await saveToWaitlist(to, language, data);
+        await waitlist.save(to, language, data);
         break;
       case "newsletter":
-        await subscribeToNewsletter(to, language);
+        await newsletter.subscribe(to, language);
         break;
       default:
         throw new Error(`Unknown template: ${template}`);

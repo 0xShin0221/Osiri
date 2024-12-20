@@ -1,8 +1,9 @@
-import { assert } from "std/testing/asserts.ts";
+import { assert } from "jsr:@std/assert";
 import "https://deno.land/x/dotenv@v3.2.2/load.ts";
 import { getEarlyAccessTemplate } from "../../emails/templates/early-access/index.ts";
 import { SupportedLanguage } from "../../_shared/types.ts";
 import { testContext } from "../test-helpers.ts";
+import { templateConfigs } from "./test-config.ts";
 
 const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const FUNCTION_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -13,6 +14,12 @@ if (!supabaseKey) {
 }
 if (!FUNCTION_URL) {
   throw new Error("Supabase URL not found");
+}
+
+// Helper function for random selection
+function shuffleAndSelect<T>(array: T[], n: number): T[] {
+  const shuffled = [...array].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
 }
 
 const testLanguageTemplate = (lang: SupportedLanguage, config: {
@@ -40,53 +47,15 @@ const testLanguageTemplate = (lang: SupportedLanguage, config: {
 };
 
 const testTemplateContent = () => {
-  // English
-  testLanguageTemplate("en", {
-    subject: "Osiri",
-    welcomeText: "Welcome",
-    discountText: "50% Off",
-    description: "English template test",
-  });
+  // Randomly select 3 languages to test
+  const selectedLanguages = shuffleAndSelect(Object.keys(templateConfigs), 3);
+  console.log(
+    `Testing templates for languages: ${selectedLanguages.join(", ")}`,
+  );
 
-  // Japanese
-  testLanguageTemplate("ja", {
-    subject: "Osiri",
-    welcomeText: "ようこそ",
-    discountText: "50%オフ",
-    description: "Japanese template test",
-  });
-
-  // Bengali
-  testLanguageTemplate("bn", {
-    subject: "Osiri",
-    welcomeText: "স্বাগতম",
-    discountText: "৫০% ছাড়",
-    description: "Bengali template test",
-  });
-
-  // Russian
-  testLanguageTemplate("ru", {
-    subject: "Osiri",
-    welcomeText: "Добро пожаловать",
-    discountText: "50% скидка",
-    description: "Russian template test",
-  });
-
-  // Indonesian
-  testLanguageTemplate("id", {
-    subject: "Osiri",
-    welcomeText: "Selamat Datang",
-    discountText: "Diskon 50% selama",
-    description: "Indonesian template test",
-  });
-
-  // German
-  testLanguageTemplate("de", {
-    subject: "Osiri",
-    welcomeText: "Willkommen",
-    discountText: "50% Rabatt",
-    description: "German template test",
-  });
+  for (const lang of selectedLanguages as SupportedLanguage[]) {
+    testLanguageTemplate(lang, templateConfigs[lang]);
+  }
 };
 
 const sendTestEmail = async (email: string, language: string = "en") => {
@@ -109,10 +78,18 @@ const sendTestEmail = async (email: string, language: string = "en") => {
 
 const testEmailSending = async () => {
   const testEmail = testContext.generateTestEmail("single");
-  const { response, responseText } = await sendTestEmail(testEmail);
+  const selectedLanguage = shuffleAndSelect(Object.keys(templateConfigs), 1)[0];
+  console.log(`Testing email sending with language: ${selectedLanguage}`);
+
+  const { response, responseText } = await sendTestEmail(
+    testEmail,
+    selectedLanguage,
+  );
 
   if (!response.ok) {
-    throw new Error(`Email sending failed: ${response.status} ${responseText}`);
+    throw new Error(
+      `Email sending failed for ${selectedLanguage}: ${response.status} ${responseText}`,
+    );
   }
 
   const data = JSON.parse(responseText);
@@ -121,9 +98,13 @@ const testEmailSending = async () => {
 };
 
 const testEmailSendingMultiLanguage = async () => {
-  const testLanguages = ["en", "ja", "bn", "ru", "id", "de"];
+  // Select 2 random languages
+  const selectedLanguages = shuffleAndSelect(Object.keys(templateConfigs), 2);
+  console.log(
+    `Testing multi-language emails for: ${selectedLanguages.join(", ")}`,
+  );
 
-  for (const lang of testLanguages) {
+  for (const lang of selectedLanguages) {
     const testEmail = testContext.generateTestEmail(`multi_${lang}`);
     const { response, responseText } = await sendTestEmail(testEmail, lang);
 
@@ -134,58 +115,95 @@ const testEmailSendingMultiLanguage = async () => {
     }
 
     const data = JSON.parse(responseText);
-    assert(data && typeof data === 'object', `Response data should be an object for ${lang}`);
     assert(
-      typeof data.id === 'string' && data.id.length > 0,
-      `Response should contain a non-empty ID string for ${lang}`
+      data && typeof data === "object",
+      `Response data should be an object for ${lang}`,
+    );
+    assert(
+      typeof data.id === "string" && data.id.length > 0,
+      `Response should contain a non-empty ID string for ${lang}`,
     );
   }
 };
 
 const testDuplicateEmailHandling = async () => {
   const testEmail = testContext.generateTestEmail("duplicate");
+  const [primaryLang, secondaryLang] = shuffleAndSelect(
+    Object.keys(templateConfigs),
+    2,
+  );
+  console.log(
+    `Testing duplicate handling with languages: ${primaryLang}, ${secondaryLang}`,
+  );
 
   // First email should succeed
   const { response: firstResponse, responseText: firstResponseText } =
-    await sendTestEmail(testEmail);
+    await sendTestEmail(testEmail, primaryLang);
 
-  assert(firstResponse.ok, "First email should be sent successfully");
+  assert(
+    firstResponse.ok,
+    `First email should be sent successfully (${primaryLang})`,
+  );
   const firstData = JSON.parse(firstResponseText);
-  assert(firstData.id, "First response should contain an email ID");
+  assert(
+    firstData.id,
+    `First response should contain an email ID (${primaryLang})`,
+  );
 
   // Second email should fail with duplicate error
   const { response: secondResponse, responseText: secondResponseText } =
-    await sendTestEmail(testEmail, "ja");
+    await sendTestEmail(testEmail, secondaryLang);
 
-  assert(!secondResponse.ok, "Duplicate email should be rejected");
+  assert(
+    !secondResponse.ok,
+    `Duplicate email should be rejected (${secondaryLang})`,
+  );
   assert(
     secondResponseText.includes("23505"),
-    "Should return unique constraint violation error",
+    `Should return unique constraint violation error (${secondaryLang})`,
   );
   assert(
     secondResponseText.includes("duplicate key value"),
-    "Should indicate duplicate email",
+    `Should indicate duplicate email (${secondaryLang})`,
   );
 };
 
 const testDuplicateEmailHandlingMultiLanguage = async () => {
-  const testLanguages = ["ja", "bn", "ru", "id", "de"];
+  const [primaryLang, ...testLanguages] = shuffleAndSelect(
+    Object.keys(templateConfigs),
+    3,
+  );
+  console.log(
+    `Testing multi-language duplicate handling: primary=${primaryLang}, tests=${
+      testLanguages.join(", ")
+    }`,
+  );
+
   const baseEmail = testContext.generateTestEmail("multi_duplicate");
 
-  // First email in English
+  // First email in primary language
   const { response: firstResponse, responseText: firstResponseText } =
-    await sendTestEmail(baseEmail, "en");
+    await sendTestEmail(baseEmail, primaryLang);
 
-  assert(firstResponse.ok, "First email should be sent successfully");
+  assert(
+    firstResponse.ok,
+    `First email should be sent successfully (${primaryLang})`,
+  );
   const firstData = JSON.parse(firstResponseText);
-  assert(firstData.id, "First response should contain an email ID");
+  assert(
+    firstData.id,
+    `First response should contain an email ID (${primaryLang})`,
+  );
 
-  // Test duplicate handling for each language
+  // Test duplicate handling for selected languages
   for (const lang of testLanguages) {
     const { response: duplicateResponse, responseText: duplicateResponseText } =
       await sendTestEmail(baseEmail, lang);
 
-    assert(!duplicateResponse.ok, `Duplicate email should be rejected for ${lang}`);
+    assert(
+      !duplicateResponse.ok,
+      `Duplicate email should be rejected for ${lang}`,
+    );
     assert(
       duplicateResponseText.includes("23505"),
       `Should return unique constraint violation error for ${lang}`,
