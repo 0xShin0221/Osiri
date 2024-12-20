@@ -1,13 +1,27 @@
-name: Autofill PR description
+name: pr-agent
 
-on: pull_request
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: write
 
 jobs:
-  openai-pr-description:
-    runs-on: ubuntu-22.04
-
+  pr_agent:
+    runs-on: ubuntu-latest
+    name: Run PR Agent
+    if: ${{ github.event.sender.type != 'Bot' }}
     steps:
-      - uses: platisd/openai-pr-description@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+      - id: pr-agent
+        uses: Codium-ai/pr-agent@main
+        env:
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_DESCRIPTION.USE_DESCRIPTION_MARKERS: 'true'
+          PR_REVIEWER.EXTRA_INSTRUCTIONS: 'Please use English in descriptions.'
+          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: 'Please use English in descriptions. Titles should have prefix of commitlint pattern such as `feat:`, `fix:`, `perf:`, `refactor:`, `test:`, `chore:`, `ci:`, `docs:` etc'
