@@ -14,7 +14,7 @@ export const templateConfigs: Record<SupportedLanguage, {
   },
   ja: {
     subject: "Osiri アーリーアクセス登録 | 無料クーポン獲得",
-    welcomeText: "Osiri アーリーアクセスへようこそ",
+    welcomeText: "Osiriアーリーアクセスへようこそ",
     discountText: "1年間50%オフ",
     description: "Japanese template test",
   },
