@@ -64,18 +64,22 @@ export const templateConfigs: Record<SupportedLanguage, {
     subject: "Ранняя регистрация на Osiri | Получите бесплатный купон",
     welcomeText: "Добро пожаловать в ранний доступ Osiri",
     discountText: "50% скидка на 1 год",
-    description: "Вы получили специальный купон для глобальной ленты новостей AI в приложении Osiri",
+    description:
+      "Вы получили специальный купон для глобальной ленты новостей AI в приложении Osiri",
   },
   id: {
     subject: "Pendaftaran Akses Awal di Osiri | Dapatkan Kupon Gratis",
     welcomeText: "Selamat Datang di Akses Awal Osiri",
     discountText: "Diskon 50% selama 1 tahun",
-    description: "Anda telah menerima kupon khusus untuk Osiri App, layanan berita AI global",
+    description:
+      "Anda telah menerima kupon khusus untuk Osiri App, layanan berita AI global",
   },
   de: {
-    subject: "Frühzeitige Registrierung bei Osiri | Erhalten Sie einen kostenlosen Gutschein",
+    subject:
+      "Frühzeitige Registrierung bei Osiri | Erhalten Sie einen kostenlosen Gutschein",
     welcomeText: "Willkommen beim Frühzugang zu Osiri",
     discountText: "50% Rabatt für 1 Jahr",
-    description: "Sie haben einen speziellen Gutschein für den globalen KI-Nachrichtenfeed der Osiri App erhalten",
+    description:
+      "Sie haben einen speziellen Gutschein für den globalen KI-Nachrichtenfeed der Osiri App erhalten",
   },
 };

@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { buttonVariants } from "@/components/ui/button-variants";
 
 interface TeamProps {
   imageUrl: string;
