@@ -1,3 +1,9 @@
+export interface RSSItem {
+  title: string;
+  content?: string;
+  link: string;
+}
+
 export interface EmailPayload {
   to: NotificationTemplate;
   template: NotificationTemplate;
