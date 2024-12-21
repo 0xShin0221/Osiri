@@ -18,7 +18,7 @@ importers:
         specifier: ^4.24.1
         version: 4.77.0
       puppeteer:
-        specifier: ^21.6.1
+        specifier: ^21.11.0
         version: 21.11.0(typescript@5.7.2)
       rss-parser:
         specifier: ^3.13.0
