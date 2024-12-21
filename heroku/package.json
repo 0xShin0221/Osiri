@@ -6,7 +6,7 @@
     "build": "tsc",
     "dev": "ts-node-dev src/app.ts",
     "test": "jest",
-    "heroku-postbuild": "npm run build && mkdir -p ./.cache && mv /app/.cache/puppeteer ./.cache"
+    "heroku-postbuild": "npm run build && mkdir -p /tmp/.cache/puppeteer && mv /tmp/chromium /tmp/.cache/puppeteer || echo 'No Puppeteer cache found'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.1",
