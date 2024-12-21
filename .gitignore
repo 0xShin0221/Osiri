@@ -27,4 +27,4 @@ dist-ssr
 
 deno.lock
 
-test-results
+heroku/test-results/
