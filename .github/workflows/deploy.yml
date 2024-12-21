@@ -65,6 +65,7 @@ jobs:
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: "heroku"
+          dontuseforce: false
 
       - name: Notify Slack
         if: ${{ env.ENVIRONMENT == 'production' }}
