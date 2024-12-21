@@ -32,12 +32,13 @@ jobs:
 
   heroku-deploy:
     runs-on: ubuntu-latest
-    needs: supabase-deploy  # Supabaseデプロイ後に実行
+    needs: supabase-deploy
     env:
       ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
       HEROKU_APP_NAME: ${{ github.ref == 'refs/heads/main' && 'osiri-prod' || 'osiri-dev' }}
+      HEROKU_REMOTE: ${{ github.ref == 'refs/heads/main' && 'heroku-prod' || 'heroku-dev' }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
@@ -64,6 +65,7 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          remote_branch: ${{ env.HEROKU_REMOTE }}
           appdir: "heroku"
           dontuseforce: false
 
