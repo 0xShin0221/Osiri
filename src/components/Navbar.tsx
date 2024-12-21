@@ -12,13 +12,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { buttonVariants } from "./ui/button";
+
 import { LogIn, Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { OsiriLogo } from "./Logo";
 import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "./LangSelector";
 import { t } from "i18next";
+import { buttonVariants } from "@/components/ui/button-variants";
 
 interface RouteProps {
   href: string;

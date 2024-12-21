@@ -1,8 +1,9 @@
 import { Button } from "./ui/button";
-import { buttonVariants } from "./ui/button";
+
 import { HeroCards } from "./HeroCards";
 import { Globe2, Newspaper } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { buttonVariants } from "@/components/ui/button-variants";
 
 export const Hero = () => {
   const { t } = useTranslation("home");

@@ -28,3 +28,5 @@ jobs:
           PR_DESCRIPTION.USE_DESCRIPTION_MARKERS: 'true'
           PR_REVIEWER.EXTRA_INSTRUCTIONS: 'Please use English in descriptions.'
           PR_DESCRIPTION.EXTRA_INSTRUCTIONS: 'Please use English in descriptions. Titles should have prefix of commitlint pattern such as `feat:`, `fix:`, `perf:`, `refactor:`, `test:`, `chore:`, `ci:`, `docs:` etc'
+        with:
+          config-file: ./.github/pr-agent-config.ini
