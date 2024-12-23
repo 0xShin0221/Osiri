@@ -1,0 +1,39 @@
+import { ArticleRepository } from '../../repositories/article.repository';
+import { ProcessResult, RSSItem } from '../../types/models';
+import { ContentCleaner } from '../content/cleaner';
+
+export class FeedProcessor {
+  private cleaner: ContentCleaner;
+
+  constructor(
+    private readonly articleRepository: ArticleRepository
+  ) {
+    this.cleaner = new ContentCleaner();
+  }
+
+  async process(feedId: string, items: RSSItem[]): Promise<ProcessResult> {
+    try {
+      const articles = items.map(item => ({
+        feed_id: feedId,
+        title: item.title,
+        content: this.cleaner.clean(item.content),
+        url: item.link
+      }));
+
+      const savedArticles = await this.articleRepository.saveMany(articles);
+
+      return {
+        feedId,
+        itemsProcessed: savedArticles.length,
+        success: true
+      };
+    } catch (error) {
+      return {
+        feedId,
+        itemsProcessed: 0,
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+}
