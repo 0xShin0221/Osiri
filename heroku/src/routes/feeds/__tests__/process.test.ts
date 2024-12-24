@@ -106,23 +106,21 @@ describe('POST /feeds/process', () => {
         });
     });
 
-    // it('should handle empty item list', async () => {
-    //     const response = await request(app)
-    //         .post('/feeds/process')
-    //         .send({
-    //             feedId: validFeedId,
-    //             items: []
-    //         });
+    it('should handle empty item list', async () => {
+        const response = await request(app)
+            .post('/feeds/process')
+            .send({
+                feedId: validFeedId,
+                items: []
+            });
 
-    //     expect(response.status).toBe(200);
-    //     expect(response.body).toEqual({
-    //         success: true,
-    //         data: {
-    //             processedItems: 0,
-    //             savedItems: 0
-    //         }
-    //     });
-    // });
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+            success: true,
+            feedId: validFeedId,
+            itemsProcessed: 0
+        });
+    });
 
     // it('should handle article creation failure', async () => {
     //     const mockArticleRepo = {

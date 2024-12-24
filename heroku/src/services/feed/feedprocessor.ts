@@ -13,6 +13,14 @@ export class FeedProcessor {
 
   async process(feedId: string, items: RSSItem[]): Promise<ProcessResult> {
     try {
+      if (items.length === 0) {
+        return {
+          success: true,
+          feedId,
+          itemsProcessed: 0
+        };
+      }
+
       const articles = items.map(item => ({
         feed_id: feedId,
         title: item.title,
@@ -20,11 +28,11 @@ export class FeedProcessor {
         url: item.link
       }));
 
-      const savedArticles = await this.articleRepository.saveMany(articles);
+      const result = await this.articleRepository.saveMany(articles);
 
       return {
         feedId,
-        itemsProcessed: savedArticles.length,
+        itemsProcessed: result.length,
         success: true
       };
     } catch (error) {
