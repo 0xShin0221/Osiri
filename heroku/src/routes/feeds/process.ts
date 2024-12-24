@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { ArticleRepository } from '../../repositories/article.repository';
 import { z } from 'zod';
 import { FeedProcessor } from '../../services/feed/feedprocessor';
+import { withValidation } from '../../middleware/requestHandler';
 
 const processRequestSchema = z.object({
   feedId: z.string().uuid(),
@@ -12,32 +13,16 @@ const processRequestSchema = z.object({
   }))
 });
 
-export const processFeeds = async (req: Request, res: Response) => {
-  try {
-    const validatedData = processRequestSchema.parse(req.body);
-    
+export const processFeeds = withValidation(processRequestSchema)(
+  async (req: Request, res: Response) => {
     const articleRepository = new ArticleRepository();
     const processor = new FeedProcessor(articleRepository);
     
     const result = await processor.process(
-      validatedData.feedId,
-      validatedData.items
+      req.body.feedId,
+      req.body.items
     );
     
     res.json(result);
-  } catch (error) {
-    console.error('Feed processing error:', error);
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid request data',
-        details: error.errors
-      });
-    }
-    
-    res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Feed processing failed'
-    });
   }
-};
+);

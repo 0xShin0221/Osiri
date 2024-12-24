@@ -2,9 +2,9 @@
   "name": "content-processing-service",
   "version": "1.0.0",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "ts-node-dev src/app.ts",
+    "dev": "ts-node-dev src/server.ts",
     "test": "jest",
     "heroku-postbuild": "npm run build && mkdir -p /tmp/.cache/puppeteer && mv /tmp/chromium /tmp/.cache/puppeteer || echo 'No Puppeteer cache found'"
   },

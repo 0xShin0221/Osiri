@@ -1,10 +1,12 @@
 import { createClient, SupabaseClient, PostgrestError } from '@supabase/supabase-js';
 import type { Database } from '../types/database.types';
+import dotenv from 'dotenv';
 
 export abstract class BaseRepository {
   protected client: SupabaseClient<Database>;
 
   constructor() {
+    dotenv.config();
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
