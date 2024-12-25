@@ -1,4 +1,4 @@
-# Osiri - AI-Powered Global Tech News Reader
+# Osiri - AI-Powered Global Tech News RSS Reader
 
 ![Osiri Logo](public/assets/og-image.jpg)
 
