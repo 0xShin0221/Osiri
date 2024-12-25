@@ -40,6 +40,10 @@ export type Database = {
           created_at: string
           feed_id: string
           id: string
+          last_scraping_attempt: string | null
+          scraping_attempt_count: number
+          scraping_error: string | null
+          scraping_status: Database["public"]["Enums"]["article_scraping_status"]
           title: string
           updated_at: string
           url: string
@@ -49,6 +53,10 @@ export type Database = {
           created_at?: string
           feed_id: string
           id?: string
+          last_scraping_attempt?: string | null
+          scraping_attempt_count?: number
+          scraping_error?: string | null
+          scraping_status?: Database["public"]["Enums"]["article_scraping_status"]
           title: string
           updated_at?: string
           url: string
@@ -58,6 +66,10 @@ export type Database = {
           created_at?: string
           feed_id?: string
           id?: string
+          last_scraping_attempt?: string | null
+          scraping_attempt_count?: number
+          scraping_error?: string | null
+          scraping_status?: Database["public"]["Enums"]["article_scraping_status"]
           title?: string
           updated_at?: string
           url?: string
@@ -142,7 +154,7 @@ export type Database = {
           email: string
           id: string
           language: string
-          name: string | null
+          name: string
           role: string | null
         }
         Insert: {
@@ -151,7 +163,7 @@ export type Database = {
           email: string
           id?: string
           language: string
-          name?: string | null
+          name: string
           role?: string | null
         }
         Update: {
@@ -160,7 +172,7 @@ export type Database = {
           email?: string
           id?: string
           language?: string
-          name?: string | null
+          name?: string
           role?: string | null
         }
         Relationships: []
@@ -170,9 +182,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_attempt_count: {
+        Args: {
+          row_id: string
+        }
+        Returns: number
+      }
     }
     Enums: {
+      article_scraping_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "skipped"
       feed_language:
         | "en"
         | "ja"

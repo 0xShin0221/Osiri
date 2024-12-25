@@ -8,6 +8,7 @@ export type FeedLanguage = Database['public']['Enums']['feed_language'];
 export type Article = Database['public']['Tables']['articles']['Row'];
 export type ArticleInsert = Database['public']['Tables']['articles']['Insert'];
 export type ArticleUpdate = Database['public']['Tables']['articles']['Update'];
+export type ArticleScrapingStatus = Database['public']['Enums']['article_scraping_status'];
 
 export interface ServiceResponse<T> {
   success: boolean;
