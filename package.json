@@ -14,7 +14,7 @@
     "multilingual"
   ],
   "private": true,
-  "version": "0.1.4",
+  "version": "0.1.6",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -32,7 +32,8 @@
     "heroku:test": "cd heroku && pnpm jest",
     "start:all": "npm-run-all --parallel supabase:start heroku:start",
     "stop:all": "npm-run-all --parallel supabase:stop",
-    "test:all": "npm-run-all --parallel lint supabase:test heroku:test"
+    "test:all": "npm-run-all --parallel lint supabase:test heroku:test",
+    "genType:heroku": "npx supabase gen types typescript --local > heroku/src/types/database.types.ts"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.9",
@@ -56,6 +57,7 @@
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-http-backend": "^2.6.2",
     "lucide-react": "^0.424.0",
+    "playwright-chromium": "^1.49.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",

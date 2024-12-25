@@ -1,6 +1,6 @@
 import { BatchResults } from "../../../types/batch";
 import { FeedCollector } from "../../feed/collector";
-import { StepProcessor, StepResult } from "./stepProcessor";
+import { FeedCollectionStepResult, StepProcessor} from "./stepProcessor.types";
 
 export class FeedCollectionStep implements StepProcessor {
   constructor(private readonly feedCollector: FeedCollector) {}
@@ -9,11 +9,16 @@ export class FeedCollectionStep implements StepProcessor {
     results: BatchResults,
     onProgress?: (stage: string, count: number) => void,
     onError?: (stage: string, error: Error, itemId?: string) => void
-  ): Promise<StepResult> {
+  ): Promise<FeedCollectionStepResult> {
     const collectionResponse = await this.feedCollector.collectFeeds();
     
     if (!collectionResponse.success || !collectionResponse.data) {
-      throw new Error(collectionResponse.error || 'Feed collection failed');
+      return {
+        processedFeeds: 0,
+        successfulFeeds: 0,
+        failedFeeds: 0,
+        error: collectionResponse.error || 'Feed collection failed'
+      };
     }
 
     const collectedFeeds = collectionResponse.data;
