@@ -1,7 +1,7 @@
 import { BatchResults } from "../../../types/batch";
 import { ContentTranslator } from "../../content/translator";
 import { ArticleRepository } from "../../../repositories/article.repository";
-import { StepProcessor, StepResult } from "./stepProcessor";
+import { StepProcessor, StepResult } from "./stepProcessor.types";
 
 export class ContentTranslationStep implements StepProcessor {
   constructor(
