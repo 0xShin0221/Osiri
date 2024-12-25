@@ -1,38 +1,58 @@
-import { chunk } from 'lodash';
-import { Article, ServiceResponse } from "../../types/models";
 import { BatchOptions, BatchProcessResult, BatchResults } from "../../types/batch";
 import { FeedRepository } from '../../repositories/feed.repository';
 import { ArticleRepository } from '../../repositories/article.repository';
+import { FeedCollectionStep } from './steps/feedCollectionStep';
+import { FeedProcessingStep } from './steps/feedProcessingStep';
+import { ContentScrapingStep } from './steps/contentScrapingStep';
+import { ContentTranslationStep } from './steps/contentTranslationStep';
 import { FeedCollector } from '../feed/collector';
 import { FeedProcessor } from '../feed/feedProcessor';
+import { FeedParser } from '../feed/parser';
 import { ContentScraper } from '../content/scraper';
 import { ContentTranslator } from '../content/translator';
-import { FeedParser } from '../feed/parser';
 
 export class BatchProcessor {
-  private readonly feedCollector: FeedCollector;
-  private readonly feedProcessor: FeedProcessor;
-  private readonly contentScraper: ContentScraper;
-  private readonly contentTranslator: ContentTranslator;
-  private readonly feedParser: FeedParser;
+  private readonly feedCollectionStep: FeedCollectionStep;
+  private readonly feedProcessingStep: FeedProcessingStep;
+  private readonly contentScrapingStep: ContentScrapingStep;
+  private readonly contentTranslationStep: ContentTranslationStep;
   private readonly DEFAULT_BATCH_SIZE = 5;
 
   constructor(
     private readonly feedRepository: FeedRepository,
     private readonly articleRepository: ArticleRepository
   ) {
-    this.feedCollector = new FeedCollector(feedRepository, articleRepository);
-    this.feedProcessor = new FeedProcessor(articleRepository);
-    this.contentScraper = new ContentScraper();
-    this.contentTranslator = new ContentTranslator();
-    this.feedParser = new FeedParser();
+    // Initialize dependencies
+    const feedCollector = new FeedCollector(feedRepository, articleRepository);
+    const feedProcessor = new FeedProcessor(articleRepository);
+    const feedParser = new FeedParser();
+    const contentScraper = new ContentScraper();
+    const contentTranslator = new ContentTranslator();
+
+    // Initialize steps
+    this.feedCollectionStep = new FeedCollectionStep(feedCollector);
+    this.feedProcessingStep = new FeedProcessingStep(
+      feedProcessor,
+      feedParser,
+      feedRepository,
+      this.DEFAULT_BATCH_SIZE
+    );
+    this.contentScrapingStep = new ContentScrapingStep(
+      contentScraper,
+      articleRepository,
+      this.DEFAULT_BATCH_SIZE
+    );
+    this.contentTranslationStep = new ContentTranslationStep(
+      contentTranslator,
+      articleRepository,
+      this.DEFAULT_BATCH_SIZE
+    );
   }
 
   async process(options: BatchOptions = {}): Promise<BatchProcessResult> {
     const startTime = Date.now();
     const batchId = crypto.randomUUID();
     const {
-      forceFetch = false,
       batchSize = this.DEFAULT_BATCH_SIZE,
       onProgress,
       onError
@@ -48,105 +68,47 @@ export class BatchProcessor {
     try {
       // Step 1: Collect feeds
       console.log('Starting feed collection...');
-      const collectionResponse = await this.feedCollector.collectFeeds();
-      
-      if (!collectionResponse.success || !collectionResponse.data) {
-        throw new Error(collectionResponse.error || 'Feed collection failed');
-      }
+      const collectionResult = await this.feedCollectionStep.execute(
+        batchResults,
+        onProgress,
+        onError
+      );
 
-      const collectedFeeds = collectionResponse.data;
-      batchResults.collection.success = collectedFeeds.successCount;
-      batchResults.collection.failed = collectedFeeds.failedFeeds.length;
-      onProgress?.('feed', batchResults.collection.success);
-
-      // Step 2: Process feeds - Parse RSS and save articles
+      // Step 2: Process feeds
       console.log('Processing feeds...');
-      const activeFeeds = await this.feedRepository.getActiveBatch(batchSize);
+      const processingResult = await this.feedProcessingStep.execute(
+        batchResults,
+        onProgress,
+        onError
+      );
 
-      for (const feed of activeFeeds) {
-        try {
-          // Parse RSS feed
-          const rssItems = await this.feedParser.parse(feed.url);
-          
-          // Process articles
-          const processResult = await this.feedProcessor.process(feed.id, rssItems);
-          if (processResult.success) {
-            batchResults.processing.success += processResult.itemsProcessed;
-            onProgress?.('article', batchResults.processing.success);
-          } else {
-            batchResults.processing.failed++;
-            onError?.('article_process', new Error(processResult.error || 'Processing failed'), feed.id);
-          }
+      // Step 3: Scrape content
+      console.log('Scraping content...');
+      const scrapingResult = await this.contentScrapingStep.execute(
+        batchResults,
+        onProgress,
+        onError
+      );
 
-          // Update feed's last fetched timestamp
-          await this.feedRepository.updateLastFetched(feed.id);
-
-        } catch (error) {
-          console.error(`Error processing feed ${feed.id}:`, error);
-          batchResults.processing.failed++;
-          onError?.('feed_process', error instanceof Error ? error : new Error('Unknown error'), feed.id);
-        }
-      }
-
-      // Step 3: Scrape and translate content
-      console.log('Processing content...');
-      // const unprocessedResponse = await this.articleRepository.getUnprocessedArticles(batchSize);
-      // if (unprocessedResponse.success && unprocessedResponse.data) {
-      //   const articleChunks = chunk(unprocessedResponse.data, 5);
-
-      //   for (const articles of articleChunks) {
-      //     for (const article of articles) {
-      //       try {
-      //         // Scrape content
-      //         const scrapeResult = await this.contentScraper.scrape(article.url);
-      //         if (scrapeResult.success && scrapeResult.data) {
-      //           await this.articleRepository.updateScrapedContent(
-      //             article.id,
-      //             scrapeResult.data
-      //           );
-      //           batchResults.scraping.success++;
-      //           onProgress?.('scrape', batchResults.scraping.success);
-
-      //           // Translate content
-      //           try {
-      //             const translateResult = await this.contentTranslator.translate(
-      //               article.id,
-      //               scrapeResult.data
-      //             );
-      //             if (translateResult.success) {
-      //               batchResults.translation.success++;
-      //               onProgress?.('translate', batchResults.translation.success);
-      //             } else {
-      //               batchResults.translation.failed++;
-      //               onError?.('translation', new Error(translateResult.error || 'Translation failed'), article.id);
-      //             }
-      //           } catch (error) {
-      //             batchResults.translation.failed++;
-      //             onError?.('translation', error instanceof Error ? error : new Error('Unknown error'), article.id);
-      //           }
-      //         } else {
-      //           batchResults.scraping.failed++;
-      //           onError?.('scraping', new Error(scrapeResult.error || 'Scraping failed'), article.id);
-      //         }
-      //       } catch (error) {
-      //         batchResults.scraping.failed++;
-      //         onError?.('scraping', error instanceof Error ? error : new Error('Unknown error'), article.id);
-      //       }
-      //     }
-      //   }
-      // }
+      // Step 4: Translate content
+      console.log('Translating content...');
+      const translationResult = await this.contentTranslationStep.execute(
+        batchResults,
+        onProgress,
+        onError
+      );
 
       return {
         message: 'Batch processing completed',
         results: batchResults,
         summary: {
-          processedFeeds: collectedFeeds.processedFeeds,
-          successfulFeeds: collectedFeeds.successCount,
-          failedFeeds: collectedFeeds.failedFeeds.length,
+          processedFeeds: collectionResult.processedFeeds,
+          successfulFeeds: collectionResult.successfulFeeds,
+          failedFeeds: collectionResult.failedFeeds,
         },
         processingTime: Date.now() - startTime,
         batchId,
-        newArticlesCount: batchResults.processing.success,
+        newArticlesCount: processingResult.processedArticles,
         updatedArticlesCount: 0
       };
 
