@@ -53,7 +53,6 @@ export class BatchProcessor {
     const startTime = Date.now();
     const batchId = crypto.randomUUID();
     const {
-      batchSize = this.DEFAULT_BATCH_SIZE,
       onProgress,
       onError
     } = options;
