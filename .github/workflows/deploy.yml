@@ -3,13 +3,28 @@ name: Deploy
 on:
   push:
     branches: [develop, main]
-    paths:
-      - "supabase/**"
-      - "heroku/**"
   workflow_dispatch:
 
 jobs:
+  check-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      supabase: ${{ steps.filter.outputs.supabase }}
+      heroku: ${{ steps.filter.outputs.heroku }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            supabase:
+              - 'supabase/**'
+            heroku:
+              - 'heroku/**'
+
   supabase-deploy:
+    needs: check-paths
+    if: needs.check-paths.outputs.supabase == 'true'
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -34,8 +49,9 @@ jobs:
         run: supabase functions deploy --project-ref $SUPABASE_PROJECT_ID
 
   heroku-deploy:
+    needs: check-paths
+    if: needs.check-paths.outputs.heroku == 'true'
     runs-on: ubuntu-latest
-    needs: supabase-deploy
     env:
       ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
