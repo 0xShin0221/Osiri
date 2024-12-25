@@ -2,18 +2,24 @@
   "name": "content-processing-service",
   "version": "1.0.0",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "ts-node-dev src/app.ts",
+    "dev": "ts-node-dev src/server.ts",
     "test": "jest",
     "heroku-postbuild": "npm run build && mkdir -p /tmp/.cache/puppeteer && mv /tmp/chromium /tmp/.cache/puppeteer || echo 'No Puppeteer cache found'"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.26",
+    "@langchain/openai": "^0.3.16",
     "@supabase/supabase-js": "^2.39.1",
+    "@types/lodash": "^4.17.13",
+    "dotenv": "^16.4.7",
     "express": "^4.18.2",
+    "langchain": "^0.3.7",
     "openai": "^4.24.1",
     "puppeteer": "^21.11.0",
-    "rss-parser": "^3.13.0"
+    "rss-parser": "^3.13.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
