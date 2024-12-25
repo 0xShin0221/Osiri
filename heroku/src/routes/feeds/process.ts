@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { ArticleRepository } from '../../repositories/article.repository';
 import { z } from 'zod';
-import { FeedProcessor } from '../../services/feed/feedprocessor';
 import { withValidation } from '../../middleware/requestHandler';
+import { FeedProcessor } from '../../services/feed/feedProcessor';
 
 const processRequestSchema = z.object({
   feedId: z.string().uuid(),
