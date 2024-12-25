@@ -5,7 +5,8 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "dev": "ts-node-dev src/server.ts",
-    "test": "jest"
+    "test": "jest",
+    "heroku-cleanup": "yarn run playwright install chromium"
   },
   "dependencies": {
     "@langchain/community": "^0.3.20",
