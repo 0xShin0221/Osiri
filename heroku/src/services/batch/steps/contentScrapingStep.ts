@@ -43,7 +43,6 @@ export class ContentScrapingStep implements StepProcessor {
             try {
               // Scrape content
               const scrapeResult = await this.contentScraper.scrape(article.url);
-              
               if (scrapeResult.success && scrapeResult.data) {
                 // Update article with scraped content
                 const updateResult = await this.articleRepository.updateScrapedContent(
@@ -65,6 +64,7 @@ export class ContentScrapingStep implements StepProcessor {
                   );
                 }
               } else {
+                this.articleRepository.updateScrapingStatus(article.id, 'failed', scrapeResult.error || "Undefined the content");
                 failedCount++;
                 results.scraping.failed++;
                 onError?.(
