@@ -32,7 +32,8 @@
     "heroku:test": "cd heroku && pnpm jest",
     "start:all": "npm-run-all --parallel supabase:start heroku:start",
     "stop:all": "npm-run-all --parallel supabase:stop",
-    "test:all": "npm-run-all --parallel lint supabase:test heroku:test"
+    "test:all": "npm-run-all --parallel lint supabase:test heroku:test",
+    "genType:heroku": "npx supabase gen types typescript --local > heroku/src/types/database.types.ts"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.9",
