@@ -18,7 +18,7 @@ export class FeedProcessingStep implements StepProcessor {
     onError?: (stage: string, error: Error, itemId?: string) => void
   ): Promise<StepResult> {
     const activeFeeds = await this.feedRepository.getActiveBatch(this.batchSize);
-
+    
     for (const feed of activeFeeds) {
       try {
         const rssItems = await this.feedParser.parse(feed.url);

@@ -9,8 +9,6 @@ export class ArticleRepository extends BaseRepository {
       const now = new Date().toISOString();
       const articlesWithTimestamps = articles.map(article => ({
         ...article,
-        created_at: now,
-        updated_at: now
       }));
 
       const { data, error } = await this.client

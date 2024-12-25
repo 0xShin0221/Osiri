@@ -19,7 +19,7 @@ create unique index idx_articles_url on articles(url);
 create trigger set_articles_updated_at
   before update on articles
   for each row
-  execute function moddatetime();
+  execute function moddatetime(updated_at);
 
 -- Enable RLS
 alter table articles enable row level security;
@@ -48,12 +48,6 @@ comment on column articles.url is 'Article URL';
 drop policy if exists "Anyone can view articles" on articles;
 drop policy if exists "Only admins can modify articles" on articles;
 drop policy if exists "Edge Function can insert articles" on articles;
-
--- Create basic policies
-create policy "Anyone can view articles"
-  on articles for select
-  to authenticated, anon
-  using (true);
 
 create policy "Service role can insert articles"
   on articles for insert

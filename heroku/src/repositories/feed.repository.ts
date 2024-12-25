@@ -76,16 +76,16 @@ export class FeedRepository extends BaseRepository {
       const { error } = await this.client
         .from(this.table)
         .update({ 
-          is_active: false,
-          updated_at: new Date().toISOString()
+          is_active: false
         } satisfies RssFeedUpdate)
         .eq('id', id);
-
+  
       if (error) throw error;
     } catch (error) {
       this.handleError(error);
     }
   }
+  
 
   async getFeedStatus(id: string): Promise<{ isActive: boolean; lastFetched: Date | null } | null> {
     try {
@@ -116,11 +116,10 @@ export class FeedRepository extends BaseRepository {
       const { error } = await this.client
         .from(this.table)
         .update({ 
-          url: newUrl,
-          updated_at: new Date().toISOString()
+          url: newUrl
         } satisfies RssFeedUpdate)
         .eq('id', id);
-
+  
       if (error) throw error;
     } catch (error) {
       this.handleError(error);

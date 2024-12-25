@@ -30,7 +30,7 @@ create index idx_rss_feeds_last_fetched on rss_feeds(last_fetched_at);
 create trigger set_rss_feeds_updated_at
   before update on rss_feeds
   for each row
-  execute function moddatetime();
+  execute function moddatetime(updated_at);
 
 -- Enable RLS
 alter table rss_feeds enable row level security;
