@@ -5,10 +5,10 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "dev": "ts-node-dev src/server.ts",
-    "test": "jest",
-    "heroku-postbuild": "npm run build && mkdir -p /tmp/.cache/puppeteer && mv /tmp/chromium /tmp/.cache/puppeteer || echo 'No Puppeteer cache found'"
+    "test": "jest"
   },
   "dependencies": {
+    "@langchain/community": "^0.3.20",
     "@langchain/core": "^0.3.26",
     "@langchain/openai": "^0.3.16",
     "@supabase/supabase-js": "^2.39.1",
@@ -18,7 +18,7 @@
     "langchain": "^0.3.7",
     "lodash": "^4.17.21",
     "openai": "^4.24.1",
-    "puppeteer": "^21.11.0",
+    "playwright": "^1.49.1",
     "rss-parser": "^3.13.0",
     "zod": "^3.24.1"
   },
