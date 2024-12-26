@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "DEBUG=app:*,server:*,-server:verbose,-app:debug ts-node-dev src/server.ts",
     "test": "jest",
     "heroku-cleanup": "yarn run playwright install chromium"
   },
