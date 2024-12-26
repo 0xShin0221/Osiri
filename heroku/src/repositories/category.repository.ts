@@ -73,7 +73,7 @@ export class CategoryRepository extends BaseRepository {
 
   async getArticlesByCategory(
     categoryId: string,
-    limit: number = 20,
+    limit: number = 40,
     offset: number = 0
   ): Promise<ServiceResponse<{ articles: any[]; total: number }>> {
     try {

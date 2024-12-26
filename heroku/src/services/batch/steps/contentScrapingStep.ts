@@ -2,17 +2,19 @@ import { BatchResults } from "../../../types/batch";
 import { ContentScraper } from "../../content/scraper";
 import { ArticleRepository } from "../../../repositories/article.repository";
 import { ScrapingStepResult, StepProcessor } from "./stepProcessor.types";
-import { chunk } from "lodash";
 
 
 export class ContentScrapingStep implements StepProcessor {
-  private readonly CHUNK_SIZE = 5;
-
+  private readonly API_DELAY_MS = 700; // 0.7 second between requests
   constructor(
     private readonly contentScraper: ContentScraper,
     private readonly articleRepository: ArticleRepository,
     private readonly batchSize: number
   ) {}
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   async execute(
     results: BatchResults,
@@ -23,7 +25,7 @@ export class ContentScrapingStep implements StepProcessor {
       // Get unprocessed articles
       const unprocessedResponse = await this.articleRepository.getUnprocessedArticles(this.batchSize);
       
-      if (!unprocessedResponse.success || !unprocessedResponse.data) {
+      if (!unprocessedResponse.success || !unprocessedResponse.data?.length) {
         return {
           scrapedArticles: 0,
           failedScrapes: 0,
@@ -32,68 +34,53 @@ export class ContentScrapingStep implements StepProcessor {
       }
 
       const articles = unprocessedResponse.data;
-      const articleChunks = chunk(articles, this.CHUNK_SIZE);
-      let scrapedCount = 0;
-      let failedCount = 0;
 
-      // Process each chunk
-      for (const articleChunk of articleChunks) {
-        await Promise.all(
-          articleChunk.map(async (article) => {
-            try {
-              // Scrape content
-              const scrapeResult = await this.contentScraper.scrape(article.url);
-              if (scrapeResult.success && scrapeResult.data) {
-                // Update article with scraped content
-                const updateResult = await this.articleRepository.updateScrapedContent(
-                  article.id,
-                  scrapeResult.data
-                );
+      // Process articles in parallel
+      const scrapingPromises = articles.map(async (article) => {
+        try {
+          // Scrape content
+          const scrapeResult = await this.contentScraper.scrape(article.url);
+          
+          if (!scrapeResult.success || !scrapeResult.data) {
+            await this.articleRepository.updateScrapingStatus(article.id, 'failed', scrapeResult.error || "Undefined content");
+            return false;
+          }
 
-                if (updateResult.success) {
-                  scrapedCount++;
-                  results.scraping.success++;
-                  onProgress?.('scrape', results.scraping.success);
-                } else {
-                  failedCount++;
-                  results.scraping.failed++;
-                  onError?.(
-                    'scraping_update',
-                    new Error(updateResult.error || 'Failed to update scraped content'),
-                    article.id
-                  );
-                }
-              } else {
-                this.articleRepository.updateScrapingStatus(article.id, 'failed', scrapeResult.error || "Undefined the content");
-                failedCount++;
-                results.scraping.failed++;
-                onError?.(
-                  'scraping',
-                  new Error(scrapeResult.error || 'Failed to scrape content'),
-                  article.id
-                );
-              }
-            } catch (error) {
-              failedCount++;
-              results.scraping.failed++;
-              onError?.(
-                'scraping',
-                error instanceof Error ? error : new Error('Unknown scraping error'),
-                article.id
-              );
-            }
-          })
-        );
+          // Update article with scraped content
+          const updateResult = await this.articleRepository.updateScrapedContent(
+            article.id,
+            scrapeResult.data
+          );
 
-        // Optional: Add delay between chunks to prevent rate limiting
-        if (articleChunks.length > 1) {
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          if (!updateResult.success) {
+            onError?.(
+              'scraping_update',
+              new Error(updateResult.error || 'Failed to update scraped content'),
+              article.id
+            );
+            return false;
+          }
+
+          results.scraping.success++;
+          onProgress?.('scrape', results.scraping.success);
+          await this.delay(this.API_DELAY_MS);
+          return true;
+        } catch (error) {
+          onError?.(
+            'scraping',
+            error instanceof Error ? error : new Error('Unknown scraping error'),
+            article.id
+          );
+          return false;
         }
-      }
+      });
+
+      // Wait for all scraping attempts to complete
+      const scrapingResults = await Promise.all(scrapingPromises);
 
       return {
-        scrapedArticles: scrapedCount,
-        failedScrapes: failedCount,
+        scrapedArticles: scrapingResults.filter(Boolean).length,
+        failedScrapes: scrapingResults.filter(r => !r).length,
         totalArticles: articles.length
       };
     } catch (error) {

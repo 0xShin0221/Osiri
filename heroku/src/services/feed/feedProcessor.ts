@@ -29,7 +29,7 @@ export class FeedProcessor {
       }));
 
       const result = await this.articleRepository.saveMany(articles);
-
+      console.log("articles saved", result);
       return {
         feedId,
         itemsProcessed: result.length,

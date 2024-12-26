@@ -4,7 +4,7 @@ import { BaseRepository } from './base.repository';
 export class FeedRepository extends BaseRepository {
   private readonly table = 'rss_feeds';
 
-  async getActiveBatch(limit: number = 5): Promise<RssFeed[]> {
+  async getActiveBatch(limit: number = 50): Promise<RssFeed[]> {
     try {
       const { data, error } = await this.client
         .from(this.table)

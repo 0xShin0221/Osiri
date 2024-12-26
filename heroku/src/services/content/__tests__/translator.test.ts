@@ -10,7 +10,7 @@ import { title } from 'process';
 const translationSchema = z.object({
     title: z.string().describe("Translated title in target language"),
     translation: z.string().describe("Translated content in target language"),
-    key_terms: z.array(z.string()).max(5).describe("Up to 5 preserved technical terms"),
+    key_points: z.array(z.string()).max(5).describe("Up to 5 preserved technical terms"),
     summary: z.string().describe("3-5 key points summary in target language")
   });
   
@@ -59,7 +59,7 @@ describe('ContentTranslator', () => {
       const mockResponse: TranslationOutput = {
         title: "こんにちは世界の例",
         translation: "こんにちは世界",
-        key_terms: ["World"],
+        key_points: ["World"],
         summary: "簡単な挨拶文です。"
       };
 
@@ -103,7 +103,7 @@ describe('ContentTranslator', () => {
           return Promise.resolve({
             title: "",
             translation: "",
-            key_terms: [],
+            key_points: [],
             summary: ""
           });
         });
@@ -119,7 +119,7 @@ describe('ContentTranslator', () => {
         expect(result.data).toEqual({
           title: "",
           translation: "",
-          key_terms: [],
+          key_points: [],
           summary: ""
         });
       });
@@ -145,7 +145,7 @@ describe('ContentTranslator', () => {
     // it('should pass correct prompt template parameters', async () => {
     //   const mockResponse: TranslationOutput = {
     //     translation: "こんにちは世界",
-    //     key_terms: ["World"],
+    //     key_points: ["World"],
     //     summary: "簡単な挨拶文です。"
     //   };
 

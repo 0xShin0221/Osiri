@@ -1,5 +1,5 @@
 import { BaseRepository } from "./base.repository";
-import { FeedLanguage, ServiceResponse, Translation, TranslationInsert, TranslationStatus, TranslationUpdate } from "../types/models";
+import { ArticleForTranslation, FeedLanguage, ServiceResponse, Translation, TranslationInsert, TranslationStatus, TranslationUpdate } from "../types/models";
 
 export interface PendingTranslation {
     translation_id: string;
@@ -12,14 +12,52 @@ export interface PendingTranslation {
   
   export class TranslationRepository extends BaseRepository {
     private readonly table = "translations";
+
+    private readonly TARGET_LANGUAGES: FeedLanguage[] = ['ja', 'en', 'zh'];
+
+    async findArticlesForTranslation(limit: number = 50): Promise<ServiceResponse<ArticleForTranslation[]>> {
+      try {
+        const { data, error } = await this.client
+          .rpc('get_articles_for_translation', {
+            max_articles: limit
+          });
   
-    async getPendingTranslations(limit: number = 10): Promise<ServiceResponse<PendingTranslation[]>> {
+        if (error) throw error;
+        return { success: true, data };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : "Unknown error"
+        };
+      }
+    }
+  
+    async createTranslationTasks(articles: ArticleForTranslation[]): Promise<ServiceResponse<void>> {
+      try {
+        const articleIds = articles.map(article => article.id);
+        
+        const { error } = await this.client
+          .rpc('create_translation_tasks', {
+            p_article_ids: articleIds,
+            p_target_languages: this.TARGET_LANGUAGES
+          });
+  
+        if (error) throw error;
+        return { success: true };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : "Unknown error"
+        };
+      }
+    }
+  
+    async getPendingTranslations(limit: number = 50): Promise<ServiceResponse<PendingTranslation[]>> {
       try {
         const { data, error } = await this.client
           .from("pending_translations")
           .select()
           .limit(limit);
-  
         if (error) throw error;
         return { 
             success: true, 
@@ -45,23 +83,60 @@ export interface PendingTranslation {
       translation: {
         title: string;
         content: string;
-        key_terms: string[];
+        key_points: string[];
         summary: string;
         target_language: FeedLanguage;
       }
     ): Promise<ServiceResponse<Translation>> {
       try {
+        // First, try to update existing translation if it exists
+        const { data: existingTranslation, error: fetchError } = await this.client
+          .from(this.table)
+          .select()
+          .eq('article_id', articleId)
+          .eq('target_language', translation.target_language)
+          .single();
+    
+        if (existingTranslation) {
+          // Update existing translation
+          const { data, error } = await this.client
+            .from(this.table)
+            .update({
+              title: translation.title,
+              content: translation.content,
+              key_point1: translation.key_points[0] ?? null,
+              key_point2: translation.key_points[1] ?? null,
+              key_point3: translation.key_points[2] ?? null,
+              key_point4: translation.key_points[3] ?? null,
+              key_point5: translation.key_points[4] ?? null,
+              summary: translation.summary,
+              status: "completed"
+            })
+            .eq('article_id', articleId)
+            .eq('target_language', translation.target_language)
+            .select()
+            .single();
+    
+          if (error) {
+            console.error("Error updating existing translation", error);
+            throw error;
+          }
+          
+          return { success: true, data };
+        }
+    
+        // If no existing translation, insert new
         const { data, error } = await this.client
           .from(this.table)
           .insert({
             article_id: articleId,
             title: translation.title,
             content: translation.content,
-            key_term1: translation.key_terms[0] ?? null,
-            key_term2: translation.key_terms[1] ?? null,
-            key_term3: translation.key_terms[2] ?? null,
-            key_term4: translation.key_terms[3] ?? null,
-            key_term5: translation.key_terms[4] ?? null,
+            key_point1: translation.key_points[0] ?? null,
+            key_point2: translation.key_points[1] ?? null,
+            key_point3: translation.key_points[2] ?? null,
+            key_point4: translation.key_points[3] ?? null,
+            key_point5: translation.key_points[4] ?? null,
             summary: translation.summary,
             target_language: translation.target_language,
             status: "completed"
@@ -69,7 +144,11 @@ export interface PendingTranslation {
           .select()
           .single();
     
-        if (error) throw error;
+        if (error) {
+          console.error("Error saving translation", error);
+          throw error;
+        }
+        
         return { success: true, data };
       } catch (error) {
         return {

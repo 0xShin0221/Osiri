@@ -29,7 +29,7 @@ describe('POST /content/translate', () => {
                 data: {
                     title: 'Hello, world!',
                     translation: 'こんにちは、世界！',
-                    key_terms: ['world'],
+                    key_points: ['world'],
                     summary: '世界への挨拶を表現しています。'
                 }
             }))
@@ -52,7 +52,7 @@ describe('POST /content/translate', () => {
             data: {
                 title: 'Hello, world!',
                 translation: 'こんにちは、世界！',
-                key_terms: ['world'],
+                key_points: ['world'],
                 summary: '世界への挨拶を表現しています。'
             }
         });

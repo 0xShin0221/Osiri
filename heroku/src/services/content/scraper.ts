@@ -16,7 +16,7 @@ const waitUntilMapping = {
 export class ContentScraper {
   private cleaner: ContentCleaner;
   private readonly defaultOptions: Required<ScraperOptions> = {
-    timeout: 30000,
+    timeout: 6500,
     waitUntil: 'domcontentloaded'
   };
 
@@ -30,7 +30,8 @@ export class ContentScraper {
     try {
       const loader = new PlaywrightWebBaseLoader(url, {
         launchOptions: {
-          headless: true
+          headless: true,
+          args: ['--no-sandbox', '--disable-setuid-sandbox','--use-gl=egl','--disable-gpu','--disable-software-rasterizer']
         },
         gotoOptions: {
           timeout: opts.timeout,
