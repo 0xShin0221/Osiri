@@ -5,11 +5,11 @@ insert into translations (
   target_language,
   title,
   content,
-  key_term1,
-  key_term2,
-  key_term3,
-  key_term4,
-  key_term5,
+  key_point1,
+  key_point2,
+  key_point3,
+  key_point4,
+  key_point5,
   summary,
   status,
   attempt_count,
@@ -122,17 +122,6 @@ insert into translations (
   updated_at
 )
 values
-  (
-    '8f0a8012-175c-48c1-8e57-3af4bc3c61d6',
-    'a0a80121-75c8-4c18-8e57-3af4bc3c61d5',
-    'ja',
-    null,
-    null,
-    'processing',
-    1,
-    now(),
-    now()
-  ),
   (
     '8f0a8012-175c-48c1-8e57-3af4bc3c61d7',
     'a0a80121-75c8-4c18-8e57-3af4bc3c61d6',

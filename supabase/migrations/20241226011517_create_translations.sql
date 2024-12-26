@@ -14,11 +14,11 @@ create table translations (
   target_language feed_language not null,
   content text,
   title text,
-  key_term1 text,
-  key_term2 text,
-  key_term3 text,
-  key_term4 text,
-  key_term5 text,
+  key_point1 text,
+  key_point2 text,
+  key_point3 text,
+  key_point4 text,
+  key_point5 text,
   summary text,
   status translation_status not null default 'pending',
   attempt_count integer not null default 0,
@@ -70,5 +70,6 @@ create policy "Only admins can modify translations"
 
 -- Add comments
 comment on table translations is 'Stores article translations with status tracking';
-comment on column translations.key_term1 is 'Preserved industry term 1';
+comment on column translations.key_point1 is 'Preserved industry point 1';
 comment on column translations.summary is 'Translated summary of key points (3-5 points)';
+

@@ -23,7 +23,7 @@ VALUES
     'https://techcrunch.com/feed', 
     'en',
     'Leading technology media property, dedicated to startup coverage',
-    true,
+    false,
     NOW()
   );
 

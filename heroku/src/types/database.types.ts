@@ -209,11 +209,11 @@ export type Database = {
           created_at: string | null
           error: string | null
           id: string
-          key_term1: string | null
-          key_term2: string | null
-          key_term3: string | null
-          key_term4: string | null
-          key_term5: string | null
+          key_point1: string | null
+          key_point2: string | null
+          key_point3: string | null
+          key_point4: string | null
+          key_point5: string | null
           last_attempt: string | null
           status: Database["public"]["Enums"]["translation_status"]
           summary: string | null
@@ -228,11 +228,11 @@ export type Database = {
           created_at?: string | null
           error?: string | null
           id?: string
-          key_term1?: string | null
-          key_term2?: string | null
-          key_term3?: string | null
-          key_term4?: string | null
-          key_term5?: string | null
+          key_point1?: string | null
+          key_point2?: string | null
+          key_point3?: string | null
+          key_point4?: string | null
+          key_point5?: string | null
           last_attempt?: string | null
           status?: Database["public"]["Enums"]["translation_status"]
           summary?: string | null
@@ -247,11 +247,11 @@ export type Database = {
           created_at?: string | null
           error?: string | null
           id?: string
-          key_term1?: string | null
-          key_term2?: string | null
-          key_term3?: string | null
-          key_term4?: string | null
-          key_term5?: string | null
+          key_point1?: string | null
+          key_point2?: string | null
+          key_point3?: string | null
+          key_point4?: string | null
+          key_point5?: string | null
           last_attempt?: string | null
           status?: Database["public"]["Enums"]["translation_status"]
           summary?: string | null
@@ -322,6 +322,67 @@ export type Database = {
       }
     }
     Functions: {
+      create_translation_tasks: {
+        Args: {
+          p_article_ids: string[]
+          p_target_languages: Database["public"]["Enums"]["feed_language"][]
+        }
+        Returns: {
+          article_id: string
+          attempt_count: number
+          content: string | null
+          created_at: string | null
+          error: string | null
+          id: string
+          key_point1: string | null
+          key_point2: string | null
+          key_point3: string | null
+          key_point4: string | null
+          key_point5: string | null
+          last_attempt: string | null
+          status: Database["public"]["Enums"]["translation_status"]
+          summary: string | null
+          target_language: Database["public"]["Enums"]["feed_language"]
+          title: string | null
+          updated_at: string | null
+        }[]
+      }
+      create_translation_tasks_with_logging: {
+        Args: {
+          p_article_ids: string[]
+          p_target_languages: Database["public"]["Enums"]["feed_language"][]
+        }
+        Returns: {
+          article_id: string
+          attempt_count: number
+          content: string | null
+          created_at: string | null
+          error: string | null
+          id: string
+          key_point1: string | null
+          key_point2: string | null
+          key_point3: string | null
+          key_point4: string | null
+          key_point5: string | null
+          last_attempt: string | null
+          status: Database["public"]["Enums"]["translation_status"]
+          summary: string | null
+          target_language: Database["public"]["Enums"]["feed_language"]
+          title: string | null
+          updated_at: string | null
+        }[]
+      }
+      get_articles_for_translation: {
+        Args: {
+          max_articles: number
+        }
+        Returns: {
+          id: string
+          title: string
+          content: string
+          source_language: Database["public"]["Enums"]["feed_language"]
+        }[]
+      }
       increment_attempt_count: {
         Args: {
           row_id: string

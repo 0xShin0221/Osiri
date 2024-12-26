@@ -19,6 +19,12 @@ export type TranslationStatus = Database["public"]["Enums"]["translation_status"
 export type ArticleCategory = Database["public"]["Tables"]["article_categories"]["Row"];
 export type ArticleCategoryInsert = Database["public"]["Tables"]["article_categories"]["Insert"];
 
+export type ArticleForTranslation  = {
+  id: string;
+  title: string;
+  content: string;
+  source_language: Database["public"]["Enums"]["feed_language"]
+}; // Same as Database['public']['Functions']['get_articles_for_translation']['Returns'];
 
 export interface ServiceResponse<T> {
   success: boolean;

@@ -16,7 +16,7 @@ values
     'https://techcrunch.com/feed/',
     'en',
     'Technology news and analysis',
-    true,
+    false,
     now(),
     now(),
     now()
@@ -27,7 +27,7 @@ values
     'https://www.technologyreview.com/feed/',
     'en',
     'Technology insights and analysis',
-    true,
+    false,
     now(),
     now(),
     now()
@@ -89,17 +89,6 @@ values
     now(),
     'pending',
     0
-  ),
-  (
-    'a0a80121-75c8-4c18-8e57-3af4bc3c61d5',
-    'f0a80121-75c8-4c18-8e57-3af4bc3c61d1',
-    'Processing Article',
-    null,
-    'https://example.com/processing-article',
-    now(),
-    now(),
-    'processing',
-    1
   ),
   (
     'a0a80121-75c8-4c18-8e57-3af4bc3c61d6',
