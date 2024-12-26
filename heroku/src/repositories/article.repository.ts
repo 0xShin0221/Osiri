@@ -98,7 +98,7 @@ export class ArticleRepository extends BaseRepository {
         .from(this.table)
         .update({
           content,
-          scraping_status: 'processing' as ArticleScrapingStatus,
+          scraping_status: 'completed' as ArticleScrapingStatus,
           last_scraping_attempt: now,
           updated_at: now
         })
