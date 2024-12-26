@@ -4,9 +4,11 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ContentTranslator } from '../translator';
 import { RunnableSequence } from "@langchain/core/runnables";
 import { z } from "zod";
+import { title } from 'process';
 
 
 const translationSchema = z.object({
+    title: z.string().describe("Translated title in target language"),
     translation: z.string().describe("Translated content in target language"),
     key_terms: z.array(z.string()).max(5).describe("Up to 5 preserved technical terms"),
     summary: z.string().describe("3-5 key points summary in target language")
@@ -15,6 +17,7 @@ const translationSchema = z.object({
   type TranslationOutput = z.infer<typeof translationSchema>;
   
   interface ChainInput {
+    title: string; 
     content: string;
     source_language: string;
     target_language: string;
@@ -47,12 +50,14 @@ describe('ContentTranslator', () => {
   });
 
   describe('translate', () => {
+    const validTitle = "Hello World Example";
     const validContent = "Hello World";
     const validSourceLang = "en";
     const validTargetLang = "ja";
 
     it('should successfully translate content', async () => {
       const mockResponse: TranslationOutput = {
+        title: "こんにちは世界の例",
         translation: "こんにちは世界",
         key_terms: ["World"],
         summary: "簡単な挨拶文です。"
@@ -61,6 +66,7 @@ describe('ContentTranslator', () => {
       mockChainInvoke.mockResolvedValueOnce(mockResponse);
 
       const result = await translator.translate(
+        validTitle,
         validContent,
         validSourceLang,
         validTargetLang
@@ -69,6 +75,7 @@ describe('ContentTranslator', () => {
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockResponse);
       expect(mockChainInvoke).toHaveBeenCalledWith({
+        title: validTitle,
         content: validContent,
         source_language: validSourceLang,
         target_language: validTargetLang,
@@ -80,6 +87,7 @@ describe('ContentTranslator', () => {
       mockChainInvoke.mockRejectedValueOnce(new Error('Translation failed'));
 
       const result = await translator.translate(
+        validTitle,
         validContent,
         validSourceLang,
         validTargetLang
@@ -93,6 +101,7 @@ describe('ContentTranslator', () => {
         // Using type assertion to test invalid response scenario
         mockChainInvoke.mockImplementation(async () => {
           return Promise.resolve({
+            title: "",
             translation: "",
             key_terms: [],
             summary: ""
@@ -100,6 +109,7 @@ describe('ContentTranslator', () => {
         });
   
         const result = await translator.translate(
+          validTitle,
           validContent,
           validSourceLang,
           validTargetLang
@@ -107,6 +117,7 @@ describe('ContentTranslator', () => {
   
         expect(result.success).toBe(true);
         expect(result.data).toEqual({
+          title: "",
           translation: "",
           key_terms: [],
           summary: ""

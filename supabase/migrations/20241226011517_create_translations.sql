@@ -13,6 +13,7 @@ create table translations (
   article_id uuid not null references articles(id) on delete cascade,
   target_language feed_language not null,
   content text,
+  title text,
   key_term1 text,
   key_term2 text,
   key_term3 text,

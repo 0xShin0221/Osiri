@@ -3,8 +3,10 @@ import { ContentTranslator } from '../../services/content/translator';
 import { z } from 'zod';
 import { withValidation } from '../../middleware/requestHandler';
 import { FeedLanguage } from '../../types/models';
+import { title } from 'process';
 
 const translateRequestSchema = z.object({
+  title: z.string(),
   content: z.string(),
   sourceLanguage: z.custom<FeedLanguage>(),
   targetLanguage: z.custom<FeedLanguage>()
@@ -17,6 +19,7 @@ export const translateContent = withValidation(translateRequestSchema)(
       const translator = new ContentTranslator();
 
       const result = await translator.translate(
+        validatedData.title,
         validatedData.content,
         validatedData.sourceLanguage as FeedLanguage,
         validatedData.targetLanguage as FeedLanguage

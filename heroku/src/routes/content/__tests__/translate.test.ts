@@ -2,6 +2,7 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../app';
 import { ContentTranslator } from '../../../services/content/translator';
+import { title } from 'process';
 
 jest.mock('../../../services/content/translator', () => {
     return {
@@ -12,6 +13,7 @@ jest.mock('../../../services/content/translator', () => {
 });
 
 describe('POST /content/translate', () => {
+    const validTitle = 'Hello, world!';
     const validContent = 'Hello, world!';
     const validSourceLanguage = 'en';
     const validTargetLanguage = 'ja';
@@ -25,6 +27,7 @@ describe('POST /content/translate', () => {
             translate: jest.fn().mockImplementation(async () => ({
                 success: true,
                 data: {
+                    title: 'Hello, world!',
                     translation: 'こんにちは、世界！',
                     key_terms: ['world'],
                     summary: '世界への挨拶を表現しています。'
@@ -37,6 +40,7 @@ describe('POST /content/translate', () => {
         const response = await request(app)
             .post('/content/translate')
             .send({
+                title: validTitle,
                 content: validContent,
                 sourceLanguage: validSourceLanguage,
                 targetLanguage: validTargetLanguage
@@ -46,6 +50,7 @@ describe('POST /content/translate', () => {
         expect(response.body).toEqual({
             success: true,
             data: {
+                title: 'Hello, world!',
                 translation: 'こんにちは、世界！',
                 key_terms: ['world'],
                 summary: '世界への挨拶を表現しています。'

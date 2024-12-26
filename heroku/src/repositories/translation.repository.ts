@@ -43,6 +43,7 @@ export interface PendingTranslation {
     async saveTranslation(
       articleId: string,
       translation: {
+        title: string;
         content: string;
         key_terms: string[];
         summary: string;
@@ -54,6 +55,7 @@ export interface PendingTranslation {
           .from(this.table)
           .insert({
             article_id: articleId,
+            title: translation.title,
             content: translation.content,
             key_term1: translation.key_terms[0] ?? null,
             key_term2: translation.key_terms[1] ?? null,
@@ -66,7 +68,7 @@ export interface PendingTranslation {
           } satisfies TranslationInsert)
           .select()
           .single();
-  
+    
         if (error) throw error;
         return { success: true, data };
       } catch (error) {

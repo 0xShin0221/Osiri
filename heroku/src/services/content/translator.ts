@@ -7,6 +7,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ServiceResponse } from "../../types/models";
 
 const translationSchema = z.object({
+  title: z.string().describe("Translated title in target language"),
   translation: z.string().describe("Translated content in target language"),
   key_terms: z.array(z.string()).max(5).describe("Up to 5 preserved technical terms"),
   summary: z.string().describe("3-5 key points summary in target language")
@@ -23,22 +24,23 @@ export class ContentTranslator {
     });
 
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
-
     const promptTemplate = ChatPromptTemplate.fromTemplate(`
-      Translate the following text from {source_language} to {target_language}.
+        Translate the following title and text from {source_language} to {target_language}.
+        
+        Guidelines:
+        1. Preserve technical terms and industry jargon in English
+        2. Maintain the original's tone and formality
+        3. Create a concise summary with 3-5 key points
+        4. Identify up to 5 key technical terms that should be preserved
+        
+        Original title:
+        {title}
       
-      Guidelines:
-      1. Preserve technical terms and industry jargon in English
-      2. Maintain the original's tone and formality
-      3. Create a concise summary with 3-5 key points
-      4. Identify up to 5 key technical terms that should be preserved
-      
-      Original text:
-      {content}
-      
-      {format_instructions}
-    `);
-
+        Original text:
+        {content}
+        
+        {format_instructions}
+      `);
     this.chain = RunnableSequence.from([
       promptTemplate,
       this.model,
@@ -47,16 +49,19 @@ export class ContentTranslator {
   }
 
   async translate(
+    title: string,
     content: string,
     sourceLang: string,
     targetLang: string
   ): Promise<ServiceResponse<{
+    title: string;
     translation: string;
     key_terms: string[];
     summary: string;
   }>> {
     try {
       const response = await this.chain.invoke({
+        title,
         content,
         source_language: sourceLang,
         target_language: targetLang,

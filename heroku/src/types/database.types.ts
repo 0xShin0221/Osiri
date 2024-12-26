@@ -218,6 +218,7 @@ export type Database = {
           status: Database["public"]["Enums"]["translation_status"]
           summary: string | null
           target_language: Database["public"]["Enums"]["feed_language"]
+          title: string | null
           updated_at: string | null
         }
         Insert: {
@@ -236,6 +237,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["translation_status"]
           summary?: string | null
           target_language: Database["public"]["Enums"]["feed_language"]
+          title?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -254,6 +256,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["translation_status"]
           summary?: string | null
           target_language?: Database["public"]["Enums"]["feed_language"]
+          title?: string | null
           updated_at?: string | null
         }
         Relationships: [
