@@ -1,47 +1,34 @@
 import { Request, Response } from 'express';
 import { ContentTranslator } from '../../services/content/translator';
 import { z } from 'zod';
+import { withValidation } from '../../middleware/requestHandler';
+import { FeedLanguage } from '../../types/models';
 
 const translateRequestSchema = z.object({
-  content: z.union([
-    z.string(),
-    z.array(z.string())
-  ]),
-  targetLanguage: z.string()
+  content: z.string(),
+  sourceLanguage: z.custom<FeedLanguage>(),
+  targetLanguage: z.custom<FeedLanguage>()
 });
 
-export const translateContent = async (req: Request, res: Response) => {
-  try {
-    const validatedData = translateRequestSchema.parse(req.body);
-    const translator = new ContentTranslator();
+export const translateContent = withValidation(translateRequestSchema)(
+  async (req: Request, res: Response) => {
+    try {
+      const validatedData = req.body;
+      const translator = new ContentTranslator();
 
-    let result;
-    if (Array.isArray(validatedData.content)) {
-      result = await translator.translateBatch(
+      const result = await translator.translate(
         validatedData.content,
-        validatedData.targetLanguage
+        validatedData.sourceLanguage as FeedLanguage,
+        validatedData.targetLanguage as FeedLanguage
       );
-    } else {
-      result = await translator.translate(
-        validatedData.content,
-        validatedData.targetLanguage
-      );
-    }
 
-    res.json(result);
-  } catch (error) {
-    console.error('Translation error:', error);
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({
+      res.json(result);
+    } catch (error) {
+      console.error('Translation error:', error);
+      res.status(500).json({
         success: false,
-        error: 'Invalid request data',
-        details: error.errors
+        error: error instanceof Error ? error.message : 'Translation failed'
       });
     }
-    
-    res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Translation failed'
-    });
   }
-};
+);

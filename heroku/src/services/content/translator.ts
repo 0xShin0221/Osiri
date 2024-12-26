@@ -1,98 +1,77 @@
-import { ChatOpenAI } from '@langchain/openai';
-import { 
-  AIMessage, 
-  BaseMessage,
-  HumanMessage,
-  SystemMessage 
-} from '@langchain/core/messages';
-import { ServiceResponse } from '../../types/models';
+// src/services/content/translator.ts
+import { z } from "zod";
+import { ChatOpenAI } from "@langchain/openai";
+import { RunnableSequence } from "@langchain/core/runnables";
+import { StructuredOutputParser } from "@langchain/core/output_parsers";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { ServiceResponse } from "../../types/models";
+
+const translationSchema = z.object({
+  translation: z.string().describe("Translated content in target language"),
+  key_terms: z.array(z.string()).max(5).describe("Up to 5 preserved technical terms"),
+  summary: z.string().describe("3-5 key points summary in target language")
+});
 
 export class ContentTranslator {
   private model: ChatOpenAI;
-
+  private chain: RunnableSequence;
+  private parser: StructuredOutputParser<typeof translationSchema>;
   constructor() {
     this.model = new ChatOpenAI({
-      modelName: 'gpt-4o-mini',
-      temperature: 0.3,
-      maxRetries: 3,
+      temperature: 0.1,
+      modelName: "gpt-4o-mini"
     });
+
+    this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
+
+    const promptTemplate = ChatPromptTemplate.fromTemplate(`
+      Translate the following text from {source_language} to {target_language}.
+      
+      Guidelines:
+      1. Preserve technical terms and industry jargon in English
+      2. Maintain the original's tone and formality
+      3. Create a concise summary with 3-5 key points
+      4. Identify up to 5 key technical terms that should be preserved
+      
+      Original text:
+      {content}
+      
+      {format_instructions}
+    `);
+
+    this.chain = RunnableSequence.from([
+      promptTemplate,
+      this.model,
+      this.parser
+    ]);
   }
 
-  async translate(content: string, targetLanguage: string): Promise<ServiceResponse<string>> {
+  async translate(
+    content: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<ServiceResponse<{
+    translation: string;
+    key_terms: string[];
+    summary: string;
+  }>> {
     try {
-      const messages: BaseMessage[] = [
-        new SystemMessage({
-          content: `You are a professional translator. Translate the following text to ${targetLanguage}. 
-                   Maintain the original meaning, tone, and formatting.`
-        }),
-        new HumanMessage({ content })
-      ];
-      
-      const response = await this.model.invoke(messages);
+      const response = await this.chain.invoke({
+        content,
+        source_language: sourceLang,
+        target_language: targetLang,
+        format_instructions: this.parser.getFormatInstructions()
+      });
 
-      if (response instanceof AIMessage && typeof response.content === 'string') {
-        return {
-          success: true,
-          data: response.content
-        };
-      }
-
-      throw new Error('Unexpected response format from model');
+      return {
+        success: true,
+        data: response
+      };
     } catch (error) {
-      console.error('Translation error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Translation failed'
+        error: error instanceof Error ? error.message : "Translation failed"
       };
     }
-  }
-
-  async translateBatch(contents: string[], targetLanguage: string): Promise<ServiceResponse<string[]>> {
-    try {
-      const messages: BaseMessage[] = [
-        new SystemMessage({
-          content: `You are a professional translator. Translate each of the following texts to ${targetLanguage}.
-                   Maintain the original meaning and tone. Return each translation on a new line, 
-                   separated by '---NEW_TRANSLATION---'.`
-        }),
-        new HumanMessage({
-          content: contents.join('\n---INPUT_SEPARATOR---\n')
-        })
-      ];
-
-      const response = await this.model.invoke(messages);
-      
-      if (response instanceof AIMessage && typeof response.content === 'string') {
-        const translations = response.content
-          .split('---NEW_TRANSLATION---')
-          .map(t => t.trim())
-          .filter(t => t.length > 0);
-
-        if (translations.length !== contents.length) {
-          throw new Error('Number of translations does not match input');
-        }
-
-        return {
-          success: true,
-          data: translations
-        };
-      }
-
-      throw new Error('Unexpected response format from model');
-    } catch (error) {
-      console.error('Batch translation error:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Batch translation failed'
-      };
-    }
-  }
-
-  // Helper method to process model response
-  private validateResponse(response: AIMessage): string {
-    if (typeof response.content !== 'string') {
-      throw new Error('Expected string response from model');
-    }
-    return response.content;
   }
 }
