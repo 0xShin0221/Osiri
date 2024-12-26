@@ -34,6 +34,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      article_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      article_category_relations: {
+        Row: {
+          article_id: string
+          category_id: string
+        }
+        Insert: {
+          article_id: string
+          category_id: string
+        }
+        Update: {
+          article_id?: string
+          category_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "article_category_relations_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "article_category_relations_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "article_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       articles: {
         Row: {
           content: string | null
@@ -147,6 +201,71 @@ export type Database = {
         }
         Relationships: []
       }
+      translations: {
+        Row: {
+          article_id: string
+          attempt_count: number
+          content: string | null
+          created_at: string | null
+          error: string | null
+          id: string
+          key_term1: string | null
+          key_term2: string | null
+          key_term3: string | null
+          key_term4: string | null
+          key_term5: string | null
+          last_attempt: string | null
+          status: Database["public"]["Enums"]["translation_status"]
+          summary: string | null
+          target_language: Database["public"]["Enums"]["feed_language"]
+          updated_at: string | null
+        }
+        Insert: {
+          article_id: string
+          attempt_count?: number
+          content?: string | null
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          key_term1?: string | null
+          key_term2?: string | null
+          key_term3?: string | null
+          key_term4?: string | null
+          key_term5?: string | null
+          last_attempt?: string | null
+          status?: Database["public"]["Enums"]["translation_status"]
+          summary?: string | null
+          target_language: Database["public"]["Enums"]["feed_language"]
+          updated_at?: string | null
+        }
+        Update: {
+          article_id?: string
+          attempt_count?: number
+          content?: string | null
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          key_term1?: string | null
+          key_term2?: string | null
+          key_term3?: string | null
+          key_term4?: string | null
+          key_term5?: string | null
+          last_attempt?: string | null
+          status?: Database["public"]["Enums"]["translation_status"]
+          summary?: string | null
+          target_language?: Database["public"]["Enums"]["feed_language"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translations_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       waitlist: {
         Row: {
           company: string | null
@@ -179,7 +298,25 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      pending_translations: {
+        Row: {
+          article_id: string | null
+          original_content: string | null
+          original_title: string | null
+          source_language: Database["public"]["Enums"]["feed_language"] | null
+          target_language: Database["public"]["Enums"]["feed_language"] | null
+          translation_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translations_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       increment_attempt_count: {
@@ -209,6 +346,12 @@ export type Database = {
         | "ru"
         | "id"
         | "de"
+      translation_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "skipped"
     }
     CompositeTypes: {
       [_ in never]: never
