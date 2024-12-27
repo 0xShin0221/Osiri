@@ -1,4 +1,3 @@
-// src/routes/batch/processBatch.ts
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { withValidation } from '../../middleware/requestHandler';
@@ -25,82 +24,88 @@ type BatchStatus = {
   }>;
 };
 
+async function runBatchProcess(options: any) {
+  const status: BatchStatus = {
+    feedsProcessed: 0,
+    articlesCreated: 0,
+    contentScraped: 0,
+    translationsCompleted: 0,
+    errors: []
+  };
+
+  const feedRepository = new FeedRepository();
+  const articleRepository = new ArticleRepository();
+  const batchProcessor = new BatchProcessor(feedRepository, articleRepository);
+
+  try {
+    console.info('Starting batch process');
+    const result = await batchProcessor.process({
+      ...options,
+      onProgress: (stage: string, count: number) => {
+        switch (stage) {
+          case 'feed':
+            status.feedsProcessed = count;
+            break;
+          case 'article':
+            status.articlesCreated = count;
+            break;
+          case 'scrape':
+            status.contentScraped = count;
+            break;
+          case 'translate':
+            status.translationsCompleted = count;
+            break;
+        }
+        console.info('Progress update:', { stage, count, status });
+      },
+      onError: (stage: string, error: Error, itemId?: string) => {
+        status.errors.push({
+          stage,
+          error: error.message,
+          itemId
+        });
+        console.error('Process error:', { stage, error: error.message, itemId });
+      }
+    });
+
+    console.info('Batch process completed:', {
+      status,
+      processingTime: result.processingTime,
+      newArticlesCount: result.newArticlesCount,
+      updatedArticlesCount: result.updatedArticlesCount
+    });
+    
+  } catch (error) {
+    if (status.errors.length === 0) {
+      status.errors.push({
+        stage: 'batch',
+        error: error instanceof Error ? error.message : 'Unknown error occurred'
+      });
+    }
+
+    console.error('Batch process failed:', {
+      status,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+}
+
 export const processBatch = withValidation(batchOptionsSchema)(
   withErrorHandling(async (req: Request, res: Response) => {
     const options = req.body || {};
-    
-    const feedRepository = new FeedRepository();
-    const articleRepository = new ArticleRepository();
-    
-    const batchProcessor = new BatchProcessor(
-      feedRepository,
-      articleRepository
-    );
 
-    const status: BatchStatus = {
-      feedsProcessed: 0,
-      articlesCreated: 0,
-      contentScraped: 0,
-      translationsCompleted: 0,
-      errors: []
-    };
+    // Send immediate response
+    res.json({
+      success: true,
+      timestamp: new Date().toISOString(),
+      message: 'Batch processing started'
+    });
 
-    try {
-      const result = await batchProcessor.process({
-        ...options,
-        onProgress: (stage: string, count: number) => {
-          switch (stage) {
-            case 'feed':
-              status.feedsProcessed = count;
-              break;
-            case 'article':
-              status.articlesCreated = count;
-              break;
-            case 'scrape':
-              status.contentScraped = count;
-              break;
-            case 'translate':
-              status.translationsCompleted = count;
-              break;
-          }
-        },
-        onError: (stage: string, error: Error, itemId?: string) => {
-          status.errors.push({
-            stage,
-            error: error.message,
-            itemId
-          });
-        }
+    // Start batch process in background
+    setImmediate(() => {
+      runBatchProcess(options).catch(error => {
+        console.error('Background batch process failed:', error);
       });
-      res.json({
-        success: true,
-        timestamp: new Date().toISOString(),
-        status,
-        details: {
-          totalProcessingTime: result.processingTime,
-          batchId: result.batchId,
-          newArticlesCount: result.newArticlesCount,
-          updatedArticlesCount: result.updatedArticlesCount
-        }
-      });
-      
-    } catch (error) {
-      if (status.errors.length === 0) {
-        status.errors.push({
-          stage: 'batch',
-          error: error instanceof Error ? error.message : 'Unknown error occurred'
-        });
-      }
-
-      res.status(500).json({
-        success: false,
-        timestamp: new Date().toISOString(),
-        status,
-        error: {
-          message: 'Batch processing failed',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }
-      });
-    }
+    });
   })
 );

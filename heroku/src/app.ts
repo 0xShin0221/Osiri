@@ -3,10 +3,12 @@ import feedRoutes from './routes/feeds';
 import contentRoutes from './routes/content';
 import healthRouter from './routes/health';
 import batchRoutes from './routes/batch';
+import { requireApiKey }  from './middleware/auth';
 
 const app = express();
 
 app.use(express.json());
+app.use(requireApiKey);
 
 app.use('/health', healthRouter);
 app.use('/feeds', feedRoutes);
