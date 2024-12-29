@@ -45,6 +45,8 @@
     "@radix-ui/react-navigation-menu": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/auth-js": "2.65.1",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/functions-js": "2.4.3",
     "@supabase/node-fetch": "2.6.15",
     "@supabase/postgrest-js": "1.16.3",

@@ -16,6 +16,8 @@ import { ComingSoon } from "./pages/ComingSoon";
 import { NotFound } from "./pages/NotFound";
 import { Unsubscribe } from "./pages/Unsubscribe";
 import * as amplitude from '@amplitude/analytics-browser';
+import { Dashboard } from "./pages/Dashboard";
+import { AuthContainer } from "./components/auth/AuthSupabase";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,7 +38,13 @@ function LocalizedRoutes() {
           <Route path="coming-soon" element={<ComingSoon />} />
           <Route path="terms" element={<Terms />} />
           <Route path="privacy" element={<Privacy />} />
-          <Route path="unsubscribe" element={<Unsubscribe />} /> 
+          <Route path="unsubscribe" element={<Unsubscribe />} />
+
+          <Route path="dashboard" element={
+            <AuthContainer>
+              <Dashboard />
+            </AuthContainer>
+        } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
