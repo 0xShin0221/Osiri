@@ -1,5 +1,5 @@
 import { BaseRepository } from "./base.repository";
-import { ArticleForTranslation, FeedLanguage, ServiceResponse, Translation, TranslationInsert, TranslationStatus, TranslationUpdate } from "../types/models";
+import { ArticleForTranslation, enableFeedLanguages, FeedLanguage, ServiceResponse, Translation, TranslationInsert, TranslationStatus, TranslationUpdate } from "../types/models";
 
 export interface PendingTranslation {
     translation_id: string;
@@ -13,7 +13,7 @@ export interface PendingTranslation {
   export class TranslationRepository extends BaseRepository {
     private readonly table = "translations";
 
-    private readonly TARGET_LANGUAGES: FeedLanguage[] = ['ja', 'en', 'zh'];
+    private readonly TARGET_LANGUAGES: FeedLanguage[] = enableFeedLanguages;
 
     async findArticlesForTranslation(limit: number = 50): Promise<ServiceResponse<ArticleForTranslation[]>> {
       try {

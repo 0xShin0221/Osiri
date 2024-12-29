@@ -1,6 +1,7 @@
 import type { Database } from './database.types';
 
 export type FeedLanguage = Database['public']['Enums']['feed_language'];
+export const enableFeedLanguages = ['en', 'ja', 'zh'] as FeedLanguage[];
 
 export type RssFeed = Database['public']['Tables']['rss_feeds']['Row'];
 export type RssFeedInsert = Database['public']['Tables']['rss_feeds']['Insert'];
