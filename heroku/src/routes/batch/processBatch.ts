@@ -8,7 +8,7 @@ import { withErrorHandling } from '../../middleware/errorHandler';
 
 const batchOptionsSchema = z.object({
   forceFetch: z.boolean().optional().default(false),
-  batchSize: z.number().optional().default(10),
+  batchSize: z.number().optional().default(8),
   retryCount: z.number().optional().default(3)
 }).optional();
 
