@@ -34,16 +34,6 @@ const routeList = (): RouteProps[] => {
       label: t("menu.dashboard"),
       icon: <LayoutDashboard className="w-4 h-4" />,
     },
-    // {
-    //   href: "/bookmarks",
-    //   label: t("menu.bookmarks"),
-    //   icon: <BookMarked className="w-4 h-4" />,
-    // },
-    // {
-    //   href: "/settings",
-    //   label: t("menu.settings"),
-    //   icon: <Settings className="w-4 h-4" />,
-    // },
   ];
 };
 
@@ -64,7 +54,7 @@ export const NavbarLogined = () => {
         <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between">
           <NavigationMenuItem className="font-bold flex">
             <a
-              href={`/${currentLang}/dashboard`}
+              href={`/${currentLang}`}
               className="ml-2 font-bold text-xl flex"
             >
               <OsiriLogo />
@@ -72,13 +62,12 @@ export const NavbarLogined = () => {
             </a>
           </NavigationMenuItem>
 
-          {/* Mobile */}
-          <span className="flex md:hidden">
+          <span className="flex items-center">
             <ModeToggle />
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className="px-2">
-                <Menu className="flex md:hidden h-5 w-5" />
+                <Menu className="h-5 w-5" />
               </SheetTrigger>
 
               <SheetContent side="left">
@@ -97,7 +86,7 @@ export const NavbarLogined = () => {
                       <span className="ml-2">{label}</span>
                     </a>
                   ))}
-                  <LanguageSelector variant="mobile" />
+                  <LanguageSelector />
                   <button
                     onClick={handleLogout}
                     className={buttonVariants({ variant: "ghost" })}
@@ -109,37 +98,6 @@ export const NavbarLogined = () => {
               </SheetContent>
             </Sheet>
           </span>
-
-          {/* Desktop */}
-          <nav className="hidden md:flex gap-2">
-            {routeList().map(({ href, label, icon }: RouteProps) => (
-              <a
-                key={label}
-                href={`/${currentLang}${href}`}
-                className={`text-[17px] ${buttonVariants({
-                  variant: "ghost",
-                })}`}
-              >
-                {icon}
-                <span className="ml-2">{label}</span>
-              </a>
-            ))}
-          </nav>
-
-          <div className="hidden md:flex items-center gap-2">
-            <LanguageSelector />
-            <button
-              onClick={handleLogout}
-              className={buttonVariants({ 
-                variant: "ghost",
-                className: "text-muted-foreground hover:text-foreground"
-              })}
-            >
-              <LogOut className="mr-2 w-4 h-4" />
-              {t("menu.logout")}
-            </button>
-            <ModeToggle />
-          </div>
         </NavigationMenuList>
       </NavigationMenu>
     </header>
