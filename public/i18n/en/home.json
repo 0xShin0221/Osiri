@@ -162,8 +162,9 @@
   "menu": {
     "faq": "FAQ",
     "features": "Features",
-    "login": "login",
-    "personas": "whoUses",
+    "login": "Login",
+    "logout": "Logout",
+    "personas": "WhoUses",
     "pricing": "Pricing"
   },
   "newsletter": {
