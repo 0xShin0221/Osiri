@@ -6,9 +6,6 @@ import { useEffect } from "react";
 import { LanguageRedirect } from "./components/LanguadgeRedirect";
 import { LANGUAGES } from "./lib/i18n/languages";
 import { HelmetProvider } from "react-helmet-async";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { ScrollToTop } from "@/components/ScrollToTop";
 import { Home } from "@/pages/Home";
 import { Terms } from "./pages/Terms";
 import { Privacy } from "./pages/Privacy";
@@ -18,14 +15,14 @@ import { Unsubscribe } from "./pages/Unsubscribe";
 import * as amplitude from '@amplitude/analytics-browser';
 import { Dashboard } from "./pages/Dashboard";
 import { AuthContainer } from "./components/auth/AuthSupabase";
+import { AuthLayout } from "./components/layout/AuthLayout";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Navbar />
-      <main>{children}</main>
-      <Footer />
-      <ScrollToTop />
+   <AuthLayout>
+      {children}
+    </AuthLayout>
     </>
   );
 }
