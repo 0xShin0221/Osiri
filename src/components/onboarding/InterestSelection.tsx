@@ -177,13 +177,13 @@ export default function InterestSelection() {
       <Card className="max-w-7xl mx-auto">
         <CardContent className="p-6 space-y-8">
           {/* header */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          {/* <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h2 className="text-2xl font-bold mb-2">{t('interests.recommendedFeeds')}</h2>
               <p className="text-muted-foreground">{t('interests.subtitle')}</p>
             </div>
          
-          </div>
+          </div> */}
 
           {/* filter section */}
           <div className="flex flex-col md:flex-row gap-4">
