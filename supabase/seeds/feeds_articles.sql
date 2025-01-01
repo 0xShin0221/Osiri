@@ -10,7 +10,7 @@ INSERT INTO public.rss_feeds (
 VALUES
   (
     yc_feed_id, 
-    'Y Combinator Blog', 
+    '[SEEDS DATA] Y Combinator Blog', 
     'https://www.ycombinator.com/blog/rss/', 
     'en',
     'Official blog of Y Combinator, featuring advice and insights for startups',
@@ -20,7 +20,7 @@ VALUES
   ),
   (
     tc_feed_id, 
-    'TechCrunch', 
+    '[SEEDS DATA] TechCrunch', 
     'https://techcrunch.com/feed', 
     'en',
     'Leading technology media property, dedicated to startup coverage',
