@@ -16,7 +16,10 @@ type FeedCategory = Tables<'rss_feeds'>['categories'][number]
 
 const ITEMS_PER_PAGE = 10
 const FREE_PLAN_LIMIT = 3
-const DEFAULT_FEED_ID = "1094eed3-cce6-4edc-b1de-55c4f1c71ca5"
+const DEFAULT_FEED_ID = import.meta.env.VITE_DEFAULT_FEED_ID as string // the Hacker News from Ycom rss feed id
+if (!DEFAULT_FEED_ID) {
+  console.warn('VITE_DEFAULT_FEED_ID is not defined')
+}
 
 const CATEGORY_GROUPS = [
   {
