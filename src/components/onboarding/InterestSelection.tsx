@@ -40,7 +40,7 @@ export default function InterestSelection() {
   const [languageFilter, setLanguageFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<FeedCategory | 'all'>('all')
   const [isLoading, setIsLoading] = useState(true)
-  const { selectedFeeds, setSelectedFeeds, setStep } = useOnboardingStore()
+  const { selectedFeeds, setSelectedFeeds } = useOnboardingStore()
 
   const { t } = useTranslation('onboarding')
 
