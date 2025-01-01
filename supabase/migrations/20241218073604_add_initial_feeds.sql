@@ -1,22 +1,3 @@
--- Hacker News (multiple categories as it covers various topics)
-insert into rss_feeds (
-  name,
-  description,
-  site_icon,
-  url,
-  language,
-  is_active,
-  categories
-) values (
-  'Hacker News',
-  'Tech news and interesting discussions from Hacker News',
-  'https://news.ycombinator.com/favicon.ico',
-  'http://news.ycombinator.com/rss',
-  'en',
-  true,
-  array['tech_news', 'software_development', 'startup_news']::feed_category[]
-);
-
 -- Learning Category
 insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
 ('The Decision Lab', 

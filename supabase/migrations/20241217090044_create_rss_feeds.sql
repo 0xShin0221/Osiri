@@ -123,3 +123,22 @@ comment on column rss_feeds.language is 'Primary language of the feed';
 comment on column rss_feeds.is_active is 'Active/inactive flag';
 comment on column rss_feeds.last_fetched_at is 'Last fetched timestamp';
 comment on column rss_feeds.categories is 'Array of feed categories';
+
+-- Hacker News (multiple categories as it covers various topics)
+insert into rss_feeds (
+  name,
+  description,
+  site_icon,
+  url,
+  language,
+  is_active,
+  categories
+) values (
+  'Hacker News',
+  'Tech news and interesting discussions from Hacker News',
+  'https://news.ycombinator.com/favicon.ico',
+  'http://news.ycombinator.com/rss',
+  'en',
+  true,
+  array['tech_news', 'software_development', 'startup_news']::feed_category[]
+);
