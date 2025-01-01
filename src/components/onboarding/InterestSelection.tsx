@@ -172,7 +172,7 @@ export default function InterestSelection() {
   
 
   return (
-    <div className="min-h-screen bg-background px-4 py-8">
+    <div className="min-h-screen bg-background px-2 py-8">
        <FixedHeader selectedFeeds={selectedFeeds} />
       <Card className="max-w-7xl mx-auto">
         <CardContent className="p-6 space-y-8">

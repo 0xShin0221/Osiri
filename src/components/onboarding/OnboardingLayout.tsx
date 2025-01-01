@@ -31,7 +31,7 @@ export default function OnboardingLayout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Progress indicator */}
-      <div className="max-w-xl mx-auto pt-8 px-4">
+      <div className="max-w-xl mx-auto pt-8 px-2">
         <Progress value={step === 1 ? 50 : 100} className="mb-2" />
         <div className="flex justify-between text-sm text-muted-foreground">
           <span className={step === 1 ? 'text-primary font-medium' : ''}>

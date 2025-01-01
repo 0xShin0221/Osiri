@@ -20,9 +20,11 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
           ? 'border-muted opacity-50'
           : 'border-muted hover:border-primary hover:shadow-md'
       }`}
+      onClick={() => onToggle(feed.id)}
     >
-      <div className="flex items-start gap-4" onClick={() => onToggle(feed.id)}>
-        <div className="flex-shrink-0">
+      <div className="flex flex-col sm:flex-row items-start gap-4">
+        {/* Icon Section */}
+        <div className="flex-shrink-0 mb-2 sm:mb-0">
           {feed.site_icon ? (
             <div className="w-12 h-12 rounded-lg bg-background border overflow-hidden">
               <img 
@@ -47,59 +49,84 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
           )}
         </div>
 
-        <div className="flex-grow space-y-2">
-          <div className="flex items-start justify-between">
-            <div>
+        {/* Content Section */}
+        <div className="flex-grow space-y-3 w-full">
+          <div>
+            <div className="flex items-start justify-between gap-2">
               <h3 className="font-medium line-clamp-1">
                 {feed.name}
                 {isDefault && (
                   <Star className="inline-block ml-2 w-4 h-4 text-yellow-500 fill-current" />
                 )}
               </h3>
-              {feed.description && (
-                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                  {feed.description}
-                </p>
-              )}
+              <Button
+                variant={isSelected ? "default" : "outline"}
+                size="sm"
+                className={`flex-shrink-0 hidden sm:flex min-w-[100px] justify-center ${
+                  isSelected ? 'bg-primary/10 hover:bg-primary/20 text-primary border-primary' : ''
+                }`}
+                onClick={() => onToggle(feed.id)}
+                disabled={isLocked || isDefault}
+              >
+                {isLocked ? (
+                  <><Lock className="w-4 h-4 mr-2" />Locked</>
+                ) : isSelected ? (
+                  <><Star className="w-4 h-4 mr-2" />Following</>
+                ) : (
+                  <>Follow</>
+                )}
+              </Button>
             </div>
+            {feed.description && (
+              <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                {feed.description}
+              </p>
+            )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-            <a 
+          {/* Tags Section */}
+          <div className="flex flex-wrap gap-2">
+            {/* <a 
               href={feed.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-primary"
+              className="inline-flex items-center px-3 py-1 text-sm bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-full transition-colors"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Globe className="w-4 h-4" />
+              <Globe className="w-4 h-4 mr-1" />
               Visit feed
-            </a>
-            <span className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full">
+            </a> */}
+            <span className="px-3 py-1 text-sm bg-primary/10 text-primary rounded-full">
               {feed.language.toUpperCase()}
             </span>
             {feed.categories.map(category => (
-              <span key={category} className="text-xs text-muted-foreground">
+              <span 
+                key={category} 
+                className="px-3 py-1 text-sm bg-muted hover:bg-muted/80 text-muted-foreground rounded-full transition-colors"
+              >
                 {category.replace(/_/g, ' ')}
               </span>
             ))}
           </div>
-        </div>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`flex-shrink-0 ${isSelected ? 'text-primary' : ''}`}
-          onClick={() => onToggle(feed.id)}
-          disabled={isLocked || isDefault}
-        >
-          {isLocked ? (
-            <Lock className="w-4 h-4" />
-          ) : isSelected ? (
-            'Following'
-          ) : (
-            'Follow'
-          )}
-        </Button>
+          {/* Mobile Follow Button */}
+          <Button
+            variant={isSelected ? "default" : "outline"}
+            size="sm"
+            className={`flex-shrink-0 w-full sm:hidden ${
+              isSelected ? 'bg-primary/10 hover:bg-primary/20 text-primary border-primary' : ''
+            }`}
+            disabled={isLocked || isDefault}
+          >
+            {isLocked ? (
+              <><Lock className="w-4 h-4 mr-2" />Locked</>
+            ) : isSelected ? (
+              <><Star className="w-4 h-4 mr-2" />Following</>
+            ) : (
+              <>Follow</>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   )
