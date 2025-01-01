@@ -5,7 +5,7 @@ DECLARE
 BEGIN
 
 INSERT INTO public.rss_feeds (
-  id, name, url, language, description, is_active, last_fetched_at
+  id, name, url, language, description, site_icon, is_active, last_fetched_at
 )
 VALUES
   (
@@ -14,6 +14,7 @@ VALUES
     'https://www.ycombinator.com/blog/rss/', 
     'en',
     'Official blog of Y Combinator, featuring advice and insights for startups',
+    'https://ycombinator.com/favicon.ico',
     true,
     NOW()
   ),
@@ -23,6 +24,7 @@ VALUES
     'https://techcrunch.com/feed', 
     'en',
     'Leading technology media property, dedicated to startup coverage',
+    'https://techcrunch.com/favicon.ico',
     false,
     NOW()
   );

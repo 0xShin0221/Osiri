@@ -179,17 +179,7 @@ export default function InterestSelection() {
               <h2 className="text-2xl font-bold mb-2">{t('interests.recommendedFeeds')}</h2>
               <p className="text-muted-foreground">{t('interests.subtitle')}</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary">
-                {selectedFeeds.length}/{FREE_PLAN_LIMIT} {t('interests.selected')}
-              </Badge>
-              <Button
-                onClick={() => setStep(2)}
-                disabled={selectedFeeds.length === 0}
-              >
-                {t('interests.next')}
-              </Button>
-            </div>
+         
           </div>
 
           {/* filter section */}

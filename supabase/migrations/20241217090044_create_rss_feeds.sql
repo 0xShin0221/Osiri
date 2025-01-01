@@ -9,12 +9,79 @@ create type feed_language as enum (
   'hi', 'pt', 'bn', 'ru', 'id', 'de'
 );
 
+-- Create more detailed enum for feed categories
+create type feed_category as enum (
+  -- Learning & Personal Development
+  'learning_productivity',
+  'critical_thinking',
+  'mental_models',
+  'personal_development',
+  
+  -- Business & Startups
+  'startup_news',
+  'venture_capital',
+  'entrepreneurship',
+  'product_management',
+  'leadership',
+  'business_strategy',
+  
+  -- Technology
+  'tech_news',
+  'software_development',
+  'web_development',
+  'mobile_development',
+  'devops',
+  'cybersecurity',
+  
+  -- Engineering
+  'engineering_general',
+  'system_design',
+  'backend_engineering',
+  'frontend_engineering',
+  'data_engineering',
+  'infrastructure',
+  
+  -- AI & Data Science
+  'machine_learning',
+  'artificial_intelligence',
+  'data_science',
+  'deep_learning',
+  'nlp',
+  'computer_vision',
+  
+  -- Design
+  'ux_design',
+  'ui_design',
+  'product_design',
+  'design_systems',
+  'web_design',
+  'interaction_design',
+  
+  -- Science & Research
+  'computer_science',
+  'neuroscience',
+  'psychology',
+  'cognitive_science',
+  'data_analytics',
+  'research_papers',
+  
+  -- Marketing & Growth
+  'digital_marketing',
+  'growth_marketing',
+  'content_marketing',
+  'seo',
+  'social_media',
+  'marketing_analytics'
+);
+
 -- RSS Feed table
 create table rss_feeds (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   description text,
   url text not null unique,
+  site_icon text,
+  categories feed_category[] not null default '{}',
   language feed_language not null default 'en',
   is_active boolean not null default true,
   last_fetched_at timestamp with time zone,
@@ -25,6 +92,7 @@ create table rss_feeds (
 -- Performance indexes
 create index idx_rss_feeds_active on rss_feeds(is_active) where is_active = true;
 create index idx_rss_feeds_last_fetched on rss_feeds(last_fetched_at);
+create index idx_rss_feeds_categories on rss_feeds using gin(categories);
 
 -- Auto-update timestamp trigger
 create trigger set_rss_feeds_updated_at
@@ -54,3 +122,4 @@ comment on column rss_feeds.url is 'Feed URL';
 comment on column rss_feeds.language is 'Primary language of the feed';
 comment on column rss_feeds.is_active is 'Active/inactive flag';
 comment on column rss_feeds.last_fetched_at is 'Last fetched timestamp';
+comment on column rss_feeds.categories is 'Array of feed categories';

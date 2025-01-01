@@ -1,36 +1,42 @@
 {
   "interests": {
-    "freePlanLimit": "",
-    "next": "",
-    "recommendedFeeds": "",
-    "searchPlaceholder": "",
-    "selected": "",
-    "subtitle": "",
-    "title": ""
+    "freePlanLimit": "無料プランの上限({limit}フィード)に達しました。アップグレードで追加可能です。",
+    "next": "次へ",
+    "recommendedFeeds": "ニュースソースを選択",
+    "searchPlaceholder": "フィードを検索...",
+    "selected": "件選択中",
+    "subtitle": "まずは3つのニュースソースを選択してください。有料プランでさらに追加できます。",
+    "title": "RSSフィード選択"
   },
   "platform": {
-    "back": "",
-    "complete": "",
+    "back": "戻る",
+    "complete": "設定を完了",
     "discord": {
-      "description": "",
-      "title": ""
+      "description": "Discordサーバーで更新を受け取る",
+      "title": "Discord"
     },
     "email": {
-      "description": "",
-      "frequency": "",
-      "placeholder": "",
-      "schedules": "",
-      "title": ""
+      "description": "メールで更新をお届け",
+      "frequency": "更新頻度",
+      "placeholder": "メールアドレスを入力",
+      "schedules": {
+        "daily_morning": "毎日（朝）",
+        "daily_evening": "毎日（夕方）",
+        "weekday_morning": "平日（朝）",
+        "weekly_monday": "週次（月曜）",
+        "weekly_sunday": "週次（日曜）"
+      },
+      "title": "メール"
     },
     "slack": {
-      "description": "",
-      "title": ""
+      "description": "Slackワークスペースで更新を受け取る",
+      "title": "Slack"
     },
-    "subtitle": "",
-    "title": ""
+    "subtitle": "更新の受け取り方を選択してください",
+    "title": "通知設定"
   },
   "steps": {
-    "interests": "",
-    "notifications": ""
+    "interests": "ソース選択",
+    "notifications": "通知設定"
   }
 }

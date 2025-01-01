@@ -1,36 +1,43 @@
+// public/i18n/en/onboarding.json
 {
   "interests": {
-    "freePlanLimit": "",
-    "next": "",
-    "recommendedFeeds": "",
-    "searchPlaceholder": "",
-    "selected": "",
-    "subtitle": "",
-    "title": ""
+    "freePlanLimit": "Free plan limit reached ({limit} feeds). Upgrade for more.",
+    "next": "Next",
+    "recommendedFeeds": "Choose Your News Sources",
+    "searchPlaceholder": "Search feeds...",
+    "selected": "sources selected",
+    "subtitle": "Select up to 3 news sources to get started. You can add more later with a paid plan.",
+    "title": "RSS Feed Selection"
   },
   "platform": {
-    "back": "",
-    "complete": "",
+    "back": "Back",
+    "complete": "Complete Setup",
     "discord": {
-      "description": "",
-      "title": ""
+      "description": "Get updates in your Discord server",
+      "title": "Discord"
     },
     "email": {
-      "description": "",
-      "frequency": "",
-      "placeholder": "",
-      "schedules": "",
-      "title": ""
+      "description": "Receive digests in your inbox",
+      "frequency": "Update Frequency",
+      "placeholder": "Enter your email",
+      "schedules": {
+        "daily_morning": "Daily (Morning)",
+        "daily_evening": "Daily (Evening)",
+        "weekday_morning": "Weekdays (Morning)",
+        "weekly_monday": "Weekly (Monday)",
+        "weekly_sunday": "Weekly (Sunday)"
+      },
+      "title": "Email"
     },
     "slack": {
-      "description": "",
-      "title": ""
+      "description": "Get updates in your Slack workspace",
+      "title": "Slack"
     },
-    "subtitle": "",
-    "title": ""
+    "subtitle": "Choose how you want to receive updates",
+    "title": "Setup Notifications"
   },
   "steps": {
-    "interests": "",
-    "notifications": ""
+    "interests": "Select Sources",
+    "notifications": "Setup Notifications"
   }
 }
