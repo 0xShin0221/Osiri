@@ -13,7 +13,7 @@ jobs:
       heroku: ${{ steps.filter.outputs.heroku }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -79,7 +79,7 @@ jobs:
         run: pnpm install
 
       - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.13.15
+        uses: akhileshns/heroku-deploy@v4
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
