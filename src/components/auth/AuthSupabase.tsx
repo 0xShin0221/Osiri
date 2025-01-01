@@ -107,7 +107,7 @@ export function AuthContainer({
         localization={{
           variables: authLocales[currentLang as keyof typeof authLocales] || authLocales.en
         }}
-        providers={["google", "github"]}
+        providers={["google", "github","twitter","linkedin"]}
         redirectTo={`${window.location.origin}/auth/callback`}
         socialLayout="horizontal"
       />
