@@ -24,15 +24,19 @@ export default function PlatformSetup() {
     setStep 
   } = useOnboardingStore()
   const { t } = useTranslation('onboarding')
+  const { i18n } = useTranslation()
+  const currentLang = i18n.resolvedLanguage;
 
   const handleSlackConnect = async () => {
     setPlatform('slack')
     setIsConnecting(true)
+
+    const redirectUri = `${import.meta.env.VITE_SLACK_REDIRECT_URI}?lang=${currentLang}`
     // Redirect to Slack OAuth
     window.location.href = `https://slack.com/oauth/v2/authorize?client_id=${
       import.meta.env.VITE_SLACK_CLIENT_ID
     }&scope=chat:write,channels:read,channels:join&redirect_uri=${
-      encodeURIComponent(import.meta.env.VITE_SLACK_REDIRECT_URI)
+      encodeURIComponent(redirectUri)
     }`
   }
 
