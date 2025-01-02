@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Rss, Globe, Lock, Star } from 'lucide-react'
+import { Rss, Lock, Star } from 'lucide-react'
 import type { Tables } from '@/types/database.types'
 
 type FeedCardProps = {
