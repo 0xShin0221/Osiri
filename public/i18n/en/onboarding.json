@@ -1,4 +1,3 @@
-// public/i18n/en/onboarding.json
 {
   "interests": {
     "freePlanLimit": "Free plan limit reached ({limit} feeds). Upgrade for more.",
