@@ -156,12 +156,13 @@ export default function InterestSelection() {
                 {selectedFeeds.length}/{FREE_PLAN_LIMIT} {t('interests.selected')}
               </Badge>
               {selectedFeeds.length >= FREE_PLAN_LIMIT && (
-                <Button
-                  onClick={() => setStep(2)}
-                  className="animate-pulse"
-                >
-                  {t('interests.next')}
-                </Button>
+              <Button
+              onClick={() => setStep(2)}
+              className="animate-pulse min-w-[120px] font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
+              size="lg"
+            >
+              {t('interests.next')}
+            </Button>
               )}
             </div>
           </div>
