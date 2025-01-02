@@ -20,8 +20,8 @@
       "frequency": "更新頻度",
       "placeholder": "メールアドレスを入力",
       "schedules": {
-        "daily_morning": "毎日（朝）",
         "daily_evening": "毎日（夕方）",
+        "daily_morning": "毎日（朝）",
         "weekday_morning": "平日（朝）",
         "weekly_monday": "週次（月曜）",
         "weekly_sunday": "週次（日曜）"

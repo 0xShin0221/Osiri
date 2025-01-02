@@ -20,8 +20,8 @@
       "frequency": "Update Frequency",
       "placeholder": "Enter your email",
       "schedules": {
-        "daily_morning": "Daily (Morning)",
         "daily_evening": "Daily (Evening)",
+        "daily_morning": "Daily (Morning)",
         "weekday_morning": "Weekdays (Morning)",
         "weekly_monday": "Weekly (Monday)",
         "weekly_sunday": "Weekly (Sunday)"
