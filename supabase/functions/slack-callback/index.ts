@@ -1,4 +1,7 @@
 import { handleWithCors } from "../_shared/cors.ts";
+import { createOrganization } from "../_shared/db/organization.ts";
+import { createWorkspaceConnection } from "../_shared/db/workspace.ts";
+import { SlackOAuthResponse } from "../_shared/types.ts";
 
 const getEnvVars = () => {
   const vars = {
@@ -19,7 +22,7 @@ const getSlackToken = async (
   code: string,
   clientId: string,
   clientSecret: string,
-) => {
+): Promise<SlackOAuthResponse> => {
   const response = await fetch("https://slack.com/api/oauth.v2.access", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -49,10 +52,12 @@ Deno.serve(handleWithCors(async (req) => {
   }
 
   try {
-    const data = await getSlackToken(code, vars.slackId, vars.slackSecret);
-    console.log("Slack response:", data);
+    const slackData = await getSlackToken(code, vars.slackId, vars.slackSecret);
+    const org = await createOrganization(slackData.team.name);
+    await createWorkspaceConnection(org.id, slackData);
+
     return Response.redirect(
-      `https://${host}/${lang}/onboarding?platform=slack&status=success`,
+      `https://${host}/${lang}/onboarding?platform=slack&status=success&organization_id=${org.id}`,
     );
   } catch (error) {
     console.error(error);

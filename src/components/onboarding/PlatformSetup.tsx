@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,9 +12,13 @@ import {
 import { MessageCircle, MessageSquare, Mail } from 'lucide-react'
 import { useOnboardingStore } from '../../stores/onboardingStore'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
+import { supabase } from '@/lib/supabase'
 
 export default function PlatformSetup() {
   const [isConnecting, setIsConnecting] = useState(false)
+  const [searchParams] = useSearchParams()
+  const organizationId = searchParams.get('organization_id')
   const { 
     platform, 
     workspaceConnection,
@@ -26,6 +30,28 @@ export default function PlatformSetup() {
   const { t } = useTranslation('onboarding')
   const { i18n } = useTranslation()
   const currentLang = i18n.resolvedLanguage;
+
+  useEffect(() => {
+    // Handle organization_id from OAuth callback
+    const handleOAuthCallback = async () => {
+      if (!organizationId) return
+ 
+      try {
+        // Create organization member
+        await supabase.from('organization_members').insert({
+          organization_id: organizationId,
+          user_id: (await supabase.auth.getUser()).data.user?.id,
+          role: 'owner'
+        })
+        // Redirect to dashboard after member creation
+        window.location.href = '/dashboard'
+      } catch (error) {
+        console.error('Error creating organization member:', error)
+      }
+    }
+ 
+    handleOAuthCallback()
+  }, [organizationId])
 
   const handleSlackConnect = async () => {
     setPlatform('slack')
