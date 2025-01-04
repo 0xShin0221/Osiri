@@ -255,6 +255,9 @@ inspector_port = 8083
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 # entrypoint = "./functions/MY_FUNCTION_NAME/index.ts"
 
+[functions.slack-callback]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327
