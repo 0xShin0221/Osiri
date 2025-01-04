@@ -3,7 +3,7 @@ import {
   NotificationTemplate,
   SlackPayload,
   TemplateConfigs,
-} from "./database.types.ts";
+} from "./types.ts";
 
 /**
  * Template-specific notification settings
