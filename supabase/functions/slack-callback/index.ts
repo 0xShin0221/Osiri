@@ -9,6 +9,7 @@ const getEnvVars = () => {
     supabaseKey: Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     slackId: Deno.env.get("SLACK_CLIENT_ID") ?? "",
     slackSecret: Deno.env.get("SLACK_CLIENT_SECRET") ?? "",
+    appDomain: Deno.env.get("APP_DOMAIN") ?? "loalhost:5173",
   };
 
   Object.entries(vars).forEach(([key, value]) => {
@@ -40,7 +41,7 @@ Deno.serve(handleWithCors(async (req) => {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
   const lang = url.searchParams.get("lang");
-  const host = req.headers.get("x-forwarded-host");
+
   if (!code || !lang) {
     return new Response(
       JSON.stringify({
@@ -59,12 +60,12 @@ Deno.serve(handleWithCors(async (req) => {
     await createWorkspaceConnection(org.id, slackData);
 
     return Response.redirect(
-      `https://${host}/${lang}/onboarding?platform=slack&status=success&organization_id=${org.id}`,
+      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=success&organization_id=${org.id}`,
     );
   } catch (error) {
     console.error(error);
     return Response.redirect(
-      `https://${host}/${lang}/onboarding?platform=slack&status=error`,
+      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=error`,
     );
   }
 }));
