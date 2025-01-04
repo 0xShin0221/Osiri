@@ -68,17 +68,13 @@ Deno.serve(handleWithCors(async (req) => {
     const org = await createOrganization(slackData.team.name);
     await createWorkspaceConnection(org.id, slackData);
 
-    return new Response(
-      JSON.stringify({
-        status: "success",
-        organizationId: org.id,
-      }),
-      { status: 200 },
-    );
+    return Response.redirect(
+      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=success`,
+      );
   } catch (error) {
     console.error(error);
     return Response.redirect(
-      `https://${vars.appDomain}/onboarding?platform=slack&status=error`,
+      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=error`,
     );
   }
 }));
