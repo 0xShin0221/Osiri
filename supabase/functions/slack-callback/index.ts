@@ -31,6 +31,7 @@ const getSlackToken = async (
       code,
       client_id: clientId,
       client_secret: clientSecret,
+      redirect_uri: `https://dncifsewnmobvibdwoir.supabase.co/functions/v1/slack-callback`,
     }),
   });
   return response.json();
