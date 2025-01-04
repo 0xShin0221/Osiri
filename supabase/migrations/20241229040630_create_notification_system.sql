@@ -198,22 +198,22 @@ create policy "Users can view notification logs of their channels"
     )
   );
 
--- Anon can create organizations
-create policy "Anon can create organizations"
+  -- Service Role can create organizations
+create policy "Service role can create organizations"
   on organizations for insert
-  to anon
+  to service_role
   with check (true);
 
--- Anon can create workspace connections
-create policy "Anon can create workspace connections"
+-- Service Role can create workspace connections
+create policy "Service role can create workspace connections"
   on workspace_connections for insert
-  to anon
+  to service_role
   with check (true);
 
--- Anon can create organization members
-create policy "Anon can create organization members"
+-- Service Role can create organization members
+create policy "Service role can create organization members"
   on organization_members for insert
-  to anon
+  to service_role
   with check (true);
 
 -- Add comments
