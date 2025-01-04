@@ -45,7 +45,7 @@ export function AuthContainer({
           ) {
           navigate(`/${currentLang}/onboarding`);
         } else {
-          navigate(`/${currentLang}${redirectTo}`);
+          return <>{children}</>
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
