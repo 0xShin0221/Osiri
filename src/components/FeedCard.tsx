@@ -65,7 +65,6 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
                 className={`flex-shrink-0 hidden sm:flex min-w-[100px] justify-center ${
                   isSelected ? 'bg-primary/10 hover:bg-primary/20 text-primary border-primary' : ''
                 }`}
-                onClick={() => onToggle(feed.id)}
                 disabled={isLocked || isDefault}
               >
                 {isLocked ? (
