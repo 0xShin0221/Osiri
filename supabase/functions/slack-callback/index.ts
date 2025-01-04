@@ -41,7 +41,6 @@ Deno.serve(handleWithCors(async (req) => {
   const code = url.searchParams.get("code");
   const lang = url.searchParams.get("lang");
   const host = req.headers.get("x-forwarded-host");
-
   if (!code || !lang) {
     return new Response(
       JSON.stringify({
@@ -53,6 +52,9 @@ Deno.serve(handleWithCors(async (req) => {
 
   try {
     const slackData = await getSlackToken(code, vars.slackId, vars.slackSecret);
+    if (!slackData.ok || !slackData.team?.name) {
+      throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
+    }
     const org = await createOrganization(slackData.team.name);
     await createWorkspaceConnection(org.id, slackData);
 
