@@ -27,6 +27,11 @@ create policy "Users can create own profile"
   to authenticated
   with check ( auth.uid() = user_id );
 
+create policy "Anon can create profile"
+  on public.profiles for insert
+  to anon
+  with check ( auth.uid() = user_id );
+
 -- Add moddatetime trigger
 create trigger set_profile_updated_at
   before update on article_categories
