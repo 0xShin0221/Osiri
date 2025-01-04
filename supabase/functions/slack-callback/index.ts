@@ -31,7 +31,9 @@ const getSlackToken = async (
       code,
       client_id: clientId,
       client_secret: clientSecret,
-      redirect_uri: `${Deno.env.get("SUPABASE_URL")}/functions/v1/slack-callback`,
+      redirect_uri: `${
+        Deno.env.get("SUPABASE_URL")
+      }/functions/v1/slack-callback`,
     }),
   });
   return response.json();
@@ -41,12 +43,11 @@ Deno.serve(handleWithCors(async (req) => {
   const vars = getEnvVars();
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
-  const lang = url.searchParams.get("lang");
 
-  if (!code || !lang) {
+  if (!code) {
     return new Response(
       JSON.stringify({
-        error: !code ? "No code provided" : "No lang provided",
+        error: "No code provided",
       }),
       { status: 400 },
     );
@@ -60,13 +61,17 @@ Deno.serve(handleWithCors(async (req) => {
     const org = await createOrganization(slackData.team.name);
     await createWorkspaceConnection(org.id, slackData);
 
-    return Response.redirect(
-      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=success&organization_id=${org.id}`,
-    );
+    return new Response(
+      JSON.stringify({
+        status: "success",
+        organizationId: org.id,
+      }),
+      { status: 200 },
+    )
   } catch (error) {
     console.error(error);
     return Response.redirect(
-      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=error`,
+      `https://${vars.appDomain}/onboarding?platform=slack&status=error`,
     );
   }
 }));
