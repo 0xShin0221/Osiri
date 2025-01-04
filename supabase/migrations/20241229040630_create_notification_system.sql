@@ -198,6 +198,24 @@ create policy "Users can view notification logs of their channels"
     )
   );
 
+  -- Service Role can create organizations
+create policy "Service role can create organizations"
+  on organizations for insert
+  to service_role
+  with check (true);
+
+-- Service Role can create workspace connections
+create policy "Service role can create workspace connections"
+  on workspace_connections for insert
+  to service_role
+  with check (true);
+
+-- Service Role can create organization members
+create policy "Service role can create organization members"
+  on organization_members for insert
+  to service_role
+  with check (true);
+
 -- Add comments
 comment on table organizations is 'Organizations using the notification system';
 comment on table organization_members is 'Users belonging to organizations with their roles';
