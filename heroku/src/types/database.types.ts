@@ -165,8 +165,237 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_channels: {
+        Row: {
+          category_ids: string[] | null
+          channel_identifier: string
+          created_at: string | null
+          error_count: number | null
+          feed_ids: string[]
+          id: string
+          is_active: boolean
+          last_error: string | null
+          last_notified_at: string | null
+          organization_id: string | null
+          platform: Database["public"]["Enums"]["notification_platform"]
+          schedule_id: string | null
+          updated_at: string | null
+          workspace_connection_id: string | null
+        }
+        Insert: {
+          category_ids?: string[] | null
+          channel_identifier: string
+          created_at?: string | null
+          error_count?: number | null
+          feed_ids: string[]
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_notified_at?: string | null
+          organization_id?: string | null
+          platform: Database["public"]["Enums"]["notification_platform"]
+          schedule_id?: string | null
+          updated_at?: string | null
+          workspace_connection_id?: string | null
+        }
+        Update: {
+          category_ids?: string[] | null
+          channel_identifier?: string
+          created_at?: string | null
+          error_count?: number | null
+          feed_ids?: string[]
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_notified_at?: string | null
+          organization_id?: string | null
+          platform?: Database["public"]["Enums"]["notification_platform"]
+          schedule_id?: string | null
+          updated_at?: string | null
+          workspace_connection_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_channels_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "notification_schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_channels_workspace_connection_id_fkey"
+            columns: ["workspace_connection_id"]
+            isOneToOne: false
+            referencedRelation: "workspace_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_logs: {
+        Row: {
+          article_id: string | null
+          channel_id: string | null
+          created_at: string | null
+          error: string | null
+          id: string
+          platform: Database["public"]["Enums"]["notification_platform"]
+          recipient: string
+          status: string
+        }
+        Insert: {
+          article_id?: string | null
+          channel_id?: string | null
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          platform: Database["public"]["Enums"]["notification_platform"]
+          recipient: string
+          status: string
+        }
+        Update: {
+          article_id?: string | null
+          channel_id?: string | null
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          platform?: Database["public"]["Enums"]["notification_platform"]
+          recipient?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_logs_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_logs_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "notification_channels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_schedules: {
+        Row: {
+          created_at: string | null
+          cron_expression: string | null
+          id: string
+          name: string
+          schedule_type: Database["public"]["Enums"]["notification_schedule_type"]
+          timezone: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          cron_expression?: string | null
+          id?: string
+          name: string
+          schedule_type: Database["public"]["Enums"]["notification_schedule_type"]
+          timezone?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          cron_expression?: string | null
+          id?: string
+          name?: string
+          schedule_type?: Database["public"]["Enums"]["notification_schedule_type"]
+          timezone?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      organization_members: {
+        Row: {
+          created_at: string | null
+          id: string
+          organization_id: string | null
+          role: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          organization_id?: string | null
+          role: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          organization_id?: string | null
+          role?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          onboarding_completed: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          onboarding_completed?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          onboarding_completed?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rss_feeds: {
         Row: {
+          categories: Database["public"]["Enums"]["feed_category"][]
           created_at: string
           description: string | null
           id: string
@@ -174,10 +403,12 @@ export type Database = {
           language: Database["public"]["Enums"]["feed_language"]
           last_fetched_at: string | null
           name: string
+          site_icon: string | null
           updated_at: string
           url: string
         }
         Insert: {
+          categories?: Database["public"]["Enums"]["feed_category"][]
           created_at?: string
           description?: string | null
           id?: string
@@ -185,10 +416,12 @@ export type Database = {
           language?: Database["public"]["Enums"]["feed_language"]
           last_fetched_at?: string | null
           name: string
+          site_icon?: string | null
           updated_at?: string
           url: string
         }
         Update: {
+          categories?: Database["public"]["Enums"]["feed_category"][]
           created_at?: string
           description?: string | null
           id?: string
@@ -196,6 +429,7 @@ export type Database = {
           language?: Database["public"]["Enums"]["feed_language"]
           last_fetched_at?: string | null
           name?: string
+          site_icon?: string | null
           updated_at?: string
           url?: string
         }
@@ -299,6 +533,50 @@ export type Database = {
         }
         Relationships: []
       }
+      workspace_connections: {
+        Row: {
+          access_token: string | null
+          created_at: string | null
+          id: string
+          organization_id: string | null
+          platform: Database["public"]["Enums"]["notification_platform"]
+          refresh_token: string | null
+          token_expires_at: string | null
+          updated_at: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string | null
+          id?: string
+          organization_id?: string | null
+          platform: Database["public"]["Enums"]["notification_platform"]
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          updated_at?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string | null
+          id?: string
+          organization_id?: string | null
+          platform?: Database["public"]["Enums"]["notification_platform"]
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          updated_at?: string | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       pending_translations: {
@@ -397,6 +675,53 @@ export type Database = {
         | "completed"
         | "failed"
         | "skipped"
+      feed_category:
+        | "learning_productivity"
+        | "critical_thinking"
+        | "mental_models"
+        | "personal_development"
+        | "startup_news"
+        | "venture_capital"
+        | "entrepreneurship"
+        | "product_management"
+        | "leadership"
+        | "business_strategy"
+        | "tech_news"
+        | "software_development"
+        | "web_development"
+        | "mobile_development"
+        | "devops"
+        | "cybersecurity"
+        | "engineering_general"
+        | "system_design"
+        | "backend_engineering"
+        | "frontend_engineering"
+        | "data_engineering"
+        | "infrastructure"
+        | "machine_learning"
+        | "artificial_intelligence"
+        | "data_science"
+        | "deep_learning"
+        | "nlp"
+        | "computer_vision"
+        | "ux_design"
+        | "ui_design"
+        | "product_design"
+        | "design_systems"
+        | "web_design"
+        | "interaction_design"
+        | "computer_science"
+        | "neuroscience"
+        | "psychology"
+        | "cognitive_science"
+        | "data_analytics"
+        | "research_papers"
+        | "digital_marketing"
+        | "growth_marketing"
+        | "content_marketing"
+        | "seo"
+        | "social_media"
+        | "marketing_analytics"
       feed_language:
         | "en"
         | "ja"
@@ -410,6 +735,16 @@ export type Database = {
         | "ru"
         | "id"
         | "de"
+      notification_platform: "slack" | "discord" | "email"
+      notification_schedule_type:
+        | "realtime"
+        | "daily_morning"
+        | "daily_evening"
+        | "weekday_morning"
+        | "weekday_evening"
+        | "weekly_monday"
+        | "weekly_sunday"
+        | "custom"
       translation_status:
         | "pending"
         | "processing"

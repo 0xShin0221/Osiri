@@ -35,7 +35,8 @@
     "test:all": "npm-run-all --parallel lint supabase:test heroku:test",
     "genType:heroku": "npx supabase gen types typescript --local > heroku/src/types/database.types.ts",
     "genType:frontend": "npx supabase gen types typescript --local > src/types/database.types.ts",
-    "genType:supabase": "npx supabase gen types typescript --local > supabase/functions/_shared/database.types.ts"
+    "genType:supabase": "npx supabase gen types typescript --local > supabase/functions/_shared/database.types.ts",
+    "genType": "npm-run-all -s genType:*"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.9",
