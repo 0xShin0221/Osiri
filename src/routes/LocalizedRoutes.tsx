@@ -10,6 +10,7 @@ import { Onboarding } from "@/pages/Onboarding";
 import { Unsubscribe } from "@/pages/Unsubscribe";
 import { NotFound } from "@/pages/NotFound";
 import { AuthLayout } from "@/components/layout/AuthLayout";
+import ChannelSettingsMock from "@/pages/ChannelSettings";
 
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
@@ -50,6 +51,14 @@ export const LocalizedRoutes = () => (
         element={
           <ProtectedRoute>
             <Onboarding />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="setchannel"
+        element={
+          <ProtectedRoute>
+            <ChannelSettingsMock />
           </ProtectedRoute>
         }
       />
