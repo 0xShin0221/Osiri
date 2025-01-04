@@ -20,6 +20,7 @@ const getEnvVars = () => {
 };
 
 const getSlackToken = async (
+  lang: string,
   code: string,
   clientId: string,
   clientSecret: string,
@@ -31,7 +32,9 @@ const getSlackToken = async (
       code,
       client_id: clientId,
       client_secret: clientSecret,
-      redirect_uri: `https://dncifsewnmobvibdwoir.supabase.co/functions/v1/slack-callback`,
+      redirect_uri: `${
+        Deno.env.get("SUPABASE_URL")
+      }/functions/v1/slack-callback?lang=${lang}`,
     }),
   });
   return response.json();
@@ -41,18 +44,24 @@ Deno.serve(handleWithCors(async (req) => {
   const vars = getEnvVars();
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
+  const lang = url.searchParams.get("lang");
 
-  if (!code) {
+  if (!code || !lang) {
     return new Response(
       JSON.stringify({
-        error: "No code provided",
+        error: code ? "Missing lang" : "Missing code",
       }),
       { status: 400 },
     );
   }
 
   try {
-    const slackData = await getSlackToken(code, vars.slackId, vars.slackSecret);
+    const slackData = await getSlackToken(
+      lang,
+      code,
+      vars.slackId,
+      vars.slackSecret,
+    );
     if (!slackData.ok || !slackData.team?.name) {
       throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
     }
@@ -65,7 +74,7 @@ Deno.serve(handleWithCors(async (req) => {
         organizationId: org.id,
       }),
       { status: 200 },
-    )
+    );
   } catch (error) {
     console.error(error);
     return Response.redirect(
