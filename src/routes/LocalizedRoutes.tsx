@@ -11,11 +11,13 @@ import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Dashboard } from "@/pages/Dashboard";
 import { Onboarding } from "@/pages/Onboarding";
 import ChannelSettingsPage from "@/pages/ChannelSettings";
+import FeedsPage from "@/pages/Feeds";
 
 const protectedRoutes = [
   { path: "dashboard", element: <Dashboard /> },
   { path: "onboarding", element: <Onboarding /> },
   { path: "setchannel", element: <ChannelSettingsPage /> },
+  { path: "feeds", element: <FeedsPage /> },
 ];
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (

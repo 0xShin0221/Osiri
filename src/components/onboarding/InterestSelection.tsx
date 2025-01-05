@@ -1,15 +1,14 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useOnboardingStore } from '../../stores/onboardingStore'
 import { supabase } from '@/lib/supabase'
 import { useTranslation } from 'react-i18next'
-import { Search } from 'lucide-react'
-import FeedCard from '../FeedCard'
+import FeedCard from '../rssFeed/FeedCard'
 import type { Tables } from '@/types/database.types'
 import { Badge } from '@/components/ui/badge'
+import { CATEGORY_GROUPS } from '@/mocks/categoryData'
+import { CategoryFilter, FeedSearch } from '@/components/rssFeed'
 
 type RssFeed = Tables<'rss_feeds'>
 type FeedCategory = Tables<'rss_feeds'>['categories'][number]
@@ -20,21 +19,6 @@ const DEFAULT_FEED_ID = import.meta.env.VITE_DEFAULT_FEED_ID as string // the Ha
 if (!DEFAULT_FEED_ID) {
   console.warn('VITE_DEFAULT_FEED_ID is not defined')
 }
-
-const CATEGORY_GROUPS = [
-  {
-    label: 'Learning & Development',
-    categories: ['learning_productivity', 'critical_thinking', 'mental_models', 'personal_development']
-  },
-  {
-    label: 'Business & Startups',
-    categories: ['startup_news', 'venture_capital', 'entrepreneurship', 'product_management', 'leadership', 'business_strategy']
-  },
-  {
-    label: 'Technology',
-    categories: ['tech_news', 'software_development', 'web_development', 'mobile_development', 'devops', 'cybersecurity']
-  }
-] as const;
 
 export default function InterestSelection() {
   const [feeds, setFeeds] = useState<RssFeed[]>([])
@@ -148,7 +132,7 @@ export default function InterestSelection() {
         <div className="container py-4">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 max-w-7xl mx-auto">
             <div>
-              <h2 className="text-2xl font-bold">{t('interests.recommendedFeeds')}</h2>
+              <h2 className="text-xl font-bold">{t('interests.recommendedFeeds')}</h2>
               <p className="text-muted-foreground">{t('interests.subtitle')}</p>
             </div>
             <div className="flex items-center gap-2">
@@ -187,41 +171,22 @@ export default function InterestSelection() {
           </div> */}
 
           {/* filter section */}
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                className="pl-9"
-                placeholder={t('interests.searchPlaceholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={languageFilter} onValueChange={setLanguageFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Languages</SelectItem>
-                {languages.map(lang => (
-                  <SelectItem key={lang} value={lang}>
-                    {lang.toUpperCase()}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <FeedSearch
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            languageFilter={languageFilter}
+            onLanguageChange={setLanguageFilter}
+            languages={languages}
+          />
 
           {/* category filter */}
           <div className="space-y-4">
-            <Badge 
-              variant={categoryFilter === 'all' ? "default" : "outline"}
-              className="cursor-pointer hover:bg-primary/20 transition-colors"
-              onClick={() => handleCategoryChange('all')}
-            >
-              All Categories
-            </Badge>
-            
+            <CategoryFilter
+                categoryFilter={categoryFilter}
+                onCategoryChange={handleCategoryChange}
+                categoryGroups={CATEGORY_GROUPS}
+              />
+{/*             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {CATEGORY_GROUPS.map(group => (
                 <div 
@@ -251,7 +216,7 @@ export default function InterestSelection() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* feeds grid */}
