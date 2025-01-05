@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LogOut, Menu, LayoutDashboard } from "lucide-react";
+import { LogOut, Menu, LayoutDashboard, Rss, Bell, Settings } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { OsiriLogo } from "./Logo";
 import { useTranslation } from "react-i18next";
@@ -27,16 +27,41 @@ interface RouteProps {
 }
 
 const routeList = (): RouteProps[] => {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("menu");
+  
   return [
     {
       href: "/dashboard",
       label: t("menu.dashboard"),
       icon: <LayoutDashboard className="w-4 h-4" />,
     },
+    {
+      href: "/feeds",
+      label: t("menu.feedManagement"),
+      icon: <Rss className="w-4 h-4" />,
+    },
+    {
+      href: "/setchannel",
+      label: t("menu.notificationManagement"),
+      icon: <Bell className="w-4 h-4" />,
+    },
+    // {
+    //   href: "/bookmarks",
+    //   label: t("menu.bookmarks"),
+    //   icon: <Bookmark className="w-4 h-4" />,
+    // },
+    // {
+    //   href: "/analytics",
+    //   label: t("menu.analytics"),
+    //   icon: <LineChart className="w-4 h-4" />,
+    // },
+    {
+      href: "/settings",
+      label: t("menu.settings"),
+      icon: <Settings className="w-4 h-4" />,
+    }
   ];
 };
-
 export const NavbarLogined = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t, i18n } = useTranslation();

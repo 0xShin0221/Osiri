@@ -1,0 +1,8 @@
+{
+  "menu": {
+    "dashboard": "Home",
+    "feedManagement": "Feeds",
+    "notificationManagement": "Notifications",
+    "settings": "Settings"
+  }
+}
