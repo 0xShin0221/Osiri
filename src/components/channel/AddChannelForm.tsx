@@ -167,7 +167,18 @@ export function AddChannelForm({
                     <SelectValue placeholder={t("addChannel.selectChannel")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {/* Channel options */}
+                    {platform === 'slack' 
+                      ? mockSlackChannels.map(channel => (
+                          <SelectItem key={channel.id} value={channel.id}>
+                            {channel.name}
+                          </SelectItem>
+                        ))
+                      : mockDiscordChannels.map(channel => (
+                          <SelectItem key={channel.id} value={channel.id}>
+                            {channel.name}
+                          </SelectItem>
+                        ))
+                    }
                   </SelectContent>
                 </Select>
               </div>

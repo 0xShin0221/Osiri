@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Settings2 } from 'lucide-react';
 import { type Tables } from '@/types/database.types';
 import { useTranslation } from 'react-i18next';
-
-
+import { GetPlatformIcon } from '../PlatformIcons';
 // Types
 type NotificationChannel = Tables<'notification_channels'>;
 
@@ -27,6 +26,10 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   onUpdate,
 }) => {
   const { t } = useTranslation("channel");
+  const handleSettingsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSelect(channel);
+  };
   
   return (
     <Card
@@ -38,10 +41,11 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
+          {GetPlatformIcon(channel.platform)}
             <div>
               <h3 className="font-medium">{channel.channel_identifier}</h3>
               <p className="text-sm text-muted-foreground">
-              {t("card.feedCount", { count: channel.feed_ids.length })}
+                {t("card.feedCount", { count: channel.feed_ids.length })}
               </p>
             </div>
           </div>
@@ -51,8 +55,13 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
               onCheckedChange={(checked) => {
                 onUpdate({ ...channel, is_active: checked });
               }}
+              onClick={(e) => e.stopPropagation()}
             />
-            <Button variant="ghost" size="icon">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleSettingsClick}
+            >
               <Settings2 className="h-4 w-4" />
             </Button>
           </div>

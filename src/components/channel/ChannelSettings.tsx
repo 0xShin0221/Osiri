@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from 'lucide-react';
 import { type Tables } from '@/types/database.types';
 import { useTranslation } from 'react-i18next';
+import { GetPlatformIcon } from '../PlatformIcons';
 
 // Types
 type NotificationChannel = Tables<'notification_channels'>;
@@ -39,8 +40,11 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          {channel.channel_identifier}
+        
+      <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+          {GetPlatformIcon(channel.platform)} {channel.channel_identifier}
+          </div>
         </CardTitle>
         <CardDescription>
           {t("settings.configureDescription")}
