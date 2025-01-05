@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge"
 import type { Tables } from '@/types/database.types'
 import { Button } from "../ui/button"
 import { X } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 type FeedCategory = Tables<'rss_feeds'>['categories'][number]
 
@@ -19,17 +20,19 @@ export function CategoryFilter({
   onCategoryChange,
   categoryGroups
 }: CategoryFilterProps) {
+  const { t } = useTranslation('feeds')
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Browse by Category</h3>
+        <h3 className="text-lg font-medium">{t('categoryFilter.title')}</h3>
         {categoryFilter !== 'all' && (
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => onCategoryChange('all')}
           >
-            Clear Filter
+            {t('categoryFilter.clearFilter')}
           </Button>
         )}
       </div>
@@ -46,9 +49,9 @@ export function CategoryFilter({
           `}
           onClick={() => onCategoryChange('all')}
         >
-          <div className="font-medium">All Categories</div>
+          <div className="font-medium">{t('categoryFilter.allCategories')}</div>
           <p className="text-sm text-muted-foreground mt-1">
-            Browse all available feeds
+            {t('categoryFilter.allCategoriesDescription')}
           </p>
         </div>
 
@@ -59,7 +62,7 @@ export function CategoryFilter({
             className="p-4 rounded-lg border bg-card space-y-3"
           >
             <div className="font-medium text-sm text-muted-foreground">
-              {group.label}
+             {group.label}
             </div>
             <div className="flex flex-wrap gap-2">
               {group.categories.map(category => (
@@ -88,7 +91,7 @@ export function CategoryFilter({
               ))}
             </div>
             <div className="text-xs text-muted-foreground mt-2">
-              {group.categories.length} categories
+              {t('categoryFilter.categoryCount', { count: group.categories.length })}
             </div>
           </div>
         ))}
@@ -98,7 +101,7 @@ export function CategoryFilter({
         <div className="bg-muted/50 rounded-lg p-3 mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">
-              Current Filter:
+              {t('categoryFilter.currentFilter')}:
             </span>
             <Badge variant="default">
               {categoryFilter.replace(/_/g, ' ')}
@@ -109,7 +112,7 @@ export function CategoryFilter({
             size="sm"
             onClick={() => onCategoryChange('all')}
           >
-            Clear
+            {t('categoryFilter.clear')}
           </Button>
         </div>
       )}

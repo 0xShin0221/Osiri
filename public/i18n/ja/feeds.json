@@ -1,0 +1,40 @@
+{
+  "categoryFilter": {
+    "allCategories": "すべてのカテゴリー",
+    "allCategoriesDescription": "すべてのフィードを表示",
+    "categoryCount_0": "{{count}}個のカテゴリー",
+    "clear": "クリア",
+    "clearFilter": "フィルターをクリア",
+    "currentFilter": "選択中のフィルター",
+    "title": "カテゴリーから探す"
+  },
+  "description": "RSSフィードの管理と新しいコンテンツの発見",
+  "discover": {
+    "availableFeeds": "おすすめRSSフィード",
+    "description": "新しいフィードを探して追加することができます",
+    "title": "フィードを探す"
+  },
+  "following": {
+    "addMore": "フィードを追加",
+    "browseFeeds": "フィードを探す",
+    "description": "購読中のRSSフィード",
+    "noFeeds": "購読中のフィードはありません",
+    "noMatchingFeeds": "条件に一致するフィードが見つかりません",
+    "startByDiscovering": "下のフィード一覧から興味のあるものを見つけましょう",
+    "title": "フォロー中",
+    "tryAdjustingFilters": "検索条件を変更してお試しください"
+  },
+  "loading": "読み込み中...",
+  "request": {
+    "button": "新しいフィードをリクエスト",
+    "description": "追加してほしいRSSフィードをリクエストできます",
+    "descriptionLabel": "リクエストの理由",
+    "descriptionPlaceholder": "このフィードが有益だと思う理由を教えてください",
+    "submit": "リクエストを送信",
+    "submitting": "送信中...",
+    "title": "フィードのリクエスト",
+    "urlLabel": "フィードのURL",
+    "urlPlaceholder": "https://example.com/feed.xml"
+  },
+  "title": "RSS Feeds"
+}
