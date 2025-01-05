@@ -246,14 +246,6 @@ export default function FeedsPage() {
           </Card>
         </section>
 
-        {/* Global Search & Filters */}
-        <FeedSearch
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          languageFilter={languageFilter}
-          onLanguageChange={setLanguageFilter}
-          languages={languages}
-        />
         {/* Discover Section */}
         <section id="discover-section">
           <Card>
@@ -271,6 +263,14 @@ export default function FeedsPage() {
 
               {/* Available Feeds */}
               <div className="space-y-4">
+                {/* Global Search & Filters */}
+                <FeedSearch
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                languageFilter={languageFilter}
+                onLanguageChange={setLanguageFilter}
+                languages={languages}
+                />
                 <h3 className="text-lg font-medium">{t('discover.availableFeeds')}</h3>
                 <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
                   {filteredDiscoverFeeds.map(feed => (
