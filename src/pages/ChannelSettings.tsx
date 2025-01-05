@@ -11,6 +11,7 @@ import { ChannelCard } from '@/components/channel/ChannelCard';
 import { ChannelSettings } from '@/components/channel/ChannelSettings';
 import { type Tables } from '@/types/database.types';
 import { mockChannels, mockFeeds, mockSchedules } from '@/mocks/notificationData';
+import { useTranslation } from 'react-i18next';
 
 // Types
 type NotificationChannel = Tables<'notification_channels'>;
@@ -20,6 +21,7 @@ export default function ChannelSettingsPage() {
   const [channels, setChannels] = useState<NotificationChannel[]>(mockChannels);
   const [selectedChannel, setSelectedChannel] = useState<NotificationChannel | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const { t } = useTranslation("channel");
 
   const handleUpdateChannel = (updatedChannel: NotificationChannel) => {
     setChannels((prev) =>
@@ -54,17 +56,17 @@ export default function ChannelSettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Channel Settings</h1>
+          <h1 className="text-2xl font-bold">{t("page.title")}</h1>
           <p className="text-muted-foreground">
-            Manage your notification channels and feed preferences
+            {t("page.description")}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline">
-            <RefreshCw className="h-4 w-4 mr-2" /> Refresh
+            <RefreshCw className="h-4 w-4 mr-2" /> {t("common.refresh")}
           </Button>
           <Button onClick={() => setShowAddDialog(true)}>
-            <Plus className="h-4 w-4 mr-2" /> Add Channel
+            <Plus className="h-4 w-4 mr-2" /> {t("channel.add")}
           </Button>
         </div>
       </div>
@@ -85,7 +87,7 @@ export default function ChannelSettingsPage() {
           {channels.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                No channels configured yet
+                {t("channel.noChannels")}
               </CardContent>
             </Card>
           )}
@@ -104,7 +106,7 @@ export default function ChannelSettingsPage() {
           ) : (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                Select a channel to configure
+                {t("page.selectChannel")}
               </CardContent>
             </Card>
           )}

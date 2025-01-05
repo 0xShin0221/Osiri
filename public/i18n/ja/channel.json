@@ -1,0 +1,46 @@
+{
+  "addChannel": {
+    "channel": "チャンネル",
+    "description": "新しい通知チャンネルを設定します。プラットフォームと設定を選択してください。",
+    "emailAddress": "メールアドレス",
+    "emailPlaceholder": "メールアドレスを入力してください",
+    "feedsPlaceholder": "フィードを選択...",
+    "platform": "プラットフォーム",
+    "schedule": "通知スケジュール",
+    "selectChannel": "チャンネルを選択",
+    "selectFeeds": "RSSフィードを選択",
+    "selectSchedule": "スケジュールを選択",
+    "title": "新規チャンネル追加"
+  },
+  "channel": {
+    "add": "チャンネル追加",
+    "noChannels": "チャンネルが設定されていません"
+  },
+  "common": {
+    "add": "追加",
+    "adding": "追加中...",
+    "cancel": "キャンセル",
+    "refresh": "更新"
+  },
+  "page": {
+    "description": "通知チャンネルとフィード設定を管理",
+    "selectChannel": "設定するチャンネルを選択してください",
+    "title": "チャンネル設定"
+  },
+  "platforms": {
+    "slack": "Slack"
+  },
+  "schedules": {
+    "realtime": "リアルタイム"
+  },
+  "settings": {
+    "configureDescription": "チャンネル設定とフィード設定を構成",
+    "deleteChannel": "チャンネルを削除",
+    "description": "通知チャンネルとフィード設定を管理",
+    "notificationSchedule": "通知スケジュール",
+    "selectChannel": "設定するチャンネルを選択してください",
+    "selectSchedule": "スケジュールを選択",
+    "selectedFeeds": "選択されたフィード",
+    "title": "チャンネル設定"
+  }
+}
