@@ -40,7 +40,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
             <div>
               <h3 className="font-medium">{channel.channel_identifier}</h3>
               <p className="text-sm text-muted-foreground">
-                {t("card.feedCount", { count: channel.feed_ids.length })}
+                {t("card.feedCount")}  { channel.feed_ids.length }
               </p>
             </div>
           </div>
