@@ -12,6 +12,9 @@
     "selectSchedule": "スケジュールを選択",
     "title": "新規チャンネル追加"
   },
+  "card": {
+    "feedCount": "{{count}}個のフィード"
+  },
   "channel": {
     "add": "チャンネル追加",
     "noChannels": "チャンネルが設定されていません"
@@ -26,9 +29,6 @@
     "description": "通知チャンネルとフィード設定を管理",
     "selectChannel": "設定するチャンネルを選択してください",
     "title": "チャンネル設定"
-  },
-  "platforms": {
-    "slack": "Slack"
   },
   "schedules": {
     "realtime": "リアルタイム"

@@ -12,6 +12,10 @@
     "selectSchedule": "Select schedule",
     "title": "Add New Channel"
   },
+  "card": {
+    "feedCount": "{{count}} feed",
+    "feedCount_plural": "{{count}} feeds"
+  },
   "channel": {
     "add": "Add Channel",
     "noChannels": "No channels configured yet"
@@ -26,9 +30,6 @@
     "description": "Manage your notification channels and feed preferences",
     "selectChannel": "Select a channel to configure",
     "title": "Channel Settings"
-  },
-  "platforms": {
-    "slack": "Slack"
   },
   "schedules": {
     "realtime": "Real-time"

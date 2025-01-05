@@ -7,7 +7,8 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Settings2 } from 'lucide-react';
 import { type Tables } from '@/types/database.types';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
+
 
 // Types
 type NotificationChannel = Tables<'notification_channels'>;
@@ -40,7 +41,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
             <div>
               <h3 className="font-medium">{channel.channel_identifier}</h3>
               <p className="text-sm text-muted-foreground">
-                {t("card.feedCount")}  { channel.feed_ids.length }
+              {t("card.feedCount", { count: channel.feed_ids.length })}
               </p>
             </div>
           </div>

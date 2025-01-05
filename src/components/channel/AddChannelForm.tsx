@@ -123,10 +123,38 @@ export function AddChannelForm({
                     className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                   >
                     <SlackIcon />
-                    {t("platforms.slack")}
+                    Slack
                   </Label>
                 </div>
-                {/* Similar changes for Discord and Email */}
+                <div>
+                  <RadioGroupItem
+                    value="discord"
+                    id="discord"
+                    className="peer sr-only"
+                  />
+                  <Label
+                    htmlFor="discord"
+                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  >
+                    <DiscordIcon />
+                    Discord
+                  </Label>
+                </div>
+                
+                <div>
+                  <RadioGroupItem
+                    value="email"
+                    id="email"
+                    className="peer sr-only"
+                  />
+                  <Label
+                    htmlFor="email"
+                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  >
+                    <EmailIcon />
+                    Email
+                  </Label>
+                </div>
               </RadioGroup>
             </div>
 
