@@ -26,6 +26,13 @@
     "cancel": "Cancel",
     "refresh": "Refresh"
   },
+  "feeds": {
+    "noFeeds": {
+      "action": "Follow feeds",
+      "description": "You need to follow feeds to receive notifications",
+      "title": "No feeds selected"
+    }
+  },
   "page": {
     "description": "Manage your notification channels and feed preferences",
     "selectChannel": "Select a channel to configure",

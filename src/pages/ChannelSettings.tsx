@@ -88,7 +88,7 @@ export default function ChannelSettingsPage() {
                     <h3 className="font-medium text-lg">
                       {t("feeds.noFeeds.title")}
                     </h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground pb-4">
                       {t("feeds.noFeeds.description")}
                     </p>
                     <a href="/feeds">

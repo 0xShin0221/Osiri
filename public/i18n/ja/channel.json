@@ -13,7 +13,8 @@
     "title": "新規チャンネル追加"
   },
   "card": {
-    "feedCount": "{{count}}個のフィード"
+    "feedCount": "{{count}}個のフィード",
+    "feedCount_0": ""
   },
   "channel": {
     "add": "チャンネル追加",
@@ -24,6 +25,13 @@
     "adding": "追加中...",
     "cancel": "キャンセル",
     "refresh": "更新"
+  },
+  "feeds": {
+    "noFeeds": {
+      "action": "フィードをフォローする",
+      "description": "通知を受け取るにはフィードをフォローしてください",
+      "title": "フォローしているフィードがありません"
+    }
   },
   "page": {
     "description": "通知チャンネルとフィード設定を管理",

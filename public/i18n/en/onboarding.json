@@ -4,7 +4,7 @@
     "next": "Next",
     "recommendedFeeds": "Choose Your News Sources",
     "searchPlaceholder": "Search feeds...",
-    "selected": "sources selected",
+    "selected": "selected",
     "subtitle": "Select up to 3 news sources to get started. You can add more later with a paid plan.",
     "title": "RSS Feed Selection"
   },
@@ -16,6 +16,8 @@
       "title": "Discord"
     },
     "email": {
+      "alternativeTitle": "Get updates in your email inbox",
+      "cancel": "cancel",
       "description": "Receive digests in your inbox",
       "frequency": "Update Frequency",
       "placeholder": "Enter your email",
@@ -26,6 +28,7 @@
         "weekly_monday": "Weekly (Monday)",
         "weekly_sunday": "Weekly (Sunday)"
       },
+      "setup": "SetUp",
       "title": "Email"
     },
     "slack": {
