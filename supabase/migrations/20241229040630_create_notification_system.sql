@@ -1,5 +1,3 @@
--- 20241229000000_create_notification_system.sql
-
 -- Create platform type
 create type notification_platform as enum (
   'slack',
@@ -19,6 +17,26 @@ create type notification_schedule_type as enum (
   'custom'            -- For special cases, uses cron_expression
 );
 
+--Create roles
+create type member_role as enum (
+  'admin',              -- Administrator with full permissions
+  'member',             -- Regular member with limited permissions
+  'viewer',             -- (Unused)Read-only access
+  'guest',              -- (Unused)Guest user with minimal access
+  'owner',              -- (Unused)Organization owner with ultimate control
+  'moderator',          -- (Unused)Responsible for managing specific content or users
+  'editor',             -- (Unused)Can edit content but not manage settings
+  'support',            -- (Unused)Support role for troubleshooting and assistance
+  'external_contributor' -- (Unused)External partner with limited permissions
+);
+
+create type utc_offset as enum (
+  'UTC+14', 'UTC+13', 'UTC+12', 'UTC+11', 'UTC+10', 'UTC+9', 'UTC+8',
+  'UTC+7', 'UTC+6', 'UTC+5', 'UTC+4', 'UTC+3', 'UTC+2', 'UTC+1',
+  'UTC+0', 'UTC-1', 'UTC-2', 'UTC-3', 'UTC-4', 'UTC-5', 'UTC-6',
+  'UTC-7', 'UTC-8', 'UTC-9', 'UTC-10', 'UTC-11', 'UTC-12'
+);
+
 -- Organizations table
 create table organizations (
   id uuid primary key default gen_random_uuid(),
@@ -32,7 +50,7 @@ create table organization_members (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid references organizations(id) on delete cascade,
   user_id uuid references auth.users(id) on delete cascade,
-  role text not null,
+  role member_role not null,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now(),
   unique(organization_id, user_id)
@@ -61,7 +79,7 @@ create table notification_schedules (
   name text not null,
   schedule_type notification_schedule_type not null,
   cron_expression text,
-  timezone text not null default 'UTC',
+  timezone utc_offset not null,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now(),
   constraint valid_custom_schedule check (
@@ -138,83 +156,72 @@ alter table notification_logs enable row level security;
 alter table notification_schedules enable row level security;
 
 -- Organization policies
-create policy "Users can view organizations they belong to"
-  on organizations for select
-  to authenticated
-  using (
-    exists (
-      select 1 from organization_members
-      where organization_id = organizations.id
-      and user_id = auth.uid()
+CREATE POLICY "Users can view their organizations"
+  ON organizations FOR SELECT
+  TO authenticated
+  USING (
+    id IN (
+      SELECT organization_id 
+      FROM organization_members 
+      WHERE user_id = auth.uid()
     )
   );
 
 -- Organization members policies
-create policy "Users can view organization members"
-  on organization_members for select
-  to authenticated
-  using (
-    exists (
-      select 1 from organization_members
-      where organization_id = organization_members.organization_id
-      and user_id = auth.uid()
-    )
-  );
+CREATE POLICY "Users can view their organization memberships"
+  ON organization_members FOR SELECT
+  TO authenticated
+  USING (user_id = auth.uid());
 
 -- Workspace connections policies
-create policy "Users can view workspace connections of their organizations"
-  on workspace_connections for select
-  to authenticated
-  using (
-    exists (
-      select 1 from organization_members
-      where organization_id = workspace_connections.organization_id
-      and user_id = auth.uid()
-    )
-  );
+CREATE POLICY "Users can view their workspace connections"
+  ON workspace_connections FOR SELECT
+  TO authenticated
+  USING (organization_id IN (
+    SELECT organization_id 
+    FROM organization_members 
+    WHERE user_id = auth.uid()
+  ));
 
 -- Notification channels policies
-create policy "Users can view notification channels of their organizations"
-  on notification_channels for select
-  to authenticated
-  using (
-    exists (
-      select 1 from organization_members
-      where organization_id = notification_channels.organization_id
-      and user_id = auth.uid()
-    )
-  );
+CREATE POLICY "Users can view their notification channels"
+  ON notification_channels FOR SELECT
+  TO authenticated
+  USING (organization_id IN (
+    SELECT organization_id 
+    FROM organization_members 
+    WHERE user_id = auth.uid()
+  ));
 
 -- Notification logs policies
-create policy "Users can view notification logs of their channels"
-  on notification_logs for select
-  to authenticated
-  using (
-    exists (
-      select 1 from notification_channels nc
-      join organization_members om on nc.organization_id = om.organization_id
-      where nc.id = notification_logs.channel_id
-      and om.user_id = auth.uid()
+CREATE POLICY "Users can view their notification logs"
+  ON notification_logs FOR SELECT
+  TO authenticated
+  USING (channel_id IN (
+    SELECT nc.id 
+    FROM notification_channels nc
+    WHERE nc.organization_id IN (
+      SELECT organization_id 
+      FROM organization_members 
+      WHERE user_id = auth.uid()
     )
-  );
+  ));
 
-  -- Service Role can create organizations
-create policy "Service role can create organizations"
-  on organizations for insert
-  to service_role
-  with check (true);
+-- Service Role policies
+CREATE POLICY "Service role can create organizations"
+  ON organizations FOR INSERT
+  TO service_role
+  WITH CHECK (true);
 
--- Service Role can create workspace connections
-create policy "Service role can create workspace connections"
-  on workspace_connections for insert
-  to service_role
-  with check (true);
+CREATE POLICY "Service role can create workspace connections"
+  ON workspace_connections FOR INSERT
+  TO service_role
+  WITH CHECK (true);
 
--- Service Role can create organization members
-create policy "Service role can create organization members"
-  on organization_members for insert
-  to service_role
-  with check (true);
+CREATE POLICY "Service role can create organization members"
+  ON organization_members FOR INSERT
+  TO service_role
+  WITH CHECK (true);
 
 -- Add comments
 comment on table organizations is 'Organizations using the notification system';

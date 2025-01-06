@@ -293,7 +293,7 @@ export type Database = {
           id: string
           name: string
           schedule_type: Database["public"]["Enums"]["notification_schedule_type"]
-          timezone: string
+          timezone: Database["public"]["Enums"]["utc_offset"]
           updated_at: string | null
         }
         Insert: {
@@ -302,7 +302,7 @@ export type Database = {
           id?: string
           name: string
           schedule_type: Database["public"]["Enums"]["notification_schedule_type"]
-          timezone?: string
+          timezone: Database["public"]["Enums"]["utc_offset"]
           updated_at?: string | null
         }
         Update: {
@@ -311,7 +311,7 @@ export type Database = {
           id?: string
           name?: string
           schedule_type?: Database["public"]["Enums"]["notification_schedule_type"]
-          timezone?: string
+          timezone?: Database["public"]["Enums"]["utc_offset"]
           updated_at?: string | null
         }
         Relationships: []
@@ -321,7 +321,7 @@ export type Database = {
           created_at: string | null
           id: string
           organization_id: string | null
-          role: string
+          role: Database["public"]["Enums"]["member_role"]
           updated_at: string | null
           user_id: string | null
         }
@@ -329,7 +329,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           organization_id?: string | null
-          role: string
+          role: Database["public"]["Enums"]["member_role"]
           updated_at?: string | null
           user_id?: string | null
         }
@@ -337,7 +337,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           organization_id?: string | null
-          role?: string
+          role?: Database["public"]["Enums"]["member_role"]
           updated_at?: string | null
           user_id?: string | null
         }
@@ -375,21 +375,24 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          id: string
           onboarding_completed: boolean | null
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
+          id?: string
           onboarding_completed?: boolean | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
+          id?: string
           onboarding_completed?: boolean | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -735,6 +738,16 @@ export type Database = {
         | "ru"
         | "id"
         | "de"
+      member_role:
+        | "admin"
+        | "member"
+        | "viewer"
+        | "guest"
+        | "owner"
+        | "moderator"
+        | "editor"
+        | "support"
+        | "external_contributor"
       notification_platform: "slack" | "discord" | "email"
       notification_schedule_type:
         | "realtime"
@@ -751,6 +764,34 @@ export type Database = {
         | "completed"
         | "failed"
         | "skipped"
+      utc_offset:
+        | "UTC+14"
+        | "UTC+13"
+        | "UTC+12"
+        | "UTC+11"
+        | "UTC+10"
+        | "UTC+9"
+        | "UTC+8"
+        | "UTC+7"
+        | "UTC+6"
+        | "UTC+5"
+        | "UTC+4"
+        | "UTC+3"
+        | "UTC+2"
+        | "UTC+1"
+        | "UTC+0"
+        | "UTC-1"
+        | "UTC-2"
+        | "UTC-3"
+        | "UTC-4"
+        | "UTC-5"
+        | "UTC-6"
+        | "UTC-7"
+        | "UTC-8"
+        | "UTC-9"
+        | "UTC-10"
+        | "UTC-11"
+        | "UTC-12"
     }
     CompositeTypes: {
       [_ in never]: never
