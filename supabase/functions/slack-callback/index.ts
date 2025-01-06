@@ -39,7 +39,7 @@ const getSlackToken = async (
       client_secret: clientSecret,
       redirect_uri: `${
         Deno.env.get("SUPABASE_URL")
-      }/functions/v1/slack-callback?lang=${lang}?userId=${userId}`,
+      }/functions/v1/slack-callback?lang=${lang}&userId=${userId}`,
     }),
   });
   return response.json();
