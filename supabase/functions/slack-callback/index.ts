@@ -77,6 +77,7 @@ Deno.serve(handleWithCors(async (req) => {
     if (!slackData.ok || !slackData.team?.name) {
       throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
     }
+    console.log("user id and slack data", userId, slackData);
     const org = await createOrganization(slackData.team.name);
     await createOrganizationMemberAsAdmin(org.id, userId);
     await createWorkspaceConnection(org.id, slackData);
