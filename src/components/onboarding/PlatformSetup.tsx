@@ -66,7 +66,7 @@ export default function PlatformSetup() {
     setIsConnecting(true)
     if (!userId) return
     const combinedParam = `${currentLang}_${userId}`
-    const redirectUri = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/slack-callback?lang_userId=${combinedParam}}`
+    const redirectUri = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/slack-callback?lang_userId=${combinedParam}`
     window.location.href = `https://slack.com/oauth/v2/authorize?client_id=${
       import.meta.env.VITE_SLACK_CLIENT_ID
     }&scope=channels:join,channels:read,chat:write,channels:manage&user_scope=chat:write,channels:read&redirect_uri=${

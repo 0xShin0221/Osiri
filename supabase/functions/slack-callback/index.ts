@@ -58,34 +58,25 @@ Deno.serve(handleWithCors(async (req) => {
     );
   }
 
-  console.log("Raw URL:", req.url);
-  console.log("Parameters:", {
-    code,
-    lang_userId,
-  });
-
-  if (!code || !lang_userId) {
+  const [lang, userId] = lang_userId.split("_");
+  if (!lang || !userId) {
     return new Response(
-      JSON.stringify({ error: "Missing required parameters", code, lang_userId }),
+      JSON.stringify({ error: "Invalid lang_userId format" }),
       { status: 400 },
     );
   }
-
-  const [lang, userId] = lang_userId.split("_");
-  console.log("Parsed values:", { lang, userId });
 
   try {
     const slackData = await getSlackToken(
       lang,
       code,
-      userId.trim(),
+      userId,
       vars.slackId,
       vars.slackSecret,
     );
     if (!slackData.ok || !slackData.team?.name) {
       throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
     }
-    console.log("user id and slack data", userId, slackData);
     const org = await createOrganization(slackData.team.name);
     await createOrganizationMemberAsAdmin(org.id, userId);
     await createWorkspaceConnection(org.id, slackData);
