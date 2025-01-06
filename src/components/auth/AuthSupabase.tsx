@@ -18,7 +18,7 @@ interface AuthContainerProps {
 export function AuthContainer({ 
   children,
   theme = "default", 
-  redirectTo = "/dashboard" 
+  _redirectTo = "/dashboard" 
 }: AuthContainerProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
