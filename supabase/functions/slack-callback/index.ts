@@ -1,5 +1,9 @@
 import { handleWithCors } from "../_shared/cors.ts";
-import { createOrganization, createOrganizationMemberAsAdmin } from "../_shared/db/organization.ts";
+import {
+  createOrganization,
+  createOrganizationMemberAsAdmin,
+} from "../_shared/db/organization.ts";
+import { updateOnboardingCompleted } from "../_shared/db/profile.ts";
 import { createWorkspaceConnection } from "../_shared/db/workspace.ts";
 import { SlackOAuthResponse } from "../_shared/types.ts";
 
@@ -22,6 +26,7 @@ const getEnvVars = () => {
 const getSlackToken = async (
   lang: string,
   code: string,
+  userId: string,
   clientId: string,
   clientSecret: string,
 ): Promise<SlackOAuthResponse> => {
@@ -34,7 +39,7 @@ const getSlackToken = async (
       client_secret: clientSecret,
       redirect_uri: `${
         Deno.env.get("SUPABASE_URL")
-      }/functions/v1/slack-callback?lang=${lang}`,
+      }/functions/v1/slack-callback?lang=${lang}?userId=${userId}`,
     }),
   });
   return response.json();
@@ -45,11 +50,14 @@ Deno.serve(handleWithCors(async (req) => {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
   const lang = url.searchParams.get("lang");
+  const userId = url.searchParams.get("userId");
 
-  if (!code || !lang) {
+  if (!code || !lang || !userId) {
     return new Response(
       JSON.stringify({
-        error: code ? "Missing lang" : "Missing code",
+        error: JSON.stringify(
+          `Missing required parameters: code=${code}, lang=${lang}, userId=${userId}`,
+        ),
       }),
       { status: 400 },
     );
@@ -59,6 +67,7 @@ Deno.serve(handleWithCors(async (req) => {
     const slackData = await getSlackToken(
       lang,
       code,
+      userId,
       vars.slackId,
       vars.slackSecret,
     );
@@ -66,11 +75,13 @@ Deno.serve(handleWithCors(async (req) => {
       throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
     }
     const org = await createOrganization(slackData.team.name);
+    await createOrganizationMemberAsAdmin(org.id, userId);
     await createWorkspaceConnection(org.id, slackData);
+    await updateOnboardingCompleted (userId);
 
     return Response.redirect(
       `https://${vars.appDomain}/${lang}/setchannel`,
-      );
+    );
   } catch (error) {
     console.error(error);
     throw new Error("Failed to connect Slack");

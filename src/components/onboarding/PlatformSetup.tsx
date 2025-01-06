@@ -32,15 +32,24 @@ export default function PlatformSetup() {
   const { t } = useTranslation('onboarding')
   const { i18n } = useTranslation()
   const currentLang = i18n.resolvedLanguage
+  const [userId, setUserId] = useState<string | null>(null);
 
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUserId(data.user?.id || null);
+    };
+    getCurrentUser();
+  }, []);
+  
   // OAuth callback handling remains the same
   useEffect(() => {
     const handleOAuthCallback = async () => {
-      if (!organizationId) return
+      if (!organizationId||!userId) return
       try {
         await supabase.from('organization_members').insert({
           organization_id: organizationId,
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: userId,
           role: 'owner'
         })
         window.location.href = '/dashboard'
@@ -55,7 +64,7 @@ export default function PlatformSetup() {
   const handleSlackConnect = async () => {
     setPlatform('slack')
     setIsConnecting(true)
-    const redirectUri = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/slack-callback?lang=${currentLang}`
+    const redirectUri = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/slack-callback?lang=${currentLang}?userId=${userId}`
     window.location.href = `https://slack.com/oauth/v2/authorize?client_id=${
       import.meta.env.VITE_SLACK_CLIENT_ID
     }&scope=channels:join,channels:read,chat:write,channels:manage&user_scope=chat:write,channels:read&redirect_uri=${

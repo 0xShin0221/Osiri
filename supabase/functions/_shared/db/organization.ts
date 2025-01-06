@@ -24,4 +24,4 @@ export const createOrganizationMemberAsAdmin = async (
     });
 
   if (error) throw error;
-}
+};
