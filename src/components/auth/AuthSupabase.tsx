@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { useTranslation } from "react-i18next";
 import { authLocales } from "./locales";
 import { PageLoading } from "../ui/page-loading";
-import { getProfile } from "./FetchProfile";
+import { ProfileService } from "@/services/profile";
 
 interface AuthContainerProps {
   children?: React.ReactNode;
@@ -26,8 +26,9 @@ export function AuthContainer({
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
 
-
   useEffect(() => {
+    let mounted = true;
+
     const handleSession = async (session: Session | null) => {
       if (!session) {
         setIsLoading(false);
@@ -35,51 +36,51 @@ export function AuthContainer({
       }
 
       try {
-        const profile = await getProfile(session.user.id);
-        setSession(session);
-        if(!profile){
-          throw new Error("Profile not found");
-        }
-
-        if (!profile.onboarding_completed
-          ) {
-          navigate(`/${currentLang}/onboarding`);
+        const profile = await ProfileService.getOrCreateProfile(session.user.id);
+        if (!mounted) return;
+        if (profile) {
+          setSession(session);
+          if (!profile.onboarding_completed) {
+            navigate(`/${currentLang}/onboarding`);
+          }
         } else {
-          return <>{children}</>
+          console.error("Something went wrong with the profile creation or fetching");
+          throw new Error("Profile creation or fetching failed");
         }
       } catch (error) {
-        console.error('Error fetching profile:', error);
-        // If there's an error fetching the profile, we'll redirect to onboarding
-        // This handles the case where the profile might not exist yet
-        
+        console.error('Error handling session:', error);
+        throw new Error("Error handling session");
       } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    // Initial session check
     supabase.auth.getSession().then(({ data: { session } }) => {
       handleSession(session);
     });
 
-    // Setup auth state change listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       handleSession(session);
     });
 
-    return () => subscription.unsubscribe();
-  }, [navigate, redirectTo, currentLang]);
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [navigate, currentLang]);
 
   if (isLoading) {
     return <PageLoading />;
   }
+
   if (session) {
     return <>{children}</>;
   }
 
- 
   return (
     <div className="container max-w-md mx-auto p-4">
       <Auth
@@ -89,7 +90,7 @@ export function AuthContainer({
         localization={{
           variables: authLocales[currentLang as keyof typeof authLocales] || authLocales.en
         }}
-        providers={["google", "github","twitter","linkedin"]}
+        providers={["google", "github", "twitter", "linkedin"]}
         redirectTo={`${window.location.origin}/auth/callback`}
         socialLayout="horizontal"
       />
@@ -130,20 +131,9 @@ const appearance = {
     },
   },
   style: {
-    input: {
-      borderRadius: '0.5rem',
-      fontSize: '1rem',
-    },
-    label: {
-      fontSize: '0.875rem',
-      marginBottom: '0.5rem',
-    },
-    button: {
-      borderRadius: '0.5rem',
-      fontSize: '1rem',
-    },
-    anchor: {
-      fontSize: '0.875rem',
-    },
+    input: { borderRadius: '0.5rem', fontSize: '1rem' },
+    label: { fontSize: '0.875rem', marginBottom: '0.5rem' },
+    button: { borderRadius: '0.5rem', fontSize: '1rem' },
+    anchor: { fontSize: '0.875rem' },
   }
 };

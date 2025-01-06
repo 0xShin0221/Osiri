@@ -22,7 +22,7 @@ export function useChannels() {
     } finally {
       setLoading(false);
     }
-  }, [channelService]);
+  }, []);
 
   const updateChannel = async (channel: NotificationChannel) => {
     try {
