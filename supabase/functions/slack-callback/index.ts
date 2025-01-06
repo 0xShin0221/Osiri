@@ -37,7 +37,9 @@ const getSlackToken = async (
       code,
       client_id: clientId,
       client_secret: clientSecret,
-      redirect_uri: `${Deno.env.get("SUPABASE_URL")}/functions/v1/slack-callback?lang_userId=${lang}_${userId}`,
+      redirect_uri: `${
+        Deno.env.get("SUPABASE_URL")
+      }/functions/v1/slack-callback?lang_userId=${lang}_${userId}`,
     }),
   });
   return response.json();
@@ -50,12 +52,18 @@ Deno.serve(handleWithCors(async (req) => {
   const lang_userId = url.searchParams.get("lang_userId");
 
   if (!code || !lang_userId) {
-    return new Response(JSON.stringify({ error: "Missing required parameters" }), { status: 400 });
+    return new Response(
+      JSON.stringify({ error: "Missing required parameters" }),
+      { status: 400 },
+    );
   }
 
-  const [lang, userId] = lang_userId.split('_');
+  const [lang, userId] = lang_userId.split("_");
   if (!lang || !userId) {
-    return new Response(JSON.stringify({ error: "Invalid lang_userId format" }), { status: 400 });
+    return new Response(
+      JSON.stringify({ error: "Invalid lang_userId format" }),
+      { status: 400 },
+    );
   }
 
   try {
@@ -72,7 +80,7 @@ Deno.serve(handleWithCors(async (req) => {
     const org = await createOrganization(slackData.team.name);
     await createOrganizationMemberAsAdmin(org.id, userId);
     await createWorkspaceConnection(org.id, slackData);
-    await updateOnboardingCompleted (userId);
+    await updateOnboardingCompleted(userId);
 
     return Response.redirect(
       `https://${vars.appDomain}/${lang}/setchannel`,
