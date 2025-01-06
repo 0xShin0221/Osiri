@@ -64,6 +64,7 @@ export default function PlatformSetup() {
   const handleSlackConnect = async () => {
     setPlatform('slack')
     setIsConnecting(true)
+    if (!userId) return
     const redirectUri = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/slack-callback?lang=${currentLang}?userId=${userId}`
     window.location.href = `https://slack.com/oauth/v2/authorize?client_id=${
       import.meta.env.VITE_SLACK_CLIENT_ID
