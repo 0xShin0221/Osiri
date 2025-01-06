@@ -22,6 +22,8 @@ export default function ChannelSettingsPage() {
   const [channels, setChannels] = useState<NotificationChannel[]>(mockChannels);
   const [selectedChannel, setSelectedChannel] = useState<NotificationChannel | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const { i18n } = useTranslation();
+  const currentLang = i18n.resolvedLanguage;
   const { t } = useTranslation("channel");
 
   const handleUpdateChannel = (updatedChannel: NotificationChannel) => {
@@ -91,7 +93,7 @@ export default function ChannelSettingsPage() {
                     <p className="text-muted-foreground pb-4">
                       {t("feeds.noFeeds.description")}
                     </p>
-                    <a href="/feeds">
+                    <a href={`/${currentLang}/feeds`}>
                       <Button>
                         <RssIcon className="h-4 w-4 mr-2" />
                         {t("feeds.noFeeds.action")}
