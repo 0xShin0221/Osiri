@@ -37,9 +37,7 @@ const getSlackToken = async (
       code,
       client_id: clientId,
       client_secret: clientSecret,
-      redirect_uri: `${
-        Deno.env.get("SUPABASE_URL")
-      }/functions/v1/slack-callback?lang=${lang}?userId=${userId}`,
+      redirect_uri: `${Deno.env.get("SUPABASE_URL")}/functions/v1/slack-callback?lang_userId=${lang}_${userId}`,
     }),
   });
   return response.json();
@@ -49,18 +47,15 @@ Deno.serve(handleWithCors(async (req) => {
   const vars = getEnvVars();
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
-  const lang = url.searchParams.get("lang");
-  const userId = url.searchParams.get("userId");
+  const lang_userId = url.searchParams.get("lang_userId");
 
-  if (!code || !lang || !userId) {
-    return new Response(
-      JSON.stringify({
-        error: JSON.stringify(
-          `Missing required parameters: code=${code}, lang=${lang}, userId=${userId}`,
-        ),
-      }),
-      { status: 400 },
-    );
+  if (!code || !lang_userId) {
+    return new Response(JSON.stringify({ error: "Missing required parameters" }), { status: 400 });
+  }
+
+  const [lang, userId] = lang_userId.split('_');
+  if (!lang || !userId) {
+    return new Response(JSON.stringify({ error: "Invalid lang_userId format" }), { status: 400 });
   }
 
   try {
