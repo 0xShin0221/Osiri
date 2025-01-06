@@ -4,56 +4,64 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Plus, RssIcon } from 'lucide-react';
+import { RefreshCw, Plus, RssIcon, Loader2 } from 'lucide-react';
 
 import { AddChannelForm } from '@/components/channel/AddChannelForm';
 import { ChannelCard } from '@/components/channel/ChannelCard';
 import { ChannelSettings } from '@/components/channel/ChannelSettings';
 import { type Tables } from '@/types/database.types';
-import { mockChannels, mockSchedules } from '@/mocks/notificationData';
+import {  mockSchedules } from '@/mocks/notificationData';
 import { useTranslation } from 'react-i18next';
 import { mockFeeds } from '@/mocks/feedData';
+import { useChannels } from '@/hooks/useChannels';
 
 // Types
 type NotificationChannel = Tables<'notification_channels'>;
 
-
 export default function ChannelSettingsPage() {
-  const [channels, setChannels] = useState<NotificationChannel[]>(mockChannels);
   const [selectedChannel, setSelectedChannel] = useState<NotificationChannel | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const { i18n } = useTranslation();
   const currentLang = i18n.resolvedLanguage;
   const { t } = useTranslation("channel");
 
-  const handleUpdateChannel = (updatedChannel: NotificationChannel) => {
-    setChannels((prev) =>
-      prev.map((ch) => (ch.id === updatedChannel.id ? updatedChannel : ch))
-    );
-    setSelectedChannel(updatedChannel);
+  const {
+    channels,
+    loading,
+    error,
+    fetchChannels,
+    updateChannel,
+    deleteChannel,
+    addChannel
+  } = useChannels();
+
+  const handleUpdateChannel = async(updatedChannel: NotificationChannel) => {
+    try {
+      const result = await updateChannel(updatedChannel);
+      setSelectedChannel(result);
+    } catch (err) {
+      console.error('Error updating channel:', err);
+    }
   };
 
-  const handleDeleteChannel = (channelId: string) => {
-    setChannels((prev) => prev.filter((ch) => ch.id !== channelId));
-    setSelectedChannel(null);
+  const handleDeleteChannel = async (channelId: string) => {
+    try {
+      await deleteChannel(channelId);
+      setSelectedChannel(null);
+    } catch (err) {
+      console.error('Error deleting channel:', err);
+    }
   };
 
-  const handleAddChannel = async (newChannel: Partial<NotificationChannel>): Promise<void> => {
-    return new Promise((resolve) => {
-      const channel: NotificationChannel = {
-        ...newChannel,
-        id: crypto.randomUUID(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        is_active: true,
-        feed_ids: [],
-        schedule_id: null,
-      } as NotificationChannel;
-      setChannels((prev) => [...prev, channel]);
-      resolve();
-    });
+  const handleAddChannel = async (newChannel: Partial<NotificationChannel>) => {
+    try {
+      await addChannel(newChannel);
+      setShowAddDialog(false);
+    } catch (err) {
+      console.error('Error adding channel:', err);
+      throw err;
+    }
   };
-  
   return (
     <div className="container mx-auto p-4">
       {/* Header */}
@@ -65,11 +73,17 @@ export default function ChannelSettingsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <RefreshCw className="h-4 w-4 mr-2" /> {t("common.refresh")}
+          <Button 
+            variant="outline" 
+            onClick={fetchChannels}
+            disabled={loading}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            {t("common.refresh")}
           </Button>
           <Button onClick={() => setShowAddDialog(true)}>
-            <Plus className="h-4 w-4 mr-2" /> {t("channel.add")}
+            <Plus className="h-4 w-4 mr-2" />
+            {t("channel.add")}
           </Button>
         </div>
       </div>
@@ -78,7 +92,19 @@ export default function ChannelSettingsPage() {
       <div className="grid grid-cols-1 gap-8">
         {/* Channel List */}
         <div className="space-y-4">
-          {channels.length > 0 ? (
+          {loading ? (
+            <Card>
+              <CardContent className="p-8 flex justify-center items-center">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </CardContent>
+            </Card>
+          ) : error ? (
+            <Card>
+              <CardContent className="p-8 text-center text-red-600">
+                {error}
+              </CardContent>
+            </Card>
+          ) : channels.length > 0 ? (
             <>
               {mockFeeds.length === 0 ? (
                 <Card>
@@ -123,7 +149,7 @@ export default function ChannelSettingsPage() {
 
         {/* Settings Panel */}
         <div className="lg:sticky lg:top-4">
-          {selectedChannel&&
+          {selectedChannel &&
             <ChannelSettings
               channel={selectedChannel}
               feeds={mockFeeds}

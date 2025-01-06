@@ -1,5 +1,5 @@
 import { handleWithCors } from "../_shared/cors.ts";
-import { createOrganization } from "../_shared/db/organization.ts";
+import { createOrganization, createOrganizationMemberAsAdmin } from "../_shared/db/organization.ts";
 import { createWorkspaceConnection } from "../_shared/db/workspace.ts";
 import { SlackOAuthResponse } from "../_shared/types.ts";
 
@@ -66,15 +66,14 @@ Deno.serve(handleWithCors(async (req) => {
       throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
     }
     const org = await createOrganization(slackData.team.name);
+    await createOrganizationMemberAsAdmin(org.id, slackData.authed_user.id);
     await createWorkspaceConnection(org.id, slackData);
 
     return Response.redirect(
-      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=success`,
+      `https://${vars.appDomain}/${lang}/setchannel`,
       );
   } catch (error) {
     console.error(error);
-    return Response.redirect(
-      `https://${vars.appDomain}/${lang}/onboarding?platform=slack&status=error`,
-    );
+    throw new Error("Failed to connect Slack");
   }
 }));

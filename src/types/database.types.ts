@@ -247,7 +247,7 @@ export type Database = {
           id: string
           platform: Database["public"]["Enums"]["notification_platform"]
           recipient: string
-          status: string
+          status: Database["public"]["Enums"]["notification_status"]
         }
         Insert: {
           article_id?: string | null
@@ -257,7 +257,7 @@ export type Database = {
           id?: string
           platform: Database["public"]["Enums"]["notification_platform"]
           recipient: string
-          status: string
+          status: Database["public"]["Enums"]["notification_status"]
         }
         Update: {
           article_id?: string | null
@@ -267,7 +267,7 @@ export type Database = {
           id?: string
           platform?: Database["public"]["Enums"]["notification_platform"]
           recipient?: string
-          status?: string
+          status?: Database["public"]["Enums"]["notification_status"]
         }
         Relationships: [
           {
@@ -758,6 +758,7 @@ export type Database = {
         | "weekly_monday"
         | "weekly_sunday"
         | "custom"
+      notification_status: "pending" | "success" | "failed" | "retrying"
       translation_status:
         | "pending"
         | "processing"
