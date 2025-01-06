@@ -75,7 +75,7 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
                 <div className="flex gap-1">
                   {feed.categories.map((category) => (
                     <Badge key={category} variant="secondary">
-                      ${category}
+                      {category}
                     </Badge>
                   ))}
                 </div>
