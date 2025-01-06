@@ -58,19 +58,27 @@ Deno.serve(handleWithCors(async (req) => {
     );
   }
 
-  const [lang, userId] = lang_userId.split("_");
-  if (!lang || !userId) {
+  console.log("Raw URL:", req.url);
+  console.log("Parameters:", {
+    code,
+    lang_userId,
+  });
+
+  if (!code || !lang_userId) {
     return new Response(
-      JSON.stringify({ error: "Invalid lang_userId format" }),
+      JSON.stringify({ error: "Missing required parameters", code, lang_userId }),
       { status: 400 },
     );
   }
+
+  const [lang, userId] = lang_userId.split("_");
+  console.log("Parsed values:", { lang, userId });
 
   try {
     const slackData = await getSlackToken(
       lang,
       code,
-      userId,
+      userId.trim(),
       vars.slackId,
       vars.slackSecret,
     );
