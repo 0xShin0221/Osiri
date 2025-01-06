@@ -4,7 +4,7 @@ export const updateOnboardingCompleted = async (userId: string) => {
   const { error } = await supabase
     .from("profiles")
     .update({ onboarding_completed: true })
-    .eq("id", userId);
+    .eq("user_id", userId);
 
   if (error) throw error;
 };
