@@ -157,7 +157,7 @@ export function IntegrationCard({
               {platform === "email" ? (
                 <>
                   <Settings className="h-4 w-4 mr-2" />
-                  {t("email.setup")}
+                  {t("email.setup.title")}
                 </>
               ) : (
                 <>
