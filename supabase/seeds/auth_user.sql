@@ -17,14 +17,15 @@ INSERT INTO
         email_change,
         email_change_token_new,
         recovery_token
-    ) (
-        select
+    ) 
+    values
+    (    
             '00000000-0000-0000-0000-000000000000',
             '08b28622-06fb-4ae5-aa5c-9881cfe1796f',
             'authenticated',
             'authenticated',
-            'user' || (ROW_NUMBER() OVER ()) || '@example.com',
-            crypt ('password123', gen_salt ('bf')),
+            'user1@example.com',
+            crypt('password123', gen_salt('bf')),
             current_timestamp,
             current_timestamp,
             current_timestamp,
@@ -36,6 +37,23 @@ INSERT INTO
             '',
             '',
             ''
-        FROM
-            generate_series(1, 1)
-    );
+    ),
+    (    
+            '00000000-0000-0000-0000-000000000000',
+            '18b28622-06fb-4ae5-aa5c-9881cfe1796f',
+            'authenticated',
+            'authenticated',
+            'user2@example.com',
+            crypt('password123', gen_salt('bf')),
+            current_timestamp,
+            current_timestamp,
+            current_timestamp,
+            '{"provider":"email","providers":["email"]}',
+            '{}',
+            current_timestamp,
+            current_timestamp,
+            '',
+            '',
+            '',
+            ''
+    )

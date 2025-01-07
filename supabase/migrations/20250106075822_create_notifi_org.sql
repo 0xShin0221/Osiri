@@ -28,6 +28,7 @@ create table workspace_connections (
   token_expires_at timestamp with time zone,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now(),
+  is_active boolean not null default true,
   constraint valid_platform_data check (
     (platform in ('slack', 'discord') and workspace_id is not null and access_token is not null) or
     (platform = 'email' and workspace_id is null and access_token is null)

@@ -1,4 +1,3 @@
--- テストデータの挿入
 insert into public.waitlist (email, name, company, role, language)
 values
   ('test1@example.com', 'Test User 1', 'Company A', 'Founder', 'en'),
