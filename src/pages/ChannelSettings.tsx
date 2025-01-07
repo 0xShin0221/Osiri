@@ -1,46 +1,56 @@
-import { useState } from 'react';
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+// src/pages/ChannelSettingsPage.tsx
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Plus, RssIcon, Loader2 } from 'lucide-react';
+import { RefreshCw, Plus, RssIcon, Loader2 } from "lucide-react";
 
-import { AddChannelForm } from '@/components/channel/AddChannelForm';
-import { ChannelCard } from '@/components/channel/ChannelCard';
-import { ChannelSettings } from '@/components/channel/ChannelSettings';
-import { type Tables } from '@/types/database.types';
-import {  mockSchedules } from '@/mocks/notificationData';
-import { useTranslation } from 'react-i18next';
-import { mockFeeds } from '@/mocks/feedData';
-import { useChannels } from '@/hooks/useChannels';
+import { AddChannelForm } from "@/components/channel/AddChannelForm";
+import { ChannelCard } from "@/components/channel/ChannelCard";
+import { ChannelSettings } from "@/components/channel/ChannelSettings";
+import type { Tables } from "@/types/database.types";
+import { mockSchedules } from "@/mocks/notificationData";
+import { useTranslation } from "react-i18next";
+import { mockFeeds } from "@/mocks/feedData";
+import { useChannels } from "@/hooks/useChannels";
+import { useWorkspaceConnections } from "@/hooks/useWorkspaceConnections";
+import { useAuth } from "@/hooks/useAuth";
 
-// Types
-type NotificationChannel = Tables<'notification_channels'>;
+type NotificationChannel = Tables<"notification_channels">;
 
 export default function ChannelSettingsPage() {
-  const [selectedChannel, setSelectedChannel] = useState<NotificationChannel | null>(null);
+  const [selectedChannel, setSelectedChannel] =
+    useState<NotificationChannel | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const { session } = useAuth();
   const { i18n } = useTranslation();
   const currentLang = i18n.resolvedLanguage;
   const { t } = useTranslation("channel");
 
   const {
+    connections,
+    loading: connectionsLoading,
+    error: connectionsError,
+  } = useWorkspaceConnections({ session });
+
+  const {
     channels,
-    loading,
-    error,
+    loading: channelsLoading,
+    error: channelsError,
     fetchChannels,
     updateChannel,
     deleteChannel,
-    addChannel
+    addChannel,
   } = useChannels();
 
-  const handleUpdateChannel = async(updatedChannel: NotificationChannel) => {
+  const loading = channelsLoading || connectionsLoading;
+  const error = channelsError || connectionsError;
+
+  const handleUpdateChannel = async (updatedChannel: NotificationChannel) => {
     try {
       const result = await updateChannel(updatedChannel);
       setSelectedChannel(result);
     } catch (err) {
-      console.error('Error updating channel:', err);
+      console.error("Error updating channel:", err);
     }
   };
 
@@ -49,7 +59,7 @@ export default function ChannelSettingsPage() {
       await deleteChannel(channelId);
       setSelectedChannel(null);
     } catch (err) {
-      console.error('Error deleting channel:', err);
+      console.error("Error deleting channel:", err);
     }
   };
 
@@ -58,27 +68,24 @@ export default function ChannelSettingsPage() {
       await addChannel(newChannel);
       setShowAddDialog(false);
     } catch (err) {
-      console.error('Error adding channel:', err);
+      console.error("Error adding channel:", err);
       throw err;
     }
   };
+
   return (
     <div className="container mx-auto p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">{t("page.title")}</h1>
-          <p className="text-muted-foreground">
-            {t("page.description")}
-          </p>
+          <p className="text-muted-foreground">{t("page.description")}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            onClick={fetchChannels}
-            disabled={loading}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <Button variant="outline" onClick={fetchChannels} disabled={loading}>
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+            />
             {t("common.refresh")}
           </Button>
           <Button onClick={() => setShowAddDialog(true)}>
@@ -149,7 +156,7 @@ export default function ChannelSettingsPage() {
 
         {/* Settings Panel */}
         <div className="lg:sticky lg:top-4">
-          {selectedChannel &&
+          {selectedChannel && (
             <ChannelSettings
               channel={selectedChannel}
               feeds={mockFeeds}
@@ -157,7 +164,7 @@ export default function ChannelSettingsPage() {
               onUpdate={handleUpdateChannel}
               onDelete={handleDeleteChannel}
             />
-          }
+          )}
         </div>
       </div>
 
@@ -168,6 +175,7 @@ export default function ChannelSettingsPage() {
         onSubmit={handleAddChannel}
         feeds={mockFeeds}
         schedules={mockSchedules}
+        workspaceConnections={connections || []}
       />
     </div>
   );

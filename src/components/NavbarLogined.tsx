@@ -11,7 +11,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LogOut, Menu, LayoutDashboard, Rss, Bell, Settings } from "lucide-react";
+import {
+  LogOut,
+  Menu,
+  LayoutDashboard,
+  Rss,
+  Bell,
+  Settings,
+  Combine,
+} from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { OsiriLogo } from "./Logo";
 import { useTranslation } from "react-i18next";
@@ -28,7 +36,7 @@ interface RouteProps {
 
 const routeList = (): RouteProps[] => {
   const { t } = useTranslation("menu");
-  
+
   return [
     {
       href: "/dashboard",
@@ -39,6 +47,11 @@ const routeList = (): RouteProps[] => {
       href: "/feeds",
       label: t("menu.feedManagement"),
       icon: <Rss className="w-4 h-4" />,
+    },
+    {
+      href: "/integrations",
+      label: t("menu.appIntegration"),
+      icon: <Combine className="w-4 h-4" />,
     },
     {
       href: "/setchannel",
@@ -59,7 +72,7 @@ const routeList = (): RouteProps[] => {
       href: "/settings",
       label: t("menu.settings"),
       icon: <Settings className="w-4 h-4" />,
-    }
+    },
   ];
 };
 export const NavbarLogined = () => {
@@ -78,10 +91,7 @@ export const NavbarLogined = () => {
       <NavigationMenu className="mx-auto">
         <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between">
           <NavigationMenuItem className="font-bold flex">
-            <a
-              href={`/${currentLang}`}
-              className="ml-2 font-bold text-xl flex"
-            >
+            <a href={`/${currentLang}`} className="ml-2 font-bold text-xl flex">
               <OsiriLogo />
               Osiri
             </a>

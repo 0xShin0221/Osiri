@@ -1,5 +1,4 @@
-// AddChannelForm.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,15 +18,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { Badge } from "@/components/ui/badge";
-import type { Tables } from "@/types/database.types";
-import { MultiSelect } from "../ui/multi-select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+import { MultiSelect } from "@/components/ui/multi-select";
 import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
 import { useTranslation } from "react-i18next";
+import type { Tables } from "@/types/database.types";
 
 type NotificationChannel = Tables<"notification_channels">;
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
+type WorkspaceConnection = Tables<"workspace_connections">;
 
 const mockSlackChannels = [
   { id: "ch1", name: "#general" },
@@ -47,7 +48,21 @@ interface AddChannelFormProps {
   onSubmit: (channel: Partial<NotificationChannel>) => Promise<void>;
   feeds: RssFeed[];
   schedules: NotificationSchedule[];
+  workspaceConnections: WorkspaceConnection[];
 }
+
+const getInitialPlatform = (connections: WorkspaceConnection[]) => {
+  if (connections.some((conn) => conn.platform === "slack")) {
+    return "slack";
+  }
+  if (connections.some((conn) => conn.platform === "discord")) {
+    return "discord";
+  }
+  if (connections.some((conn) => conn.platform === "email")) {
+    return "email";
+  }
+  return "email";
+};
 
 export function AddChannelForm({
   open,
@@ -55,17 +70,25 @@ export function AddChannelForm({
   onSubmit,
   feeds,
   schedules,
+  workspaceConnections,
 }: AddChannelFormProps) {
-  const [platform, setPlatform] = useState<"slack" | "discord" | "email">(
-    "slack"
+  const { t } = useTranslation("channel");
+  const { i18n } = useTranslation();
+  const currentLang = i18n.resolvedLanguage;
+  const availablePlatforms = workspaceConnections.map((conn) => conn.platform);
+  const [platform, setPlatform] = useState<"slack" | "discord" | "email" | "">(
+    ""
   );
   const [channelId, setChannelId] = useState("");
   const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
   const [scheduleId, setScheduleId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { t } = useTranslation("channel");
-
+  useEffect(() => {
+    const newPlatform = getInitialPlatform(workspaceConnections);
+    setPlatform(newPlatform);
+  }, [workspaceConnections]);
   const handleSubmit = async (e: React.FormEvent) => {
+    if (!platform || !channelId || selectedFeeds.length === 0) return;
     e.preventDefault();
     setLoading(true);
     try {
@@ -86,7 +109,9 @@ export function AddChannelForm({
       });
       onOpenChange(false);
       // Reset form
-      setPlatform("slack");
+      setPlatform(
+        (availablePlatforms[0] as "slack" | "discord" | "email") || "email"
+      );
       setChannelId("");
       setSelectedFeeds([]);
       setScheduleId(null);
@@ -109,43 +134,47 @@ export function AddChannelForm({
             <div className="grid gap-2">
               <Label>{t("addChannel.platform")}</Label>
               <RadioGroup
-                defaultValue={platform}
+                value={platform}
                 onValueChange={(value: "slack" | "discord" | "email") => {
                   setPlatform(value);
                   setChannelId("");
                 }}
-                className="grid grid-cols-3 gap-4"
+                className="grid grid-cols-2 gap-4"
               >
-                {/* Platform radio buttons */}
-                <div>
-                  <RadioGroupItem
-                    value="slack"
-                    id="slack"
-                    className="peer sr-only"
-                  />
-                  <Label
-                    htmlFor="slack"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    <SlackIcon />
-                    Slack
-                  </Label>
-                </div>
-                <div>
-                  <RadioGroupItem
-                    value="discord"
-                    id="discord"
-                    className="peer sr-only"
-                  />
-                  <Label
-                    htmlFor="discord"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    <DiscordIcon />
-                    Discord
-                  </Label>
-                </div>
-
+                {availablePlatforms.length > 0 &&
+                  availablePlatforms.includes("slack") && (
+                    <div>
+                      <RadioGroupItem
+                        value="slack"
+                        id="slack"
+                        className="peer sr-only"
+                      />
+                      <Label
+                        htmlFor="slack"
+                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <SlackIcon />
+                        <span className="mt-2">Slack</span>
+                      </Label>
+                    </div>
+                  )}
+                {availablePlatforms.length > 0 &&
+                  availablePlatforms.includes("discord") && (
+                    <div>
+                      <RadioGroupItem
+                        value="discord"
+                        id="discord"
+                        className="peer sr-only"
+                      />
+                      <Label
+                        htmlFor="discord"
+                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <DiscordIcon />
+                        <span className="mt-2">Discord</span>
+                      </Label>
+                    </div>
+                  )}
                 <div>
                   <RadioGroupItem
                     value="email"
@@ -157,10 +186,23 @@ export function AddChannelForm({
                     className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                   >
                     <EmailIcon />
-                    Email
+                    <span className="mt-2">Email</span>
                   </Label>
                 </div>
               </RadioGroup>
+              {availablePlatforms.length === 0 && (
+                <Alert className="mt-4">
+                  <AlertDescription>
+                    {t("addChannel.noIntegrationsMessage")}
+                    <a
+                      href={`/${currentLang}/integrations`}
+                      className="text-primary hover:underline ml-1"
+                    >
+                      {t("addChannel.setupIntegrations")}
+                    </a>
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
 
             {/* Channel Selection */}
