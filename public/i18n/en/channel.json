@@ -5,12 +5,12 @@
     "emailAddress": "Email Address",
     "emailPlaceholder": "Enter email address",
     "feedsPlaceholder": "Select feeds...",
+    "noIntegrationsMessage": "No apps connected.",
     "platform": "Platform",
     "schedule": "Notification Schedule",
     "selectChannel": "Select channel",
     "selectFeeds": "Select RSS Feeds",
     "selectSchedule": "Select schedule",
-    "noIntegrationsMessage": "No apps connected.",
     "setupIntegrations": "Click here to connect apps",
     "title": "Add New Channel"
   },

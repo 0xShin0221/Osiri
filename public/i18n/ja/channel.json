@@ -5,12 +5,12 @@
     "emailAddress": "メールアドレス",
     "emailPlaceholder": "メールアドレスを入力してください",
     "feedsPlaceholder": "フィードを選択...",
+    "noIntegrationsMessage": "現在アプリ連携はしていません。",
     "platform": "プラットフォーム",
     "schedule": "通知スケジュール",
     "selectChannel": "チャンネルを選択",
     "selectFeeds": "RSSフィードを選択",
     "selectSchedule": "スケジュールを選択",
-    "noIntegrationsMessage": "現在アプリ連携はしていません。",
     "setupIntegrations": "アプリ連携はこちらをクリック",
     "title": "新規チャンネル追加"
   },
