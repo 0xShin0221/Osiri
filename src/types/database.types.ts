@@ -541,6 +541,7 @@ export type Database = {
           access_token: string | null
           created_at: string | null
           id: string
+          is_active: boolean
           organization_id: string | null
           platform: Database["public"]["Enums"]["notification_platform"]
           refresh_token: string | null
@@ -552,6 +553,7 @@ export type Database = {
           access_token?: string | null
           created_at?: string | null
           id?: string
+          is_active?: boolean
           organization_id?: string | null
           platform: Database["public"]["Enums"]["notification_platform"]
           refresh_token?: string | null
@@ -563,6 +565,7 @@ export type Database = {
           access_token?: string | null
           created_at?: string | null
           id?: string
+          is_active?: boolean
           organization_id?: string | null
           platform?: Database["public"]["Enums"]["notification_platform"]
           refresh_token?: string | null
