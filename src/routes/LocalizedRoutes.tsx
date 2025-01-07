@@ -12,11 +12,13 @@ import { Dashboard } from "@/pages/Dashboard";
 import { Onboarding } from "@/pages/Onboarding";
 import ChannelSettingsPage from "@/pages/ChannelSettings";
 import FeedsPage from "@/pages/Feeds";
+import AppIntegrationPage from "@/pages/AppIntegration";
 
 const protectedRoutes = [
   { path: "dashboard", element: <Dashboard /> },
   { path: "onboarding", element: <Onboarding /> },
   { path: "setchannel", element: <ChannelSettingsPage /> },
+  { path: "integrations", element: <AppIntegrationPage /> },
   { path: "feeds", element: <FeedsPage /> },
 ];
 
