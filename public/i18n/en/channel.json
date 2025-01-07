@@ -10,6 +10,8 @@
     "selectChannel": "Select channel",
     "selectFeeds": "Select RSS Feeds",
     "selectSchedule": "Select schedule",
+    "noIntegrationsMessage": "No apps connected.",
+    "setupIntegrations": "Click here to connect apps",
     "title": "Add New Channel"
   },
   "card": {

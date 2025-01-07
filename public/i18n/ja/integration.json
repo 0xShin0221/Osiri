@@ -1,0 +1,37 @@
+{
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "saving": "保存中..."
+  },
+  "connect": "連携する",
+  "connectedOn": "{{date}}に連携",
+  "disconnect": "連携解除",
+  "discord": {
+    "description": "Discordサーバーでニュースを受け取る"
+  },
+  "email": {
+    "description": "メールで定期的にニュースを受け取る",
+    "setup": {
+      "description": "メール通知の設定をカスタマイズできます",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "メールアドレスを入力",
+      "frequency": "通知頻度",
+      "schedules": {
+        "daily_evening": "毎日（夕方）",
+        "daily_morning": "毎日（朝）",
+        "weekly_monday": "毎週（月曜）",
+        "weekly_sunday": "毎週（日曜）"
+      },
+      "selectFrequency": "通知頻度を選択",
+      "title": "メール通知設定"
+    }
+  },
+  "slack": {
+    "description": "Slackワークスペースでニュースを受け取る"
+  },
+  "subtitle": "お気に入りのアプリと連携して通知を受け取りましょう",
+  "title": "アプリ連携",
+  "workspaces": "連携済みワークスペース ({{count}})",
+  "workspaces_plural": "連携済みワークスペース ({{count}})"
+}
