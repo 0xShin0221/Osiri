@@ -1,0 +1,2 @@
+INSERT INTO "public"."workspace_connections" ("id", "organization_id", "platform", "workspace_id", "access_token", "refresh_token", "token_expires_at", "created_at", "updated_at")
+VALUES ('0c24bc65-50aa-4391-afe2-b39b5726b6ec', '5224c4d4-7f7e-414f-9f86-b0f1a70335e5', 'slack', 'T079THJ3Y3A', 'xoxb-7333596134112-8237912842309-Sdh447x8HICuoFSjdvFL9tdf', NULL, NULL, '2025-01-06 18:21:47.437515+00', '2025-01-06 18:21:47.437515+00');
