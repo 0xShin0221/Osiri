@@ -1,5 +1,5 @@
 // AddChannelForm.tsx
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,25 +20,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 // import { Badge } from "@/components/ui/badge";
-import { type Tables } from '@/types/database.types';
-import { MultiSelect } from '../ui/multi-select';
-import { DiscordIcon, EmailIcon, SlackIcon } from '../PlatformIcons';
-import { useTranslation } from 'react-i18next';
+import type { Tables } from "@/types/database.types";
+import { MultiSelect } from "../ui/multi-select";
+import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
+import { useTranslation } from "react-i18next";
 
-type NotificationChannel = Tables<'notification_channels'>;
-type RssFeed = Tables<'rss_feeds'>;
-type NotificationSchedule = Tables<'notification_schedules'>;
+type NotificationChannel = Tables<"notification_channels">;
+type RssFeed = Tables<"rss_feeds">;
+type NotificationSchedule = Tables<"notification_schedules">;
 
 const mockSlackChannels = [
-  { id: 'ch1', name: '#general' },
-  { id: 'ch2', name: '#random' },
-  { id: 'ch3', name: '#tech-news' },
+  { id: "ch1", name: "#general" },
+  { id: "ch2", name: "#random" },
+  { id: "ch3", name: "#tech-news" },
 ];
 
 const mockDiscordChannels = [
-  { id: 'dc1', name: '#general' },
-  { id: 'dc2', name: '#announcements' },
-  { id: 'dc3', name: '#feed-updates' },
+  { id: "dc1", name: "#general" },
+  { id: "dc2", name: "#announcements" },
+  { id: "dc3", name: "#feed-updates" },
 ];
 
 interface AddChannelFormProps {
@@ -54,10 +54,12 @@ export function AddChannelForm({
   onOpenChange,
   onSubmit,
   feeds,
-  schedules
+  schedules,
 }: AddChannelFormProps) {
-  const [platform, setPlatform] = useState<'slack' | 'discord' | 'email'>('slack');
-  const [channelId, setChannelId] = useState('');
+  const [platform, setPlatform] = useState<"slack" | "discord" | "email">(
+    "slack"
+  );
+  const [channelId, setChannelId] = useState("");
   const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
   const [scheduleId, setScheduleId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -69,9 +71,14 @@ export function AddChannelForm({
     try {
       await onSubmit({
         platform,
-        channel_identifier: platform === 'email' ? channelId : 
-          platform === 'slack' ? mockSlackChannels.find(ch => ch.id === channelId)?.name || channelId :
-          mockDiscordChannels.find(ch => ch.id === channelId)?.name || channelId,
+        channel_identifier:
+          platform === "email"
+            ? channelId
+            : platform === "slack"
+            ? mockSlackChannels.find((ch) => ch.id === channelId)?.name ||
+              channelId
+            : mockDiscordChannels.find((ch) => ch.id === channelId)?.name ||
+              channelId,
         feed_ids: selectedFeeds,
         schedule_id: scheduleId,
         is_active: true,
@@ -79,8 +86,8 @@ export function AddChannelForm({
       });
       onOpenChange(false);
       // Reset form
-      setPlatform('slack');
-      setChannelId('');
+      setPlatform("slack");
+      setChannelId("");
       setSelectedFeeds([]);
       setScheduleId(null);
     } finally {
@@ -94,20 +101,18 @@ export function AddChannelForm({
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{t("addChannel.title")}</DialogTitle>
-            <DialogDescription>
-              {t("addChannel.description")}
-            </DialogDescription>
+            <DialogDescription>{t("addChannel.description")}</DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-6 py-4">
             {/* Platform Selection */}
             <div className="grid gap-2">
               <Label>{t("addChannel.platform")}</Label>
               <RadioGroup
                 defaultValue={platform}
-                onValueChange={(value: 'slack' | 'discord' | 'email') => {
+                onValueChange={(value: "slack" | "discord" | "email") => {
                   setPlatform(value);
-                  setChannelId('');
+                  setChannelId("");
                 }}
                 className="grid grid-cols-3 gap-4"
               >
@@ -140,7 +145,7 @@ export function AddChannelForm({
                     Discord
                   </Label>
                 </div>
-                
+
                 <div>
                   <RadioGroupItem
                     value="email"
@@ -159,7 +164,7 @@ export function AddChannelForm({
             </div>
 
             {/* Channel Selection */}
-            {platform !== 'email' ? (
+            {platform !== "email" ? (
               <div className="grid gap-2">
                 <Label>{t("addChannel.channel")}</Label>
                 <Select value={channelId} onValueChange={setChannelId}>
@@ -167,25 +172,24 @@ export function AddChannelForm({
                     <SelectValue placeholder={t("addChannel.selectChannel")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {platform === 'slack' 
-                      ? mockSlackChannels.map(channel => (
+                    {platform === "slack"
+                      ? mockSlackChannels.map((channel) => (
                           <SelectItem key={channel.id} value={channel.id}>
                             {channel.name}
                           </SelectItem>
                         ))
-                      : mockDiscordChannels.map(channel => (
+                      : mockDiscordChannels.map((channel) => (
                           <SelectItem key={channel.id} value={channel.id}>
                             {channel.name}
                           </SelectItem>
-                        ))
-                    }
+                        ))}
                   </SelectContent>
                 </Select>
               </div>
             ) : (
               <div className="grid gap-2">
                 <Label>{t("addChannel.emailAddress")}</Label>
-                <Input 
+                <Input
                   type="email"
                   value={channelId}
                   onChange={(e) => setChannelId(e.target.value)}
@@ -198,10 +202,10 @@ export function AddChannelForm({
             <div className="grid gap-2">
               <Label>{t("addChannel.selectFeeds")}</Label>
               <MultiSelect
-                options={feeds.map(feed => ({
+                options={feeds.map((feed) => ({
                   label: feed.name,
                   value: feed.id,
-                  description: feed.categories.join(', '),
+                  description: feed.categories.join(", "),
                 }))}
                 selected={selectedFeeds}
                 onChange={setSelectedFeeds}
@@ -212,16 +216,20 @@ export function AddChannelForm({
             {/* Schedule Selection */}
             <div className="grid gap-2">
               <Label>{t("addChannel.schedule")}</Label>
-              <Select 
-                value={scheduleId || "realtime"} 
-                onValueChange={(value) => setScheduleId(value === "realtime" ? null : value)}
+              <Select
+                value={scheduleId || "realtime"}
+                onValueChange={(value) =>
+                  setScheduleId(value === "realtime" ? null : value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder={t("addChannel.selectSchedule")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="realtime">{t("schedules.realtime")}</SelectItem>
-                  {schedules.map(schedule => (
+                  <SelectItem value="realtime">
+                    {t("schedules.realtime")}
+                  </SelectItem>
+                  {schedules.map((schedule) => (
                     <SelectItem key={schedule.id} value={schedule.id}>
                       {schedule.name}
                     </SelectItem>
@@ -232,10 +240,14 @@ export function AddChannelForm({
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               {t("common.cancel")}
             </Button>
-            <Button 
+            <Button
               type="submit"
               disabled={loading || !channelId || selectedFeeds.length === 0}
             >
