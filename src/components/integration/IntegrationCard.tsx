@@ -56,11 +56,12 @@ export function IntegrationCard({
   const handleEmailSubmit = async (email: string, scheduleType: string) => {
     // Here you would call your API to create a workspace connection for email
     // This is just an example of how you might structure the data
-    const emailConnection = {
-      platform: "email",
-      email,
-      scheduleType,
-    };
+    console.log(email, scheduleType);
+    // const emailConnection = {
+    //   platform: "email",
+    //   email,
+    //   scheduleType,
+    // };
     // Call your actual API endpoint
     // await createEmailConnection(emailConnection);
   };

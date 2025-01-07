@@ -86,11 +86,11 @@ export default function ChannelSettingsPage() {
             <RefreshCw
               className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
             />
-            {t("common.refresh")}
+            {t("buttonRefreshText")}
           </Button>
           <Button onClick={() => setShowAddDialog(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            {t("channel.add")}
+            {t("buttonAddText")}
           </Button>
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function ChannelSettingsPage() {
           ) : (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                {t("channel.noChannels")}
+                {t("noChannels")}
               </CardContent>
             </Card>
           )}
