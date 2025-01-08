@@ -1,18 +1,17 @@
 // src/mocks/notificationData.ts
 
-import { type Tables } from '@/types/database.types';
+import type { Tables } from "@/types/database.types";
 
-type NotificationChannel = Tables<'notification_channels'>;
-type NotificationSchedule = Tables<'notification_schedules'>;
+type NotificationChannel = Tables<"notification_channels">;
+type NotificationSchedule = Tables<"notification_schedules">;
 
 export const mockChannels: NotificationChannel[] = [
   {
-    id: '1',
-    platform: 'slack',
-    channel_identifier: '#tech-news',
-    feed_ids: ['1', '2'],
+    id: "1",
+    platform: "slack",
+    channel_identifier: "#tech-news",
     is_active: true,
-    schedule_id: '1',
+    schedule_id: "1",
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     category_ids: null,
@@ -23,10 +22,9 @@ export const mockChannels: NotificationChannel[] = [
     workspace_connection_id: null,
   },
   {
-    id: '2',
-    platform: 'discord',
-    channel_identifier: '#startup-feeds',
-    feed_ids: ['2', '3'],
+    id: "2",
+    platform: "discord",
+    channel_identifier: "#startup-feeds",
     is_active: true,
     schedule_id: null,
     created_at: new Date().toISOString(),
@@ -40,22 +38,21 @@ export const mockChannels: NotificationChannel[] = [
   },
 ];
 
-
 export const mockSchedules: NotificationSchedule[] = [
   {
-    id: '1',
-    name: 'Daily Morning',
-    schedule_type: 'daily_morning',
-    timezone: 'UTC+9',
+    id: "1",
+    name: "Daily Morning",
+    schedule_type: "daily_morning",
+    timezone: "UTC+9",
     cron_expression: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
   {
-    id: '2',
-    name: 'Daily Evening',
-    schedule_type: 'daily_evening',
-    timezone: 'UTC-5',
+    id: "2",
+    name: "Daily Evening",
+    schedule_type: "daily_evening",
+    timezone: "UTC-5",
     cron_expression: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

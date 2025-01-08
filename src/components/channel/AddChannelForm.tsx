@@ -102,7 +102,6 @@ export function AddChannelForm({
               channelId
             : mockDiscordChannels.find((ch) => ch.id === channelId)?.name ||
               channelId,
-        feed_ids: selectedFeeds,
         schedule_id: scheduleId,
         is_active: true,
         category_ids: [],

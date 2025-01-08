@@ -12,8 +12,10 @@ interface UseFeedsOptions {
 
 export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
   const [allFeeds, setAllFeeds] = useState<RssFeed[]>([]);
-  const [followingFeeds, setFollowingFeeds] = useState<RssFeed[]>([]);
-  const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
+  const [organizationFollowingFeeds, setOrganizationFollowingFeeds] = useState<
+    RssFeed[]
+  >([]);
+  const [followedFeedIds, setFollowedFeedIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [languageFilter, setLanguageFilter] = useState<string>("all");
@@ -25,7 +27,7 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
   const { user } = useAuth();
   const feedService = useMemo(() => new FeedService(), []);
 
-  // Fetch organization's feeds
+  // Fetch organization's followed feeds
   useEffect(() => {
     async function fetchOrgFeeds() {
       if (!user) return;
@@ -34,8 +36,9 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
         const { feedIds, feeds } = await feedService.getOrganizationFeeds(
           user.id,
         );
-        setSelectedFeeds(feedIds);
-        setFollowingFeeds(feeds);
+        setFollowedFeedIds(feedIds);
+        setOrganizationFollowingFeeds(feeds);
+        console.log("Organization feeds:", feeds);
       } catch (error) {
         console.error("Error fetching organization feeds:", error);
       }
@@ -44,7 +47,7 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
     fetchOrgFeeds();
   }, [user, feedService]);
 
-  // Fetch available feeds
+  // Fetch available feeds for discovery
   useEffect(() => {
     async function fetchFeeds() {
       setIsLoading(true);
@@ -86,37 +89,49 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
   }, [searchQuery, languageFilter, categoryFilter]);
 
   const filteredFollowingFeeds = useMemo(
-    () => filterFeeds(followingFeeds),
-    [followingFeeds, filterFeeds],
+    () => filterFeeds(organizationFollowingFeeds),
+    [organizationFollowingFeeds, filterFeeds],
   );
 
   const filteredDiscoverFeeds = useMemo(
     () =>
-      filterFeeds(allFeeds).filter((feed) => !selectedFeeds.includes(feed.id)),
-    [allFeeds, selectedFeeds, filterFeeds],
+      filterFeeds(allFeeds).filter((feed) =>
+        !followedFeedIds.includes(feed.id)
+      ),
+    [allFeeds, followedFeedIds, filterFeeds],
   );
 
   const languages = useMemo(() => {
     const uniqueLanguages = [
-      ...new Set([...allFeeds, ...followingFeeds].map((feed) => feed.language)),
+      ...new Set(
+        [...allFeeds, ...organizationFollowingFeeds].map((feed) =>
+          feed.language
+        ),
+      ),
     ];
     return uniqueLanguages.sort();
-  }, [allFeeds, followingFeeds]);
+  }, [allFeeds, organizationFollowingFeeds]);
 
   const toggleFeed = async (feedId: string) => {
     if (!user) return;
 
     try {
-      await feedService.toggleOrganizationFeed(user.id, feedId, selectedFeeds);
+      await feedService.toggleOrganizationFeed(
+        user.id,
+        feedId,
+        followedFeedIds,
+      );
 
-      if (selectedFeeds.includes(feedId)) {
-        setSelectedFeeds((prev) => prev.filter((id) => id !== feedId));
-        setFollowingFeeds((prev) => prev.filter((feed) => feed.id !== feedId));
+      if (followedFeedIds.includes(feedId)) {
+        setFollowedFeedIds((prev) => prev.filter((id) => id !== feedId));
+        setOrganizationFollowingFeeds((prev) =>
+          prev.filter((feed) => feed.id !== feedId)
+        );
       } else {
-        setSelectedFeeds((prev) => [...prev, feedId]);
+        setFollowedFeedIds((prev) => [...prev, feedId]);
         const feed = allFeeds.find((f) => f.id === feedId);
         if (feed) {
-          setFollowingFeeds((prev) => [...prev, feed]);
+          setOrganizationFollowingFeeds((prev) => [...prev, feed]);
         }
       }
     } catch (error) {
@@ -138,7 +153,7 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
     allFeeds,
     followingFeeds: filteredFollowingFeeds,
     discoverFeeds: filteredDiscoverFeeds,
-    selectedFeeds,
+    followedFeedIds,
     searchQuery,
     languageFilter,
     categoryFilter,

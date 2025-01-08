@@ -1,24 +1,35 @@
-import { Button } from "@/components/ui/button"
-import { Rss, Lock, Star } from 'lucide-react'
-import type { Tables } from '@/types/database.types'
+import { Button } from "@/components/ui/button";
+import { Rss, Lock, Star } from "lucide-react";
+import type { Tables } from "@/types/database.types";
 
 type FeedCardProps = {
-  feed: Tables<'rss_feeds'>
-  isSelected: boolean
-  onToggle: (id: string) => void
-  isLocked?: boolean
-  isDefault?: boolean
-}
+  feed: Tables<"rss_feeds">;
+  isSelected: boolean;
+  onToggle: (id: string) => void;
+  isLocked?: boolean;
+  isDefault?: boolean;
+  variant?: "organization" | "discover";
+};
 
-export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefault }: FeedCardProps) {
+export default function FeedCard({
+  feed,
+  isSelected,
+  onToggle,
+  isLocked,
+  isDefault,
+  variant = "discover",
+}: FeedCardProps) {
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       className={`p-4 rounded-lg border transition-all duration-200 ${
         isSelected
-          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+          ? variant === "organization"
+            ? "border-primary bg-primary/10 ring-2 ring-primary/20"
+            : "border-primary bg-primary/5 ring-2 ring-primary/20"
           : isLocked
-          ? 'border-muted opacity-50'
-          : 'border-muted hover:border-primary hover:shadow-md'
+          ? "border-muted opacity-50"
+          : "border-muted hover:border-primary hover:shadow-md"
       }`}
       onClick={() => onToggle(feed.id)}
     >
@@ -27,16 +38,17 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
         <div className="flex-shrink-0 mb-2 sm:mb-0">
           {feed.site_icon ? (
             <div className="w-12 h-12 rounded-lg bg-background border overflow-hidden">
-              <img 
-                src={feed.site_icon} 
+              <img
+                src={feed.site_icon}
                 alt={feed.name}
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  target.parentElement?.classList.add('bg-primary/10');
-                  const fallbackIcon = document.createElement('div');
-                  fallbackIcon.className = 'w-full h-full flex items-center justify-center';
+                  target.style.display = "none";
+                  target.parentElement?.classList.add("bg-primary/10");
+                  const fallbackIcon = document.createElement("div");
+                  fallbackIcon.className =
+                    "w-full h-full flex items-center justify-center";
                   fallbackIcon.innerHTML = `<svg class="w-6 h-6 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>`;
                   target.parentElement?.appendChild(fallbackIcon);
                 }}
@@ -55,7 +67,7 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
             <div className="flex items-start justify-between gap-2">
               <h3 className="font-medium line-clamp-1">
                 {feed.name}
-                {isDefault && (
+                {(isDefault || variant === "organization") && (
                   <Star className="inline-block ml-2 w-4 h-4 text-yellow-500 fill-current" />
                 )}
               </h3>
@@ -63,14 +75,29 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
                 variant={isSelected ? "default" : "outline"}
                 size="sm"
                 className={`flex-shrink-0 hidden sm:flex min-w-[100px] justify-center ${
-                  isSelected ? 'bg-primary/10 hover:bg-primary/20 text-primary border-primary' : ''
+                  isSelected
+                    ? variant === "organization"
+                      ? "bg-primary/20 hover:bg-primary/30 text-primary border-primary"
+                      : "bg-primary/10 hover:bg-primary/20 text-primary border-primary"
+                    : ""
                 }`}
-                disabled={isLocked || isDefault}
+                disabled={isLocked || isDefault || variant === "organization"}
               >
                 {isLocked ? (
-                  <><Lock className="w-4 h-4 mr-2" />Locked</>
+                  <>
+                    <Lock className="w-4 h-4 mr-2" />
+                    Locked
+                  </>
+                ) : variant === "organization" ? (
+                  <>
+                    <Star className="w-4 h-4 mr-2" />
+                    Organization Feed
+                  </>
                 ) : isSelected ? (
-                  <><Star className="w-4 h-4 mr-2" />Following</>
+                  <>
+                    <Star className="w-4 h-4 mr-2" />
+                    Following
+                  </>
                 ) : (
                   <>Follow</>
                 )}
@@ -85,25 +112,15 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
 
           {/* Tags Section */}
           <div className="flex flex-wrap gap-2">
-            {/* <a 
-              href={feed.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-3 py-1 text-sm bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-full transition-colors"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Globe className="w-4 h-4 mr-1" />
-              Visit feed
-            </a> */}
             <span className="px-3 py-1 text-sm bg-primary/10 text-primary rounded-full">
               {feed.language.toUpperCase()}
             </span>
-            {feed.categories.map(category => (
-              <span 
-                key={category} 
+            {feed.categories.map((category) => (
+              <span
+                key={category}
                 className="px-3 py-1 text-sm bg-muted hover:bg-muted/80 text-muted-foreground rounded-full transition-colors"
               >
-                {category.replace(/_/g, ' ')}
+                {category.replace(/_/g, " ")}
               </span>
             ))}
           </div>
@@ -113,14 +130,29 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
             variant={isSelected ? "default" : "outline"}
             size="sm"
             className={`flex-shrink-0 w-full sm:hidden ${
-              isSelected ? 'bg-primary/10 hover:bg-primary/20 text-primary border-primary' : ''
+              isSelected
+                ? variant === "organization"
+                  ? "bg-primary/20 hover:bg-primary/30 text-primary border-primary"
+                  : "bg-primary/10 hover:bg-primary/20 text-primary border-primary"
+                : ""
             }`}
-            disabled={isLocked || isDefault}
+            disabled={isLocked || isDefault || variant === "organization"}
           >
             {isLocked ? (
-              <><Lock className="w-4 h-4 mr-2" />Locked</>
+              <>
+                <Lock className="w-4 h-4 mr-2" />
+                Locked
+              </>
+            ) : variant === "organization" ? (
+              <>
+                <Star className="w-4 h-4 mr-2" />
+                Organization Feed
+              </>
             ) : isSelected ? (
-              <><Star className="w-4 h-4 mr-2" />Following</>
+              <>
+                <Star className="w-4 h-4 mr-2" />
+                Following
+              </>
             ) : (
               <>Follow</>
             )}
@@ -128,5 +160,5 @@ export default function FeedCard({ feed, isSelected, onToggle, isLocked, isDefau
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from "react";
 import {
   Card,
   CardContent,
@@ -6,19 +6,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from 'lucide-react';
-import { type Tables } from '@/types/database.types';
-import { useTranslation } from 'react-i18next';
-import { GetPlatformIcon } from '../PlatformIcons';
+import { Trash2 } from "lucide-react";
+import type { Tables } from "@/types/database.types";
+import { useTranslation } from "react-i18next";
+import { GetPlatformIcon } from "../PlatformIcons";
 
 // Types
-type NotificationChannel = Tables<'notification_channels'>;
-type RssFeed = Tables<'rss_feeds'>;
-type NotificationSchedule = Tables<'notification_schedules'>;
+type NotificationChannel = Tables<"notification_channels"> & {
+  channel_feeds?: {
+    feed_id: string;
+    feeds: Tables<"rss_feeds">;
+  }[];
+};
+
+type RssFeed = Tables<"rss_feeds">;
+type NotificationSchedule = Tables<"notification_schedules">;
 
 interface ChannelSettingsProps {
   channel: NotificationChannel;
@@ -26,6 +38,11 @@ interface ChannelSettingsProps {
   schedules: NotificationSchedule[];
   onUpdate: (channel: NotificationChannel) => void;
   onDelete: (channelId: string) => void;
+  onToggleFeed: (
+    channelId: string,
+    feedId: string,
+    isAdding: boolean
+  ) => Promise<void>;
 }
 
 export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
@@ -34,21 +51,22 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
   schedules,
   onUpdate,
   onDelete,
+  onToggleFeed,
 }) => {
   const { t } = useTranslation("channel");
+
+  // Get current feed IDs from channel_feeds
+  const currentFeedIds = channel.channel_feeds?.map((cf) => cf.feed_id) || [];
 
   return (
     <Card>
       <CardHeader>
-        
-      <CardTitle className="flex items-center justify-between">
+        <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-          {GetPlatformIcon(channel.platform)} {channel.channel_identifier}
+            {GetPlatformIcon(channel.platform)} {channel.channel_identifier}
           </div>
         </CardTitle>
-        <CardDescription>
-          {t("settings.configureDescription")}
-        </CardDescription>
+        <CardDescription>{t("settings.configureDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Feed Selection */}
@@ -62,12 +80,9 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
               >
                 <div className="flex items-center gap-2">
                   <Switch
-                    checked={channel.feed_ids.includes(feed.id)}
+                    checked={currentFeedIds.includes(feed.id)}
                     onCheckedChange={(checked) => {
-                      const newFeedIds = checked
-                        ? [...channel.feed_ids, feed.id]
-                        : channel.feed_ids.filter((id) => id !== feed.id);
-                      onUpdate({ ...channel, feed_ids: newFeedIds });
+                      onToggleFeed(channel.id, feed.id, checked);
                     }}
                   />
                   <span>{feed.name}</span>
@@ -86,9 +101,11 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
 
         {/* Schedule Setting */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">{t("settings.notificationSchedule")}</h3>
+          <h3 className="text-lg font-medium">
+            {t("settings.notificationSchedule")}
+          </h3>
           <Select
-            value={channel.schedule_id || ''}
+            value={channel.schedule_id || ""}
             onValueChange={(value) => {
               onUpdate({ ...channel, schedule_id: value || null });
             }}
@@ -97,7 +114,9 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
               <SelectValue placeholder={t("settings.selectSchedule")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="realtime">{t("schedules.realtime")}</SelectItem>
+              <SelectItem value="realtime">
+                {t("schedules.realtime")}
+              </SelectItem>
               {schedules.map((schedule) => (
                 <SelectItem key={schedule.id} value={schedule.id}>
                   {schedule.name}
@@ -109,10 +128,7 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
 
         {/* Danger Zone */}
         <div className="pt-6 border-t">
-          <Button
-            variant="destructive"
-            onClick={() => onDelete(channel.id)}
-          >
+          <Button variant="destructive" onClick={() => onDelete(channel.id)}>
             <Trash2 className="h-4 w-4 mr-2" /> {t("settings.deleteChannel")}
           </Button>
         </div>

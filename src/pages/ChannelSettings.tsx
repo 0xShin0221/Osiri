@@ -1,4 +1,3 @@
-// src/pages/ChannelSettingsPage.tsx
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,12 +9,17 @@ import { ChannelSettings } from "@/components/channel/ChannelSettings";
 import type { Tables } from "@/types/database.types";
 import { mockSchedules } from "@/mocks/notificationData";
 import { useTranslation } from "react-i18next";
-import { mockFeeds } from "@/mocks/feedData";
+import { useFeeds } from "@/hooks/useFeeds";
 import { useChannels } from "@/hooks/useChannels";
 import { useWorkspaceConnections } from "@/hooks/useWorkspaceConnections";
 import { useAuth } from "@/hooks/useAuth";
 
-type NotificationChannel = Tables<"notification_channels">;
+type NotificationChannel = Tables<"notification_channels"> & {
+  channel_feeds?: {
+    feed_id: string;
+    feeds: Tables<"rss_feeds">;
+  }[];
+};
 
 export default function ChannelSettingsPage() {
   const [selectedChannel, setSelectedChannel] =
@@ -40,9 +44,14 @@ export default function ChannelSettingsPage() {
     updateChannel,
     deleteChannel,
     addChannel,
+    toggleChannelFeed,
   } = useChannels();
 
-  const loading = channelsLoading || connectionsLoading;
+  // Get organization feeds
+  const { followingFeeds: organizationFeeds, isLoading: feedsLoading } =
+    useFeeds({ itemsPerPage: 100 }); // Large number to get all feeds
+
+  const loading = channelsLoading || connectionsLoading || feedsLoading;
   const error = channelsError || connectionsError;
 
   const handleUpdateChannel = async (updatedChannel: NotificationChannel) => {
@@ -70,6 +79,23 @@ export default function ChannelSettingsPage() {
     } catch (err) {
       console.error("Error adding channel:", err);
       throw err;
+    }
+  };
+
+  const handleToggleFeed = async (
+    channelId: string,
+    feedId: string,
+    isAdding: boolean
+  ) => {
+    try {
+      await toggleChannelFeed(channelId, feedId, isAdding);
+      // Update selected channel to reflect changes
+      const updatedChannel = channels.find((ch) => ch.id === channelId);
+      if (updatedChannel) {
+        setSelectedChannel(updatedChannel);
+      }
+    } catch (err) {
+      console.error("Error toggling feed:", err);
     }
   };
 
@@ -113,7 +139,7 @@ export default function ChannelSettingsPage() {
             </Card>
           ) : channels.length > 0 ? (
             <>
-              {mockFeeds.length === 0 ? (
+              {organizationFeeds.length === 0 ? (
                 <Card>
                   <CardContent className="p-8 text-center space-y-4">
                     <div className="flex justify-center">
@@ -159,10 +185,11 @@ export default function ChannelSettingsPage() {
           {selectedChannel && (
             <ChannelSettings
               channel={selectedChannel}
-              feeds={mockFeeds}
+              feeds={organizationFeeds}
               schedules={mockSchedules}
               onUpdate={handleUpdateChannel}
               onDelete={handleDeleteChannel}
+              onToggleFeed={handleToggleFeed}
             />
           )}
         </div>
@@ -173,7 +200,7 @@ export default function ChannelSettingsPage() {
         open={showAddDialog}
         onOpenChange={setShowAddDialog}
         onSubmit={handleAddChannel}
-        feeds={mockFeeds}
+        feeds={organizationFeeds}
         schedules={mockSchedules}
         workspaceConnections={connections || []}
       />

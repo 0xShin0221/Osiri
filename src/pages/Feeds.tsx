@@ -26,7 +26,7 @@ export default function FeedsPage() {
   const {
     followingFeeds,
     discoverFeeds,
-    selectedFeeds,
+    followedFeedIds,
     searchQuery,
     languageFilter,
     categoryFilter,
@@ -90,7 +90,7 @@ export default function FeedsPage() {
                     <FeedCard
                       key={feed.id}
                       feed={feed}
-                      isSelected={selectedFeeds.includes(feed.id)}
+                      isSelected={followedFeedIds.includes(feed.id)}
                       onToggle={toggleFeed}
                       isDefault={false}
                     />
@@ -162,7 +162,7 @@ export default function FeedsPage() {
                     <FeedCard
                       key={feed.id}
                       feed={feed}
-                      isSelected={selectedFeeds.includes(feed.id)}
+                      isSelected={followedFeedIds.includes(feed.id)}
                       onToggle={toggleFeed}
                       isDefault={false}
                     />
@@ -176,7 +176,7 @@ export default function FeedsPage() {
                 ) : (
                   <FeedList
                     feeds={discoverFeeds}
-                    selectedFeeds={selectedFeeds}
+                    selectedFeeds={followedFeedIds}
                     onToggleFeed={toggleFeed}
                     isLoading={isLoading}
                     onLoadMore={
