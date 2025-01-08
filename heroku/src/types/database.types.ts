@@ -165,13 +165,51 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_channel_feeds: {
+        Row: {
+          channel_id: string | null
+          created_at: string | null
+          feed_id: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          channel_id?: string | null
+          created_at?: string | null
+          feed_id?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          channel_id?: string | null
+          created_at?: string | null
+          feed_id?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_channel_feeds_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "notification_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_channel_feeds_feed_id_fkey"
+            columns: ["feed_id"]
+            isOneToOne: false
+            referencedRelation: "rss_feeds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_channels: {
         Row: {
           category_ids: string[] | null
           channel_identifier: string
           created_at: string | null
           error_count: number | null
-          feed_ids: string[]
           id: string
           is_active: boolean
           last_error: string | null
@@ -187,7 +225,6 @@ export type Database = {
           channel_identifier: string
           created_at?: string | null
           error_count?: number | null
-          feed_ids: string[]
           id?: string
           is_active?: boolean
           last_error?: string | null
@@ -203,7 +240,6 @@ export type Database = {
           channel_identifier?: string
           created_at?: string | null
           error_count?: number | null
-          feed_ids?: string[]
           id?: string
           is_active?: boolean
           last_error?: string | null
@@ -315,6 +351,45 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      organization_feed_follows: {
+        Row: {
+          created_at: string
+          feed_id: string
+          id: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          feed_id: string
+          id?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          feed_id?: string
+          id?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_feed_follows_feed_id_fkey"
+            columns: ["feed_id"]
+            isOneToOne: false
+            referencedRelation: "rss_feeds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_feed_follows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organization_members: {
         Row: {

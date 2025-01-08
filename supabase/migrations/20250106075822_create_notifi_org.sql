@@ -59,14 +59,12 @@ create table notification_channels (
   channel_identifier text not null,
   schedule_id uuid references notification_schedules(id),
   is_active boolean not null default true,
-  feed_ids uuid[] not null,
   category_ids uuid[],
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now(),
   last_notified_at timestamp with time zone,
   error_count integer default 0,
-  last_error text,
-  constraint feed_ids_not_empty check (array_length(feed_ids, 1) > 0)
+  last_error text
 );
 
 -- Notification logs table
@@ -81,6 +79,16 @@ create table notification_logs (
   created_at timestamp with time zone default now()
 );
 
+-- Create notification_channel_feeds table
+CREATE TABLE notification_channel_feeds (
+  id uuid primary key default gen_random_uuid(),
+  channel_id uuid references notification_channels(id) on delete cascade,
+  feed_id uuid references rss_feeds(id) on delete cascade,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now(),
+  unique(channel_id, feed_id)
+);
+
 -- Add indexes for organizations
 create index idx_organization_members_user on organization_members(user_id);
 create index idx_organization_members_org on organization_members(organization_id);
@@ -93,7 +101,6 @@ create index idx_workspace_connections_platform on workspace_connections(platfor
 create index idx_notification_channels_org on notification_channels(organization_id);
 create index idx_notification_channels_active on notification_channels(is_active) where is_active = true;
 create index idx_notification_channels_schedule on notification_channels(schedule_id);
-create index idx_notification_channels_feed_ids on notification_channels using gin (feed_ids);
 create index idx_notification_channels_category_ids on notification_channels using gin (category_ids);
 create index idx_realtime_channels on notification_channels(is_active) 
   where is_active = true;
@@ -109,6 +116,11 @@ create index idx_notification_logs_article on notification_logs(article_id);
 create index idx_notification_logs_created on notification_logs(created_at);
 create index idx_notification_logs_status on notification_logs(status);
 
+-- Add indexes for notification_channel_feeds
+CREATE INDEX idx_notification_channel_feeds_channel ON notification_channel_feeds(channel_id);
+CREATE INDEX idx_notification_channel_feeds_feed ON notification_channel_feeds(feed_id);
+
+
 -- Add RLS policies
 alter table organizations enable row level security;
 alter table organization_members enable row level security;
@@ -116,6 +128,7 @@ alter table workspace_connections enable row level security;
 alter table notification_channels enable row level security;
 alter table notification_logs enable row level security;
 alter table notification_schedules enable row level security;
+alter table notification_channel_feeds enable row level security;
 
 -- Organization policies
 CREATE POLICY "Users can view their organizations"
@@ -169,6 +182,45 @@ CREATE POLICY "Users can view their notification logs"
     )
   ));
 
+-- Notification schedules policies
+CREATE POLICY "Users can view notification schedules"
+  ON notification_schedules FOR SELECT
+  TO authenticated
+  USING (true);
+
+-- Notification channel feeds policies
+CREATE POLICY "Users can view their notification channel feeds"
+  ON notification_channel_feeds FOR SELECT
+  TO authenticated
+  USING (
+    channel_id IN (
+      SELECT nc.id 
+      FROM notification_channels nc
+      WHERE nc.organization_id IN (
+        SELECT organization_id 
+        FROM organization_members 
+        WHERE user_id = auth.uid()
+      )
+    )
+  );
+
+CREATE POLICY "Organization admins can manage notification channel feeds"
+  ON notification_channel_feeds FOR ALL
+  TO authenticated
+  USING (
+    channel_id IN (
+      SELECT nc.id 
+      FROM notification_channels nc
+      WHERE nc.organization_id IN (
+        SELECT organization_id 
+        FROM organization_members 
+        WHERE user_id = auth.uid() 
+        AND role = 'admin'
+      )
+    )
+  );
+
+
 -- Service Role policies
 CREATE POLICY "Service role can create organizations"
   ON organizations FOR INSERT
@@ -185,6 +237,27 @@ CREATE POLICY "Service role can create organization members"
   TO service_role
   WITH CHECK (true);
 
+CREATE POLICY "Service role can create notification channels"
+  ON notification_channels FOR INSERT
+  TO service_role
+  WITH CHECK (true);
+
+CREATE POLICY "Service role can create notification logs"
+  ON notification_logs FOR INSERT
+  TO service_role
+  WITH CHECK (true);
+
+CREATE POLICY "Service role can create notification schedules"
+  ON notification_schedules FOR INSERT
+  TO service_role
+  WITH CHECK (true);
+
+CREATE POLICY "Service role can create notification channel feeds"
+  ON notification_channel_feeds FOR INSERT
+  TO service_role
+  WITH CHECK (true);
+
+
 -- Add comments
 comment on table organizations is 'Organizations using the notification system';
 comment on table organization_members is 'Users belonging to organizations with their roles';
@@ -195,8 +268,15 @@ comment on table notification_logs is 'History of all notification attempts';
 
 comment on column workspace_connections.workspace_id is 'Unique identifier for Slack workspace or Discord guild';
 comment on column notification_channels.channel_identifier is 'Slack channel ID, Discord channel ID, or email address';
-comment on column notification_channels.feed_ids is 'Array of RSS feed IDs to follow';
 comment on column notification_channels.category_ids is 'Optional array of category IDs for filtering';
+
+comment on column notification_logs.recipient is 'The recipient of the notification';
+comment on column notification_logs.status is 'The status of the notification attempt';
+comment on column notification_logs.error is 'The error message if the notification failed';
+comment on column notification_logs.created_at is 'The timestamp of the notification attempt';
+comment on column notification_channel_feeds.channel_id is 'The notification channel to notify';
+comment on column notification_channel_feeds.feed_id is 'The RSS feed to notify about';
+
 
 -- Add moddatetime triggers
 create trigger set_organizations_updated_at
@@ -221,5 +301,15 @@ create trigger set_notification_schedules_updated_at
 
 create trigger set_notification_channels_updated_at
   before update on notification_channels
+  for each row
+  execute function moddatetime(updated_at);
+
+create trigger set_notification_logs_updated_at
+  before update on notification_logs
+  for each row
+  execute function moddatetime(updated_at);
+
+create trigger set_notification_channel_feeds_updated_at
+  before update on notification_channel_feeds
   for each row
   execute function moddatetime(updated_at);
