@@ -38,9 +38,19 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   return (
     <Card
       className={`cursor-pointer transition-all duration-200 ${
-        selected ? "ring-2 ring-primary" : "hover:shadow-md"
+        selected ? "ring-2 ring-primary" : "active:shadow-md"
       }`}
       onClick={() => onSelect(channel)}
+      onTouchStart={(e) => {
+        if (!selected) {
+          e.currentTarget.classList.add('active');
+        }
+      }}
+      onTouchEnd={(e) => {
+        if (!selected) {
+          e.currentTarget.classList.remove('active');
+        }
+      }}
     >
       <CardContent className="p-4">
         <div className="flex items-center justify-between">

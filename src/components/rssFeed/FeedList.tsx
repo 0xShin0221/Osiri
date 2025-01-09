@@ -53,8 +53,8 @@ export function FeedList({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+    <div className="space-y-4 overflow-y-auto touch-pan-y">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2" style={{ minHeight: 'calc(100vh - 200px)' }}>
         {feeds.map(feed => (
           <FeedCard
             key={feed.id}

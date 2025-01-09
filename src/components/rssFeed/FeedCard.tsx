@@ -40,13 +40,23 @@ export default function FeedCard({
             : "border-primary bg-primary/5 ring-2 ring-primary/20"
           : isLocked
           ? "border-muted opacity-50"
-          : "border-muted hover:border-primary hover:shadow-md"
+          : "border-muted active:border-primary active:shadow-md"
       } ${
         !isLocked && !isDefault && variant !== "organization"
           ? "cursor-pointer"
           : ""
       }`}
       onClick={handleCardClick}
+      onTouchStart={(e) => {
+        if (!isLocked && !isDefault && variant !== "organization") {
+          e.currentTarget.classList.add('active');
+        }
+      }}
+      onTouchEnd={(e) => {
+        if (!isLocked && !isDefault && variant !== "organization") {
+          e.currentTarget.classList.remove('active');
+        }
+      }}
       onKeyUp={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           handleCardClick(e as unknown as React.MouseEvent);

@@ -169,7 +169,7 @@ export function AddChannelForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
         <DialogOverlay>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-[500px] overflow-y-auto touch-pan-y" style={{ maxHeight: '90vh' }}>
             <form onSubmit={handleSubmit}>
               <DialogHeader>
                 <DialogTitle>{t("addChannel.title")}</DialogTitle>
