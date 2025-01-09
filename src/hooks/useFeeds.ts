@@ -38,7 +38,7 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
         );
         setFollowedFeedIds(feedIds);
         setOrganizationFollowingFeeds(feeds);
-        console.log("Organization feeds:", feeds);
+        
       } catch (error) {
         console.error("Error fetching organization feeds:", error);
       }
