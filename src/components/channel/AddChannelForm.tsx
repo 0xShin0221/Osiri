@@ -83,6 +83,7 @@ export function AddChannelForm({
   const [platform, setPlatform] = useState<"slack" | "discord" | "email" | "">(
     ""
   );
+  const [isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("");
   const [channelId, setChannelId] = useState("");
   const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
@@ -106,22 +107,28 @@ export function AddChannelForm({
 
   // Load Slack channels when workspace is selected
   useEffect(() => {
-    if (!organizationId || !selectedWorkspaceId) return;
+    if (!organizationId || !selectedWorkspaceId || platform !== "slack") return;
 
     const loadSlackChannels = async () => {
-      if (platform !== "slack") return;
+      setIsLoadingChannels(true);
+      setChannelLoadError(null);
 
       try {
-        setChannelLoadError(null);
         const slackService = new SlackService();
         const channels = await slackService.getChannels(selectedWorkspaceId);
         setSlackChannels(channels);
       } catch (error) {
         console.error("Error loading Slack channels:", error);
         setChannelLoadError(t("addChannel.errorLoadingChannels"));
+        setSlackChannels([]); // Reset channels on error
+      } finally {
+        setIsLoadingChannels(false);
       }
     };
 
+    // Clear existing channels before loading new ones
+    setSlackChannels([]);
+    setChannelId("");
     loadSlackChannels();
   }, [platform, organizationId, selectedWorkspaceId, t]);
 
@@ -280,6 +287,7 @@ export function AddChannelForm({
                     value={channelId}
                     onChange={setChannelId}
                     error={channelLoadError}
+                    isLoading={isLoadingChannels}
                   />
                 ) : platform === "discord" ? (
                   <ChannelSelector
