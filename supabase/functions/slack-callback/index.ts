@@ -5,7 +5,7 @@ import {
 } from "../_shared/db/organization.ts";
 import { updateOnboardingCompleted } from "../_shared/db/profile.ts";
 import { createWorkspaceConnection } from "../_shared/db/workspace.ts";
-import { SlackOAuthResponse } from "../_shared/types.ts";
+import type { SlackOAuthResponse } from "../_shared/types.ts";
 
 const getEnvVars = () => {
   const vars = {
