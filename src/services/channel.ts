@@ -1,10 +1,35 @@
 import { supabase } from "@/lib/supabase";
 import type { Tables } from "@/types/database.types";
 
-type NotificationChannel = Tables<"notification_channels">;
+type NotificationChannel = Tables<"notification_channels"> & {
+  notification_channel_feeds?: {
+    feed_id: string;
+  }[];
+};
+
+export type NotificationChannelWithFeeds = NotificationChannel & {
+  notification_channel_feeds: {
+    feed_id: string;
+  }[];
+};
 
 export class ChannelService {
-  async getChannels() {
+  private async getChannelById(channelId: string) {
+    const { data, error } = await supabase
+      .from("notification_channels")
+      .select(`
+        *,
+        notification_channel_feeds (
+          feed_id
+        )
+      `)
+      .eq("id", channelId);
+
+    if (error) throw error;
+    return data?.[0] || null;
+  }
+
+  async getChannels(): Promise<NotificationChannelWithFeeds[]> {
     const { data, error } = await supabase
       .from("notification_channels")
       .select(`
@@ -16,84 +41,83 @@ export class ChannelService {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data;
-  }
-
-  async createChannel(channel: Partial<NotificationChannel>) {
-    try {
-      const { data, error } = await supabase
-        .from("notification_channels")
-        .insert(channel)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error("Error creating channel:", error);
-      throw error;
-    }
+    return data || [];
   }
 
   async updateChannel(channel: NotificationChannel) {
-    try {
-      const { data, error } = await supabase
-        .from("notification_channels")
-        .update(channel)
-        .eq("id", channel.id)
-        .select()
-        .single();
+    const { notification_channel_feeds, ...updateData } = channel;
 
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error("Error updating channel:", error);
-      throw error;
+    const { error } = await supabase
+      .from("notification_channels")
+      .update(updateData)
+      .eq("id", channel.id);
+
+    if (error) throw error;
+
+    const updatedChannel = await this.getChannelById(channel.id);
+    if (!updatedChannel) {
+      throw new Error("Channel not found after update");
     }
+    console.log("updatedChannel", updatedChannel);
+    return updatedChannel;
+  }
+
+  async createChannel(channel: Partial<NotificationChannel>) {
+    const { notification_channel_feeds, ...createData } = channel;
+
+    const { data, error } = await supabase
+      .from("notification_channels")
+      .insert(createData)
+      .select(`
+        *,
+        notification_channel_feeds (
+          feed_id
+        )
+      `);
+
+    if (error) throw error;
+    return data?.[0] || null;
   }
 
   async deleteChannel(channelId: string) {
-    try {
-      const { error } = await supabase
-        .from("notification_channels")
-        .delete()
-        .eq("id", channelId);
+    const { error } = await supabase
+      .from("notification_channels")
+      .delete()
+      .eq("id", channelId);
 
-      if (error) throw error;
-    } catch (error) {
-      console.error("Error deleting channel:", error);
-      throw error;
-    }
+    if (error) throw error;
   }
 
   async addFeedToChannel(channelId: string, feedId: string) {
-    try {
-      const { error } = await supabase
-        .from("notification_channel_feeds")
-        .insert({
-          channel_id: channelId,
-          feed_id: feedId,
-        });
+    const { error } = await supabase
+      .from("notification_channel_feeds")
+      .insert({
+        channel_id: channelId,
+        feed_id: feedId,
+      });
 
-      if (error) throw error;
-    } catch (error) {
-      console.error("Error adding feed to channel:", error);
-      throw error;
+    if (error) throw error;
+
+    const updatedChannel = await this.getChannelById(channelId);
+    if (!updatedChannel) {
+      throw new Error("Channel not found after adding feed");
     }
+    return updatedChannel;
   }
 
   async removeFeedFromChannel(channelId: string, feedId: string) {
-    try {
-      const { error } = await supabase
-        .from("notification_channel_feeds")
-        .delete()
-        .eq("channel_id", channelId)
-        .eq("feed_id", feedId);
+    const { error } = await supabase
+      .from("notification_channel_feeds")
+      .delete()
+      .eq("channel_id", channelId)
+      .eq("feed_id", feedId);
 
-      if (error) throw error;
-    } catch (error) {
-      console.error("Error removing feed from channel:", error);
-      throw error;
+    if (error) throw error;
+
+    const updatedChannel = await this.getChannelById(channelId);
+    if (!updatedChannel) {
+      throw new Error("Channel not found after removing feed");
     }
+    return updatedChannel;
   }
 }
