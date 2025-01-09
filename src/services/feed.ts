@@ -116,33 +116,6 @@ export class FeedService {
           console.error("Error following feed:", followError);
           throw followError;
         }
-
-        // Get active channels to add the feed to them
-        const { data: channels, error: channelsError } = await supabase
-          .from("notification_channels")
-          .select("id")
-          .eq("organization_id", orgMember.organization_id)
-          .eq("is_active", true);
-
-        if (channelsError) {
-          console.error("Error getting channels:", channelsError);
-          throw channelsError;
-        }
-
-        // Add feed to active channels
-        for (const channel of channels) {
-          const { error: addError } = await supabase
-            .from("notification_channel_feeds")
-            .insert({
-              channel_id: channel.id,
-              feed_id: feedId,
-            });
-
-          if (addError) {
-            console.error("Error adding feed to channel:", addError);
-            // Continue with other channels even if one fails
-          }
-        }
       } else {
         // Remove feed follow relationship
         const { error: unfollowError } = await supabase
