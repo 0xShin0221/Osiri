@@ -26,9 +26,8 @@ export default function ChannelSettingsPage() {
     useState<NotificationChannel | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const { session } = useAuth();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("channel");
   const currentLang = i18n.resolvedLanguage;
-  const { t } = useTranslation("channel");
 
   const {
     connections,
@@ -112,11 +111,11 @@ export default function ChannelSettingsPage() {
             <RefreshCw
               className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
             />
-            {t("buttonRefreshText")}
+            {t("feeds.refreshText")}
           </Button>
           <Button onClick={() => setShowAddDialog(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            {t("buttonAddText")}
+            {t("feeds.addText")}
           </Button>
         </div>
       </div>

@@ -29,12 +29,15 @@
     "refresh": "更新"
   },
   "feeds": {
+    "addText": "新規追加",
     "noFeeds": {
       "action": "フィードをフォローする",
       "description": "通知を受け取るにはフィードをフォローしてください",
       "title": "フォローしているフィードがありません"
-    }
+    },
+    "refreshText": "更新"
   },
+  "noChannels": "チャンネルが設定されていません",
   "page": {
     "description": "通知チャンネルとフィード設定を管理",
     "selectChannel": "設定するチャンネルを選択してください",

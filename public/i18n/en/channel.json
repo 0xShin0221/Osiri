@@ -29,12 +29,15 @@
     "refresh": "Refresh"
   },
   "feeds": {
+    "addText": "Add New",
     "noFeeds": {
       "action": "Follow feeds",
       "description": "You need to follow feeds to receive notifications",
       "title": "No feeds selected"
-    }
+    },
+    "refreshText": "Refresh"
   },
+  "noChannels": "No channels yet",
   "page": {
     "description": "Manage your notification channels and feed preferences",
     "selectChannel": "Select a channel to configure",
