@@ -19,10 +19,21 @@ export default function FeedCard({
   isDefault,
   variant = "discover",
 }: FeedCardProps) {
+  const handleCardClick = (e: React.MouseEvent) => {
+    // ボタン以外の領域がクリックされた場合のみ処理
+    if (
+      !(e.target instanceof HTMLButtonElement) &&
+      !isLocked &&
+      !isDefault &&
+      variant !== "organization"
+    ) {
+      onToggle(feed.id);
+    }
+  };
+
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
-      className={`p-4 rounded-lg border transition-all duration-200 ${
+      className={`p-4 rounded-lg border transition-all duration-200 w-full ${
         isSelected
           ? variant === "organization"
             ? "border-primary bg-primary/10 ring-2 ring-primary/20"
@@ -30,8 +41,22 @@ export default function FeedCard({
           : isLocked
           ? "border-muted opacity-50"
           : "border-muted hover:border-primary hover:shadow-md"
+      } ${
+        !isLocked && !isDefault && variant !== "organization"
+          ? "cursor-pointer"
+          : ""
       }`}
-      onClick={() => onToggle(feed.id)}
+      onClick={handleCardClick}
+      onKeyUp={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          handleCardClick(e as unknown as React.MouseEvent);
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+        }
+      }}
     >
       <div className="flex flex-col sm:flex-row items-start gap-4">
         {/* Icon Section */}
@@ -82,6 +107,10 @@ export default function FeedCard({
                     : ""
                 }`}
                 disabled={isLocked || isDefault || variant === "organization"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggle(feed.id);
+                }}
               >
                 {isLocked ? (
                   <>
@@ -137,6 +166,10 @@ export default function FeedCard({
                 : ""
             }`}
             disabled={isLocked || isDefault || variant === "organization"}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle(feed.id);
+            }}
           >
             {isLocked ? (
               <>
