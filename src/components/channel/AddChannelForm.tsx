@@ -28,6 +28,7 @@ import { useAuth } from "@/hooks/useAuth";
 import type { Tables } from "@/types/database.types";
 import { ChannelSelector } from "./ChannelSelector";
 import { Alert, AlertDescription } from "../ui/alert";
+import { MultiFeedSelect } from "./ChannelMultiCombobox";
 
 type NotificationChannel = Tables<"notification_channels">;
 type RssFeed = Tables<"rss_feeds">;
@@ -303,7 +304,7 @@ export function AddChannelForm({
                 {/* Feed Selection */}
                 <div className="grid gap-2">
                   <Label>{t("addChannel.selectFeeds")}</Label>
-                  <MultiSelect
+                  <MultiFeedSelect
                     options={feeds.map((feed) => ({
                       label: feed.name,
                       value: feed.id,

@@ -7,6 +7,7 @@
     "errorLoadingChannels": "Error loading channels",
     "feedsPlaceholder": "Select feeds...",
     "noChannelsFound": "No channels found",
+    "noFeedsFound": "No followed feeds found",
     "noIntegrationsMessage": "No apps connected.",
     "platform": "Platform",
     "schedule": "Notification Schedule",

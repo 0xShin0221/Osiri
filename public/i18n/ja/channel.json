@@ -7,6 +7,7 @@
     "errorLoadingChannels": "チャンネルの読み込みエラー",
     "feedsPlaceholder": "フィードを選択...",
     "noChannelsFound": "チャンネルが見つかりません",
+    "noFeedsFound": "フォローしているフィードが見つかりません",
     "noIntegrationsMessage": "現在アプリ連携はしていません。",
     "platform": "プラットフォーム",
     "schedule": "通知スケジュール",
