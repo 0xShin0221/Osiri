@@ -2,19 +2,17 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export const ChannelSelector = ({
-  // platform, channels, value, onChange, error
   channels,
   value,
   onChange,
@@ -41,14 +39,19 @@ export const ChannelSelector = ({
   }, [channels, channelSearch]);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <Label>{t("addChannel.channel")}</Label>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder={t("addChannel.selectChannel")} />
-        </SelectTrigger>
-        <SelectContent position="popper">
-          <div className="px-2 py-2 border-b border-input">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="w-full">
+            {value
+              ? channels.find((channel) => channel.id === value)?.name ||
+                t("addChannel.selectChannel")
+              : t("addChannel.selectChannel")}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-auto">
+          <div className="sticky top-0 bg-background z-10 px-3 py-2 border-b">
             <Input
               placeholder={t("addChannel.searchPlaceholder")}
               onChange={(e) => {
@@ -56,39 +59,33 @@ export const ChannelSelector = ({
                 onChange("");
               }}
               value={channelSearch}
-              className="h-8 focus-visible:ring-0"
+              className="h-9 w-full focus-visible:ring-0"
             />
           </div>
           <ScrollArea className="h-[200px]">
-            <SelectGroup>
-              {filteredChannels.length > 0 ? (
-                filteredChannels.map((channel) => (
-                  <SelectItem
-                    key={channel.id}
-                    value={channel.id}
-                    className="py-2 px-8 cursor-pointer"
-                  >
-                    <div className="flex flex-col gap-1">
-                      <span className="text-sm font-medium">
-                        {channel.name}
-                      </span>
-                      {channel.topic?.value && (
-                        <span className="text-xs text-muted-foreground line-clamp-2">
-                          {channel.topic.value}
-                        </span>
-                      )}
-                    </div>
-                  </SelectItem>
-                ))
-              ) : (
-                <div className="py-6 text-center text-sm text-muted-foreground">
-                  {t("addChannel.noChannelsFound")}
-                </div>
-              )}
-            </SelectGroup>
+            {filteredChannels.length > 0 ? (
+              filteredChannels.map((channel) => (
+                <DropdownMenuItem
+                  key={channel.id}
+                  onSelect={() => onChange(channel.id)}
+                  className="flex flex-col gap-1 py-2.5 px-4 cursor-pointer hover:bg-accent/50"
+                >
+                  <span className="text-sm font-medium">{channel.name}</span>
+                  {channel.topic?.value && (
+                    <span className="text-xs text-muted-foreground line-clamp-2">
+                      {channel.topic.value}
+                    </span>
+                  )}
+                </DropdownMenuItem>
+              ))
+            ) : (
+              <div className="py-6 text-center text-sm text-muted-foreground">
+                {t("addChannel.noChannelsFound")}
+              </div>
+            )}
           </ScrollArea>
-        </SelectContent>
-      </Select>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {error && (
         <Alert variant="destructive" className="mt-2">
           <AlertDescription>{error}</AlertDescription>
