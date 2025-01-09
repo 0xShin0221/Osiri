@@ -102,7 +102,7 @@ BEGIN
       digdatech_org_id,
       workspace_conn_id1,
       'slack',
-      'C04MXMRP9H6', -- Example Slack channel ID
+      '#dev-news-ycom', -- Startup news channel
       schedule_id1,
       true,
       ARRAY['c0a80121-75c8-4c18-8e57-3af4bc3c61d7']::uuid[], -- AI/ML category
@@ -135,7 +135,7 @@ BEGIN
       digdatech_org_id,
       workspace_conn_id1,
       'slack',
-      'C04MXMRP9H7',
+      '#general-tech', -- General tech news channel
       schedule_id2,
       true,
       NULL,
@@ -168,7 +168,7 @@ BEGIN
       ddt_org_id,
       workspace_conn_id2,
       'slack',
-      'C04MXMRP9H8',
+      '#ai-ml-updates', -- AI/ML focused updates channel
       schedule_id3,
       true,
       ARRAY['c0a80121-75c8-4c18-8e57-3af4bc3c61d6', 'c0a80121-75c8-4c18-8e57-3af4bc3c61d7']::uuid[],
