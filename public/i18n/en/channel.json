@@ -4,15 +4,20 @@
     "description": "Configure your new notification channel. Choose platform and settings.",
     "emailAddress": "Email Address",
     "emailPlaceholder": "Enter email address",
+    "errorLoadingChannels": "Error loading channels",
     "feedsPlaceholder": "Select feeds...",
+    "noChannelsFound": "No channels found",
     "noIntegrationsMessage": "No apps connected.",
     "platform": "Platform",
     "schedule": "Notification Schedule",
+    "searchPlaceholder": "Input search text",
     "selectChannel": "Select channel",
     "selectFeeds": "Select RSS Feeds",
     "selectSchedule": "Select schedule",
+    "selectWorkspace": "Select workspace",
     "setupIntegrations": "Click here to connect apps",
-    "title": "Add New Channel"
+    "title": "Add New Channel",
+    "workspace": "workspace"
   },
   "card": {
     "feedCount": "{{count}} feed",

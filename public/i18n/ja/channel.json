@@ -4,15 +4,20 @@
     "description": "新しい通知チャンネルを設定します。プラットフォームと設定を選択してください。",
     "emailAddress": "メールアドレス",
     "emailPlaceholder": "メールアドレスを入力してください",
+    "errorLoadingChannels": "チャンネルの読み込みエラー",
     "feedsPlaceholder": "フィードを選択...",
+    "noChannelsFound": "チャンネルが見つかりません",
     "noIntegrationsMessage": "現在アプリ連携はしていません。",
     "platform": "プラットフォーム",
     "schedule": "通知スケジュール",
+    "searchPlaceholder": "検索テキストを入力",
     "selectChannel": "チャンネルを選択",
     "selectFeeds": "RSSフィードを選択",
     "selectSchedule": "スケジュールを選択",
+    "selectWorkspace": "ワークスペースを選択",
     "setupIntegrations": "アプリ連携はこちらをクリック",
-    "title": "新規チャンネル追加"
+    "title": "新規チャンネル追加",
+    "workspace": "ワークスペース"
   },
   "card": {
     "feedCount": "{{count}}個のフィード",
