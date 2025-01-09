@@ -50,7 +50,7 @@ export const ChannelSelector = ({
               : t("addChannel.selectChannel")}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-auto">
+        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] max-w-[var(--radix-dropdown-menu-content-available-width)] min-w-[var(--radix-dropdown-menu-trigger-width)]">
           <div className="sticky top-0 bg-background z-10 px-3 py-2 border-b">
             <Input
               placeholder={t("addChannel.searchPlaceholder")}
