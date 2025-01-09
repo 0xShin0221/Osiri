@@ -623,6 +623,7 @@ export type Database = {
           token_expires_at: string | null
           updated_at: string | null
           workspace_id: string | null
+          workspace_name: string | null
         }
         Insert: {
           access_token?: string | null
@@ -635,6 +636,7 @@ export type Database = {
           token_expires_at?: string | null
           updated_at?: string | null
           workspace_id?: string | null
+          workspace_name?: string | null
         }
         Update: {
           access_token?: string | null
@@ -647,6 +649,7 @@ export type Database = {
           token_expires_at?: string | null
           updated_at?: string | null
           workspace_id?: string | null
+          workspace_name?: string | null
         }
         Relationships: [
           {
