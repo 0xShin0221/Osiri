@@ -22,6 +22,7 @@ create table workspace_connections (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid references organizations(id) on delete cascade,
   platform notification_platform not null,
+  workspace_name text,
   workspace_id text,
   access_token text,
   refresh_token text,
@@ -30,8 +31,8 @@ create table workspace_connections (
   updated_at timestamp with time zone default now(),
   is_active boolean not null default true,
   constraint valid_platform_data check (
-    (platform in ('slack', 'discord') and workspace_id is not null and access_token is not null) or
-    (platform = 'email' and workspace_id is null and access_token is null)
+    (platform in ('slack', 'discord') and workspace_id is not null and access_token is not null and workspace_name is not null) or
+    (platform = 'email' and workspace_id is null and access_token is null and workspace_name is null)
   )
 );
 
@@ -279,8 +280,8 @@ comment on table workspace_connections is 'OAuth tokens and connection info for 
 comment on table notification_schedules is 'Configurable notification schedule patterns';
 comment on table notification_channels is 'Channel configurations for notifications';
 comment on table notification_logs is 'History of all notification attempts';
-
 comment on column workspace_connections.workspace_id is 'Unique identifier for Slack workspace or Discord guild';
+comment on column workspace_connections.workspace_name is 'Display name of the Slack workspace or Discord server';
 comment on column notification_channels.channel_identifier is 'Slack channel ID, Discord channel ID, or email address';
 comment on column notification_channels.category_ids is 'Optional array of category IDs for filtering';
 
