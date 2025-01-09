@@ -3,17 +3,9 @@ import { ChannelService } from "@/services/channel";
 import type { Tables } from "@/types/database.types";
 
 type NotificationChannel = Tables<"notification_channels">;
-type RssFeed = Tables<"rss_feeds">;
-
-interface ChannelWithFeeds extends NotificationChannel {
-  channel_feeds: {
-    feed_id: string;
-    feeds: RssFeed;
-  }[];
-}
 
 export function useChannels() {
-  const [channels, setChannels] = useState<ChannelWithFeeds[]>([]);
+  const [channels, setChannels] = useState<NotificationChannel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const channelService = new ChannelService();
@@ -60,7 +52,9 @@ export function useChannels() {
   const addChannel = async (channel: Partial<NotificationChannel>) => {
     try {
       const newChannel = await channelService.createChannel(channel);
-      setChannels((prev) => [...prev, { ...newChannel, channel_feeds: [] }]);
+      setChannels(
+        (prev) => [...prev, { ...newChannel, notification_channel_feeds: [] }],
+      );
       return newChannel;
     } catch (err) {
       console.error("Error adding channel:", err);

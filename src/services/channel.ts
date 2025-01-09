@@ -7,7 +7,12 @@ export class ChannelService {
   async getChannels() {
     const { data, error } = await supabase
       .from("notification_channels")
-      .select("*")
+      .select(`
+        *,
+        notification_channel_feeds (
+          feed_id
+        )
+      `)
       .order("created_at", { ascending: false });
 
     if (error) throw error;

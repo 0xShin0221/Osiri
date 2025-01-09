@@ -15,9 +15,8 @@ import { useWorkspaceConnections } from "@/hooks/useWorkspaceConnections";
 import { useAuth } from "@/hooks/useAuth";
 
 type NotificationChannel = Tables<"notification_channels"> & {
-  channel_feeds?: {
+  notification_channel_feeds: {
     feed_id: string;
-    feeds: Tables<"rss_feeds">;
   }[];
 };
 
@@ -56,7 +55,7 @@ export default function ChannelSettingsPage() {
   const handleUpdateChannel = async (updatedChannel: NotificationChannel) => {
     try {
       const result = await updateChannel(updatedChannel);
-      setSelectedChannel(result);
+      setSelectedChannel(result as NotificationChannel);
     } catch (err) {
       console.error("Error updating channel:", err);
     }
@@ -88,11 +87,22 @@ export default function ChannelSettingsPage() {
   ) => {
     try {
       await toggleChannelFeed(channelId, feedId, isAdding);
-      // Update selected channel to reflect changes
-      const updatedChannel = channels.find((ch) => ch.id === channelId);
-      if (updatedChannel) {
-        setSelectedChannel(updatedChannel);
-      }
+
+      // Update function for notification_channel_feeds
+      const updateFeeds = (channel: NotificationChannel) => {
+        const updatedFeeds = isAdding
+          ? [...(channel.notification_channel_feeds || []), { feed_id: feedId }]
+          : channel.notification_channel_feeds.filter(
+              (f) => f.feed_id !== feedId
+            );
+
+        return {
+          ...channel,
+          notification_channel_feeds: updatedFeeds,
+        };
+      };
+      // Update the selected channel
+      setSelectedChannel((prev) => (prev ? updateFeeds(prev) : null));
     } catch (err) {
       console.error("Error toggling feed:", err);
     }
@@ -162,7 +172,7 @@ export default function ChannelSettingsPage() {
                 channels.map((channel) => (
                   <ChannelCard
                     key={channel.id}
-                    channel={channel}
+                    channel={channel as NotificationChannel}
                     selected={selectedChannel?.id === channel.id}
                     onSelect={setSelectedChannel}
                     onUpdate={handleUpdateChannel}

@@ -23,9 +23,8 @@ import { GetPlatformIcon } from "../PlatformIcons";
 
 // Types
 type NotificationChannel = Tables<"notification_channels"> & {
-  channel_feeds?: {
+  notification_channel_feeds: {
     feed_id: string;
-    feeds: Tables<"rss_feeds">;
   }[];
 };
 
@@ -55,8 +54,9 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
 }) => {
   const { t } = useTranslation("channel");
 
-  // Get current feed IDs from channel_feeds
-  const currentFeedIds = channel.channel_feeds?.map((cf) => cf.feed_id) || [];
+  // Get current feed IDs from notification_channel_feeds
+  const currentFeedIds =
+    channel.notification_channel_feeds?.map((cf) => cf.feed_id) || [];
 
   return (
     <Card>
