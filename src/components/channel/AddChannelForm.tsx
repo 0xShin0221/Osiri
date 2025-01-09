@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MultiSelect } from "@/components/ui/multi-select";
 import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
 import { useTranslation } from "react-i18next";
 import { SlackService } from "@/services/slack";
