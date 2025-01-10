@@ -14,14 +14,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import {
-  Check,
-  ChevronDown,
-  ExternalLink,
-  Settings,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { Check, ChevronDown, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { Tables } from "@/types/database.types";
 import { EmailSetupDialog } from "./EmailSetupDialog";
@@ -116,7 +109,7 @@ export function IntegrationCard({
                       <div className="flex items-center justify-between">
                         <span className="font-medium">
                           {platform === "email"
-                            ? connection.email || "email"
+                            ? connection.workspace_id
                             : connection.workspace_name ||
                               connection.workspace_id}
                         </span>
