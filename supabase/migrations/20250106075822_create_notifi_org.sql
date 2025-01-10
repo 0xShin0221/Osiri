@@ -174,29 +174,45 @@ CREATE POLICY "Users can update their workspace connections"
     WHERE user_id = auth.uid()
   ));
 
--- Notification channels policies
-CREATE POLICY "Users can view their notification channels"
-  ON notification_channels FOR SELECT
+CREATE POLICY "Users can select their organization channels"
+  ON notification_channels
+  FOR SELECT
   TO authenticated
-  USING (organization_id IN (
-    SELECT organization_id
-    FROM organization_members
-    WHERE user_id = auth.uid()
-  ));
+  USING (
+    organization_id IN (
+      SELECT organization_id  
+      FROM organization_members 
+      WHERE user_id = auth.uid()
+    )
+  );
 
-CREATE POLICY "Users can update their notification channels"
-  ON notification_channels FOR UPDATE
+CREATE POLICY "Users can insert organization channels"
+  ON notification_channels
+  FOR INSERT
   TO authenticated
-  USING (organization_id IN (
-    SELECT organization_id
-    FROM organization_members
-    WHERE user_id = auth.uid()
-  ))
-  WITH CHECK (organization_id IN (
-    SELECT organization_id
-    FROM organization_members
-    WHERE user_id = auth.uid()
-  ));
+  WITH CHECK (
+    organization_id IN (
+      SELECT organization_id 
+      FROM organization_members 
+      WHERE user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can insert notification channel feeds"
+  ON notification_channel_feeds
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    channel_id IN (
+      SELECT nc.id 
+      FROM notification_channels nc
+      WHERE nc.organization_id IN (
+        SELECT organization_id 
+        FROM organization_members 
+        WHERE user_id = auth.uid()
+      )
+    )
+  );
 
 -- Notification logs policies
 CREATE POLICY "Users can view their notification logs"
@@ -212,6 +228,24 @@ CREATE POLICY "Users can view their notification logs"
     )
   ));
 
+CREATE POLICY "Users can update their organization channels"
+  ON notification_channels
+  FOR UPDATE
+  TO authenticated
+  USING (
+    organization_id IN (
+      SELECT organization_id 
+      FROM organization_members 
+      WHERE user_id = auth.uid()
+    )
+  )
+  WITH CHECK (
+    organization_id IN (
+      SELECT organization_id 
+      FROM organization_members 
+      WHERE user_id = auth.uid()
+    )
+  );
 -- Notification schedules policies
 CREATE POLICY "Users can view notification schedules"
   ON notification_schedules FOR SELECT
