@@ -19,6 +19,7 @@ import {
   ChevronDown,
   ExternalLink,
   Settings,
+  Plus,
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
@@ -54,16 +55,7 @@ export function IntegrationCard({
   const [showEmailSetup, setShowEmailSetup] = useState(false);
 
   const handleEmailSubmit = async (email: string, scheduleType: string) => {
-    // Here you would call your API to create a workspace connection for email
-    // This is just an example of how you might structure the data
     console.log(email, scheduleType);
-    // const emailConnection = {
-    //   platform: "email",
-    //   email,
-    //   scheduleType,
-    // };
-    // Call your actual API endpoint
-    // await createEmailConnection(emailConnection);
   };
 
   return (
@@ -87,6 +79,17 @@ export function IntegrationCard({
               </CardDescription>
             </div>
           </div>
+          <Button
+            onClick={
+              platform === "email" ? () => setShowEmailSetup(true) : onConnect
+            }
+            variant="outline"
+            size="sm"
+            className="shrink-0"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            {t("addWorkspace")}
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -113,8 +116,9 @@ export function IntegrationCard({
                       <div className="flex items-center justify-between">
                         <span className="font-medium">
                           {platform === "email"
-                            ? "email"
-                            : connection.workspace_id}
+                            ? connection.email || "email"
+                            : connection.workspace_name ||
+                              connection.workspace_id}
                         </span>
                         <Switch
                           checked={connection.is_active}
@@ -148,26 +152,7 @@ export function IntegrationCard({
                 </div>
               </CollapsibleContent>
             </Collapsible>
-          ) : (
-            <Button
-              onClick={
-                platform === "email" ? () => setShowEmailSetup(true) : onConnect
-              }
-              className="w-full"
-            >
-              {platform === "email" ? (
-                <>
-                  <Settings className="h-4 w-4 mr-2" />
-                  {t("email.setup.title")}
-                </>
-              ) : (
-                <>
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  {t("connect")}
-                </>
-              )}
-            </Button>
-          )}
+          ) : null}
         </div>
       </CardContent>
 

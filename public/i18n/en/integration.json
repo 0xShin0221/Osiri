@@ -1,10 +1,10 @@
 {
+  "addWorkspace": "Add Workspace",
   "common": {
     "cancel": "Cancel",
     "save": "Save",
     "saving": "Saving..."
   },
-  "connect": "Connect",
   "connectedOn": "Connected on {{date}}",
   "disconnect": "Disconnect",
   "discord": {

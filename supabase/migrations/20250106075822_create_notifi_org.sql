@@ -30,7 +30,7 @@ create table workspace_connections (
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now(),
   is_active boolean not null default true,
-  is_disconnect boolean not null default false,
+  is_disconnected boolean not null default false,
   constraint valid_platform_data check (
     (platform in ('slack', 'discord') and workspace_id is not null and access_token is not null and workspace_name is not null) or
     (platform = 'email' and workspace_id is null and access_token is null and workspace_name is null)

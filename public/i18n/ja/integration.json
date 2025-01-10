@@ -1,10 +1,10 @@
 {
+  "addWorkspace": "ワークスペースを追加",
   "common": {
     "cancel": "キャンセル",
     "save": "保存",
     "saving": "保存中..."
   },
-  "connect": "連携する",
   "connectedOn": "{{date}}に連携",
   "disconnect": "連携解除",
   "discord": {
@@ -33,5 +33,6 @@
   "subtitle": "お気に入りのアプリと連携して通知を受け取りましょう",
   "title": "アプリ連携",
   "workspaces": "連携済みワークスペース ({{count}})",
+  "workspaces_0": "",
   "workspaces_plural": "連携済みワークスペース ({{count}})"
 }

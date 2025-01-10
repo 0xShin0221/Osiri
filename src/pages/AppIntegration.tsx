@@ -37,6 +37,7 @@ export default function AppIntegrationPage() {
         const { data, error } = await supabase
           .from("workspace_connections")
           .select("*")
+          .eq("is_disconnected", false)
           .order("created_at", { ascending: false });
         if (error) throw error;
         setConnections(data || []);
@@ -83,10 +84,19 @@ export default function AppIntegrationPage() {
     try {
       const { error } = await supabase
         .from("workspace_connections")
-        .delete()
+        .update({
+          is_disconnected: true,
+          is_active: false,
+        })
         .eq("id", connectionId);
       if (error) throw error;
-      setConnections((prev) => prev.filter((conn) => conn.id !== connectionId));
+      setConnections((prev) =>
+        prev.map((conn) =>
+          conn.id === connectionId
+            ? { ...conn, is_disconnected: true, is_active: false }
+            : conn
+        )
+      );
     } catch (error) {
       console.error("Error disconnecting:", error);
     }
