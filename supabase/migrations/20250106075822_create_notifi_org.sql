@@ -30,6 +30,7 @@ create table workspace_connections (
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now(),
   is_active boolean not null default true,
+  is_disconnect boolean not null default false,
   constraint valid_platform_data check (
     (platform in ('slack', 'discord') and workspace_id is not null and access_token is not null and workspace_name is not null) or
     (platform = 'email' and workspace_id is null and access_token is null and workspace_name is null)
@@ -156,6 +157,20 @@ CREATE POLICY "Users can view their workspace connections"
   USING (organization_id IN (
     SELECT organization_id 
     FROM organization_members 
+    WHERE user_id = auth.uid()
+  ));
+
+CREATE POLICY "Users can update their workspace connections"
+  ON workspace_connections FOR UPDATE
+  TO authenticated
+  USING (organization_id IN (
+    SELECT organization_id 
+    FROM organization_members 
+    WHERE user_id = auth.uid()
+  ))
+  WITH CHECK (organization_id IN (
+    SELECT organization_id
+    FROM organization_members
     WHERE user_id = auth.uid()
   ));
 
