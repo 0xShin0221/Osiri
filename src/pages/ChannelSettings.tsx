@@ -129,6 +129,7 @@ export default function ChannelSettingsPage() {
           </Button>
         </div>
       </div>
+
       {/* Main Content */}
       <div className="grid grid-cols-1 gap-8">
         {/* Channel List */}
@@ -177,14 +178,16 @@ export default function ChannelSettingsPage() {
                       onUpdate={handleUpdateChannel}
                     />
                     {selectedChannel?.id === channel.id && (
-                      <ChannelSettings
-                        channel={selectedChannel}
-                        feeds={organizationFeeds}
-                        schedules={mockSchedules}
-                        onUpdate={handleUpdateChannel}
-                        onDelete={handleDeleteChannel}
-                        onToggleFeed={handleToggleFeed}
-                      />
+                      <div className="pl-4">
+                        <ChannelSettings
+                          channel={selectedChannel}
+                          feeds={organizationFeeds}
+                          schedules={mockSchedules}
+                          onUpdate={handleUpdateChannel}
+                          onDelete={handleDeleteChannel}
+                          onToggleFeed={handleToggleFeed}
+                        />
+                      </div>
                     )}
                   </div>
                 ))
@@ -199,6 +202,16 @@ export default function ChannelSettingsPage() {
           )}
         </div>
       </div>
+
+      {/* Add Channel Dialog */}
+      <AddChannelForm
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        onSubmit={handleAddChannel}
+        feeds={organizationFeeds}
+        schedules={mockSchedules}
+        workspaceConnections={connections || []}
+      />
     </div>
   );
 }
