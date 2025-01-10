@@ -1,8 +1,18 @@
 -- Create platform type
 create type notification_platform as enum (
-  'slack',
-  'discord',
-  'email'
+   'slack',    -- Social media and messaging
+   'twitter',
+   'discord', 
+   'line',
+   'chatwork',
+   'kakaotalk',
+   'wechat',
+   'facebook_messenger',
+   'google_chat',
+   'whatsapp',
+   'telegram',
+   'webhook',    -- System integration
+   'email'
 );
 
 -- Create schedule type

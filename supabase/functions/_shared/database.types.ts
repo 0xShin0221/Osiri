@@ -617,7 +617,7 @@ export type Database = {
           created_at: string | null
           id: string
           is_active: boolean
-          is_disconnect: boolean
+          is_disconnected: boolean
           organization_id: string | null
           platform: Database["public"]["Enums"]["notification_platform"]
           refresh_token: string | null
@@ -631,7 +631,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean
-          is_disconnect?: boolean
+          is_disconnected?: boolean
           organization_id?: string | null
           platform: Database["public"]["Enums"]["notification_platform"]
           refresh_token?: string | null
@@ -645,7 +645,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean
-          is_disconnect?: boolean
+          is_disconnected?: boolean
           organization_id?: string | null
           platform?: Database["public"]["Enums"]["notification_platform"]
           refresh_token?: string | null
@@ -832,7 +832,20 @@ export type Database = {
         | "editor"
         | "support"
         | "external_contributor"
-      notification_platform: "slack" | "discord" | "email"
+      notification_platform:
+        | "slack"
+        | "twitter"
+        | "discord"
+        | "line"
+        | "chatwork"
+        | "kakaotalk"
+        | "wechat"
+        | "facebook_messenger"
+        | "google_chat"
+        | "whatsapp"
+        | "telegram"
+        | "webhook"
+        | "email"
       notification_schedule_type:
         | "realtime"
         | "daily_morning"
