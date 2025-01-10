@@ -129,7 +129,6 @@ export default function ChannelSettingsPage() {
           </Button>
         </div>
       </div>
-
       {/* Main Content */}
       <div className="grid grid-cols-1 gap-8">
         {/* Channel List */}
@@ -170,13 +169,24 @@ export default function ChannelSettingsPage() {
                 </Card>
               ) : (
                 channels.map((channel) => (
-                  <ChannelCard
-                    key={channel.id}
-                    channel={channel as NotificationChannel}
-                    selected={selectedChannel?.id === channel.id}
-                    onSelect={setSelectedChannel}
-                    onUpdate={handleUpdateChannel}
-                  />
+                  <div key={channel.id} className="space-y-4">
+                    <ChannelCard
+                      channel={channel as NotificationChannel}
+                      selected={selectedChannel?.id === channel.id}
+                      onSelect={setSelectedChannel}
+                      onUpdate={handleUpdateChannel}
+                    />
+                    {selectedChannel?.id === channel.id && (
+                      <ChannelSettings
+                        channel={selectedChannel}
+                        feeds={organizationFeeds}
+                        schedules={mockSchedules}
+                        onUpdate={handleUpdateChannel}
+                        onDelete={handleDeleteChannel}
+                        onToggleFeed={handleToggleFeed}
+                      />
+                    )}
+                  </div>
                 ))
               )}
             </>
@@ -188,31 +198,7 @@ export default function ChannelSettingsPage() {
             </Card>
           )}
         </div>
-
-        {/* Settings Panel */}
-        <div className="lg:sticky lg:top-4">
-          {selectedChannel && (
-            <ChannelSettings
-              channel={selectedChannel}
-              feeds={organizationFeeds}
-              schedules={mockSchedules}
-              onUpdate={handleUpdateChannel}
-              onDelete={handleDeleteChannel}
-              onToggleFeed={handleToggleFeed}
-            />
-          )}
-        </div>
       </div>
-
-      {/* Add Channel Dialog */}
-      <AddChannelForm
-        open={showAddDialog}
-        onOpenChange={setShowAddDialog}
-        onSubmit={handleAddChannel}
-        feeds={organizationFeeds}
-        schedules={mockSchedules}
-        workspaceConnections={connections || []}
-      />
     </div>
   );
 }
