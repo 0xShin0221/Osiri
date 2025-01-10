@@ -28,8 +28,6 @@ import type { Tables } from "@/types/database.types";
 import { ChannelSelector } from "./ChannelSelector";
 import { Alert, AlertDescription } from "../ui/alert";
 import { MultiFeedSelect } from "./ChannelMultiCombobox";
-
-type NotificationChannel = Tables<"notification_channels">;
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
 type WorkspaceConnection = Tables<"workspace_connections">;
@@ -38,6 +36,12 @@ interface SlackChannel {
   id: string;
   workspace_name?: string;
   name: string;
+}
+
+interface NotificationChannelWithFeeds extends Tables<"notification_channels"> {
+  notification_channel_feeds?: {
+    feed_id: string;
+  }[];
 }
 
 const mockDiscordChannels = [
@@ -49,7 +53,7 @@ const mockDiscordChannels = [
 interface AddChannelFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (channel: Partial<NotificationChannel>) => Promise<void>;
+  onSubmit: (channel: Partial<NotificationChannelWithFeeds>) => Promise<void>;
   feeds: RssFeed[];
   schedules: NotificationSchedule[];
   workspaceConnections: WorkspaceConnection[];
@@ -139,6 +143,7 @@ export function AddChannelForm({
 
     try {
       await onSubmit({
+        organization_id: organizationId,
         platform,
         workspace_connection_id: selectedWorkspaceId,
         channel_identifier:
@@ -151,6 +156,9 @@ export function AddChannelForm({
         schedule_id: scheduleId,
         is_active: true,
         category_ids: [],
+        notification_channel_feeds: selectedFeeds.map((feedId) => ({
+          feed_id: feedId,
+        })),
       });
 
       onOpenChange(false);
@@ -169,7 +177,10 @@ export function AddChannelForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
         <DialogOverlay>
-          <DialogContent className="sm:max-w-[500px] overflow-y-auto touch-pan-y" style={{ maxHeight: '90vh' }}>
+          <DialogContent
+            className="sm:max-w-[500px] overflow-y-auto touch-pan-y"
+            style={{ maxHeight: "90vh" }}
+          >
             <form onSubmit={handleSubmit}>
               <DialogHeader>
                 <DialogTitle>{t("addChannel.title")}</DialogTitle>

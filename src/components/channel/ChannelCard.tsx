@@ -43,12 +43,12 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       onClick={() => onSelect(channel)}
       onTouchStart={(e) => {
         if (!selected) {
-          e.currentTarget.classList.add('active');
+          e.currentTarget.classList.add("active");
         }
       }}
       onTouchEnd={(e) => {
         if (!selected) {
-          e.currentTarget.classList.remove('active');
+          e.currentTarget.classList.remove("active");
         }
       }}
     >
