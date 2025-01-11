@@ -6,13 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +13,7 @@ import { Trash2 } from "lucide-react";
 import type { Tables } from "@/types/database.types";
 import { useTranslation } from "react-i18next";
 import { GetPlatformIcon } from "../PlatformIcons";
+import ScheduleSelector from "./ScheduleSelector";
 
 // Types
 type NotificationChannel = Tables<"notification_channels"> & {
@@ -104,26 +98,15 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
           <h3 className="text-lg font-medium">
             {t("settings.notificationSchedule")}
           </h3>
-          <Select
-            value={channel.schedule_id || ""}
-            onValueChange={(value) => {
-              onUpdate({ ...channel, schedule_id: value || null });
+
+          <ScheduleSelector
+            platform={channel.platform}
+            schedules={schedules}
+            value={channel.schedule_id}
+            onChange={(value) => {
+              onUpdate({ ...channel, schedule_id: value });
             }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder={t("settings.selectSchedule")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="realtime">
-                {t("schedules.realtime")}
-              </SelectItem>
-              {schedules.map((schedule) => (
-                <SelectItem key={schedule.id} value={schedule.id}>
-                  {schedule.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          />
         </div>
 
         {/* Danger Zone */}

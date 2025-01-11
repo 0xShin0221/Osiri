@@ -28,6 +28,7 @@ import type { Tables } from "@/types/database.types";
 import { ChannelSelector } from "./ChannelSelector";
 import { Alert, AlertDescription } from "../ui/alert";
 import { MultiFeedSelect } from "./ChannelMultiCombobox";
+import ScheduleSelector from "./ScheduleSelector";
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
 type WorkspaceConnection = Tables<"workspace_connections">;
@@ -337,28 +338,12 @@ export function AddChannelForm({
                 {/* Schedule Selection */}
                 <div className="grid gap-2">
                   <Label>{t("addChannel.schedule")}</Label>
-                  <Select
-                    value={scheduleId || "realtime"}
-                    onValueChange={(value) =>
-                      setScheduleId(value === "realtime" ? null : value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder={t("addChannel.selectSchedule")}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="realtime">
-                        {t("schedules.realtime")}
-                      </SelectItem>
-                      {schedules.map((schedule) => (
-                        <SelectItem key={schedule.id} value={schedule.id}>
-                          {schedule.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ScheduleSelector
+                    platform={platform}
+                    schedules={schedules}
+                    value={scheduleId}
+                    onChange={setScheduleId}
+                  />
                 </div>
               </div>
 

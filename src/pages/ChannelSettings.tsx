@@ -2,16 +2,15 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Plus, RssIcon, Loader2 } from "lucide-react";
-
 import { AddChannelForm } from "@/components/channel/AddChannelForm";
 import { ChannelCard } from "@/components/channel/ChannelCard";
 import { ChannelSettings } from "@/components/channel/ChannelSettings";
 import type { Tables } from "@/types/database.types";
-import { mockSchedules } from "@/mocks/notificationData";
 import { useTranslation } from "react-i18next";
 import { useFeeds } from "@/hooks/useFeeds";
 import { useChannels } from "@/hooks/useChannels";
 import { useWorkspaceConnections } from "@/hooks/useWorkspaceConnections";
+import { useNotificationSchedules } from "@/hooks/useNotificationSchedules";
 import { useAuth } from "@/hooks/useAuth";
 
 type NotificationChannel = Tables<"notification_channels"> & {
@@ -35,6 +34,12 @@ export default function ChannelSettingsPage() {
   } = useWorkspaceConnections({ session });
 
   const {
+    schedules,
+    loading: schedulesLoading,
+    error: schedulesError,
+  } = useNotificationSchedules();
+
+  const {
     channels,
     loading: channelsLoading,
     error: channelsError,
@@ -45,12 +50,12 @@ export default function ChannelSettingsPage() {
     toggleChannelFeed,
   } = useChannels();
 
-  // Get organization feeds
   const { followingFeeds: organizationFeeds, isLoading: feedsLoading } =
-    useFeeds({ itemsPerPage: 100 }); // Large number to get all feeds
+    useFeeds({ itemsPerPage: 100 });
 
-  const loading = channelsLoading || connectionsLoading || feedsLoading;
-  const error = channelsError || connectionsError;
+  const loading =
+    channelsLoading || connectionsLoading || feedsLoading || schedulesLoading;
+  const error = channelsError || connectionsError || schedulesError;
 
   const handleUpdateChannel = async (updatedChannel: NotificationChannel) => {
     try {
@@ -88,7 +93,6 @@ export default function ChannelSettingsPage() {
     try {
       await toggleChannelFeed(channelId, feedId, isAdding);
 
-      // Update function for notification_channel_feeds
       const updateFeeds = (channel: NotificationChannel) => {
         const updatedFeeds = isAdding
           ? [...(channel.notification_channel_feeds || []), { feed_id: feedId }]
@@ -101,7 +105,7 @@ export default function ChannelSettingsPage() {
           notification_channel_feeds: updatedFeeds,
         };
       };
-      // Update the selected channel
+
       setSelectedChannel((prev) => (prev ? updateFeeds(prev) : null));
     } catch (err) {
       console.error("Error toggling feed:", err);
@@ -110,7 +114,6 @@ export default function ChannelSettingsPage() {
 
   return (
     <div className="container mx-auto p-4">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">{t("page.title")}</h1>
@@ -130,9 +133,7 @@ export default function ChannelSettingsPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="grid grid-cols-1 gap-8">
-        {/* Channel List */}
         <div className="space-y-4">
           {loading ? (
             <Card>
@@ -181,7 +182,7 @@ export default function ChannelSettingsPage() {
                       <ChannelSettings
                         channel={selectedChannel}
                         feeds={organizationFeeds}
-                        schedules={mockSchedules}
+                        schedules={schedules}
                         onUpdate={handleUpdateChannel}
                         onDelete={handleDeleteChannel}
                         onToggleFeed={handleToggleFeed}
@@ -201,13 +202,12 @@ export default function ChannelSettingsPage() {
         </div>
       </div>
 
-      {/* Add Channel Dialog */}
       <AddChannelForm
         open={showAddDialog}
         onOpenChange={setShowAddDialog}
         onSubmit={handleAddChannel}
         feeds={organizationFeeds}
-        schedules={mockSchedules}
+        schedules={schedules}
         workspaceConnections={connections || []}
       />
     </div>
