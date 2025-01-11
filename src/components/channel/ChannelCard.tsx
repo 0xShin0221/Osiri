@@ -1,6 +1,5 @@
 import type React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Settings2 } from "lucide-react";
 import type { Tables } from "@/types/database.types";
@@ -25,7 +24,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   channel,
   selected,
   onSelect,
-  onUpdate,
+  // onUpdate,
 }) => {
   const { t } = useTranslation("channel");
   const handleSettingsClick = (e: React.MouseEvent) => {
