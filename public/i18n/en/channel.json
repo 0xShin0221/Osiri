@@ -50,7 +50,10 @@
     "title": "Channel Settings"
   },
   "schedules": {
-    "realtime": "Real-time"
+    "dailyMorningDescription": "Receive a daily digest of all new articles in the morning",
+    "dailyMorningTime": "Daily at {{time}} AM",
+    "realtime": "Real-time",
+    "realtimeDescription": "Get notified immediately when new articles are published"
   },
   "settings": {
     "configureDescription": "Configure channel settings and feed preferences",

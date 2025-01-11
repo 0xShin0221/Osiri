@@ -50,7 +50,10 @@
     "title": "チャンネル設定"
   },
   "schedules": {
-    "realtime": "リアルタイム"
+    "dailyMorningDescription": "新着記事を朝にまとめてお届けします",
+    "dailyMorningTime": "毎朝 {{time}}",
+    "realtime": "リアルタイム",
+    "realtimeDescription": "新着記事をすぐにお知らせします"
   },
   "settings": {
     "configureDescription": "チャンネル設定とフィード設定を構成",
