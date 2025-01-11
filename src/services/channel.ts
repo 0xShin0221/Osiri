@@ -65,31 +65,48 @@ export class ChannelService {
   }
 
   async createChannel(channel: Partial<NotificationChannelWithFeeds>) {
-    const { notification_channel_feeds, ...createData } = channel;
-    console.log("createData", createData);
-    console.log("notification_channel_feeds", notification_channel_feeds);
-    if (!notification_channel_feeds) {
-      throw new Error("notification_channel_feeds is required");
-    }
-    const { data: channelData, error: channelError } = await supabase
+    // Handle platform-specific logic
+    const channelData = {
+      ...channel,
+      // For email platform, workspace_connection_id should be null
+      workspace_connection_id: channel.platform === "email"
+        ? null
+        : channel.workspace_connection_id,
+      schedule_id: channel.schedule_id || null,
+      category_ids: channel.category_ids || [],
+      is_active: channel.is_active ?? true,
+    };
+
+    const { notification_channel_feeds, ...cleanChannelData } = channelData;
+
+    const { data: newChannel, error } = await supabase
       .from("notification_channels")
-      .insert(createData)
-      .select()
+      .insert([cleanChannelData])
+      .select("*")
       .single();
 
-    if (channelError) throw channelError;
-    const feedsToCreate = notification_channel_feeds.map((feed) => ({
-      channel_id: channelData.id,
-      feed_id: feed.feed_id,
-    }));
+    if (error) {
+      console.error("Error creating channel:", error);
+      throw error;
+    }
 
-    const { error: feedsError } = await supabase
-      .from("notification_channel_feeds")
-      .insert(feedsToCreate);
+    // If we have feeds to associate, create the relationships
+    if (notification_channel_feeds && notification_channel_feeds.length > 0) {
+      const feedRelations = notification_channel_feeds.map((feed) => ({
+        channel_id: newChannel.id,
+        feed_id: feed.feed_id,
+      }));
 
-    if (feedsError) throw feedsError;
+      const { error: feedError } = await supabase
+        .from("notification_channel_feeds")
+        .insert(feedRelations);
 
-    const { data, error } = await supabase
+      if (feedError) {
+        console.error("Error adding channel feeds:", feedError);
+        throw feedError;
+      }
+    }
+    const { data, error: selectError } = await supabase
       .from("notification_channels")
       .select(`
       *,
@@ -97,10 +114,9 @@ export class ChannelService {
         feed_id
       )
     `)
-      .eq("id", channelData.id)
+      .eq("id", newChannel.id)
       .single();
-    console.log("data", data);
-    if (error) throw error;
+    if (selectError) throw selectError;
     return data as NotificationChannelWithFeeds;
   }
 
