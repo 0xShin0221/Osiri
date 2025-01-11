@@ -57,6 +57,10 @@ export default function ChannelSettingsPage() {
     channelsLoading || connectionsLoading || feedsLoading || schedulesLoading;
   const error = channelsError || connectionsError || schedulesError;
 
+  const handleSelectChannel = (channel: NotificationChannel) => {
+    setSelectedChannel((prev) => (prev?.id === channel.id ? null : channel));
+  };
+
   const handleUpdateChannel = async (updatedChannel: NotificationChannel) => {
     try {
       const result = await updateChannel(updatedChannel);
@@ -175,7 +179,7 @@ export default function ChannelSettingsPage() {
                     <ChannelCard
                       channel={channel as NotificationChannel}
                       selected={selectedChannel?.id === channel.id}
-                      onSelect={setSelectedChannel}
+                      onSelect={handleSelectChannel}
                       onUpdate={handleUpdateChannel}
                     />
                     {selectedChannel?.id === channel.id && (
