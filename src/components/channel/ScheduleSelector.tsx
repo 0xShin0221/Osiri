@@ -9,6 +9,7 @@ interface ScheduleSelectorProps {
   value: string | null;
   onChange: (value: string) => void;
   isDisabled?: boolean;
+  userTimezone: string;
 }
 
 const ScheduleSelector: React.FC<ScheduleSelectorProps> = ({
@@ -16,11 +17,9 @@ const ScheduleSelector: React.FC<ScheduleSelectorProps> = ({
   value,
   onChange,
   isDisabled = false,
+  userTimezone,
 }) => {
   const { t } = useTranslation("channel");
-
-  // Get user's timezone for display
-  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const getScheduleLabel = (schedule: NotificationSchedule) => {
     if (schedule.schedule_type === "realtime") {
