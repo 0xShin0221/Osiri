@@ -208,6 +208,7 @@ export type Database = {
         Row: {
           category_ids: string[] | null
           channel_identifier: string
+          channel_identifier_id: string | null
           created_at: string | null
           error_count: number | null
           id: string
@@ -223,6 +224,7 @@ export type Database = {
         Insert: {
           category_ids?: string[] | null
           channel_identifier: string
+          channel_identifier_id?: string | null
           created_at?: string | null
           error_count?: number | null
           id?: string
@@ -238,6 +240,7 @@ export type Database = {
         Update: {
           category_ids?: string[] | null
           channel_identifier?: string
+          channel_identifier_id?: string | null
           created_at?: string | null
           error_count?: number | null
           id?: string

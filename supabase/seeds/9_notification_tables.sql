@@ -27,6 +27,7 @@ BEGIN
     workspace_connection_id,
     platform,
     channel_identifier,
+    channel_identifier_id,
     schedule_id,
     is_active,
     category_ids,
@@ -43,6 +44,7 @@ BEGIN
       workspace_conn_id1,
       'slack',
       '#dev-news-ycom', -- Startup news channel
+      'C07PATAAAAP',
       schedule_id1,
       true,
       ARRAY['c0a80121-75c8-4c18-8e57-3af4bc3c61d7']::uuid[], -- AI/ML category
@@ -60,6 +62,7 @@ BEGIN
     workspace_connection_id,
     platform,
     channel_identifier,
+    channel_identifier_id,
     schedule_id,
     is_active,
     category_ids,
@@ -76,6 +79,7 @@ BEGIN
       workspace_conn_id1,
       'slack',
       '#general-tech', -- General tech news channel
+       'BB2PATAAAAP',
       schedule_id2,
       true,
       NULL,
@@ -93,6 +97,7 @@ BEGIN
     workspace_connection_id,
     platform,
     channel_identifier,
+    channel_identifier_id,
     schedule_id,
     is_active,
     category_ids,
@@ -109,6 +114,7 @@ BEGIN
       workspace_conn_id2,
       'slack',
       '#ai-ml-updates', -- AI/ML focused updates channel
+      'C07PA0A4AAP',
       schedule_id3,
       true,
       ARRAY['c0a80121-75c8-4c18-8e57-3af4bc3c61d6', 'c0a80121-75c8-4c18-8e57-3af4bc3c61d7']::uuid[],

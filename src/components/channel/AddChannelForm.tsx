@@ -157,13 +157,13 @@ export function AddChannelForm({
         organization_id: organizationId,
         platform,
         workspace_connection_id: selectedWorkspaceId,
+        channel_identifier_id: platform === "email" ? null : channelId,
         channel_identifier:
           platform === "email"
             ? channelId
             : platform === "slack"
-            ? slackChannels.find((ch) => ch.id === channelId)?.name || channelId
-            : mockDiscordChannels.find((ch) => ch.id === channelId)?.name ||
-              channelId,
+            ? slackChannels.find((c) => c.id === channelId)?.name
+            : mockDiscordChannels.find((c) => c.id === channelId)?.name,
         schedule_id: scheduleId,
         is_active: true,
         category_ids: [],

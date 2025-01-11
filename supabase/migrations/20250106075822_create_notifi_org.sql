@@ -59,6 +59,7 @@ create table notification_channels (
   workspace_connection_id uuid references workspace_connections(id) on delete cascade,
   platform notification_platform not null,
   channel_identifier text not null,
+  channel_identifier_id text,
   schedule_id uuid references notification_schedules(id),
   is_active boolean not null default true,
   category_ids uuid[],
@@ -66,7 +67,11 @@ create table notification_channels (
   updated_at timestamp with time zone default now(),
   last_notified_at timestamp with time zone,
   error_count integer default 0,
-  last_error text
+  last_error text,
+  constraint valid_channel_identifier check (
+    (platform = 'email' and channel_identifier_id is null) or
+    (platform != 'email' and channel_identifier_id is not null)
+  )
 );
 
 -- Notification logs table
