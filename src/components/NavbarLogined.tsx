@@ -44,6 +44,11 @@ const routeList = (): RouteProps[] => {
       icon: <LayoutDashboard className="w-4 h-4" />,
     },
     {
+      href: "/setchannel",
+      label: t("menu.notificationManagement"),
+      icon: <Bell className="w-4 h-4" />,
+    },
+    {
       href: "/feeds",
       label: t("menu.feedManagement"),
       icon: <Rss className="w-4 h-4" />,
@@ -52,11 +57,6 @@ const routeList = (): RouteProps[] => {
       href: "/integrations",
       label: t("menu.appIntegration"),
       icon: <Combine className="w-4 h-4" />,
-    },
-    {
-      href: "/setchannel",
-      label: t("menu.notificationManagement"),
-      icon: <Bell className="w-4 h-4" />,
     },
     // {
     //   href: "/bookmarks",
