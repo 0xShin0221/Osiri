@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,7 @@ import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
 import { useTranslation } from "react-i18next";
 import { SlackService } from "@/services/slack";
 import { useAuth } from "@/hooks/useAuth";
-import type { Tables } from "@/types/database.types";
+import type { Database, Tables } from "@/types/database.types";
 import { ChannelSelector } from "./ChannelSelector";
 import { Alert, AlertDescription } from "../ui/alert";
 import { MultiFeedSelect } from "./ChannelMultiCombobox";
@@ -137,6 +137,33 @@ export function AddChannelForm({
     loadSlackChannels();
   }, [platform, organizationId, selectedWorkspaceId, t]);
 
+  const filteredSchedules = useMemo(() => {
+    if (!platform) return [];
+
+    if (platform === "email") {
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const offset = new Date().getTimezoneOffset();
+      const hours = Math.abs(Math.floor(offset / 60));
+      const direction = offset > 0 ? "-" : "+";
+      const utcOffset =
+        `UTC${direction}${hours}` as Database["public"]["Enums"]["utc_offset"];
+
+      return schedules.filter(
+        (s) => s.schedule_type === "daily_morning" && s.timezone === utcOffset
+      );
+    }
+
+    return schedules.filter((s) => s.schedule_type === "realtime");
+  }, [platform, schedules]);
+
+  useEffect(() => {
+    if (platform) {
+      const defaultSchedule = filteredSchedules[0];
+      if (defaultSchedule) {
+        setScheduleId(defaultSchedule.id);
+      }
+    }
+  }, [platform, filteredSchedules]);
   const handleSubmit = async (e: React.FormEvent) => {
     if (!platform || !channelId || selectedFeeds.length === 0) return;
     e.preventDefault();
@@ -173,7 +200,6 @@ export function AddChannelForm({
       setLoading(false);
     }
   };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
@@ -339,10 +365,10 @@ export function AddChannelForm({
                 <div className="grid gap-2">
                   <Label>{t("addChannel.schedule")}</Label>
                   <ScheduleSelector
-                    platform={platform}
-                    schedules={schedules}
+                    schedules={filteredSchedules}
                     value={scheduleId}
                     onChange={setScheduleId}
+                    isDisabled={false}
                   />
                 </div>
               </div>

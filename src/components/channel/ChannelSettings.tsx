@@ -10,10 +10,11 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import type { Tables } from "@/types/database.types";
+import type { Database, Tables } from "@/types/database.types";
 import { useTranslation } from "react-i18next";
 import { GetPlatformIcon } from "../PlatformIcons";
 import ScheduleSelector from "./ScheduleSelector";
+import { useMemo } from "react";
 
 // Types
 type NotificationChannel = Tables<"notification_channels"> & {
@@ -51,6 +52,23 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
   // Get current feed IDs from notification_channel_feeds
   const currentFeedIds =
     channel.notification_channel_feeds?.map((cf) => cf.feed_id) || [];
+
+  const filteredSchedules = useMemo(() => {
+    if (channel.platform === "email") {
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const offset = new Date().getTimezoneOffset();
+      const hours = Math.abs(Math.floor(offset / 60));
+      const direction = offset > 0 ? "-" : "+";
+      const utcOffset =
+        `UTC${direction}${hours}` as Database["public"]["Enums"]["utc_offset"];
+
+      return schedules.filter(
+        (s) => s.schedule_type === "daily_morning" && s.timezone === utcOffset
+      );
+    }
+
+    return schedules.filter((s) => s.schedule_type === "realtime");
+  }, [channel.platform, schedules]);
 
   return (
     <Card>
@@ -100,12 +118,12 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
           </h3>
 
           <ScheduleSelector
-            platform={channel.platform}
-            schedules={schedules}
+            schedules={filteredSchedules}
             value={channel.schedule_id}
             onChange={(value) => {
               onUpdate({ ...channel, schedule_id: value });
             }}
+            isDisabled={false}
           />
         </div>
 
