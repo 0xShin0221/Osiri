@@ -178,16 +178,14 @@ export default function ChannelSettingsPage() {
                       onUpdate={handleUpdateChannel}
                     />
                     {selectedChannel?.id === channel.id && (
-                      <div className="pl-4">
-                        <ChannelSettings
-                          channel={selectedChannel}
-                          feeds={organizationFeeds}
-                          schedules={mockSchedules}
-                          onUpdate={handleUpdateChannel}
-                          onDelete={handleDeleteChannel}
-                          onToggleFeed={handleToggleFeed}
-                        />
-                      </div>
+                      <ChannelSettings
+                        channel={selectedChannel}
+                        feeds={organizationFeeds}
+                        schedules={mockSchedules}
+                        onUpdate={handleUpdateChannel}
+                        onDelete={handleDeleteChannel}
+                        onToggleFeed={handleToggleFeed}
+                      />
                     )}
                   </div>
                 ))

@@ -64,13 +64,13 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Switch
+            {/* <Switch
               checked={channel.is_active}
               onCheckedChange={(checked) => {
                 onUpdate({ ...channel, is_active: checked });
               }}
               onClick={(e) => e.stopPropagation()}
-            />
+            /> */}
             <Button variant="ghost" size="icon" onClick={handleSettingsClick}>
               <Settings2 className="h-4 w-4" />
             </Button>
