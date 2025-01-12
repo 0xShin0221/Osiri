@@ -9,6 +9,7 @@ import ChannelSettingsPage from "@/pages/ChannelSettings";
 import FeedsPage from "@/pages/Feeds";
 import AppIntegrationPage from "@/pages/AppIntegration";
 import type { ReactElement } from "react";
+import { AuthCallback } from "@/components/auth/AuthCallback";
 
 interface RouteConfig {
   path: string;
@@ -27,4 +28,5 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
   { path: "setchannel", element: <ChannelSettingsPage />, protected: true },
   { path: "integrations", element: <AppIntegrationPage />, protected: true },
   { path: "feeds", element: <FeedsPage />, protected: true },
+  { path: "auth/callback", element: <AuthCallback /> },
 ];
