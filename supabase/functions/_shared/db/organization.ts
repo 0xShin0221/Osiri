@@ -1,6 +1,13 @@
+import type { Database } from "../database.types.ts";
 import { supabase } from "./client.ts";
 
-export const createOrganization = async (name: string) => {
+type Organization = Database["public"]["Tables"]["organizations"]["Row"];
+type OrganizationMember =
+  Database["public"]["Tables"]["organization_members"]["Row"];
+
+export const createOrganization = async (
+  name: string,
+): Promise<Organization> => {
   const { data, error } = await supabase
     .from("organizations")
     .insert({ name })
@@ -14,7 +21,7 @@ export const createOrganization = async (name: string) => {
 export const createOrganizationMemberAsAdmin = async (
   organizationId: string,
   userId: string,
-) => {
+): Promise<void> => {
   const { error } = await supabase
     .from("organization_members")
     .insert({
@@ -24,4 +31,24 @@ export const createOrganizationMemberAsAdmin = async (
     });
 
   if (error) throw error;
+};
+
+export const getOrganizationByUserId = async (
+  userId: string,
+): Promise<(OrganizationMember & { organizations: Organization })[]> => {
+  const { data, error } = await supabase
+    .from("organization_members")
+    .select(`
+      *,
+      organizations (
+        id,
+        name,
+        created_at,
+        updated_at
+      )
+    `)
+    .eq("user_id", userId);
+
+  if (error) throw error;
+  return data;
 };

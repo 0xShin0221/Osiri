@@ -2,9 +2,13 @@ import { handleWithCors } from "../_shared/cors.ts";
 import {
   createOrganization,
   createOrganizationMemberAsAdmin,
+  getOrganizationByUserId,
 } from "../_shared/db/organization.ts";
 import { updateOnboardingCompleted } from "../_shared/db/profile.ts";
-import { createWorkspaceConnection } from "../_shared/db/workspace.ts";
+import {
+  addWorkspaceConnection,
+  createWorkspaceConnection,
+} from "../_shared/db/workspace.ts";
 import type { SlackOAuthResponse } from "../_shared/types.ts";
 
 const getEnvVars = () => {
@@ -77,11 +81,23 @@ Deno.serve(handleWithCors(async (req) => {
     if (!slackData.ok || !slackData.team?.name) {
       throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
     }
-    const org = await createOrganization(slackData.team.name);
-    await createOrganizationMemberAsAdmin(org.id, userId);
-    await createWorkspaceConnection(org.id, slackData);
-    await updateOnboardingCompleted(userId);
-
+    const existingOrg = await getOrganizationByUserId(userId);
+    if (existingOrg.length > 0 && existingOrg[0].organization_id) {
+      await addWorkspaceConnection(
+        existingOrg[0].organization_id,
+        "slack",
+        slackData.team.id,
+        slackData.team.name,
+        slackData.access_token,
+        null,
+        null,
+      );
+    } else {
+      const org = await createOrganization(slackData.team.name);
+      await createOrganizationMemberAsAdmin(org.id, userId);
+      await createWorkspaceConnection(org.id, slackData, "slack");
+      await updateOnboardingCompleted(userId);
+    }
     return Response.redirect(
       `https://${vars.appDomain}/${lang}/setchannel`,
     );
