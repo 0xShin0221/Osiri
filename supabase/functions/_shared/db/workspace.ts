@@ -12,7 +12,7 @@ type WorkspaceConnectionInsert =
 export const createWorkspaceConnection = async (
   organizationId: string,
   slackData: SlackOAuthResponse,
-  platform: Database["public"]["Enums"]["notification_platform"]
+  platform: Database["public"]["Enums"]["notification_platform"],
 ): Promise<WorkspaceConnection> => {
   const workspaceConnection: WorkspaceConnectionInsert = {
     organization_id: organizationId,
