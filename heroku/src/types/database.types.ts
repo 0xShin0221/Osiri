@@ -453,24 +453,24 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          email: string | null
           id: string
           onboarding_completed: boolean | null
           updated_at: string
-          user_id: string | null
         }
         Insert: {
           created_at?: string
-          id?: string
+          email?: string | null
+          id: string
           onboarding_completed?: boolean | null
           updated_at?: string
-          user_id?: string | null
         }
         Update: {
           created_at?: string
+          email?: string | null
           id?: string
           onboarding_completed?: boolean | null
           updated_at?: string
-          user_id?: string | null
         }
         Relationships: []
       }

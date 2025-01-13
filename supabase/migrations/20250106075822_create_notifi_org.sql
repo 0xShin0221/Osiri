@@ -137,23 +137,38 @@ alter table notification_logs enable row level security;
 alter table notification_schedules enable row level security;
 alter table notification_channel_feeds enable row level security;
 
--- Organization policies
-CREATE POLICY "Users can view their organizations"
+CREATE POLICY "Enable read access for authenticated users"
   ON organizations FOR SELECT
   TO authenticated
-  USING (
-    id IN (
-      SELECT organization_id 
-      FROM organization_members 
-      WHERE user_id = auth.uid()
-    )
-  );
+  USING (true);
 
--- Organization members policies
-CREATE POLICY "Users can view their organization memberships"
+CREATE POLICY "Enable insert access for authenticated users"
+  ON organizations FOR INSERT
+  TO authenticated
+  WITH CHECK (true);
+
+CREATE POLICY "Enable update access for authenticated users"
+  ON organizations FOR UPDATE
+  TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Create more relaxed policies for organization members
+CREATE POLICY "Enable read access for members"
   ON organization_members FOR SELECT
   TO authenticated
-  USING (user_id = auth.uid());
+  USING (true);
+
+CREATE POLICY "Enable insert access for members"
+  ON organization_members FOR INSERT
+  TO authenticated
+  WITH CHECK (true);
+
+CREATE POLICY "Enable update access for members"
+  ON organization_members FOR UPDATE
+  TO authenticated
+  USING (true)
+  WITH CHECK (true);
 
 -- Workspace connections policies
 CREATE POLICY "Users can view their workspace connections"
