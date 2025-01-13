@@ -14,6 +14,7 @@
     "@langchain/openai": "^0.3.16",
     "@supabase/supabase-js": "^2.39.1",
     "@types/lodash": "^4.17.13",
+    "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "langchain": "^0.3.7",
