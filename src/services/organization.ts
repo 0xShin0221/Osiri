@@ -3,6 +3,12 @@ import type { Tables } from "@/types/database.types";
 
 type Organization = Tables<"organizations">;
 type OrganizationMember = Tables<"organization_members">;
+interface MemberWithProfile extends OrganizationMember {
+    user: {
+        id: string;
+        email: string | null;
+    };
+}
 
 export class OrganizationService {
     async getOrganization(
