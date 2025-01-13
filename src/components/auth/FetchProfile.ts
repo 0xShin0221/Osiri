@@ -15,7 +15,7 @@ export const getProfile = async (userId: string) => {
       const { data: existingProfile, error: fetchError } = await supabase
         .from("profiles")
         .select("*")
-        .eq("user_id", userId)
+        .eq("id", userId)
         .single();
 
       if (existingProfile) {
@@ -27,7 +27,7 @@ export const getProfile = async (userId: string) => {
           .from("profiles")
           .insert([
             {
-              user_id: userId,
+              id: userId,
               onboarding_completed: false,
             },
           ])

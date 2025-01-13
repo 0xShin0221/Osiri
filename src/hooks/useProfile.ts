@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Session } from '@supabase/supabase-js';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import type { Session } from "@supabase/supabase-js";
 
-import { Database } from '@/types/database.types';
-import { ProfileService } from '@/services/profile';
+import type { Database } from "@/types/database.types";
+import { ProfileService } from "@/services/profile";
 
-type Profile = Database['public']['Tables']['profiles']['Row'];
-type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
 
 interface UseProfileOptions {
   session: Session | null;
   redirectToOnboarding?: boolean;
 }
 
-export function useProfile({ 
-  session, 
-  redirectToOnboarding = true 
+export function useProfile({
+  session,
+  redirectToOnboarding = true,
 }: UseProfileOptions) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,18 +31,20 @@ export function useProfile({
       }
 
       try {
-        const userProfile = await ProfileService.getOrCreateProfile(session.user.id);
-        
+        const userProfile = await ProfileService.getOrCreateProfile(
+          session.user.id,
+        );
+
         if (!mounted) return;
-        
+
         if (userProfile) {
           setProfile(userProfile);
           if (redirectToOnboarding && !userProfile.onboarding_completed) {
-            navigate('/onboarding');
+            navigate("/onboarding");
           }
         }
       } catch (error) {
-        console.error('Failed to load profile:', error);
+        console.error("Failed to load profile:", error);
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -51,18 +53,20 @@ export function useProfile({
     }
 
     loadProfile();
-    return () => { mounted = false };
+    return () => {
+      mounted = false;
+    };
   }, [session, navigate, redirectToOnboarding]);
 
-  const updateProfile = async (update: Omit<ProfileUpdate, 'user_id'>) => {
+  const updateProfile = async (update: Omit<ProfileUpdate, "id">) => {
     if (!session?.user) {
-      console.error('No active session');
+      console.error("No active session");
       return null;
     }
 
     const updatedProfile = await ProfileService.updateProfile(
-      session.user.id, 
-      update
+      session.user.id,
+      update,
     );
 
     if (updatedProfile) {
