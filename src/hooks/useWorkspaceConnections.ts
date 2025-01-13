@@ -78,7 +78,7 @@ export function useWorkspaceConnections(
         if (profile) {
             fetchConnections();
         }
-    }, [profile?.user_id]);
+    }, [profile?.id]);
 
     return {
         connections,

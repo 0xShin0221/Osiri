@@ -52,7 +52,7 @@ export function OrganizationSettings({
 
     setIsSubmitting(true);
     try {
-      await onUpdateOrganization(newOrgName.trim());
+      await onUpdateOrganization({ name: newOrgName.trim() });
       setIsEditing(false);
       setNewOrgName("");
     } finally {
