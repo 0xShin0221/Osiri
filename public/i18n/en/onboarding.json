@@ -38,6 +38,7 @@
     "subtitle": "Choose how you want to receive updates",
     "title": "Setup Notifications"
   },
+  "skip": "Skip",
   "steps": {
     "interests": "Select Sources",
     "notifications": "Setup Notifications"
