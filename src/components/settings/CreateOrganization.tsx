@@ -25,7 +25,7 @@ export function CreateOrganization({
   error,
   onCreateOrganization,
 }: CreateOrganizationProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("settings");
   const [newOrgName, setNewOrgName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 

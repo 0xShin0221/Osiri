@@ -57,7 +57,7 @@ interface OrganizationMembersProps {
 export function OrganizationMembers({
   organizationId,
 }: OrganizationMembersProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("settings");
   const [members, setMembers] = useState<OrganizationMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

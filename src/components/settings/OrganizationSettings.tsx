@@ -32,7 +32,7 @@ export function OrganizationSettings({
   error,
   onUpdateOrganization,
 }: OrganizationSettingsProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("settings");
   const [isEditing, setIsEditing] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);

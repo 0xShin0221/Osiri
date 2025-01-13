@@ -1,0 +1,42 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "loading": "Loading..."
+  },
+  "organization": {
+    "create": {
+      "button": "Create Organization",
+      "description": "Create a new organization to manage your team and settings.",
+      "require": "An organization is required to continue using this service.",
+      "title": "Create Organization"
+    },
+    "members": {
+      "description": "Manage your organization members and their roles.",
+      "remove": "Remove Member",
+      "removeDialog": {
+        "description": "Are you sure you want to remove {{email}} from the organization?",
+        "title": "Remove Member"
+      },
+      "title": "Organization Members"
+    },
+    "nameLabel": "Organization Name",
+    "namePlaceholder": "Enter organization name",
+    "roles": {
+      "admin": "Admin",
+      "member": "Member",
+      "owner": "Owner"
+    },
+    "settings": {
+      "description": "Manage your organization settings and preferences.",
+      "title": "Organization Settings"
+    }
+  },
+  "settings": {
+    "description": "Manage your organization settings and team members.",
+    "title": "Settings"
+  },
+  "tabs": {
+    "members": "Members",
+    "organization": "Organization"
+  }
+}

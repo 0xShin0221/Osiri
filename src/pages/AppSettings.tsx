@@ -11,7 +11,7 @@ import { OrganizationSettings } from "@/components/settings/OrganizationSettings
 import { CreateOrganization } from "@/components/settings/CreateOrganization";
 
 export default function AppSettingsPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("settings");
   const { session } = useAuth();
   const {
     organization,
