@@ -34,4 +34,16 @@ router.post("/send", async (req, res) => {
     }
 });
 
+router.post("/process", async (req, res) => {
+    try {
+        const result = await slackService.processArticleNotifications();
+        return res.json(result);
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+        });
+    }
+});
+
 export default router;

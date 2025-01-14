@@ -194,6 +194,18 @@ CREATE POLICY "Users can update their workspace connections"
     WHERE user_id = auth.uid()
   ));
 
+CREATE POLICY "Users can update their organization channels"
+  ON notification_channels
+  FOR UPDATE
+  TO authenticated
+  USING (
+    organization_id IN (
+      SELECT organization_id  
+      FROM organization_members 
+      WHERE user_id = auth.uid()
+    )
+  );
+
 CREATE POLICY "Users can select their organization channels"
   ON notification_channels
   FOR SELECT
@@ -248,24 +260,6 @@ CREATE POLICY "Users can view their notification logs"
     )
   ));
 
-CREATE POLICY "Users can update their organization channels"
-  ON notification_channels
-  FOR UPDATE
-  TO authenticated
-  USING (
-    organization_id IN (
-      SELECT organization_id 
-      FROM organization_members 
-      WHERE user_id = auth.uid()
-    )
-  )
-  WITH CHECK (
-    organization_id IN (
-      SELECT organization_id 
-      FROM organization_members 
-      WHERE user_id = auth.uid()
-    )
-  );
 -- Notification schedules policies
 CREATE POLICY "Users can view notification schedules"
   ON notification_schedules FOR SELECT

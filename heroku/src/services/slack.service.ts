@@ -2,6 +2,7 @@ import e from "express";
 import { NotificationRepository } from "../repositories/notification.repository";
 import type { ServiceResponse } from "../types/models";
 import axios from "axios";
+import type { Database } from "../types/database.types";
 
 export class SlackService {
     private repository: NotificationRepository;
@@ -98,5 +99,60 @@ export class SlackService {
                 error: error instanceof Error ? error.message : "Unknown error",
             };
         }
+    }
+
+    async processArticleNotifications(): Promise<ServiceResponse<void>> {
+        try {
+            // 1. Get unsent articles
+            const { data: articles, error: articlesError } = await this
+                .repository.getUnsentArticles();
+            if (articlesError || !articles) {
+                throw new Error(articlesError || "No articles found");
+            }
+
+            console.log("articles", articles);
+
+            // 2. Get channels for each article
+            // for (const article of articles) {
+            //     const { data: channels, error: channelsError } = await this
+            //         .repository.getChannelsForFeed(article.article.feed_id);
+            //     if (channelsError) {
+            //         console.error(
+            //             `Error getting channels for feed ${article.article.feed_id}:`,
+            //             channelsError,
+            //         );
+            //         continue;
+            //     }
+
+            //     // 3. Send message to each channel
+            //     for (const channel of channels || []) {
+            //         const message = this.formatArticleMessage(
+            //             article.article,
+            //             article.translation,
+            //         );
+            //         await this.sendMessageToChannel(channel.id, message);
+            //     }
+            // }
+
+            return { success: true };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error",
+            };
+        }
+    }
+
+    private formatArticleMessage(
+        article: Database["public"]["Tables"]["articles"]["Row"],
+        translation: Database["public"]["Tables"]["translations"]["Row"],
+    ): string {
+        return `
+*${translation.title || article.title}*
+
+${translation.summary || translation.content || article.content}
+
+${article.url}
+    `.trim();
     }
 }
