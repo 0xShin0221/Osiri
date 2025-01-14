@@ -20,6 +20,7 @@ export function useProfile({
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const profileService = new ProfileService();
 
   useEffect(() => {
     let mounted = true;
@@ -31,7 +32,7 @@ export function useProfile({
       }
 
       try {
-        const userProfile = await ProfileService.getOrCreateProfile(
+        const userProfile = await profileService.getOrCreateProfile(
           session.user.id,
         );
 
@@ -64,7 +65,7 @@ export function useProfile({
       return null;
     }
 
-    const updatedProfile = await ProfileService.updateProfile(
+    const updatedProfile = await profileService.updateProfile(
       session.user.id,
       update,
     );

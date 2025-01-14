@@ -1,76 +1,92 @@
 import { supabase } from "@/lib/supabase";
-import type { Database } from "@/types/database.types";
+import type { Tables } from "@/types/database.types";
 
-type Profile = Database["public"]["Tables"]["profiles"]["Row"];
-type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
-type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+type Profile = Tables<"profiles">;
 
 export class ProfileService {
-  static async getProfile(userId: string): Promise<Profile | null> {
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
+    async getProfile(userId: string): Promise<Profile | null> {
+        try {
+            const { data: profile, error } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", userId)
+                .single();
 
-    if (error) {
-      console.error("Error fetching profile:", error);
-      return null;
+            if (error) throw error;
+            return profile;
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+            return null;
+        }
     }
 
-    return profile;
-  }
+    async createProfile(userId: string): Promise<Profile | null> {
+        try {
+            const { data: profile, error } = await supabase
+                .from("profiles")
+                .insert([{
+                    id: userId,
+                    onboarding_completed: false,
+                }])
+                .select()
+                .single();
 
-  static async createProfile(userId: string): Promise<Profile | null> {
-    const profileData: ProfileInsert = {
-      id: userId,
-      onboarding_completed: false,
-    };
+            if (error) {
+                // If profile already exists, try to fetch it
+                if (error.code === "23505") { // unique violation error code
+                    return await this.getProfile(userId);
+                }
+                throw error;
+            }
 
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .insert([profileData])
-      .select()
-      .single();
-
-    if (error) {
-      // If profile already exists, try to fetch it
-      if (error.code === "23505") {
-        return await this.getProfile(userId);
-      }
-      console.error("Error creating profile:", error);
-      return null;
+            return profile;
+        } catch (error) {
+            console.error("Error creating profile:", error);
+            return null;
+        }
     }
 
-    return profile;
-  }
+    async updateProfile(
+        userId: string,
+        data: Partial<Omit<Profile, "id" | "created_at">>,
+    ): Promise<Profile | null> {
+        try {
+            const { data: profile, error } = await supabase
+                .from("profiles")
+                .update({
+                    ...data,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq("id", userId)
+                .select()
+                .single();
 
-  static async updateProfile(
-    userId: string,
-    update: Omit<ProfileUpdate, "user_id">,
-  ): Promise<Profile | null> {
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .update({
-        ...update,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", userId)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error updating profile:", error);
-      return null;
+            if (error) throw error;
+            return profile;
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            return null;
+        }
     }
 
-    return profile;
-  }
+    async getOrCreateProfile(userId: string): Promise<Profile | null> {
+        try {
+            let profile = await this.getProfile(userId);
 
-  static async getOrCreateProfile(userId: string): Promise<Profile | null> {
-    const existingProfile = await this.getProfile(userId);
-    if (existingProfile) return existingProfile;
+            if (!profile) {
+                profile = await this.createProfile(userId);
+            }
 
-    return await this.createProfile(userId);
-  }
+            return profile;
+        } catch (error) {
+            console.error("Error in getOrCreateProfile:", error);
+            return null;
+        }
+    }
+
+    async updateOnboardingCompleted(userId: string): Promise<Profile | null> {
+        return await this.updateProfile(userId, {
+            onboarding_completed: true,
+        });
+    }
 }

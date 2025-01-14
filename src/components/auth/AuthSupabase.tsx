@@ -24,6 +24,7 @@ export function AuthContainer({
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
+  const profileService = new ProfileService();
 
   useEffect(() => {
     let mounted = true;
@@ -35,7 +36,7 @@ export function AuthContainer({
       }
 
       try {
-        const profile = await ProfileService.getOrCreateProfile(
+        const profile = await profileService.getOrCreateProfile(
           session.user.id
         );
         if (!mounted) return;
