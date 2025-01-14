@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { Tables } from "@/types/database.types";
+import { createPlatform } from "./platforms/platform-factory";
 
 type NotificationChannel = Tables<"notification_channels"> & {
   notification_channel_feeds?: {
@@ -65,6 +66,16 @@ export class ChannelService {
   }
 
   async createChannel(channel: Partial<NotificationChannelWithFeeds>) {
+    if (
+      channel.platform && channel.workspace_connection_id &&
+      channel.channel_identifier_id
+    ) {
+      const platform = createPlatform(channel.platform);
+      await platform.joinChannel(
+        channel.workspace_connection_id,
+        channel.channel_identifier_id,
+      );
+    }
     // Handle platform-specific logic
     const channelData = {
       ...channel,

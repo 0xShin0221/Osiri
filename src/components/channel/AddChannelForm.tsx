@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
 import { useTranslation } from "react-i18next";
-import { SlackService } from "@/services/slack";
+
 import { useAuth } from "@/hooks/useAuth";
 import type { Tables } from "@/types/database.types";
 import { ChannelSelector } from "./ChannelSelector";
@@ -30,6 +30,8 @@ import { Alert, AlertDescription } from "../ui/alert";
 import { MultiFeedSelect } from "./ChannelMultiCombobox";
 import ScheduleSelector from "./ScheduleSelector";
 import { useFilteredSchedules } from "@/hooks/useNotificationSchedules";
+import type { NotificationPlatform } from "@/types/notification-platform";
+import { createPlatform } from "@/services/platforms/platform-factory";
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
 type WorkspaceConnection = Tables<"workspace_connections">;
@@ -85,10 +87,7 @@ export function AddChannelForm({
   const organizationId = user?.organization_id;
   const currentLang = i18n.resolvedLanguage;
   const availablePlatforms = workspaceConnections.map((conn) => conn.platform);
-
-  const [platform, setPlatform] = useState<"slack" | "discord" | "email" | "">(
-    ""
-  );
+  const [platform, setPlatform] = useState<NotificationPlatform | "">("");
   const [isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("");
   const [channelId, setChannelId] = useState("");
@@ -118,13 +117,13 @@ export function AddChannelForm({
   useEffect(() => {
     if (!organizationId || !selectedWorkspaceId || platform !== "slack") return;
 
-    const loadSlackChannels = async () => {
+    const loadChannels = async () => {
       setIsLoadingChannels(true);
       setChannelLoadError(null);
 
       try {
-        const slackService = new SlackService();
-        const channels = await slackService.getChannels(selectedWorkspaceId);
+        const platformService = createPlatform(platform);
+        const channels = await platformService.getChannels(selectedWorkspaceId);
         setSlackChannels(channels);
       } catch (error) {
         console.error("Error loading Slack channels:", error);
@@ -138,7 +137,7 @@ export function AddChannelForm({
     // Clear existing channels before loading new ones
     setSlackChannels([]);
     setChannelId("");
-    loadSlackChannels();
+    loadChannels();
   }, [platform, organizationId, selectedWorkspaceId, t]);
 
   useEffect(() => {
@@ -205,7 +204,7 @@ export function AddChannelForm({
                   <Label>{t("addChannel.platform")}</Label>
                   <RadioGroup
                     value={platform}
-                    onValueChange={(value: "slack" | "discord" | "email") => {
+                    onValueChange={(value: NotificationPlatform) => {
                       setPlatform(value);
                       setSelectedWorkspaceId("");
                       setChannelId("");
