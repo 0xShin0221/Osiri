@@ -8,24 +8,26 @@ export class SlackPlatform extends BasePlatform {
 
     async joinChannel(workspaceId: string, channelId: string): Promise<void> {
         try {
-            const workspace = await this.getWorkspaceConnection(workspaceId);
-            if (!workspace.access_token) {
-                throw new Error("No access token found for workspace");
-            }
-
             const response = await fetch(
-                "https://slack.com/api/conversations.join",
+                `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/slack-join-channel`,
                 {
                     method: "POST",
                     headers: {
-                        "Authorization": `Bearer ${workspace.access_token}`,
                         "Content-Type": "application/json",
+                        "Authorization":
+                            `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
                     },
                     body: JSON.stringify({
-                        channel: channelId,
+                        workspace_id: workspaceId,
+                        channel_id: channelId,
                     }),
                 },
             );
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || "Failed to join channel");
+            }
 
             const data = await response.json();
             if (!data.ok) {
