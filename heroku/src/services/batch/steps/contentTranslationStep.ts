@@ -1,18 +1,22 @@
 import type { BatchResults } from "../../../types/batch";
 import type { ContentTranslator } from "../../content/translator";
-import type { ArticleRepository } from "../../../repositories/article.repository";
 import type { StepProcessor, StepResult } from "./stepProcessor.types";
 import { TranslationRepository } from "../../../repositories/translation.repository";
 import type { FeedLanguage, TranslationStatus } from "../../../types/models";
 
 export class ContentTranslationStep implements StepProcessor {
   private readonly translationRepository: TranslationRepository;
-  private readonly API_DELAY_MS = 100; // 0.1 second between requests
-  private readonly MAX_CONCURRENT_TRANSLATIONS = 3;
+  // Increased delay to prevent rate limits while still maintaining good throughput
+  private readonly API_DELAY_MS = 250; // 0.25 second between requests
+  // Adjusted for GPT-4o-mini's performance characteristics
+  private readonly MAX_CONCURRENT_TRANSLATIONS = 4;
+  // Add backoff for retries
+  private readonly INITIAL_RETRY_DELAY = 1000; // 1 second
+  private readonly MAX_RETRY_DELAY = 8000; // 8 seconds
+  private readonly MAX_RETRIES = 3;
 
   constructor(
     private readonly contentTranslator: ContentTranslator,
-    private readonly articleRepository: ArticleRepository,
     private readonly batchSize: number,
   ) {
     this.translationRepository = new TranslationRepository();
@@ -102,6 +106,13 @@ export class ContentTranslationStep implements StepProcessor {
       throw new Error(createTasksResponse.error);
     }
   }
+  private async exponentialBackoffDelay(attempt: number): Promise<void> {
+    const delay = Math.min(
+      this.INITIAL_RETRY_DELAY * 2 ** attempt,
+      this.MAX_RETRY_DELAY,
+    );
+    await this.delay(delay);
+  }
 
   private async processInParallel<T>(
     items: T[],
@@ -110,26 +121,52 @@ export class ContentTranslationStep implements StepProcessor {
     const results: boolean[] = [];
     const queue = [...items];
     const active = new Set<Promise<void>>();
+    let consecutiveErrors = 0;
+    const MAX_CONSECUTIVE_ERRORS = 3;
 
     while (queue.length > 0 || active.size > 0) {
-      // Add new processes up to the concurrent limit
+      // Dynamically adjust concurrency based on error rate
+      const currentMaxConcurrent = consecutiveErrors > 0
+        ? Math.max(1, this.MAX_CONCURRENT_TRANSLATIONS - consecutiveErrors)
+        : this.MAX_CONCURRENT_TRANSLATIONS;
+
       while (
-        active.size < this.MAX_CONCURRENT_TRANSLATIONS && queue.length > 0
+        active.size < currentMaxConcurrent && queue.length > 0
       ) {
-        const item = queue.shift()!;
+        const item = queue.shift();
+        if (!item) continue;
+
         const promise = (async () => {
-          const result = await processor(item);
-          results.push(result);
+          try {
+            const result = await processor(item);
+            if (result) {
+              consecutiveErrors = 0; // Reset on success
+            } else {
+              consecutiveErrors++;
+            }
+            results.push(result);
+          } catch (error) {
+            consecutiveErrors++;
+            results.push(false);
+            console.error("Error in parallel processing:", error);
+          }
         })();
 
         active.add(promise);
-        // Cleanup promise from active set upon completion
         promise.then(() => active.delete(promise));
+
+        // If too many consecutive errors, add delay
+        if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+          await this.exponentialBackoffDelay(
+            consecutiveErrors - MAX_CONSECUTIVE_ERRORS,
+          );
+          consecutiveErrors = 0; // Reset after backoff
+        }
       }
 
-      // Wait for at least one active process to complete
       if (active.size > 0) {
         await Promise.race(active);
+        await this.delay(this.API_DELAY_MS);
       }
     }
 
@@ -142,29 +179,49 @@ export class ContentTranslationStep implements StepProcessor {
     onProgress?: (stage: string, count: number) => void,
     onError?: (stage: string, error: Error, itemId?: string) => void,
   ): Promise<boolean> {
-    try {
-      await this.updateTranslationStatus(pending.translation_id, "processing");
-      const translateResult = await this.performTranslation(pending);
-      await this.saveTranslationResult(
-        pending.article_id,
-        translateResult,
-        pending.target_language,
-      );
+    let retryCount = 0;
 
-      results.translation.success++;
-      onProgress?.("translate", results.translation.success);
-      await this.delay(this.API_DELAY_MS);
-      return true;
-    } catch (error) {
-      return this.handleTranslationError(
-        error,
-        pending.translation_id,
-        results,
-        onError,
-      );
+    while (retryCount < this.MAX_RETRIES) {
+      try {
+        await this.updateTranslationStatus(
+          pending.translation_id,
+          "processing",
+        );
+
+        const translateResult = await this.performTranslation(pending);
+        await this.saveTranslationResult(
+          pending.article_id,
+          translateResult,
+          pending.target_language,
+        );
+
+        results.translation.success++;
+        onProgress?.("translate", results.translation.success);
+        return true;
+      } catch (error) {
+        retryCount++;
+
+        if (retryCount < this.MAX_RETRIES) {
+          await this.exponentialBackoffDelay(retryCount);
+          console.warn(
+            `Retrying translation ${pending.translation_id}, attempt ${
+              retryCount + 1
+            }`,
+          );
+          continue;
+        }
+
+        return this.handleTranslationError(
+          error,
+          pending.translation_id,
+          results,
+          onError,
+        );
+      }
     }
-  }
 
+    return false;
+  }
   private async updateTranslationStatus(
     translationId: string,
     status: TranslationStatus,

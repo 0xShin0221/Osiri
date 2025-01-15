@@ -284,7 +284,7 @@ export type Database = {
           created_at: string | null
           error: string | null
           id: string
-          platform: Database["public"]["Enums"]["notification_platform"]
+          platform: Database["public"]["Enums"]["notification_platform"] | null
           recipient: string
           status: Database["public"]["Enums"]["notification_status"]
         }
@@ -294,7 +294,7 @@ export type Database = {
           created_at?: string | null
           error?: string | null
           id?: string
-          platform: Database["public"]["Enums"]["notification_platform"]
+          platform?: Database["public"]["Enums"]["notification_platform"] | null
           recipient: string
           status: Database["public"]["Enums"]["notification_status"]
         }
@@ -304,7 +304,7 @@ export type Database = {
           created_at?: string | null
           error?: string | null
           id?: string
-          platform?: Database["public"]["Enums"]["notification_platform"]
+          platform?: Database["public"]["Enums"]["notification_platform"] | null
           recipient?: string
           status?: Database["public"]["Enums"]["notification_status"]
         }
