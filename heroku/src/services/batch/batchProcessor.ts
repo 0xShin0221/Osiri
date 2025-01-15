@@ -48,7 +48,6 @@ export class BatchProcessor {
     );
     this.contentTranslationStep = new ContentTranslationStep(
       contentTranslator,
-      articleRepository,
       this.DEFAULT_BATCH_SIZE,
     );
   }
