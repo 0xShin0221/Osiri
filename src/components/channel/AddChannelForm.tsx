@@ -24,7 +24,7 @@ import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/hooks/useAuth";
-import type { Tables } from "@/types/database.types";
+import type { Database, Tables } from "@/types/database.types";
 import { ChannelSelector } from "./ChannelSelector";
 import { Alert, AlertDescription } from "../ui/alert";
 import { MultiFeedSelect } from "./ChannelMultiCombobox";
@@ -32,9 +32,11 @@ import ScheduleSelector from "./ScheduleSelector";
 import { useFilteredSchedules } from "@/hooks/useNotificationSchedules";
 import type { NotificationPlatform } from "@/types/notification-platform";
 import { createPlatform } from "@/services/platforms/platform-factory";
+import { LANGUAGES } from "@/lib/i18n/languages";
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
 type WorkspaceConnection = Tables<"workspace_connections">;
+type FeedLanguage = Database["public"]["Enums"]["feed_language"];
 
 interface SlackChannel {
   id: string;
@@ -88,6 +90,8 @@ export function AddChannelForm({
   const currentLang = i18n.resolvedLanguage;
   const availablePlatforms = workspaceConnections.map((conn) => conn.platform);
   const [platform, setPlatform] = useState<NotificationPlatform | "">("");
+  const [notificationLanguage, setNotificationLanguage] =
+    useState<FeedLanguage>(currentLang as FeedLanguage);
   const [isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("");
   const [channelId, setChannelId] = useState("");
@@ -169,6 +173,7 @@ export function AddChannelForm({
         notification_channel_feeds: selectedFeeds.map((feedId) => ({
           feed_id: feedId,
         })),
+        notification_language: notificationLanguage,
       });
 
       onOpenChange(false);
@@ -178,6 +183,7 @@ export function AddChannelForm({
       setChannelId("");
       setSelectedFeeds([]);
       setScheduleId(null);
+      setNotificationLanguage(currentLang as FeedLanguage);
     } finally {
       setLoading(false);
     }
@@ -327,6 +333,30 @@ export function AddChannelForm({
                     />
                   </div>
                 ) : null}
+
+                {/* Language Selection */}
+                <div className="grid gap-2">
+                  <Label>{t("addChannel.language")}</Label>
+                  <Select
+                    value={notificationLanguage}
+                    onValueChange={(value: FeedLanguage) =>
+                      setNotificationLanguage(value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder={t("addChannel.selectLanguage")}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {LANGUAGES.SUPPORTED.map((lang) => (
+                        <SelectItem key={lang.code} value={lang.code}>
+                          {lang.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 {/* Feed Selection */}
                 <div className="grid gap-2">

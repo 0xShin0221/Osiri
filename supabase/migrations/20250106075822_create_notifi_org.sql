@@ -57,6 +57,7 @@ create table notification_channels (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid references organizations(id) on delete cascade,
   workspace_connection_id uuid references workspace_connections(id) on delete cascade,
+  notification_language feed_language not null,
   platform notification_platform not null,
   channel_identifier text not null,
   channel_identifier_id text,
@@ -77,7 +78,7 @@ create table notification_channels (
 -- Notification logs table
 create table notification_logs (
   id uuid primary key default gen_random_uuid(),
-  platform notification_platform not null,
+  platform notification_platform,
   channel_id uuid references notification_channels(id),
   article_id uuid references articles(id) on delete cascade,
   recipient text not null,

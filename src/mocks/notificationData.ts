@@ -21,6 +21,7 @@ export const mockChannels: NotificationChannel[] = [
     last_notified_at: null,
     organization_id: null,
     workspace_connection_id: null,
+    notification_language: "zh",
   },
   {
     id: "2",
@@ -37,6 +38,7 @@ export const mockChannels: NotificationChannel[] = [
     last_notified_at: null,
     organization_id: null,
     workspace_connection_id: null,
+    notification_language: "ja",
   },
 ];
 

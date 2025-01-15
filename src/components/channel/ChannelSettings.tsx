@@ -10,12 +10,20 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import type { Tables } from "@/types/database.types";
+import type { Database, Tables } from "@/types/database.types";
 import { useTranslation } from "react-i18next";
 import { GetPlatformIcon } from "../PlatformIcons";
 import ScheduleSelector from "./ScheduleSelector";
 
 import { useFilteredSchedules } from "@/hooks/useNotificationSchedules";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { LANGUAGES } from "@/lib/i18n/languages";
 
 // Types
 type NotificationChannel = Tables<"notification_channels"> & {
@@ -26,7 +34,7 @@ type NotificationChannel = Tables<"notification_channels"> & {
 
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
-
+type FeedLanguage = Database["public"]["Enums"]["feed_language"];
 interface ChannelSettingsProps {
   channel: NotificationChannel;
   feeds: RssFeed[];
@@ -69,6 +77,30 @@ export const ChannelSettings: React.FC<ChannelSettingsProps> = ({
         <CardDescription>{t("settings.configureDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Language Setting */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">{t("settings.language")}</h3>
+          <Select
+            value={channel.notification_language}
+            onValueChange={(value: FeedLanguage) => {
+              onUpdate({ ...channel, notification_language: value });
+            }}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder={t("settings.selectLanguage")} />
+            </SelectTrigger>
+            <SelectContent>
+              {LANGUAGES.SUPPORTED.map((lang) => (
+                <SelectItem key={lang.code} value={lang.code}>
+                  {lang.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-sm text-muted-foreground">
+            {t("settings.languageDescription")}
+          </p>
+        </div>
         {/* Feed Selection */}
         <div className="space-y-4">
           <h3 className="text-lg font-medium">{t("settings.selectedFeeds")}</h3>

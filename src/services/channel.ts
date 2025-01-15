@@ -76,9 +76,13 @@ export class ChannelService {
         channel.channel_identifier_id,
       );
     }
+    // Set default notification language based on the platform
+    const notificationLanguage = channel.notification_language || "en";
+
     // Handle platform-specific logic
     const channelData = {
       ...channel,
+      notification_language: notificationLanguage,
       // For email platform, workspace_connection_id should be null
       workspace_connection_id: channel.platform === "email"
         ? null

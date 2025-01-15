@@ -215,6 +215,7 @@ export type Database = {
           is_active: boolean
           last_error: string | null
           last_notified_at: string | null
+          notification_language: Database["public"]["Enums"]["feed_language"]
           organization_id: string | null
           platform: Database["public"]["Enums"]["notification_platform"]
           schedule_id: string | null
@@ -231,6 +232,7 @@ export type Database = {
           is_active?: boolean
           last_error?: string | null
           last_notified_at?: string | null
+          notification_language: Database["public"]["Enums"]["feed_language"]
           organization_id?: string | null
           platform: Database["public"]["Enums"]["notification_platform"]
           schedule_id?: string | null
@@ -247,6 +249,7 @@ export type Database = {
           is_active?: boolean
           last_error?: string | null
           last_notified_at?: string | null
+          notification_language?: Database["public"]["Enums"]["feed_language"]
           organization_id?: string | null
           platform?: Database["public"]["Enums"]["notification_platform"]
           schedule_id?: string | null

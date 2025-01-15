@@ -8,8 +8,8 @@ DECLARE
     channel_id3 UUID;
     digdatech_org_id UUID;
     ddt_org_id UUID;
-    workspace_conn_id1 UUID := '0c24bc65-50aa-4391-afe2-b39b5726b6ec'::uuid; -- From workspace_connections.sql
-    workspace_conn_id2 UUID := '1c24bc65-50aa-4391-afe2-b39b5726b6ed'::uuid; -- From workspace_connections.sql
+    workspace_conn_id1 UUID := '0c24bc65-50aa-4391-afe2-b39b5726b6ec'::uuid;
+    workspace_conn_id2 UUID := '1c24bc65-50aa-4391-afe2-b39b5726b6ed'::uuid;
 BEGIN
   -- Get organization IDs
   SELECT id INTO digdatech_org_id FROM organizations WHERE name = 'DigDaTech';
@@ -35,7 +35,8 @@ BEGIN
     updated_at,
     last_notified_at,
     error_count,
-    last_error
+    last_error,
+    notification_language
   )
   VALUES
     (
@@ -43,16 +44,17 @@ BEGIN
       digdatech_org_id,
       workspace_conn_id1,
       'slack',
-      '#dev-news-ycom', -- Startup news channel
+      '#dev-news-ycom',
       'C07PATAAAAP',
       schedule_id1,
       true,
-      ARRAY['c0a80121-75c8-4c18-8e57-3af4bc3c61d7']::uuid[], -- AI/ML category
+      ARRAY['c0a80121-75c8-4c18-8e57-3af4bc3c61d7']::uuid[],
       NOW(),
       NOW(),
       NOW() - INTERVAL '1 day',
       0,
-      NULL
+      NULL,
+      'zh'
     )
     RETURNING id INTO channel_id1;
 
@@ -70,7 +72,8 @@ BEGIN
     updated_at,
     last_notified_at,
     error_count,
-    last_error
+    last_error,
+    notification_language
   )
   VALUES
     (
@@ -78,8 +81,8 @@ BEGIN
       digdatech_org_id,
       workspace_conn_id1,
       'slack',
-      '#general-tech', -- General tech news channel
-       'BB2PATAAAAP',
+      '#general-tech',
+      'BB2PATAAAAP',
       schedule_id2,
       true,
       NULL,
@@ -87,7 +90,8 @@ BEGIN
       NOW(),
       NOW() - INTERVAL '1 week',
       0,
-      NULL
+      NULL,
+      'ja'
     )
     RETURNING id INTO channel_id2;
 
@@ -105,7 +109,8 @@ BEGIN
     updated_at,
     last_notified_at,
     error_count,
-    last_error
+    last_error,
+    notification_language
   )
   VALUES
     (
@@ -113,7 +118,7 @@ BEGIN
       ddt_org_id,
       workspace_conn_id2,
       'slack',
-      '#ai-ml-updates', -- AI/ML focused updates channel
+      '#ai-ml-updates',
       'C07PA0A4AAP',
       schedule_id3,
       true,
@@ -122,7 +127,8 @@ BEGIN
       NOW(),
       NOW() - INTERVAL '2 days',
       1,
-      'Rate limit exceeded'
+      'Rate limit exceeded',
+      'ja'
     )
     RETURNING id INTO channel_id3;
 
@@ -135,12 +141,12 @@ BEGIN
   )
   VALUES
     -- Channel 1 feeds
-    (channel_id1, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d1', NOW(), NOW()), -- TechCrunch feed
+    (channel_id1, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d1', NOW(), NOW()),
     -- Channel 2 feeds
-    (channel_id2, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d2', NOW(), NOW()), -- MIT Tech Review feed
+    (channel_id2, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d2', NOW(), NOW()),
     -- Channel 3 feeds
-    (channel_id3, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d1', NOW(), NOW()), -- TechCrunch feed
-    (channel_id3, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d2', NOW(), NOW()); -- MIT Tech Review feed
+    (channel_id3, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d1', NOW(), NOW()),
+    (channel_id3, 'f0a80121-75c8-4c18-8e57-3af4bc3c61d2', NOW(), NOW());
 
   -- Create notification logs
   INSERT INTO notification_logs (
