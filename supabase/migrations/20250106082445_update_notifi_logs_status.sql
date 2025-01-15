@@ -2,7 +2,8 @@ create type notification_status as enum (
   'pending',   -- Notification is created but not sent yet
   'success',   -- Notification sent successfully
   'failed',    -- Notification failed to send
-  'retrying'   -- Notification is being retried
+  'retrying',   -- Notification is being retried
+  'skipped'    -- Notification is skipped
 );
 
 alter table notification_logs

@@ -861,7 +861,12 @@ export type Database = {
         | "weekly_monday"
         | "weekly_sunday"
         | "custom"
-      notification_status: "pending" | "success" | "failed" | "retrying"
+      notification_status:
+        | "pending"
+        | "success"
+        | "failed"
+        | "retrying"
+        | "skipped"
       translation_status:
         | "pending"
         | "processing"

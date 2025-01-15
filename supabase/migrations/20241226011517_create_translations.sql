@@ -68,6 +68,17 @@ create policy "Only admins can modify translations"
   to authenticated
   using (coalesce((auth.jwt()->'app_metadata'->>'is_admin')::boolean, false));
 
+-- Add service role policies for translations
+CREATE POLICY "Service role can select translations"
+  ON translations FOR SELECT
+  TO service_role
+  USING (true);
+
+CREATE POLICY "Service role can update translations"
+  ON translations FOR UPDATE
+  TO service_role
+  USING (true);
+
 -- Add comments
 comment on table translations is 'Stores article translations with status tracking';
 comment on column translations.key_point1 is 'Preserved industry point 1';

@@ -311,6 +311,11 @@ CREATE POLICY "Service role can create workspace connections"
   TO service_role
   WITH CHECK (true);
 
+CREATE POLICY "Service role can select workspace connections"
+  ON workspace_connections FOR SELECT
+  TO service_role
+  using (true);
+
 CREATE POLICY "Service role can create organization members"
   ON organization_members FOR INSERT
   TO service_role
@@ -320,6 +325,11 @@ CREATE POLICY "Service role can create notification channels"
   ON notification_channels FOR INSERT
   TO service_role
   WITH CHECK (true);
+
+CREATE POLICY "Service role can select notification channels"
+  ON notification_channels FOR SELECT
+  TO service_role
+  USING (true);
 
 CREATE POLICY "Service role can create notification logs"
   ON notification_logs FOR INSERT
@@ -335,6 +345,11 @@ CREATE POLICY "Service role can create notification channel feeds"
   ON notification_channel_feeds FOR INSERT
   TO service_role
   WITH CHECK (true);
+
+CREATE POLICY "Service role can select notification channel feeds"
+  ON notification_channel_feeds FOR SELECT
+  TO service_role
+  USING (true);
 
 
 -- Add comments
