@@ -19,9 +19,11 @@ const translationSchema = z.object({
     .describe(
       "3-5 key points that are important for understanding the article, each around 300-500 characters.",
     ),
-  summary: z.string().describe(
-    "A concise summary of the article, focusing on the main ideas.",
-  ),
+  summary: z.string()
+    .max(400)
+    .describe(
+      "A concise summary of the article focusing on the main ideas. Maximum 500 characters.",
+    ),
 });
 
 const CHUNK_SIZE = 12000; // Size of each chunk (targeting ~75% of max output tokens)
@@ -65,6 +67,7 @@ export class ContentTranslator {
         - Maintain technical terminology
         - Extract key points if this is the first chunk
         - Maintain content flow between chunks
+        - Keep summary concise (maximum 400 characters)
         
         Chunk Information:
         - Total Chunks: {total_chunks}
