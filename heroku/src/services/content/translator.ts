@@ -22,16 +22,20 @@ const translationSchema = z.object({
   summary: z.string()
     .max(400)
     .describe(
-      "A concise summary of the article focusing on the main ideas. Maximum 500 characters.",
+      "A focused summary capturing the article's essence. Include:\n" +
+        "1. Topic and context (why it matters)\n" +
+        "2. Key findings or conclusions\n" +
+        "3. Practical implications and future outlook\n" +
+        "Minimize technical jargon and use expressions that business professionals can easily understand.",
     ),
 });
 
-const CHUNK_SIZE = 12000; // Size of each chunk (targeting ~75% of max output tokens)
-const OVERLAP_SIZE = 200; // Number of tokens to overlap between chunks
+const CHUNK_SIZE = 12000;
+const OVERLAP_SIZE = 200;
 
 const MAX_RETRIES = 3;
-const INITIAL_TIMEOUT = 30000; // 30 seconds
-const RETRY_DELAY = 1000; // 1 second
+const INITIAL_TIMEOUT = 30000;
+const RETRY_DELAY = 1000;
 
 interface TranslationChunk {
   translation: string;
@@ -56,19 +60,30 @@ export class ContentTranslator {
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
 
     const promptTemplate = ChatPromptTemplate.fromTemplate(`
-         Carefully translate the following content with high precision:
+         You are an editor well-versed in the startup and technology industry. Please translate and summarize the following article:
 
         Source Language: {source_language}
         Target Language: {target_language}
 
         Translation Requirements:
-        - Translate title and text accurately
-        - Preserve original meaning and nuance
-        - Maintain technical terminology
-        - Extract key points if this is the first chunk
-        - Maintain content flow between chunks
-        - Keep summary concise (maximum 400 characters)
-        
+
+        1. Basic Translation Requirements:
+        - Maintain precise meaning and technical nuances from the original
+        - Properly translate technical terms (use standard translations where available)
+        - Adjust expressions to sound natural in context
+
+        2. Summary & Key Points Requirements:
+        - Clearly communicate the "So What?" (why this matters)
+        - Emphasize business impact and practical significance
+        - Break down complex technical concepts for general business readers
+        - Consider industry trends and market implications
+        - Extract crucial points relevant to investors, entrepreneurs, and business professionals
+
+        3. Structure Requirements:
+        - Structure summary as: context → key points → implications
+        - Keep key points concise (1-2 sentences each)
+        - Maintain contextual consistency between chunks
+
         Chunk Information:
         - Total Chunks: {total_chunks}
         - Current Chunk: {current_chunk}
@@ -88,6 +103,27 @@ export class ContentTranslator {
       this.model,
       this.parser,
     ]);
+  }
+
+  private cleanupJsonString(text: string): string {
+    // Remove markdown code block indicators if present
+    let cleanedText = text.replace(/```json\n/, "").replace(/\n```$/, "");
+
+    // Ensure proper escaping of special characters
+    cleanedText = cleanedText.replace(/[\n\r\t]/g, " ").replace(/\s+/g, " ");
+
+    return cleanedText;
+  }
+
+  private normalizeTranslationResponse(
+    response: z.infer<typeof translationSchema>,
+  ): z.infer<typeof translationSchema> {
+    // Ensure summary is within length limit
+    if (response.summary) {
+      response.summary = response.summary.slice(0, 400);
+    }
+
+    return response;
   }
 
   private countTokens(text: string): number {
@@ -125,13 +161,15 @@ export class ContentTranslator {
     previousContext = "",
     retryCount = 0,
   ): Promise<ServiceResponse<TranslationChunk>> {
+    // Move isFirstChunk outside of try block to make it available in catch block
+    const isFirstChunk = chunkIndex === 0;
+
     try {
-      const isFirstChunk = chunkIndex === 0;
       const isFirstChunkInstructions = isFirstChunk
-        ? "This is the first chunk. Please extract key points and write a summary."
+        ? "This is the first chunk. Please extract key points and write a summary. The response must be valid JSON, with properly escaped characters."
         : "This is a continuation chunk. Focus on maintaining content flow.";
 
-      const response = await this.chain.invoke({
+      const chainResponse = await this.chain.invoke({
         title,
         content,
         source_language: sourceLang,
@@ -143,6 +181,8 @@ export class ContentTranslator {
         format_instructions: this.parser.getFormatInstructions(),
       });
 
+      const response = this.normalizeTranslationResponse(chainResponse);
+
       return {
         success: true,
         data: {
@@ -151,6 +191,36 @@ export class ContentTranslator {
         },
       };
     } catch (error) {
+      console.error("Translation error:", error);
+
+      if (
+        error instanceof Error &&
+        error.message.includes("OUTPUT_PARSING_FAILURE")
+      ) {
+        console.warn(
+          "JSON parsing error detected, attempting to clean response",
+        );
+        try {
+          // Type assertion to access cause property
+          const rawResponse =
+            (error as { cause?: { message: string } }).cause?.message || "";
+          const cleanedJson = this.cleanupJsonString(rawResponse);
+          const parsedResponse = JSON.parse(cleanedJson);
+          const normalizedResponse = this.normalizeTranslationResponse(
+            parsedResponse,
+          );
+          return {
+            success: true,
+            data: {
+              translation: normalizedResponse.translation,
+              key_points: isFirstChunk ? normalizedResponse.key_points : [],
+            },
+          };
+        } catch (cleanupError) {
+          console.error("Failed to clean and parse response:", cleanupError);
+        }
+      }
+
       if (retryCount < MAX_RETRIES) {
         console.warn(
           `Translation attempt ${retryCount + 1} failed, retrying...`,
@@ -168,12 +238,12 @@ export class ContentTranslator {
         );
       }
 
-      console.error("Chunk translation failed after all retries", error);
+      console.error("Translation process failed after all retries", error);
       return {
         success: false,
         error: error instanceof Error
           ? error.message
-          : "Translation failed after retries",
+          : "Translation process failed after retries",
       };
     }
   }
@@ -202,7 +272,6 @@ export class ContentTranslator {
     console.info(`Content tokens: ${totalTokens}`);
 
     try {
-      // Split content into chunks if necessary
       const chunks = totalTokens > CHUNK_SIZE
         ? this.splitIntoChunks(content)
         : [content];
@@ -213,7 +282,6 @@ export class ContentTranslator {
       let allKeyPoints: string[] = [];
       let previousContext = "";
 
-      // Translate each chunk
       for (let i = 0; i < chunks.length; i++) {
         const chunkResult = await this.translateChunk(
           title,
@@ -237,12 +305,10 @@ export class ContentTranslator {
           allKeyPoints = chunkResult.data.key_points;
         }
 
-        // Store the end of this chunk for context in the next chunk
         const chunkTokens = encode(chunkResult.data.translation);
         previousContext = decode(chunkTokens.slice(-OVERLAP_SIZE));
       }
 
-      // Get title translation if multiple chunks
       let translatedTitle = title;
       if (chunks.length > 1) {
         const titleResult = await this.translateChunk(
@@ -258,15 +324,13 @@ export class ContentTranslator {
         }
       }
 
-      // Combine all translations
       const finalTranslation = translatedChunks.join(" ");
 
-      // Generate final summary for long content
       let summary = "";
       if (chunks.length > 1) {
         const summaryResult = await this.translateChunk(
           title,
-          `${finalTranslation.slice(0, 1000)}...`, // Use start of content for summary
+          `${finalTranslation.slice(0, 1000)}...`,
           targetLang,
           targetLang,
           0,
