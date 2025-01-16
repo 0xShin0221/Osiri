@@ -714,6 +714,54 @@ export type Database = {
       }
     }
     Functions: {
+      create_smart_translation_tasks: {
+        Args: {
+          p_article_ids: string[]
+        }
+        Returns: {
+          article_id: string
+          attempt_count: number
+          content: string | null
+          created_at: string | null
+          error: string | null
+          id: string
+          key_point1: string | null
+          key_point2: string | null
+          key_point3: string | null
+          key_point4: string | null
+          key_point5: string | null
+          last_attempt: string | null
+          status: Database["public"]["Enums"]["translation_status"]
+          summary: string | null
+          target_language: Database["public"]["Enums"]["feed_language"]
+          title: string | null
+          updated_at: string | null
+        }[]
+      }
+      create_smart_translation_tasks_with_logging: {
+        Args: {
+          p_article_ids: string[]
+        }
+        Returns: {
+          article_id: string
+          attempt_count: number
+          content: string | null
+          created_at: string | null
+          error: string | null
+          id: string
+          key_point1: string | null
+          key_point2: string | null
+          key_point3: string | null
+          key_point4: string | null
+          key_point5: string | null
+          last_attempt: string | null
+          status: Database["public"]["Enums"]["translation_status"]
+          summary: string | null
+          target_language: Database["public"]["Enums"]["feed_language"]
+          title: string | null
+          updated_at: string | null
+        }[]
+      }
       create_translation_tasks: {
         Args: {
           p_article_ids: string[]
@@ -775,6 +823,16 @@ export type Database = {
           source_language: Database["public"]["Enums"]["feed_language"]
         }[]
       }
+      get_required_translation_languages: {
+        Args: {
+          p_article_ids: string[]
+        }
+        Returns: {
+          article_id: string
+          source_language: Database["public"]["Enums"]["feed_language"]
+          required_languages: Database["public"]["Enums"]["feed_language"][]
+        }[]
+      }
       increment_attempt_count: {
         Args: {
           row_id: string
@@ -794,48 +852,109 @@ export type Database = {
         | "critical_thinking"
         | "mental_models"
         | "personal_development"
+        | "self_improvement"
+        | "productivity_tools"
+        | "time_management"
         | "startup_news"
         | "venture_capital"
         | "entrepreneurship"
         | "product_management"
         | "leadership"
         | "business_strategy"
+        | "business_finance"
+        | "small_business"
+        | "e_commerce"
         | "tech_news"
         | "software_development"
         | "web_development"
         | "mobile_development"
         | "devops"
         | "cybersecurity"
+        | "cloud_computing"
+        | "open_source"
+        | "blockchain"
         | "engineering_general"
         | "system_design"
         | "backend_engineering"
         | "frontend_engineering"
         | "data_engineering"
         | "infrastructure"
+        | "civil_engineering"
+        | "mechanical_engineering"
+        | "electrical_engineering"
         | "machine_learning"
         | "artificial_intelligence"
         | "data_science"
         | "deep_learning"
         | "nlp"
         | "computer_vision"
+        | "data_mining"
+        | "big_data"
+        | "ai_ethics"
         | "ux_design"
         | "ui_design"
         | "product_design"
         | "design_systems"
         | "web_design"
         | "interaction_design"
+        | "graphic_design"
+        | "motion_graphics"
+        | "3d_design"
         | "computer_science"
         | "neuroscience"
         | "psychology"
         | "cognitive_science"
         | "data_analytics"
         | "research_papers"
+        | "physics"
+        | "chemistry"
+        | "biology"
         | "digital_marketing"
         | "growth_marketing"
         | "content_marketing"
         | "seo"
         | "social_media"
         | "marketing_analytics"
+        | "email_marketing"
+        | "affiliate_marketing"
+        | "public_relations"
+        | "art_and_culture"
+        | "visual_arts"
+        | "performing_arts"
+        | "literature"
+        | "film_and_cinema"
+        | "music"
+        | "fashion"
+        | "beauty"
+        | "food_and_beverage"
+        | "travel"
+        | "lifestyle"
+        | "home_and_garden"
+        | "parenting"
+        | "health_and_fitness"
+        | "news"
+        | "world_news"
+        | "business_news"
+        | "tech_news_general"
+        | "science_news"
+        | "android"
+        | "ios"
+        | "personal_finance"
+        | "investing"
+        | "real_estate"
+        | "economics"
+        | "web_development_frontend"
+        | "web_development_backend"
+        | "mobile_app_development"
+        | "game_development"
+        | "software_engineering"
+        | "space"
+        | "television"
+        | "sports"
+        | "podcasts"
+        | "video"
+        | "comics"
+        | "gaming_general"
       feed_content_status:
         | "verified"
         | "unverified"

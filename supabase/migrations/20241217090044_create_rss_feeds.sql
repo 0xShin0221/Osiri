@@ -10,13 +10,16 @@ create type feed_language as enum (
 );
 
 -- Create more detailed enum for feed categories
-create type feed_category as enum (
+CREATE TYPE feed_category AS ENUM (
   -- Learning & Personal Development
   'learning_productivity',
   'critical_thinking',
   'mental_models',
   'personal_development',
-  
+  'self_improvement', -- Focus on personal growth and development
+  'productivity_tools', -- Tools and techniques for increased productivity
+  'time_management', -- Strategies for effective time use
+
   -- Business & Startups
   'startup_news',
   'venture_capital',
@@ -24,7 +27,10 @@ create type feed_category as enum (
   'product_management',
   'leadership',
   'business_strategy',
-  
+  'business_finance', -- Financial aspects of business operations
+  'small_business', -- Topics relevant to small businesses
+  'e_commerce', -- Online commerce and retail
+
   -- Technology
   'tech_news',
   'software_development',
@@ -32,7 +38,10 @@ create type feed_category as enum (
   'mobile_development',
   'devops',
   'cybersecurity',
-  
+  'cloud_computing', -- Cloud-based technologies and services
+  'open_source', -- Open-source software and development
+  'blockchain', -- Distributed ledger technology
+
   -- Engineering
   'engineering_general',
   'system_design',
@@ -40,7 +49,10 @@ create type feed_category as enum (
   'frontend_engineering',
   'data_engineering',
   'infrastructure',
-  
+  'civil_engineering', -- Design and construction of infrastructure
+  'mechanical_engineering', -- Design and manufacturing of mechanical systems
+  'electrical_engineering', -- Design and application of electrical systems
+
   -- AI & Data Science
   'machine_learning',
   'artificial_intelligence',
@@ -48,7 +60,10 @@ create type feed_category as enum (
   'deep_learning',
   'nlp',
   'computer_vision',
-  
+  'data_mining', -- Extracting patterns from large datasets
+  'big_data', -- Handling and processing large volumes of data
+  'ai_ethics', -- Ethical considerations in AI development
+
   -- Design
   'ux_design',
   'ui_design',
@@ -56,7 +71,10 @@ create type feed_category as enum (
   'design_systems',
   'web_design',
   'interaction_design',
-  
+  'graphic_design', -- Visual communication and design
+  'motion_graphics', -- Animated graphics and visual effects
+  '3d_design', -- Three-dimensional design and modeling
+
   -- Science & Research
   'computer_science',
   'neuroscience',
@@ -64,14 +82,69 @@ create type feed_category as enum (
   'cognitive_science',
   'data_analytics',
   'research_papers',
-  
+  'physics', -- Study of the fundamental laws of nature
+  'chemistry', -- Study of matter and its properties
+  'biology', -- Study of living organisms
+
   -- Marketing & Growth
   'digital_marketing',
   'growth_marketing',
   'content_marketing',
   'seo',
   'social_media',
-  'marketing_analytics'
+  'marketing_analytics',
+  'email_marketing', -- Marketing through email campaigns
+  'affiliate_marketing', -- Performance-based marketing
+  'public_relations', -- Managing public image and communication
+
+  -- Culture & Lifestyle (More granular categories)
+  'art_and_culture', -- General arts and cultural topics
+  'visual_arts', -- Painting, sculpture, photography, etc.
+  'performing_arts', -- Theater, music, dance, etc.
+  'literature', -- Novels, poetry, essays, etc.
+  'film_and_cinema', -- Movies and filmmaking
+  'music', -- General music topics
+  'fashion', -- Clothing, style, and trends
+  'beauty', -- Cosmetics, skincare, and personal care
+  'food_and_beverage', -- Culinary arts, recipes, and dining
+  'travel', -- Tourism, destinations, and experiences
+  'lifestyle', -- General lifestyle topics
+  'home_and_garden', -- Home decor, gardening, and DIY
+  'parenting', -- Raising children and family life
+  'health_and_fitness', -- Physical and mental well-being
+
+  -- News & Current Events
+  'news', -- General news and current events
+  'world_news', -- International news and affairs
+  'business_news', -- News related to business and finance
+  'tech_news_general', -- General technology news
+  'science_news', -- News related to scientific discoveries
+
+  -- Mobile & Operating Systems
+  'android', -- Android operating system and ecosystem
+  'ios', -- iOS operating system and ecosystem
+
+  -- Finance (More specific categories)
+  'personal_finance', -- Managing personal finances
+  'investing', -- Investing in stocks, bonds, etc.
+  'real_estate', -- Real estate market and investments
+  'economics', -- Economic theories and trends
+
+  -- Development (More specific categories)
+  'web_development_frontend', -- Client-side web development
+  'web_development_backend', -- Server-side web development
+  'mobile_app_development', -- Development of mobile applications
+  'game_development', -- Development of video games
+  'software_engineering', -- Principles and practices of software development
+
+  -- Other/General Interest
+  'space', -- Space exploration and astronomy
+  'television', -- Television shows and programming
+  'sports', -- General sports news and events
+  'podcasts', -- Audio programs and discussions
+  'video', -- Video content and streaming
+  'comics', -- Comic books and graphic novels
+  'gaming_general' -- General gaming news and reviews
 );
 
 -- Create enum for technical feed status
