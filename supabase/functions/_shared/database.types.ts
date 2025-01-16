@@ -290,6 +290,7 @@ export type Database = {
           platform: Database["public"]["Enums"]["notification_platform"] | null
           recipient: string
           status: Database["public"]["Enums"]["notification_status"]
+          updated_at: string | null
         }
         Insert: {
           article_id?: string | null
@@ -300,6 +301,7 @@ export type Database = {
           platform?: Database["public"]["Enums"]["notification_platform"] | null
           recipient: string
           status: Database["public"]["Enums"]["notification_status"]
+          updated_at?: string | null
         }
         Update: {
           article_id?: string | null
@@ -310,6 +312,7 @@ export type Database = {
           platform?: Database["public"]["Enums"]["notification_platform"] | null
           recipient?: string
           status?: Database["public"]["Enums"]["notification_status"]
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -480,8 +483,14 @@ export type Database = {
       rss_feeds: {
         Row: {
           categories: Database["public"]["Enums"]["feed_category"][]
+          content_status:
+            | Database["public"]["Enums"]["feed_content_status"]
+            | null
           created_at: string
           description: string | null
+          health_status:
+            | Database["public"]["Enums"]["feed_health_status"]
+            | null
           id: string
           is_active: boolean
           language: Database["public"]["Enums"]["feed_language"]
@@ -493,8 +502,14 @@ export type Database = {
         }
         Insert: {
           categories?: Database["public"]["Enums"]["feed_category"][]
+          content_status?:
+            | Database["public"]["Enums"]["feed_content_status"]
+            | null
           created_at?: string
           description?: string | null
+          health_status?:
+            | Database["public"]["Enums"]["feed_health_status"]
+            | null
           id?: string
           is_active?: boolean
           language?: Database["public"]["Enums"]["feed_language"]
@@ -506,8 +521,14 @@ export type Database = {
         }
         Update: {
           categories?: Database["public"]["Enums"]["feed_category"][]
+          content_status?:
+            | Database["public"]["Enums"]["feed_content_status"]
+            | null
           created_at?: string
           description?: string | null
+          health_status?:
+            | Database["public"]["Enums"]["feed_health_status"]
+            | null
           id?: string
           is_active?: boolean
           language?: Database["public"]["Enums"]["feed_language"]
@@ -815,6 +836,22 @@ export type Database = {
         | "seo"
         | "social_media"
         | "marketing_analytics"
+      feed_content_status:
+        | "verified"
+        | "unverified"
+        | "low_quality"
+        | "spam"
+        | "duplicate"
+        | "inappropriate"
+      feed_health_status:
+        | "active"
+        | "error"
+        | "invalid_format"
+        | "not_found"
+        | "timeout"
+        | "rate_limited"
+        | "blocked"
+        | "pending_check"
       feed_language:
         | "en"
         | "ja"
