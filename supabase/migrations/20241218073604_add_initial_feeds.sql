@@ -130,7 +130,7 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  'https://upload.wikimedia.org/wikipedia/commons/b/b7/TechCrunch_favicon_gradient.png', 
  'https://techcrunch.com/startups/feed/', 
  'en', 
- false,
+ true,
  array['startup_news', 'venture_capital', 'tech_news']::feed_category[]
 ),
 ('OnStartups', 
@@ -606,7 +606,7 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs2JoLLmjfdYZ2Twavh6nDP0ooCeayukb0Ww&s', 
  'https://news.mit.edu/rss/research', 
  'en', 
- false,
+ true,
  array['tech_news', 'artificial_intelligence', 'research_papers']::feed_category[]
 ),
 ('ScienceAlert', 

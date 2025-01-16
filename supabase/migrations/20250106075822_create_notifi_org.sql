@@ -82,9 +82,10 @@ create table notification_logs (
   channel_id uuid references notification_channels(id),
   article_id uuid references articles(id) on delete cascade,
   recipient text not null,
-  status text not null,
+  status notification_status not null,
   error text,
-  created_at timestamp with time zone default now()
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
 );
 
 -- Create notification_channel_feeds table
@@ -334,6 +335,12 @@ CREATE POLICY "Service role can select notification channels"
 CREATE POLICY "Service role can create notification logs"
   ON notification_logs FOR INSERT
   TO service_role
+  WITH CHECK (true);
+
+CREATE POLICY "Service role can update notification logs"
+  ON notification_logs FOR UPDATE
+  TO service_role
+  USING (true)
   WITH CHECK (true);
 
 CREATE POLICY "Service role can create notification schedules"

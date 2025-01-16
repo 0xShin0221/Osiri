@@ -83,7 +83,7 @@ create table rss_feeds (
   site_icon text,
   categories feed_category[] not null default '{}',
   language feed_language not null default 'en',
-  is_active boolean not null default true,
+  is_active boolean not null default false,
   last_fetched_at timestamp with time zone,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now()
@@ -109,10 +109,16 @@ create policy "Anyone can view rss feeds"
   to authenticated, anon
   using (true);
 
-create policy "Only admins can modify rss feeds"
-  on rss_feeds for all
+create policy "Allow authenticated users to modify rss feeds"
+  on rss_feeds for update
   to authenticated
-  using (coalesce((auth.jwt()->'app_metadata'->>'is_admin')::boolean, false));
+  using (true)
+  with check (true);
+
+create policy "Service role can insert rss feeds"
+  on rss_feeds for insert
+  to service_role
+  with check (true);
 
 -- Table and column comments
 comment on table rss_feeds is 'RSS feed source information';
