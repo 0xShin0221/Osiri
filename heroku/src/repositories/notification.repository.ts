@@ -326,6 +326,7 @@ export class NotificationRepository extends BaseRepository {
     error?: string,
   ): Promise<ServiceResponse<void>> {
     try {
+      console.log("updateNotificationStatus", { id, status, recipient, error });
       const { error: updateError } = await this.client
         .from("notification_logs")
         .update({
@@ -336,7 +337,10 @@ export class NotificationRepository extends BaseRepository {
         })
         .eq("id", id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error("Error updating notification status:", updateError);
+        throw updateError;
+      }
       return { success: true };
     } catch (error) {
       return {

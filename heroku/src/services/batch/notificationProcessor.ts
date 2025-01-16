@@ -65,6 +65,11 @@ export class NotificationBatchProcessor {
 
                     const lastSentTime: Record<string, number> = {};
 
+                    console.log(
+                        "[NotificationBatch] Processing notification channels",
+                        channels,
+                    );
+
                     // 3. Send to each channel based on platform
                     for (const channel of channels) {
                         console.log(
