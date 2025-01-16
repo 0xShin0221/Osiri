@@ -146,9 +146,10 @@ export class ChannelService {
       const channel = await this.getChannelById(channelId);
       if (!channel) throw new Error("Channel not found");
 
-      const feedIds = channel.notification_channel_feeds?.map((f) =>
-        f.feed_id
-      ) || [];
+      const feedIds =
+        channel.notification_channel_feeds?.map((f: { feed_id: string }) =>
+          f.feed_id
+        ) || [];
 
       // Deactivate the channel
       const { error } = await supabase
