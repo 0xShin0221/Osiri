@@ -74,6 +74,14 @@ CREATE TYPE feed_category AS ENUM (
   'graphic_design', -- Visual communication and design
   'motion_graphics', -- Animated graphics and visual effects
   '3d_design', -- Three-dimensional design and modeling
+  'interior_design',      -- Interior design and decoration
+  'architecture',         -- Architectural design and theory
+  'furniture_design',     -- Furniture and product design for interiors
+  'lighting_design',      -- Lighting solutions and design
+  'sustainable_design',   -- Sustainable and eco-friendly design
+  'commercial_design',    -- Commercial and office space design
+  'residential_design',   -- Residential interior design
+  'landscape_design',     -- Outdoor and garden design
 
   -- Science & Research
   'computer_science',

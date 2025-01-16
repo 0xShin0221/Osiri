@@ -20,13 +20,8 @@ export default function FeedCard({
   variant = "discover",
 }: FeedCardProps) {
   const handleCardClick = (e: React.MouseEvent) => {
-    // ボタン以外の領域がクリックされた場合のみ処理
-    if (
-      !(e.target instanceof HTMLButtonElement) &&
-      !isLocked &&
-      !isDefault &&
-      variant !== "organization"
-    ) {
+    const isButton = (e.target as HTMLElement).closest("button");
+    if (!isButton && !isLocked && !isDefault && variant !== "organization") {
       onToggle(feed.id);
     }
   };
@@ -49,12 +44,12 @@ export default function FeedCard({
       onClick={handleCardClick}
       onTouchStart={(e) => {
         if (!isLocked && !isDefault && variant !== "organization") {
-          e.currentTarget.classList.add('active');
+          e.currentTarget.classList.add("active");
         }
       }}
       onTouchEnd={(e) => {
         if (!isLocked && !isDefault && variant !== "organization") {
-          e.currentTarget.classList.remove('active');
+          e.currentTarget.classList.remove("active");
         }
       }}
       onKeyUp={(e) => {

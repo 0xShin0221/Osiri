@@ -475,14 +475,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  false,
  array['ux_design', 'interaction_design', 'product_design']::feed_category[]
 ),
-('Nielsen Norman Group', 
- 'Research-based UX insights', 
- 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBk2r58Q9p88N7w1iCP1lweZxEklOOjTDiPA&s', 
- 'https://www.nngroup.com/feed/rss/', 
- 'en', 
- false,
- array['ux_design', 'interaction_design', 'research_papers']::feed_category[]
-),
 ('UX Movement', 
  'UX design patterns and solutions', 
  'https://miro.medium.com/v2/resize:fit:2400/1*0hVXTjSwlD8Kje1OlclpDg.png', 
@@ -498,22 +490,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  'en', 
  false,
  array['product_design', 'design_systems', 'ui_design']::feed_category[]
-),
-('Smashing Magazine', 
- 'Web design and development', 
- 'https://www.smashingmagazine.com/favicon.ico', 
- 'https://www.smashingmagazine.com/feed/', 
- 'en', 
- false,
- array['web_design', 'web_development', 'frontend_engineering']::feed_category[]
-),
-('UX Collective', 
- 'Curated UX design stories', 
- 'https://cdn-images-1.medium.com/v2/resize:fill:72:72/1*mDhF9X4VO0rCrJvWFatyxg.png', 
- 'https://uxdesign.cc/feed', 
- 'en', 
- false,
- array['ux_design', 'product_design', 'interaction_design']::feed_category[]
 ),
 ('Airbnb Design', 
  'Design at Airbnb', 
@@ -1196,7 +1172,78 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
   false,
   array['venture_capital', 'startup_news', 'entrepreneurship']::feed_category[]
 );
+-- Marketing Category
+insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
+('The Growth Show', 
+ 'HubSpot podcast exploring stories of business growth', 
+ 'https://hubspot.com/favicon.ico', 
+ 'http://thegrowthshow.hubspot.libsynpro.com/', 
+ 'en', 
+ false,
+ array['growth_marketing', 'business_strategy', 'digital_marketing']::feed_category[]
+),
+('Duct Tape Marketing', 
+ 'Small business marketing strategies and tips', 
+ 'https://149781471.v2.pressablecdn.com/wp-content/uploads/2022/08/15921-New-logo-Final-Transparent_Full-Color.png', 
+ 'https://ducttape.libsyn.com/rss', 
+ 'en', 
+ false,
+ array['digital_marketing', 'small_business', 'content_marketing']::feed_category[]
+);
 
+-- Interior Design Category
+insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
+('Design Milk - Interior Design', 
+ 'Modern design trends and interior inspiration', 
+ 'https://design-milk.com/favicon.ico', 
+ 'https://design-milk.com/category/interior-design/feed/', 
+ 'en', 
+ false,
+ array['interior_design', 'product_design', 'design_systems']::feed_category[]
+),
+('Dezeen Interiors', 
+ 'Architecture and design magazine interiors section', 
+ 'https://www.dezeen.com/favicon.ico', 
+ 'https://www.dezeen.com/interiors/feed/', 
+ 'en', 
+ false,
+ array['interior_design', 'product_design', 'architecture']::feed_category[]
+),
+('Apartment Therapy', 
+ 'Home design and decor inspiration for everyday living', 
+ 'https://www.apartmenttherapy.com/favicon.ico', 
+ 'https://www.apartmenttherapy.com/design.rss', 
+ 'en', 
+ false,
+ array['interior_design', 'home_and_garden', 'lifestyle']::feed_category[]
+);
+
+-- Design Category
+insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
+('Smashing Magazine', 
+ 'Web design and development resources', 
+ 'https://www.smashingmagazine.com/favicon.ico', 
+ 'https://www.smashingmagazine.com/feed', 
+ 'en', 
+ false,
+ array['web_design', 'web_development', 'frontend_engineering']::feed_category[]
+),
+('Nielsen Norman Group', 
+ 'UX research and user experience insights', 
+ 'https://yt3.googleusercontent.com/ytc/AIdro_ljsZw6A_hbeHDBc_ftg1DBLBlP4A_wQP-i_AueFZNMdw=s900-c-k-c0x00ffffff-no-rj', 
+ 'https://www.nngroup.com/feed/rss/', 
+ 'en', 
+ false,
+ array['ux_design', 'interaction_design', 'research_papers']::feed_category[]
+),
+('UX Collective', 
+ 'Curated stories on user experience, visual design, and product design', 
+ 'https://cdn-images-1.medium.com/v2/resize:fill:72:72/1*mDhF9X4VO0rCrJvWFatyxg.png', 
+ 'https://uxdesign.cc/feed', 
+ 'en', 
+ false,
+ array['ux_design', 'product_design', 'interaction_design']::feed_category[]
+);
 -- -- Venture Capital RSS Feed Inserts
 -- insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
 -- (

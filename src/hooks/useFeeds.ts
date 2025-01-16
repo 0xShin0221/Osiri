@@ -38,7 +38,6 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
         );
         setFollowedFeedIds(feedIds);
         setOrganizationFollowingFeeds(feeds);
-        
       } catch (error) {
         console.error("Error fetching organization feeds:", error);
       }
@@ -89,8 +88,8 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
   }, [searchQuery, languageFilter, categoryFilter]);
 
   const filteredFollowingFeeds = useMemo(
-    () => filterFeeds(organizationFollowingFeeds),
-    [organizationFollowingFeeds, filterFeeds],
+    () => organizationFollowingFeeds,
+    [organizationFollowingFeeds],
   );
 
   const filteredDiscoverFeeds = useMemo(
@@ -129,6 +128,7 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
         );
       } else {
         setFollowedFeedIds((prev) => [...prev, feedId]);
+
         const feed = allFeeds.find((f) => f.id === feedId);
         if (feed) {
           setOrganizationFollowingFeeds((prev) => [...prev, feed]);

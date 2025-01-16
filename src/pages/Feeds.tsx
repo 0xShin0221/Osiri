@@ -157,18 +157,6 @@ export default function FeedsPage() {
                 <h3 className="text-lg font-medium">
                   {t("discover.availableFeeds")}
                 </h3>
-                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                  {discoverFeeds.map((feed) => (
-                    <FeedCard
-                      key={feed.id}
-                      feed={feed}
-                      isSelected={followedFeedIds.includes(feed.id)}
-                      onToggle={toggleFeed}
-                      isDefault={false}
-                    />
-                  ))}
-                </div>
-
                 {isLoading ? (
                   <div className="text-center py-4 text-muted-foreground">
                     {t("loading")}
