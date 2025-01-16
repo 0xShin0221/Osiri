@@ -23,9 +23,6 @@ export const createArticleMessage = (
                     emoji: true,
                 },
             },
-            {
-                type: "divider",
-            },
         ];
 
     // Add summary if exists, handling line breaks correctly
@@ -63,9 +60,6 @@ export const createArticleMessage = (
     if (keyPoints.length > 0) {
         blocks.push(
             {
-                type: "divider",
-            },
-            {
                 type: "section",
                 text: {
                     type: "mrkdwn",
@@ -84,9 +78,6 @@ export const createArticleMessage = (
 
     // Add link to article
     blocks.push(
-        {
-            type: "divider",
-        },
         {
             type: "context",
             elements: [
