@@ -151,7 +151,8 @@ export function AddChannelForm({
   }, [platform, defaultScheduleId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    if (!platform || !channelId || selectedFeeds.length === 0) return;
+    if (!platform || !channelId || selectedFeeds.length === 0 || !scheduleId)
+      return;
     e.preventDefault();
     setLoading(true);
 
@@ -335,22 +336,26 @@ export function AddChannelForm({
                 ) : null}
 
                 {/* Language Selection */}
-                <div className="grid gap-2">
-                  <Label>{t("addChannel.language")}</Label>
+                <div className="grid gap-1">
+                  <Label className="text-sm">{t("addChannel.language")}</Label>
                   <Select
                     value={notificationLanguage}
                     onValueChange={(value: FeedLanguage) =>
                       setNotificationLanguage(value)
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8 text-sm">
                       <SelectValue
                         placeholder={t("addChannel.selectLanguage")}
                       />
                     </SelectTrigger>
                     <SelectContent>
                       {LANGUAGES.SUPPORTED.map((lang) => (
-                        <SelectItem key={lang.code} value={lang.code}>
+                        <SelectItem
+                          key={lang.code}
+                          value={lang.code}
+                          className="text-xs"
+                        >
                           {lang.label}
                         </SelectItem>
                       ))}
@@ -400,6 +405,7 @@ export function AddChannelForm({
                     loading ||
                     !channelId ||
                     selectedFeeds.length === 0 ||
+                    !scheduleId ||
                     (platform === "slack" && !selectedWorkspaceId)
                   }
                 >
