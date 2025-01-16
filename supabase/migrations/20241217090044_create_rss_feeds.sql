@@ -74,6 +74,29 @@ create type feed_category as enum (
   'marketing_analytics'
 );
 
+-- Create enum for technical feed status
+create type feed_health_status as enum (
+  'active',          -- Feed is working normally
+  'error',           -- Feed has technical issues
+  'invalid_format',  -- Feed format is invalid
+  'not_found',       -- Feed URL returns 404
+  'timeout',         -- Feed requests timeout
+  'rate_limited',    -- Being rate limited by the source
+  'blocked',         -- IP/Access blocked by the source
+  'pending_check'    -- Newly added, pending verification
+);
+
+-- Create enum for content quality status
+create type feed_content_status as enum (
+  'verified',        -- Content quality verified by admin
+  'unverified',      -- New feed, content not verified
+  'low_quality',     -- Poor content quality
+  'spam',            -- Contains spam content
+  'duplicate',       -- Duplicate of another feed
+  'inappropriate'    -- Inappropriate content
+);
+
+
 -- RSS Feed table
 create table rss_feeds (
   id uuid primary key default gen_random_uuid(),
@@ -85,6 +108,8 @@ create table rss_feeds (
   language feed_language not null default 'en',
   is_active boolean not null default false,
   last_fetched_at timestamp with time zone,
+  health_status feed_health_status,
+  content_status feed_content_status,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now()
 );
@@ -138,6 +163,8 @@ insert into rss_feeds (
   url,
   language,
   is_active,
+  health_status,
+  content_status,
   categories
 ) values (
   'Hacker News',
@@ -146,5 +173,7 @@ insert into rss_feeds (
   'http://news.ycombinator.com/rss',
   'en',
   true,
+  'active',
+  'verified',
   array['tech_news', 'software_development', 'startup_news']::feed_category[]
 );
