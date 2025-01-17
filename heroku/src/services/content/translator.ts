@@ -7,40 +7,42 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { decode, encode } from "gpt-tokenizer";
 import type { ServiceResponse } from "../../types/models";
 
+interface TranslationChunk {
+  translation: string;
+  key_points: string[];
+}
+
+// Modify the schema to be more strict with character limits
 const translationSchema = z.object({
-  title: z.string().describe(
-    "Translated title in the target language, ensuring the meaning is clear and understandable.",
-  ),
+  title: z.string()
+    .max(200)
+    .describe(
+      "Translated title in the target language, keeping it concise and clear.",
+    ),
   translation: z.string().describe(
     "Translated content in the target language.",
   ),
-  key_points: z.array(z.string())
+  key_points: z.array(z.string().max(300)) // Explicit limit per key point
     .max(5)
     .describe(
-      "3-5 key points that are important for understanding the article, each around 300-500 characters.",
+      "3-5 key points that are important for understanding the article, each should be concise.",
     ),
   summary: z.string()
-    .max(400)
+    .max(350) // Reduced from 400 to give some buffer for different character encodings
     .describe(
-      "A focused summary capturing the article's essence. Include:\n" +
-        "1. Topic and context (why it matters)\n" +
-        "2. Key findings or conclusions\n" +
-        "3. Practical implications and future outlook\n" +
-        "Minimize technical jargon and use expressions that business professionals can easily understand.",
+      "A focused summary capturing the article's essence in about 300 characters. Include:\n" +
+        "1. Main topic\n" +
+        "2. Key findings\n" +
+        "3. Business implications\n" +
+        "Keep it very concise, especially for non-Latin scripts.",
     ),
 });
 
 const CHUNK_SIZE = 12000;
 const OVERLAP_SIZE = 200;
-
 const MAX_RETRIES = 3;
 const INITIAL_TIMEOUT = 30000;
 const RETRY_DELAY = 1000;
-
-interface TranslationChunk {
-  translation: string;
-  key_points: string[];
-}
 
 export class ContentTranslator {
   private model: ChatOpenAI;
@@ -60,43 +62,44 @@ export class ContentTranslator {
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
 
     const promptTemplate = ChatPromptTemplate.fromTemplate(`
-         You are an editor well-versed in the startup and technology industry. Please translate and summarize the following article:
+      You are an editor well-versed in the startup and technology industry. 
+      Please translate and summarize the following article:
 
-        Source Language: {source_language}
-        Target Language: {target_language}
+      Source Language: {source_language}
+      Target Language: {target_language}
 
-        Translation Requirements:
+      Translation Requirements:
 
-        1. Basic Translation Requirements:
-        - Maintain precise meaning and technical nuances from the original
-        - Properly translate technical terms (use standard translations where available)
-        - Adjust expressions to sound natural in context
+      1. Length Requirements:
+      - Summary must be VERY concise (max 350 characters)
+      - Each key point must be under 300 characters
+      - Title should be clear but brief
 
-        2. Summary & Key Points Requirements:
-        - Clearly communicate the "So What?" (why this matters)
-        - Emphasize business impact and practical significance
-        - Break down complex technical concepts for general business readers
-        - Consider industry trends and market implications
-        - Extract crucial points relevant to investors, entrepreneurs, and business professionals
+      2. Content Guidelines:
+      - Focus on essential information only
+      - Avoid redundant expressions
+      - Use simple, clear language
+      - For non-Latin scripts (like Hindi, Chinese, etc.), be extra concise
+      - Ensure proper handling of technical terms
 
-        3. Structure Requirements:
-        - Structure summary as: context → key points → implications
-        - Keep key points concise (1-2 sentences each)
-        - Maintain contextual consistency between chunks
+      3. Structure Requirements:
+      - Keep summaries extremely focused
+      - Prioritize clarity over detail
+      - Maintain contextual accuracy
 
-        Chunk Information:
-        - Total Chunks: {total_chunks}
-        - Current Chunk: {current_chunk}
-        
-        {is_first_chunk_instructions}
+      Chunk Information:
+      - Total Chunks: {total_chunks}
+      - Current Chunk: {current_chunk}
+      
+      {is_first_chunk_instructions}
 
-        Original Title: {title}
-        Original Text: {content}
-        
-        Previous Context (if any): {previous_context}
-        
-        {format_instructions}
-      `);
+      Original Title: {title}
+      Original Text: {content}
+      
+      Previous Context (if any): {previous_context}
+      
+      {format_instructions}
+    `);
 
     this.chain = RunnableSequence.from([
       promptTemplate,
@@ -105,22 +108,24 @@ export class ContentTranslator {
     ]);
   }
 
-  private cleanupJsonString(text: string): string {
-    // Remove markdown code block indicators if present
-    let cleanedText = text.replace(/```json\n/, "").replace(/\n```$/, "");
-
-    // Ensure proper escaping of special characters
-    cleanedText = cleanedText.replace(/[\n\r\t]/g, " ").replace(/\s+/g, " ");
-
-    return cleanedText;
-  }
-
   private normalizeTranslationResponse(
     response: z.infer<typeof translationSchema>,
   ): z.infer<typeof translationSchema> {
-    // Ensure summary is within length limit
+    // Ensure summary is well within length limit
     if (response.summary) {
-      response.summary = response.summary.slice(0, 400);
+      response.summary = response.summary.slice(0, 350);
+    }
+
+    // Normalize key points
+    if (response.key_points) {
+      response.key_points = response.key_points.map((point) =>
+        point.slice(0, 300)
+      );
+    }
+
+    // Normalize title
+    if (response.title) {
+      response.title = response.title.slice(0, 200);
     }
 
     return response;
@@ -182,6 +187,11 @@ export class ContentTranslator {
       });
 
       const response = this.normalizeTranslationResponse(chainResponse);
+
+      console.debug("Translation response:", {
+        summaryLength: Buffer.byteLength(response.summary, "utf8"),
+        summary: response.summary,
+      });
 
       return {
         success: true,
@@ -246,6 +256,34 @@ export class ContentTranslator {
           : "Translation process failed after retries",
       };
     }
+  }
+  private cleanupJsonString(text: string): string {
+    // First, remove markdown code block if present
+    let cleanedText = text.replace(/```json\n?/, "").replace(/\n?```$/, "");
+
+    // Try to find the start of the JSON object
+    const jsonStart = cleanedText.indexOf("{");
+    if (jsonStart !== -1) {
+      cleanedText = cleanedText.slice(jsonStart);
+    }
+
+    // Clean up whitespace and special characters
+    cleanedText = cleanedText
+      .replace(/[\n\r\t]/g, " ") // Replace newlines, tabs with spaces
+      .replace(/\s+/g, " ") // Collapse multiple spaces
+      .replace(/\\/g, "\\\\") // Escape backslashes
+      .replace(/"/g, '\\"') // Escape quotes
+      .trim(); // Remove leading/trailing whitespace
+
+    // Ensure the text starts with { and ends with }
+    if (!cleanedText.startsWith("{")) {
+      cleanedText = `{${cleanedText}`;
+    }
+    if (!cleanedText.endsWith("}")) {
+      cleanedText = `${cleanedText}}`;
+    }
+
+    return cleanedText;
   }
 
   async translate(

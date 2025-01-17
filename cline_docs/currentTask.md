@@ -1,5 +1,8 @@
 # Current Task - Osiri News Reader
 
+- handling i18n for "channel" file of the en and ja
+- reduce the limit of the articles created process and content scraped
+
 ## Current Focus: Platform Integration and Content Delivery
 
 ### Phase 1: Platform Integration Management
