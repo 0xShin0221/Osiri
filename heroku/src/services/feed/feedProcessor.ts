@@ -1,47 +1,79 @@
-import { ArticleRepository } from '../../repositories/article.repository';
-import { ProcessResult, RSSItem } from '../../types/models';
-import { ContentCleaner } from '../content/cleaner';
+import type { ArticleRepository } from "../../repositories/article.repository";
+import type {
+  ArticleInsert,
+  ArticleScrapingStatus,
+  ProcessResult,
+  RSSItem,
+} from "../../types/models";
 
 export class FeedProcessor {
-  private cleaner: ContentCleaner;
+  private readonly MAX_ITEMS_TO_PROCESS = 10;
+  private readonly MIN_CONTENT_LENGTH = 100;
+  private readonly MAX_BATCH_SIZE = 5;
 
-  constructor(
-    private readonly articleRepository: ArticleRepository
-  ) {
-    this.cleaner = new ContentCleaner();
-  }
+  constructor(private readonly articleRepository: ArticleRepository) {}
 
   async process(feedId: string, items: RSSItem[]): Promise<ProcessResult> {
     try {
-      if (items.length === 0) {
+      // Filter out items that are too short
+      const validItems = items
+        .filter((item) =>
+          item.content && item.content.length >= this.MIN_CONTENT_LENGTH
+        )
+        .slice(0, this.MAX_ITEMS_TO_PROCESS);
+
+      if (validItems.length === 0) {
         return {
-          success: true,
           feedId,
-          itemsProcessed: 0
+          success: true,
+          itemsProcessed: 0,
         };
       }
 
-      const articles = items.map(item => ({
-        feed_id: feedId,
-        title: item.title,
-        content: this.cleaner.clean(item.content),
-        url: item.link
-      }));
+      // Process items in smaller batches to prevent overwhelming the database
+      const batches = this.chunkArray(validItems, this.MAX_BATCH_SIZE);
+      let totalProcessed = 0;
 
-      const result = await this.articleRepository.saveMany(articles);
-      console.log("articles saved", result);
+      for (const batch of batches) {
+        const articles: Omit<ArticleInsert, "created_at" | "updated_at">[] =
+          batch.map((item) => ({
+            feed_id: feedId,
+            title: item.title,
+            url: item.link,
+            content: item.content,
+            published_at: item.pubDate
+              ? new Date(item.pubDate).toISOString()
+              : new Date().toISOString(),
+            scraping_status: "pending" as ArticleScrapingStatus,
+            scraping_attempt_count: 0,
+          }));
+
+        const savedArticles = await this.articleRepository.saveMany(articles);
+        totalProcessed += savedArticles.length;
+      }
+
       return {
         feedId,
-        itemsProcessed: result.length,
-        success: true
+        success: true,
+        itemsProcessed: totalProcessed,
       };
     } catch (error) {
       return {
         feedId,
-        itemsProcessed: 0,
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        itemsProcessed: 0,
+        error: error instanceof Error
+          ? error.message
+          : "Unknown error processing feed",
       };
     }
+  }
+
+  private chunkArray<T>(array: T[], size: number): T[][] {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
   }
 }

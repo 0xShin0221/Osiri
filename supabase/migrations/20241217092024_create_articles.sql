@@ -19,6 +19,7 @@ create table articles (
   scraping_attempt_count integer not null default 0,
   last_scraping_attempt timestamp with time zone,
   scraping_error text,
+  published_at timestamp with time zone,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now()
 );
