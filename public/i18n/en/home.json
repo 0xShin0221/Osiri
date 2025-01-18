@@ -93,6 +93,7 @@
       "help": "Help Center",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
+      "terms-of-trade": "",
       "title": "Support"
     }
   },
@@ -162,8 +163,9 @@
   "menu": {
     "faq": "FAQ",
     "features": "Features",
-    "login": "login",
-    "personas": "whoUses",
+    "login": "Login",
+    "logout": "Logout",
+    "personas": "WhoUses",
     "pricing": "Pricing"
   },
   "newsletter": {

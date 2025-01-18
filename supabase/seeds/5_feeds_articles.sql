@@ -5,25 +5,27 @@ DECLARE
 BEGIN
 
 INSERT INTO public.rss_feeds (
-  id, name, url, language, description, is_active, last_fetched_at
+  id, name, url, language, description, site_icon, is_active, last_fetched_at
 )
 VALUES
   (
     yc_feed_id, 
-    'Y Combinator Blog', 
+    '[SEEDS SAMPLE DATA] Y Combinator Blog', 
     'https://www.ycombinator.com/blog/rss/', 
     'en',
     'Official blog of Y Combinator, featuring advice and insights for startups',
-    true,
+    'https://ycombinator.com/favicon.ico',
+    false,
     NOW()
   ),
   (
     tc_feed_id, 
-    'TechCrunch', 
+    '[SEEDS SAMPLE DATA] TechCrunch', 
     'https://techcrunch.com/feed', 
     'en',
     'Leading technology media property, dedicated to startup coverage',
-    true,
+    'https://techcrunch.com/favicon.ico',
+    false,
     NOW()
   );
 

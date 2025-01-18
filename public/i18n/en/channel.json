@@ -1,0 +1,73 @@
+{
+  "addChannel": {
+    "channel": "Channel",
+    "description": "Configure your new notification channel. Choose platform and settings.",
+    "emailAddress": "Email Address",
+    "emailPlaceholder": "Enter email address",
+    "errorLoadingChannels": "Error loading channels",
+    "feedsPlaceholder": "Select feeds...",
+    "language": "Notification Language",
+    "noChannelsFound": "No channels found",
+    "noFeedsFound": "No followed feeds found",
+    "noIntegrationsMessage": "No apps connected.",
+    "platform": "Platform",
+    "schedule": "Notification Schedule",
+    "searchPlaceholder": "Input search text",
+    "selectChannel": "Select channel",
+    "selectFeeds": "Select RSS Feeds",
+    "selectLanguage": "Select language",
+    "selectSchedule": "Select schedule",
+    "selectWorkspace": "Select workspace",
+    "setupIntegrations": "Click here to connect apps",
+    "title": "Add New Channel",
+    "workspace": "workspace"
+  },
+  "card": {
+    "feedCount": "{{count}} feed",
+    "feedCount_plural": "{{count}} feeds"
+  },
+  "channel": {
+    "add": "Add Channel",
+    "noChannels": "No channels configured yet"
+  },
+  "common": {
+    "add": "Add",
+    "adding": "Adding...",
+    "cancel": "Cancel",
+    "refresh": "Refresh"
+  },
+  "feeds": {
+    "addText": "Add New",
+    "noFeeds": {
+      "action": "Follow feeds",
+      "description": "You need to follow feeds to receive notifications",
+      "title": "No feeds selected"
+    },
+    "refreshText": "Refresh"
+  },
+  "noChannels": "No channels yet",
+  "page": {
+    "description": "Manage your notification channels and feed preferences",
+    "selectChannel": "Select a channel to configure",
+    "title": "Channel Settings"
+  },
+  "schedules": {
+    "dailyMorningDescription": "Receive a daily digest of all new articles in the morning",
+    "dailyMorningTime": "Daily at {{time}} AM",
+    "realtime": "Real-time",
+    "realtimeDescription": "Get notified immediately when new articles are published"
+  },
+  "settings": {
+    "configureDescription": "Configure channel settings and feed preferences",
+    "deleteChannel": "Delete Channel",
+    "description": "Manage your notification channels and feed preferences",
+    "language": "Notification Language",
+    "languageDescription": "Notifications will be delivered in this language",
+    "notificationSchedule": "Notification Schedule",
+    "selectChannel": "Select a channel to configure",
+    "selectLanguage": "Select language",
+    "selectSchedule": "Select schedule",
+    "selectedFeeds": "Selected Feeds",
+    "title": "Channel Settings"
+  }
+}

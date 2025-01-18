@@ -48,54 +48,54 @@ jobs:
       - name: Deploy Edge Functions
         run: supabase functions deploy --project-ref $SUPABASE_PROJECT_ID
 
-  heroku-deploy:
-    needs: check-paths
-    if: needs.check-paths.outputs.heroku == 'true'
-    runs-on: ubuntu-latest
-    env:
-      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
-      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-      HEROKU_APP_NAME: ${{ github.ref == 'refs/heads/main' && 'osiri-prod' || 'osiri-dev' }}
-      HEROKU_REMOTE: ${{ github.ref == 'refs/heads/main' && 'heroku-prod' || 'heroku-dev' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  # heroku-deploy:
+  #   needs: check-paths
+  #   if: needs.check-paths.outputs.heroku == 'true'
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+  #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  #     HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+  #     HEROKU_APP_NAME: ${{ github.ref == 'refs/heads/main' && 'osiri-prod' || 'osiri-dev' }}
+  #     HEROKU_REMOTE: ${{ github.ref == 'refs/heads/main' && 'heroku-prod' || 'heroku-dev' }}
+  #     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-          run_install: false
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 8
+  #         run_install: false
 
-      - name: Install Dependencies
-        working-directory: ./heroku
-        run: pnpm install
+  #     - name: Install Dependencies
+  #       working-directory: ./heroku
+  #       run: pnpm install
 
-      - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.13.15
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ env.HEROKU_APP_NAME }}
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          remote_branch: ${{ env.HEROKU_REMOTE }}
-          appdir: "heroku"
-          dontuseforce: false
+  #     - name: Deploy to Heroku
+  #       uses: akhileshns/heroku-deploy@v3.13.15
+  #       with:
+  #         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+  #         heroku_app_name: ${{ env.HEROKU_APP_NAME }}
+  #         heroku_email: ${{ secrets.HEROKU_EMAIL }}
+  #         remote_branch: ${{ env.HEROKU_REMOTE }}
+  #         appdir: "heroku"
+  #         dontuseforce: false
 
-      - name: Notify Slack
-        if: ${{ env.ENVIRONMENT == 'production' }}
-        uses: tokorom/action-slack-incoming-webhook@main
-        env:
-          INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          text: |
-            🚀 Deployment Complete
-            Environment: ${{ env.ENVIRONMENT }}
-            Commit: ${{ github.sha }}
-            Branch: ${{ github.ref_name }}
+  #     - name: Notify Slack
+  #       if: ${{ env.ENVIRONMENT == 'production' }}
+  #       uses: tokorom/action-slack-incoming-webhook@main
+  #       env:
+  #         INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  #       with:
+  #         text: |
+  #           🚀 Deployment Complete
+  #           Environment: ${{ env.ENVIRONMENT }}
+  #           Commit: ${{ github.sha }}
+  #           Branch: ${{ github.ref_name }}

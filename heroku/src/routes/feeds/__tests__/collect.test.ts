@@ -1,4 +1,4 @@
-import { describe, it, expect, jest } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../app';
 import { FeedRepository } from '../../../repositories/feed.repository';
@@ -9,6 +9,12 @@ jest.mock('../../../repositories/article.repository');
 
 
 describe('POST /feeds/collect', () => {
+    const validApiKey = 'test-api-key';
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        process.env.API_KEYS = validApiKey;
+    });
     it('should return 401 when Supabase credentials are missing', async () => {
         (FeedRepository as jest.Mock).mockImplementation(() => {
             throw new Error('Missing Supabase credentials');
@@ -16,6 +22,7 @@ describe('POST /feeds/collect', () => {
 
         const response = await request(app)
             .post('/feeds/collect')
+            .set('X-API-Key', validApiKey)
             .send();
 
         expect(response.status).toBe(401);
@@ -49,6 +56,7 @@ describe('POST /feeds/collect', () => {
 
         const response = await request(app)
             .post('/feeds/collect')
+            .set('X-API-Key', validApiKey)
             .send();
 
         expect(response.status).toBe(200);
@@ -76,6 +84,7 @@ describe('POST /feeds/collect', () => {
 
         const response = await request(app)
             .post('/feeds/collect')
+            .set('X-API-Key', validApiKey)
             .send();
 
         expect(response.status).toBe(200);
@@ -95,6 +104,7 @@ describe('POST /feeds/collect', () => {
 
         const response = await request(app)
             .post('/feeds/collect')
+            .set('X-API-Key', validApiKey)
             .send();
 
         expect(response.status).toBe(200);
@@ -148,6 +158,7 @@ describe('POST /feeds/collect', () => {
 
         const response = await request(app)
             .post('/feeds/collect')
+            .set('X-API-Key', validApiKey)
             .send();
 
         expect(response.status).toBe(200);
@@ -187,6 +198,7 @@ describe('POST /feeds/collect', () => {
 
         const response = await request(app)
             .post('/feeds/collect')
+            .set('X-API-Key', validApiKey)
             .send();
 
         expect(response.status).toBe(200);

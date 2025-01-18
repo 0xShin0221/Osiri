@@ -1,0 +1,9 @@
+{
+  "menu": {
+    "appIntegration": "App Integration",
+    "dashboard": "Home",
+    "feedManagement": "Feeds",
+    "notificationManagement": "Notifications",
+    "settings": "Settings"
+  }
+}

@@ -1,55 +1,27 @@
-import "./App.css";
-import "./lib/i18n/config";
-import { useTranslation } from "react-i18next";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useEffect } from "react";
-import { LanguageRedirect } from "./components/LanguadgeRedirect";
-import { LANGUAGES } from "./lib/i18n/languages";
+import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { ScrollToTop } from "@/components/ScrollToTop";
-import { Home } from "@/pages/Home";
-import { Terms } from "./pages/Terms";
-import { Privacy } from "./pages/Privacy";
-import { ComingSoon } from "./pages/ComingSoon";
-import { NotFound } from "./pages/NotFound";
-import { Unsubscribe } from "./pages/Unsubscribe";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import { LANGUAGES } from "@/lib/i18n/languages";
+import { AppRoutes } from "./routes/AppRoutes";
 import * as amplitude from '@amplitude/analytics-browser';
 
-function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <Navbar />
-      <main>{children}</main>
-      <Footer />
-      <ScrollToTop />
-    </>
-  );
-}
+import "./App.css";
+import "./lib/i18n/config";
 
-function LocalizedRoutes() {
-    return (
-      <Layout>
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="coming-soon" element={<ComingSoon />} />
-          <Route path="terms" element={<Terms />} />
-          <Route path="privacy" element={<Privacy />} />
-          <Route path="unsubscribe" element={<Unsubscribe />} /> 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Layout>
-    );
-  }
-
-function App() {
-  const { i18n } = useTranslation();
+const initializeAnalytics = () => {
   const amplitudeKey = import.meta.env.VITE_AMPLITUDE_API_KEY;
-  if(!amplitudeKey) {
+  if (!amplitudeKey) {
     throw new Error("Amplitude API key is missing");
   }
-  amplitude.init(amplitudeKey, {"autocapture":true});
+  
+  amplitude.init(amplitudeKey, { autocapture: true });
+};
+
+initializeAnalytics();
+
+export const App = () => {
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     document.documentElement.lang = i18n.resolvedLanguage || LANGUAGES.DEFAULT;
@@ -58,25 +30,10 @@ function App() {
   return (
     <BrowserRouter>
       <HelmetProvider>
-        <Routes>
-          <Route path="/" element={<LanguageRedirect />} />
-
-          {LANGUAGES.SUPPORTED.map(({ code }) => (
-            <Route
-              key={code}
-              path={`/${code}/*`}
-              element={<LocalizedRoutes />}
-            />
-          ))}
-
-      <Route
-            path="*"
-            element={<LanguageRedirect fallback={<NotFound />} />}
-          />
-        </Routes>
+        <AppRoutes />
       </HelmetProvider>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

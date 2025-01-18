@@ -1,26 +1,30 @@
-import { BatchOptions, BatchProcessResult, BatchResults } from "../../types/batch";
-import { FeedRepository } from '../../repositories/feed.repository';
-import { ArticleRepository } from '../../repositories/article.repository';
-import { FeedCollectionStep } from './steps/feedCollectionStep';
-import { FeedProcessingStep } from './steps/feedProcessingStep';
-import { ContentScrapingStep } from './steps/contentScrapingStep';
-import { ContentTranslationStep } from './steps/contentTranslationStep';
-import { FeedCollector } from '../feed/collector';
-import { FeedProcessor } from '../feed/feedProcessor';
-import { FeedParser } from '../feed/parser';
-import { ContentScraper } from '../content/scraper';
-import { ContentTranslator } from '../content/translator';
+import type {
+  BatchOptions,
+  BatchProcessResult,
+  BatchResults,
+} from "../../types/batch";
+import type { FeedRepository } from "../../repositories/feed.repository";
+import type { ArticleRepository } from "../../repositories/article.repository";
+import { FeedCollectionStep } from "./steps/feedCollectionStep";
+import { FeedProcessingStep } from "./steps/feedProcessingStep";
+import { ContentScrapingStep } from "./steps/contentScrapingStep";
+import { ContentTranslationStep } from "./steps/contentTranslationStep";
+import { FeedCollector } from "../feed/collector";
+import { FeedProcessor } from "../feed/feedProcessor";
+import { FeedParser } from "../feed/parser";
+import { ContentScraper } from "../content/scraper";
+import { ContentTranslator } from "../content/translator";
 
 export class BatchProcessor {
   private readonly feedCollectionStep: FeedCollectionStep;
   private readonly feedProcessingStep: FeedProcessingStep;
   private readonly contentScrapingStep: ContentScrapingStep;
   private readonly contentTranslationStep: ContentTranslationStep;
-  private readonly DEFAULT_BATCH_SIZE = 5;
+  private readonly DEFAULT_BATCH_SIZE = 10;
 
   constructor(
     private readonly feedRepository: FeedRepository,
-    private readonly articleRepository: ArticleRepository
+    private readonly articleRepository: ArticleRepository,
   ) {
     // Initialize dependencies
     const feedCollector = new FeedCollector(feedRepository, articleRepository);
@@ -35,17 +39,16 @@ export class BatchProcessor {
       feedProcessor,
       feedParser,
       feedRepository,
-      this.DEFAULT_BATCH_SIZE
+      this.DEFAULT_BATCH_SIZE,
     );
     this.contentScrapingStep = new ContentScrapingStep(
       contentScraper,
       articleRepository,
-      this.DEFAULT_BATCH_SIZE
+      this.DEFAULT_BATCH_SIZE,
     );
     this.contentTranslationStep = new ContentTranslationStep(
       contentTranslator,
-      articleRepository,
-      this.DEFAULT_BATCH_SIZE
+      this.DEFAULT_BATCH_SIZE,
     );
   }
 
@@ -54,7 +57,7 @@ export class BatchProcessor {
     const batchId = crypto.randomUUID();
     const {
       onProgress,
-      onError
+      onError,
     } = options;
 
     const batchResults: BatchResults = {
@@ -66,39 +69,39 @@ export class BatchProcessor {
 
     try {
       // Step 1: Collect feeds
-      console.log('Starting feed collection...');
+      console.log("Starting feed collection...");
       const collectionResult = await this.feedCollectionStep.execute(
         batchResults,
         onProgress,
-        onError
+        onError,
       );
 
       // Step 2: Process feeds
-      console.log('Processing feeds...');
+      console.log("Processing feeds...");
       const processingResult = await this.feedProcessingStep.execute(
         batchResults,
         onProgress,
-        onError
+        onError,
       );
 
       // Step 3: Scrape content
-      console.log('Scraping content...');
+      console.log("Scraping content...");
       const scrapingResult = await this.contentScrapingStep.execute(
         batchResults,
         onProgress,
-        onError
+        onError,
       );
 
       // Step 4: Translate content
-      console.log('Translating content...');
+      console.log("Translating content...");
       const translationResult = await this.contentTranslationStep.execute(
         batchResults,
         onProgress,
-        onError
+        onError,
       );
 
       return {
-        message: 'Batch processing completed',
+        message: "Batch processing completed",
         results: batchResults,
         summary: {
           processedFeeds: collectionResult.processedFeeds,
@@ -108,12 +111,14 @@ export class BatchProcessor {
         processingTime: Date.now() - startTime,
         batchId,
         newArticlesCount: processingResult.processedArticles,
-        updatedArticlesCount: 0
+        updatedArticlesCount: 0,
       };
-
     } catch (error) {
-      console.error('Error in batch processing:', error);
-      onError?.('batch', error instanceof Error ? error : new Error('Unknown error'));
+      console.error("Error in batch processing:", error);
+      onError?.(
+        "batch",
+        error instanceof Error ? error : new Error("Unknown error"),
+      );
       throw error;
     }
   }

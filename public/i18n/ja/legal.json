@@ -1,0 +1,93 @@
+{
+  "title": "特定商取引法に基づく表記",
+  "seller": {
+    "label": "販売業者",
+    "value": "Osiri"
+  },
+  "representative": {
+    "label": "運営統括責任者",
+    "value": "中川真太郎"
+  },
+  "address": {
+    "label": "所在地",
+    "value": "請求があったら遅滞なく開示します"
+  },
+  "contact": {
+    "label": "連絡先",
+    "email": {
+      "label": "メールアドレス",
+      "value": "support@osiri.xyz"
+    },
+    "phone": {
+      "label": "電話番号",
+      "value": "請求があったら遅滞なく開示します"
+    },
+    "hours": {
+      "label": "受付時間",
+      "value": "平日 10:00〜18:00（土日祝日・年末年始を除く）"
+    }
+  },
+  "service": {
+    "label": "サービス名",
+    "name": "Osiri - Global AI summarized News Reader",
+    "nameJp": "（オシリ - グローバルAIニュースリーダー）"
+  },
+  "price": {
+    "label": "販売価格",
+    "monthly": "月額レギュラープラン：980円（税込）",
+    "taxIncluded": "※表示価格はすべて税込です"
+  },
+  "trial": {
+    "label": "無料トライアル",
+    "period": "期間：ご登録から7日間",
+    "noCard": "※クレジットカード登録不要",
+    "fullAccess": "※トライアル期間中は全機能をご利用いただけます"
+  },
+  "payment": {
+    "label": "お支払い方法",
+    "method": "クレジットカード決済",
+    "cards": {
+      "visa": "・VISA",
+      "mastercard": "・Mastercard",
+      "amex": "・American Express",
+      "jcb": "・JCB"
+    }
+  },
+  "billing": {
+    "label": "お支払い時期",
+    "timing": "毎月の契約更新日にお支払い",
+    "autoCharge": "※クレジットカードの場合、契約更新日に自動決済されます"
+  },
+  "additionalFees": {
+    "label": "追加料金等",
+    "none": "サービス利用に関して、記載の利用料金以外の追加料金は発生いたしません。",
+    "internet": "ただし、インターネット接続料金およびデバイスにかかる通信料は、お客様のご負担となります。"
+  },
+  "delivery": {
+    "label": "提供開始時期",
+    "immediate": "お申し込み完了後、即時にサービスをご利用いただけます。"
+  },
+  "cancellation": {
+    "label": "契約の解約・キャンセル",
+    "about": {
+      "title": "【解約について】",
+      "anytime": "契約期間中いつでも解約が可能です",
+      "mypage": "解約はマイページから手続き可能です",
+      "untilEnd": "解約後は契約期間終了まで継続してご利用いただけます",
+      "noRefund": "契約期間中の解約による返金は致しかねます"
+    },
+    "process": {
+      "title": "【解約の手続き方法】",
+      "login": "マイページにログイン",
+      "menu": "設定メニューから「解約手続き」を選択",
+      "follow": "画面の指示に従って手続きを完了"
+    }
+  },
+  "requirements": {
+    "label": "動作環境",
+    "title": "【推奨環境】",
+    "pc": "・PC：Chrome（最新版）、Firefox（最新版）、Safari（最新版）、Edge（最新版）",
+    "mobile": "・スマートフォン/タブレット：iOS 14.0以降、Android 8.0以降",
+    "note": "※上記以外の環境でも動作する可能性がありますが、動作保証外となります"
+  }
+}

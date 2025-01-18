@@ -7,9 +7,11 @@ jest.mock('../../../services/content/scraper');
 
 describe('POST /content/scrape', () => {
     const validUrl = 'https://example.com/article';
+    const validApiKey = 'test-api-key';
 
     beforeEach(() => {
         jest.clearAllMocks();
+        process.env.API_KEYS = validApiKey;
     });
 
     it('should successfully scrape content', async () => {
@@ -24,6 +26,7 @@ describe('POST /content/scrape', () => {
 
         const response = await request(app)
             .post('/content/scrape')
+            .set('X-API-Key', validApiKey)
             .send({
                 url: validUrl,
                 options: {
@@ -50,6 +53,7 @@ describe('POST /content/scrape', () => {
 
         const response = await request(app)
             .post('/content/scrape')
+            .set('X-API-Key', validApiKey)
             .send({
                 url: validUrl
             });
@@ -64,6 +68,7 @@ describe('POST /content/scrape', () => {
     it('should handle invalid URL format', async () => {
         const response = await request(app)
             .post('/content/scrape')
+            .set('X-API-Key', validApiKey)
             .send({
                 url: 'invalid-url'
             });
@@ -83,6 +88,7 @@ describe('POST /content/scrape', () => {
     it('should handle invalid options', async () => {
         const response = await request(app)
             .post('/content/scrape')
+            .set('X-API-Key', validApiKey)
             .send({
                 url: validUrl,
                 options: {
@@ -114,6 +120,7 @@ describe('POST /content/scrape', () => {
 
         const response = await request(app)
             .post('/content/scrape')
+            .set('X-API-Key', validApiKey)
             .send({
                 url: validUrl,
                 options: {

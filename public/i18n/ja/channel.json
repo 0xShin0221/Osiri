@@ -1,0 +1,73 @@
+{
+  "addChannel": {
+    "channel": "チャンネル",
+    "description": "新しい通知チャンネルを設定します。プラットフォームと設定を選択してください。",
+    "emailAddress": "メールアドレス",
+    "emailPlaceholder": "メールアドレスを入力してください",
+    "errorLoadingChannels": "チャンネルの読み込みエラー",
+    "feedsPlaceholder": "フィードを選択...",
+    "language": "通知言語",
+    "noChannelsFound": "チャンネルが見つかりません",
+    "noFeedsFound": "フォローしているフィードが見つかりません",
+    "noIntegrationsMessage": "現在アプリ連携はしていません。",
+    "platform": "プラットフォーム",
+    "schedule": "通知スケジュール",
+    "searchPlaceholder": "検索テキストを入力",
+    "selectChannel": "チャンネルを選択",
+    "selectFeeds": "RSSフィードを選択",
+    "selectLanguage": "言語を選択",
+    "selectSchedule": "スケジュールを選択",
+    "selectWorkspace": "ワークスペースを選択",
+    "setupIntegrations": "アプリ連携はこちらをクリック",
+    "title": "新規チャンネル追加",
+    "workspace": "ワークスペース"
+  },
+  "card": {
+    "feedCount": "{{count}}個のフィード",
+    "feedCount_0": ""
+  },
+  "channel": {
+    "add": "チャンネル追加",
+    "noChannels": "チャンネルが設定されていません"
+  },
+  "common": {
+    "add": "追加",
+    "adding": "追加中...",
+    "cancel": "キャンセル",
+    "refresh": "更新"
+  },
+  "feeds": {
+    "addText": "新規追加",
+    "noFeeds": {
+      "action": "フィードをフォローする",
+      "description": "通知を受け取るにはフィードをフォローしてください",
+      "title": "フォローしているフィードがありません"
+    },
+    "refreshText": "更新"
+  },
+  "noChannels": "チャンネルが設定されていません",
+  "page": {
+    "description": "通知チャンネルとフィード設定を管理",
+    "selectChannel": "設定するチャンネルを選択してください",
+    "title": "チャンネル設定"
+  },
+  "schedules": {
+    "dailyMorningDescription": "新着記事を朝にまとめてお届けします",
+    "dailyMorningTime": "毎朝 {{time}}",
+    "realtime": "リアルタイム",
+    "realtimeDescription": "新着記事をすぐにお知らせします"
+  },
+  "settings": {
+    "configureDescription": "チャンネル設定とフィード設定を構成",
+    "deleteChannel": "チャンネルを削除",
+    "description": "通知チャンネルとフィード設定を管理",
+    "language": "通知言語",
+    "languageDescription": "この言語で通知が配信されます",
+    "notificationSchedule": "通知スケジュール",
+    "selectChannel": "設定するチャンネルを選択してください",
+    "selectLanguage": "言語を選択",
+    "selectSchedule": "スケジュールを選択",
+    "selectedFeeds": "選択されたフィード",
+    "title": "チャンネル設定"
+  }
+}
