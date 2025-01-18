@@ -1,15 +1,12 @@
-import { createClient } from "@supabase/supabase-js";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import i18n from "@/lib/i18n/config";
+import { supabase } from "@/lib/supabase";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+
 export const Newsletter = () => {
   const { t } = useTranslation("home");
 

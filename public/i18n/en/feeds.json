@@ -1,0 +1,41 @@
+{
+  "categoryFilter": {
+    "allCategories": "All Categories",
+    "allCategoriesDescription": "Browse all available feeds",
+    "categoryCount": "{{count}} categories",
+    "categoryCount_plural": "{{count}} categories",
+    "clear": "Clear",
+    "clearFilter": "Clear Filter",
+    "currentFilter": "Current Filter",
+    "title": "Browse by Category"
+  },
+  "description": "Manage your feed subscriptions and discover new content",
+  "discover": {
+    "availableFeeds": "Available Feeds",
+    "description": "Find and follow feeds that interest you",
+    "title": "Discover Feeds"
+  },
+  "following": {
+    "addMore": "Add Feeds",
+    "browseFeeds": "Browse Feeds",
+    "description": "Your subscribed RSS feeds",
+    "noFeeds": "No feeds followed yet",
+    "noMatchingFeeds": "No matching feeds found",
+    "startByDiscovering": "Start by discovering feeds below",
+    "title": "Following",
+    "tryAdjustingFilters": "Try adjusting your search or filters"
+  },
+  "loading": "Loading...",
+  "request": {
+    "button": "Request New Feed",
+    "description": "Submit a request for a new RSS feed",
+    "descriptionLabel": "Why do you want this feed?",
+    "descriptionPlaceholder": "Tell us why this feed would be valuable",
+    "submit": "Submit Request",
+    "submitting": "Submitting...",
+    "title": "Request Feed",
+    "urlLabel": "Feed URL",
+    "urlPlaceholder": "https://example.com/feed.xml"
+  },
+  "title": "RSS Feeds"
+}

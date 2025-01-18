@@ -1,3 +1,7 @@
+-- Install required extensions
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+
 create table if not exists public.waitlist (
   id uuid default gen_random_uuid() primary key,
   email text not null unique,

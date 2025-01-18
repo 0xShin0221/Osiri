@@ -1,0 +1,46 @@
+{
+  "interests": {
+    "freePlanLimit": "Free plan limit reached ({limit} feeds). Upgrade for more.",
+    "next": "Next",
+    "recommendedFeeds": "Choose Your News Sources",
+    "searchPlaceholder": "Search feeds...",
+    "selected": "selected",
+    "subtitle": "Select up to 3 news sources to get started.",
+    "title": "RSS Feed Selection"
+  },
+  "platform": {
+    "back": "Back",
+    "complete": "Complete Setup",
+    "discord": {
+      "description": "Get updates in your Discord server",
+      "title": "Discord"
+    },
+    "email": {
+      "alternativeTitle": "Get updates in your email inbox",
+      "cancel": "cancel",
+      "description": "Receive digests in your inbox",
+      "frequency": "Update Frequency",
+      "placeholder": "Enter your email",
+      "schedules": {
+        "daily_evening": "Daily (Evening)",
+        "daily_morning": "Daily (Morning)",
+        "weekday_morning": "Weekdays (Morning)",
+        "weekly_monday": "Weekly (Monday)",
+        "weekly_sunday": "Weekly (Sunday)"
+      },
+      "setup": "SetUp",
+      "title": "Email"
+    },
+    "slack": {
+      "description": "Get updates in your Slack workspace",
+      "title": "Slack"
+    },
+    "subtitle": "Choose how you want to receive updates",
+    "title": "Setup Notifications"
+  },
+  "skip": "Skip",
+  "steps": {
+    "interests": "Select Sources",
+    "notifications": "Setup Notifications"
+  }
+}

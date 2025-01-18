@@ -1,0 +1,42 @@
+{
+  "common": {
+    "cancel": "キャンセル",
+    "loading": "読み込み中..."
+  },
+  "organization": {
+    "create": {
+      "button": "組織を作成",
+      "description": "チームと設定を管理するための新しい組織を作成します。",
+      "require": "このサービスを継続して利用するには組織が必要です。",
+      "title": "組織の作成"
+    },
+    "members": {
+      "description": "組織のメンバーとその権限を管理します。",
+      "remove": "メンバーを削除",
+      "removeDialog": {
+        "description": "{{email}}を組織から削除してもよろしいですか？",
+        "title": "メンバーの削除"
+      },
+      "title": "組織メンバー"
+    },
+    "nameLabel": "組織名",
+    "namePlaceholder": "組織名を入力",
+    "roles": {
+      "admin": "管理者",
+      "member": "メンバー",
+      "owner": "オーナー"
+    },
+    "settings": {
+      "description": "組織の設定を管理します。",
+      "title": "組織の設定"
+    }
+  },
+  "settings": {
+    "description": "組織の設定とチームメンバーを管理します。",
+    "title": "設定"
+  },
+  "tabs": {
+    "members": "メンバー",
+    "organization": "組織"
+  }
+}

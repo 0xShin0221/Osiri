@@ -92,11 +92,20 @@ export interface RSSFeedUpdateResult {
   success: boolean;
 }
 
-interface ArticleData {
-  feed_id: string;
-  title: string;
-  content: string;
-  url: string;
-  created_at: string;
-  updated_at: string;
+export interface SlackOAuthResponse {
+  ok: boolean;
+  app_id: string;
+  authed_user: {
+    id: string;
+  };
+  scope: string;
+  token_type: "bot";
+  access_token: string;
+  bot_user_id: string;
+  team: {
+    id: string;
+    name: string;
+  };
+  enterprise: null | object;
+  is_enterprise_install: boolean;
 }

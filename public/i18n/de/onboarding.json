@@ -1,0 +1,36 @@
+{
+  "interests": {
+    "freePlanLimit": "",
+    "next": "",
+    "recommendedFeeds": "",
+    "searchPlaceholder": "",
+    "selected": "",
+    "subtitle": "",
+    "title": ""
+  },
+  "platform": {
+    "back": "",
+    "complete": "",
+    "discord": {
+      "description": "",
+      "title": ""
+    },
+    "email": {
+      "description": "",
+      "frequency": "",
+      "placeholder": "",
+      "schedules": "",
+      "title": ""
+    },
+    "slack": {
+      "description": "",
+      "title": ""
+    },
+    "subtitle": "",
+    "title": ""
+  },
+  "steps": {
+    "interests": "",
+    "notifications": ""
+  }
+}

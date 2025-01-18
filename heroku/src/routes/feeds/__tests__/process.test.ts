@@ -1,4 +1,4 @@
-import { describe, it, expect, jest } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../app';
 import { ArticleRepository } from '../../../repositories/article.repository';
@@ -7,6 +7,12 @@ import { ArticleRepository } from '../../../repositories/article.repository';
 jest.mock('../../../repositories/article.repository');
 
 describe('POST /feeds/process', () => {
+    const validApiKey = 'test-api-key';
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        process.env.API_KEYS = validApiKey;
+    });
     const validFeedId = '123e4567-e89b-12d3-a456-426614174000';
     const validItems = [
         {
@@ -28,6 +34,7 @@ describe('POST /feeds/process', () => {
 
         const response = await request(app)
             .post('/feeds/process')
+            .set('X-API-Key', validApiKey)
             .send({
                 feedId: validFeedId,
                 items: validItems
@@ -42,6 +49,7 @@ describe('POST /feeds/process', () => {
     it('should validate feed ID format', async () => {
         const response = await request(app)
             .post('/feeds/process')
+            .set('X-API-Key', validApiKey)
             .send({
                 feedId: 'invalid-uuid',
                 items: validItems
@@ -62,6 +70,7 @@ describe('POST /feeds/process', () => {
     it('should validate items structure', async () => {
         const response = await request(app)
             .post('/feeds/process')
+            .set('X-API-Key', validApiKey)
             .send({
                 feedId: validFeedId,
                 items: [{
@@ -85,6 +94,7 @@ describe('POST /feeds/process', () => {
     it('should validate item URL format', async () => {
         const response = await request(app)
             .post('/feeds/process')
+            .set('X-API-Key', validApiKey)
             .send({
                 feedId: validFeedId,
                 items: [{
@@ -109,6 +119,7 @@ describe('POST /feeds/process', () => {
     it('should handle empty item list', async () => {
         const response = await request(app)
             .post('/feeds/process')
+            .set('X-API-Key', validApiKey)
             .send({
                 feedId: validFeedId,
                 items: []

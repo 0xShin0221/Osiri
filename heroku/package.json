@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "DEBUG=app:*,server:*,-server:verbose,-app:debug ts-node-dev src/server.ts",
     "test": "jest",
     "heroku-cleanup": "yarn run playwright install chromium"
   },
@@ -14,13 +14,17 @@
     "@langchain/openai": "^0.3.16",
     "@supabase/supabase-js": "^2.39.1",
     "@types/lodash": "^4.17.13",
+    "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
+    "gpt-tokenizer": "^2.8.1",
     "langchain": "^0.3.7",
+    "langsmith": "^0.2.14",
     "lodash": "^4.17.21",
-    "openai": "^4.24.1",
+    "openai": "^4.77.0",
     "playwright": "^1.49.1",
     "rss-parser": "^3.13.0",
+    "tiktoken": "^1.0.18",
     "zod": "^3.24.1"
   },
   "devDependencies": {

@@ -1,0 +1,9 @@
+{
+  "menu": {
+    "appIntegration": "アプリ連携",
+    "dashboard": "ホーム",
+    "feedManagement": "フィード管理",
+    "notificationManagement": "通知管理",
+    "settings": "設定"
+  }
+}
