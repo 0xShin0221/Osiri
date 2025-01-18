@@ -30,7 +30,7 @@
   "service": {
     "label": "サービス名",
     "name": "Osiri - Global AI summarized News Reader",
-    "nameJp": "（オシリス - グローバルAIニュースリーダー）"
+    "nameJp": "（オシリ - グローバルAIニュースリーダー）"
   },
   "price": {
     "label": "販売価格",
