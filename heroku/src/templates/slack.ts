@@ -9,21 +9,42 @@ import type {
 
 type Translation = Database["public"]["Tables"]["translations"]["Row"];
 
+// Function to safely truncate text while preserving words
+const truncateText = (text: string, maxLength: number): string => {
+    if (text.length <= maxLength) return text;
+    const truncated = text.slice(0, maxLength - 3).trim();
+    return `${truncated.replace(/[^\.!\?]\s+\S*$/, "")}...`;
+};
+
 export const createArticleMessage = (
     translation: Translation,
     article_url: string,
 ): SlackMessage => {
+    // Truncate title for header (Slack limit is 150 chars)
+    const headerTitle = truncateText(translation.title || "No title", 150);
+
     const blocks: (HeaderBlock | DividerBlock | SectionBlock | ContextBlock)[] =
         [
             {
                 type: "header",
                 text: {
                     type: "plain_text",
-                    text: translation.title || "No title",
+                    text: headerTitle,
                     emoji: true,
                 },
             },
         ];
+
+    // If title was truncated, add full title in a section block
+    if (headerTitle !== translation.title) {
+        blocks.push({
+            type: "section",
+            text: {
+                type: "mrkdwn",
+                text: `*Full Title:*\n${translation.title}`,
+            },
+        });
+    }
 
     // Add summary if exists, handling line breaks correctly
     if (translation.summary) {
@@ -77,24 +98,20 @@ export const createArticleMessage = (
     }
 
     // Add link to article
-    blocks.push(
-        {
-            type: "context",
-            elements: [
-                {
-                    type: "mrkdwn",
-                    text:
-                        `:link: <${article_url}|Read full article> • :calendar: ${
-                            new Date().toLocaleDateString()
-                        }`,
-                },
-            ],
-        },
-    );
+    blocks.push({
+        type: "context",
+        elements: [
+            {
+                type: "mrkdwn",
+                text: `:link: <${article_url}|Read full article> • :calendar: ${
+                    new Date().toLocaleDateString()
+                }`,
+            },
+        ],
+    });
 
-    // Ensure the fallback text is also properly handled
     return {
         blocks,
-        text: translation.title || "New article available",
+        text: headerTitle,
     };
 };
