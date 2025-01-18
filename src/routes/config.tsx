@@ -12,6 +12,7 @@ import AppIntegrationPage from "@/pages/AppIntegration";
 import type { ReactElement } from "react";
 import { AuthCallback } from "@/components/auth/AuthCallback";
 import AppSettingsPage from "@/pages/AppSettings";
+import LegalNotice from "@/pages/LegalNotice";
 
 interface RouteConfig {
   path: string;
@@ -26,6 +27,7 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
   { path: "terms", element: <Terms /> },
   { path: "privacy", element: <Privacy /> },
   { path: "unsubscribe", element: <Unsubscribe /> },
+  { path: "legal-notice", element: <LegalNotice /> },
   { path: "auth/callback", element: <AuthCallback /> },
   {
     path: "dashboard",

@@ -1,0 +1,93 @@
+{
+  "title": "Specified Commercial Transaction Act",
+  "seller": {
+    "label": "Seller",
+    "value": "Osiri"
+  },
+  "representative": {
+    "label": "Representative",
+    "value": "Shintaro Nakagawa"
+  },
+  "address": {
+    "label": "Address",
+    "value": "Disclosed upon request without delay"
+  },
+  "contact": {
+    "label": "Contact",
+    "email": {
+      "label": "Email",
+      "value": "support@osiri.xyz"
+    },
+    "phone": {
+      "label": "Phone",
+      "value": "Disclosed upon request without delay"
+    },
+    "hours": {
+      "label": "Business Hours",
+      "value": "Weekdays 10:00-18:00 (Excluding weekends, holidays, and year-end/new year)"
+    }
+  },
+  "service": {
+    "label": "Service Name",
+    "name": "Osiri - Global AI summarized News Reader",
+    "nameJp": "(Osiri - Global AI News Reader)"
+  },
+  "price": {
+    "label": "Price",
+    "monthly": "Monthly Regular Plan: ¥980 (tax included)",
+    "taxIncluded": "* All prices include tax"
+  },
+  "trial": {
+    "label": "Free Trial",
+    "period": "Duration: 7 days from registration",
+    "noCard": "* No credit card required",
+    "fullAccess": "* Full access to all features during trial period"
+  },
+  "payment": {
+    "label": "Payment Method",
+    "method": "Credit Card",
+    "cards": {
+      "visa": "・VISA",
+      "mastercard": "・Mastercard",
+      "amex": "・American Express",
+      "jcb": "・JCB"
+    }
+  },
+  "billing": {
+    "label": "Billing Timing",
+    "timing": "Payment on monthly renewal date",
+    "autoCharge": "* For credit card payments, automatic billing occurs on the renewal date"
+  },
+  "additionalFees": {
+    "label": "Additional Fees",
+    "none": "No additional fees other than the stated service fee.",
+    "internet": "However, internet connection and device communication charges are the responsibility of the customer."
+  },
+  "delivery": {
+    "label": "Service Start",
+    "immediate": "Service is available immediately after registration."
+  },
+  "cancellation": {
+    "label": "Cancellation Policy",
+    "about": {
+      "title": "[About Cancellation]",
+      "anytime": "You can cancel at any time during the contract period",
+      "mypage": "Cancellation can be processed through My Page",
+      "untilEnd": "After cancellation, you can continue using the service until the end of the current period",
+      "noRefund": "No refunds for cancellations during the contract period"
+    },
+    "process": {
+      "title": "[Cancellation Process]",
+      "login": "Log in to My Page",
+      "menu": "Select 'Cancel Subscription' from settings menu",
+      "follow": "Follow the on-screen instructions to complete"
+    }
+  },
+  "requirements": {
+    "label": "System Requirements",
+    "title": "[Recommended Environment]",
+    "pc": "・PC: Chrome (latest), Firefox (latest), Safari (latest), Edge (latest)",
+    "mobile": "・Smartphone/Tablet: iOS 14.0 or later, Android 8.0 or later",
+    "note": "* May work in other environments but not officially supported"
+  }
+}
