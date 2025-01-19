@@ -95,6 +95,7 @@ export type Database = {
           feed_id: string
           id: string
           last_scraping_attempt: string | null
+          published_at: string | null
           scraping_attempt_count: number
           scraping_error: string | null
           scraping_status: Database["public"]["Enums"]["article_scraping_status"]
@@ -108,6 +109,7 @@ export type Database = {
           feed_id: string
           id?: string
           last_scraping_attempt?: string | null
+          published_at?: string | null
           scraping_attempt_count?: number
           scraping_error?: string | null
           scraping_status?: Database["public"]["Enums"]["article_scraping_status"]
@@ -121,6 +123,7 @@ export type Database = {
           feed_id?: string
           id?: string
           last_scraping_attempt?: string | null
+          published_at?: string | null
           scraping_attempt_count?: number
           scraping_error?: string | null
           scraping_status?: Database["public"]["Enums"]["article_scraping_status"]
@@ -192,6 +195,13 @@ export type Database = {
             foreignKeyName: "notification_channel_feeds_channel_id_fkey"
             columns: ["channel_id"]
             isOneToOne: false
+            referencedRelation: "inactive_channels"
+            referencedColumns: ["channel_id"]
+          },
+          {
+            foreignKeyName: "notification_channel_feeds_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
             referencedRelation: "notification_channels"
             referencedColumns: ["id"]
           },
@@ -216,7 +226,7 @@ export type Database = {
           last_error: string | null
           last_notified_at: string | null
           notification_language: Database["public"]["Enums"]["feed_language"]
-          organization_id: string | null
+          organization_id: string
           platform: Database["public"]["Enums"]["notification_platform"]
           schedule_id: string | null
           updated_at: string | null
@@ -233,7 +243,7 @@ export type Database = {
           last_error?: string | null
           last_notified_at?: string | null
           notification_language: Database["public"]["Enums"]["feed_language"]
-          organization_id?: string | null
+          organization_id: string
           platform: Database["public"]["Enums"]["notification_platform"]
           schedule_id?: string | null
           updated_at?: string | null
@@ -250,13 +260,20 @@ export type Database = {
           last_error?: string | null
           last_notified_at?: string | null
           notification_language?: Database["public"]["Enums"]["feed_language"]
-          organization_id?: string | null
+          organization_id?: string
           platform?: Database["public"]["Enums"]["notification_platform"]
           schedule_id?: string | null
           updated_at?: string | null
           workspace_connection_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "monthly_org_notifications"
+            referencedColumns: ["organization_id"]
+          },
           {
             foreignKeyName: "notification_channels_organization_id_fkey"
             columns: ["organization_id"]
@@ -283,33 +300,36 @@ export type Database = {
       notification_logs: {
         Row: {
           article_id: string | null
-          channel_id: string | null
+          channel_id: string
           created_at: string | null
           error: string | null
           id: string
-          platform: Database["public"]["Enums"]["notification_platform"] | null
+          organization_id: string
+          platform: Database["public"]["Enums"]["notification_platform"]
           recipient: string
           status: Database["public"]["Enums"]["notification_status"]
           updated_at: string | null
         }
         Insert: {
           article_id?: string | null
-          channel_id?: string | null
+          channel_id: string
           created_at?: string | null
           error?: string | null
           id?: string
-          platform?: Database["public"]["Enums"]["notification_platform"] | null
+          organization_id: string
+          platform: Database["public"]["Enums"]["notification_platform"]
           recipient: string
           status: Database["public"]["Enums"]["notification_status"]
           updated_at?: string | null
         }
         Update: {
           article_id?: string | null
-          channel_id?: string | null
+          channel_id?: string
           created_at?: string | null
           error?: string | null
           id?: string
-          platform?: Database["public"]["Enums"]["notification_platform"] | null
+          organization_id?: string
+          platform?: Database["public"]["Enums"]["notification_platform"]
           recipient?: string
           status?: Database["public"]["Enums"]["notification_status"]
           updated_at?: string | null
@@ -326,7 +346,28 @@ export type Database = {
             foreignKeyName: "notification_logs_channel_id_fkey"
             columns: ["channel_id"]
             isOneToOne: false
+            referencedRelation: "inactive_channels"
+            referencedColumns: ["channel_id"]
+          },
+          {
+            foreignKeyName: "notification_logs_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
             referencedRelation: "notification_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "monthly_org_notifications"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "notification_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -395,6 +436,13 @@ export type Database = {
             foreignKeyName: "organization_feed_follows_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "monthly_org_notifications"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "organization_feed_follows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -426,6 +474,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "monthly_org_notifications"
+            referencedColumns: ["organization_id"]
+          },
           {
             foreignKeyName: "organization_members_organization_id_fkey"
             columns: ["organization_id"]
@@ -686,6 +741,13 @@ export type Database = {
             foreignKeyName: "workspace_connections_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "monthly_org_notifications"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "workspace_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -693,6 +755,44 @@ export type Database = {
       }
     }
     Views: {
+      inactive_channels: {
+        Row: {
+          channel_id: string | null
+          channel_identifier: string | null
+          last_notification_date: string | null
+          last_used: string | null
+          organization_id: string | null
+          organization_name: string | null
+          platform: Database["public"]["Enums"]["notification_platform"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "monthly_org_notifications"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monthly_org_notifications: {
+        Row: {
+          failed_notifications: number | null
+          month: string | null
+          organization_id: string | null
+          organization_name: string | null
+          successful_notifications: number | null
+          total_notifications: number | null
+        }
+        Relationships: []
+      }
       pending_translations: {
         Row: {
           article_id: string | null
@@ -821,6 +921,21 @@ export type Database = {
           title: string
           content: string
           source_language: Database["public"]["Enums"]["feed_language"]
+        }[]
+      }
+      get_channel_notification_stats: {
+        Args: {
+          p_days?: number
+        }
+        Returns: {
+          organization_name: string
+          channel_identifier: string
+          platform: Database["public"]["Enums"]["notification_platform"]
+          total_notifications: number
+          successful_notifications: number
+          failed_notifications: number
+          last_notification: string
+          avg_daily_notifications: number
         }[]
       }
       get_required_translation_languages: {
