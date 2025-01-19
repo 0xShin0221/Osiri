@@ -32,7 +32,8 @@ import ScheduleSelector from "./ScheduleSelector";
 import { useFilteredSchedules } from "@/hooks/useNotificationSchedules";
 import type { NotificationPlatform } from "@/types/notification-platform";
 import { createPlatform } from "@/services/platforms/platform-factory";
-import { LANGUAGES } from "@/lib/i18n/languages";
+
+import { NotificationLanguageSelector } from "./NotificationLanguageSelector";
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
 type WorkspaceConnection = Tables<"workspace_connections">;
@@ -335,34 +336,6 @@ export function AddChannelForm({
                   </div>
                 ) : null}
 
-                {/* Language Selection */}
-                <div className="grid gap-1">
-                  <Label className="text-sm">{t("addChannel.language")}</Label>
-                  <Select
-                    value={notificationLanguage}
-                    onValueChange={(value: FeedLanguage) =>
-                      setNotificationLanguage(value)
-                    }
-                  >
-                    <SelectTrigger className="h-8 text-sm">
-                      <SelectValue
-                        placeholder={t("addChannel.selectLanguage")}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {LANGUAGES.SUPPORTED.map((lang) => (
-                        <SelectItem
-                          key={lang.code}
-                          value={lang.code}
-                          className="text-xs"
-                        >
-                          {lang.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
                 {/* Feed Selection */}
                 <div className="grid gap-2">
                   <Label>{t("addChannel.selectFeeds")}</Label>
@@ -391,26 +364,35 @@ export function AddChannelForm({
                 </div>
               </div>
 
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onOpenChange(false)}
-                >
-                  {t("common.cancel")}
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={
-                    loading ||
-                    !channelId ||
-                    selectedFeeds.length === 0 ||
-                    !scheduleId ||
-                    (platform === "slack" && !selectedWorkspaceId)
+              <DialogFooter className="flex items-center justify-between gap-2 sm:justify-between">
+                <NotificationLanguageSelector
+                  value={notificationLanguage}
+                  onChange={(value: FeedLanguage) =>
+                    setNotificationLanguage(value)
                   }
-                >
-                  {loading ? t("common.adding") : t("common.add")}
-                </Button>
+                  position="footer"
+                />
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    {t("common.cancel")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={
+                      loading ||
+                      !channelId ||
+                      selectedFeeds.length === 0 ||
+                      !scheduleId ||
+                      (platform === "slack" && !selectedWorkspaceId)
+                    }
+                  >
+                    {loading ? t("common.adding") : t("common.add")}
+                  </Button>
+                </div>
               </DialogFooter>
             </form>
           </DialogContent>
