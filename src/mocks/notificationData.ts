@@ -2,45 +2,7 @@
 
 import type { Tables } from "@/types/database.types";
 
-type NotificationChannel = Tables<"notification_channels">;
 type NotificationSchedule = Tables<"notification_schedules">;
-
-export const mockChannels: NotificationChannel[] = [
-  {
-    id: "1",
-    platform: "slack",
-    channel_identifier: "#tech-news",
-    channel_identifier_id: "dmnk234la",
-    is_active: true,
-    schedule_id: "1",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category_ids: null,
-    error_count: null,
-    last_error: null,
-    last_notified_at: null,
-    organization_id: null,
-    workspace_connection_id: null,
-    notification_language: "zh",
-  },
-  {
-    id: "2",
-    platform: "discord",
-    channel_identifier: "#startup-feeds",
-    channel_identifier_id: "mdk2SMlkf",
-    is_active: true,
-    schedule_id: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category_ids: null,
-    error_count: null,
-    last_error: null,
-    last_notified_at: null,
-    organization_id: null,
-    workspace_connection_id: null,
-    notification_language: "ja",
-  },
-];
 
 export const mockSchedules: NotificationSchedule[] = [
   {

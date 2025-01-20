@@ -4,6 +4,9 @@ import type { ServiceResponse } from "../../types/models";
 import type { SlackService } from "../platform/slack.service";
 
 type NotificationLog = Database["public"]["Tables"]["notification_logs"]["Row"];
+type NotificationChannel =
+    Database["public"]["Tables"]["notification_channels"]["Row"];
+type NotificationStatus = Database["public"]["Enums"]["notification_status"];
 
 const API_DELAY_MS = 1100;
 
@@ -15,6 +18,33 @@ export class NotificationBatchProcessor {
 
     private async delay(ms: number): Promise<void> {
         return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    private async updateNotificationWithChannel(
+        logId: string,
+        status: NotificationStatus,
+        channel: NotificationChannel,
+        error?: string,
+    ): Promise<void> {
+        console.log("[NotificationBatch] Updating notification status:", {
+            logId,
+            status,
+            channelInfo: {
+                id: channel.id,
+                platform: channel.platform,
+                identifier: channel.channel_identifier,
+                identifierId: channel.channel_identifier_id,
+            },
+            error,
+        });
+        await this.notificationRepo.updateNotificationStatus(
+            logId,
+            status,
+            channel.channel_identifier,
+            error,
+            channel.platform,
+            channel.organization_id,
+        );
     }
 
     async processNotifications(): Promise<ServiceResponse<void>> {
@@ -41,7 +71,6 @@ export class NotificationBatchProcessor {
                 log,
             ): log is NotificationLog => !!log.id);
 
-            // 2. For each pending notification, get channels
             for (const log of logs) {
                 try {
                     if (!log.article_id) continue;
@@ -51,72 +80,73 @@ export class NotificationBatchProcessor {
                         .getActiveChannelsFromArticleId(log.article_id);
 
                     if (channelsError || !channels?.length) {
-                        console.log(
-                            `[NotificationBatch] No active channels for article ${log.article_id}`,
-                        );
-                        await this.notificationRepo.updateNotificationStatus(
-                            log.id,
-                            "skipped",
-                            "",
-                            channelsError || "No active channels found",
+                        console.error(
+                            `[NotificationBatch] No active channels for article ${log.article_id}:`,
+                            channelsError,
                         );
                         continue;
                     }
 
-                    const lastSentTime: Record<string, number> = {};
-
-                    console.log(
-                        "[NotificationBatch] Processing notification channels",
-                        channels,
-                    );
-
-                    // 3. Send to each channel based on platform
                     for (const channel of channels) {
-                        console.log(
-                            "[NotificationBatch] Sending to channel",
-                            channel,
-                        );
-                        const channelId = channel.channel_identifier_id;
-                        if (!channelId) {
-                            console.error(
-                                "[NotificationBatch] Channel has no identifier",
-                            );
-                            await this.notificationRepo
-                                .updateNotificationStatus(
-                                    log.id,
-                                    "failed",
-                                    channel.channel_identifier,
-                                    "Channel has no identifier",
-                                );
-                            continue;
-                        }
                         try {
                             switch (channel.platform) {
                                 case "slack": {
-                                    const now = Date.now();
-                                    const lastSent = lastSentTime[channelId] ||
-                                        0;
-                                    const timeSinceLastSent = now - lastSent;
-
-                                    // Calculate the necessary delay time
-                                    if (timeSinceLastSent < API_DELAY_MS) {
-                                        const delayNeeded = API_DELAY_MS -
-                                            timeSinceLastSent;
-                                        await this.delay(delayNeeded);
+                                    const {
+                                        data: notifLog,
+                                        error: createError,
+                                    } = await this.notificationRepo
+                                        .createNotificationLog({
+                                            article_id: log.article_id,
+                                            channel_id: channel.id,
+                                            platform: channel.platform,
+                                            organization_id:
+                                                channel.organization_id,
+                                            status: "pending",
+                                            recipient:
+                                                channel.channel_identifier_id ||
+                                                "",
+                                        });
+                                    if (
+                                        createError ===
+                                            "Notification already exists and was successful"
+                                    ) {
+                                        console.log(
+                                            `[NotificationBatch] Skipping existing successful notification for article ${log.article_id} and channel ${channel.id}`,
+                                        );
+                                        continue;
                                     }
 
-                                    await this.slackService.sendMessage(
-                                        log.article_id,
-                                        channel,
-                                    );
-                                    lastSentTime[channelId] = Date.now();
-
-                                    await this.notificationRepo
-                                        .updateNotificationStatus(
-                                            log.id,
-                                            "success",
-                                            channel.channel_identifier,
+                                    if (createError || !notifLog) {
+                                        console.error(
+                                            "[NotificationBatch] Error creating notification log:",
+                                            createError,
                                         );
+                                        continue;
+                                    }
+
+                                    try {
+                                        await this.slackService.sendMessage(
+                                            log.article_id,
+                                            channel,
+                                        );
+                                        await this
+                                            .updateNotificationWithChannel(
+                                                notifLog.id,
+                                                "success",
+                                                channel,
+                                            );
+                                    } catch (error) {
+                                        await this
+                                            .updateNotificationWithChannel(
+                                                notifLog.id,
+                                                "failed",
+                                                channel,
+                                                error instanceof Error
+                                                    ? error.message
+                                                    : "Unknown error",
+                                            );
+                                        throw error;
+                                    }
                                     break;
                                 }
                                 default:
@@ -126,18 +156,9 @@ export class NotificationBatchProcessor {
                             }
                         } catch (error) {
                             console.error(
-                                `[NotificationBatch] Error sending to channel ${channel.id}:`,
+                                `[NotificationBatch] Error processing channel ${channel.id}:`,
                                 error,
                             );
-                            await this.notificationRepo
-                                .updateNotificationStatus(
-                                    log.id,
-                                    "failed",
-                                    channel.channel_identifier,
-                                    error instanceof Error
-                                        ? error.message
-                                        : "Unknown error",
-                                );
                         }
                     }
                 } catch (error) {
