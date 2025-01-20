@@ -1,93 +1,106 @@
 {
-  "title": "Specified Commercial Transaction Act",
-  "seller": {
-    "label": "Seller",
-    "value": "Osiri"
-  },
-  "representative": {
-    "label": "Representative",
-    "value": "Shintaro Nakagawa"
+  "additionalFees": {
+    "internet": "* Internet connection and device communication charges are the responsibility of the customer",
+    "label": "Additional Fees",
+    "none": "No additional fees other than the stated service fee"
   },
   "address": {
     "label": "Address",
     "value": "Disclosed upon request without delay"
   },
+  "billing": {
+    "autoCharge": "* For credit card payments, automatic billing occurs on the renewal date",
+    "label": "Billing Timing",
+    "timing": "Automatic billing on monthly renewal date"
+  },
+  "cancellation": {
+    "about": {
+      "anytime": "You can cancel at any time during the contract period",
+      "mypage": "Cancellation can be processed through My Page",
+      "noRefund": "No refunds for cancellations during the contract period",
+      "title": "[About Cancellation]",
+      "untilEnd": "After cancellation, you can continue using the service until the end of the current period"
+    },
+    "label": "Cancellation Policy",
+    "process": {
+      "follow": "Follow the on-screen instructions to complete",
+      "login": "Log in to My Page",
+      "menu": "Select 'Cancel Subscription' from settings menu",
+      "title": "[Cancellation Process]"
+    }
+  },
   "contact": {
-    "label": "Contact",
     "email": {
       "label": "Email",
       "value": "support@osiri.xyz"
     },
+    "hours": {
+      "label": "Business Hours",
+      "value": "Weekdays 10:00-18:00 JST (Excluding weekends, holidays, and year-end/new year)"
+    },
+    "label": "Contact Information",
+    "note": "* Please contact us via email",
     "phone": {
       "label": "Phone",
       "value": "Disclosed upon request without delay"
-    },
-    "hours": {
-      "label": "Business Hours",
-      "value": "Weekdays 10:00-18:00 (Excluding weekends, holidays, and year-end/new year)"
     }
   },
+  "delivery": {
+    "immediate": "Service is available immediately after registration",
+    "label": "Service Start"
+  },
+  "payment": {
+    "cards": {
+      "amex": "・American Express",
+      "jcb": "・JCB",
+      "mastercard": "・Mastercard",
+      "visa": "・VISA"
+    },
+    "label": "Payment Method",
+    "method": "Credit Card",
+    "processor": "* Credit card processing is provided by Stripe",
+    "security": "* Credit card information is protected by SSL encryption"
+  },
+  "price": {
+    "label": "Price",
+    "monthly": "Monthly fee: ¥980 (tax included)",
+    "taxIncluded": "* All prices include consumption tax"
+  },
+  "representative": {
+    "label": "Representative",
+    "value": "Shintaro Nakagawa"
+  },
+  "requirements": {
+    "label": "System Requirements",
+    "mobile": "・Smartphone/Tablet: iOS 14.0 or later, Android 8.0 or later",
+    "note": "* May work in other environments but not officially supported",
+    "pc": "・PC: Chrome (latest), Firefox (latest), Safari (latest), Edge (latest)",
+    "title": "[Recommended Environment]"
+  },
+  "seller": {
+    "label": "Seller",
+    "value": "Osiri"
+  },
   "service": {
+    "description": {
+      "items": [
+        "Automated collection of overseas startup news",
+        "AI-powered summarization",
+        "Multi-language translation",
+        "Slack/Discord integration",
+        "Customizable news delivery"
+      ],
+      "title": "Service Details"
+    },
     "label": "Service Name",
     "name": "Osiri - Global AI summarized News Reader",
     "nameJp": "(Osiri - Global AI News Reader)"
   },
-  "price": {
-    "label": "Price",
-    "monthly": "Monthly Regular Plan: ¥980 (tax included)",
-    "taxIncluded": "* All prices include tax"
-  },
+  "title": "Specified Commercial Transaction Act",
   "trial": {
+    "fullAccess": "* Full access to all features during trial period",
     "label": "Free Trial",
-    "period": "Duration: 7 days from registration",
     "noCard": "* No credit card required",
-    "fullAccess": "* Full access to all features during trial period"
-  },
-  "payment": {
-    "label": "Payment Method",
-    "method": "Credit Card",
-    "cards": {
-      "visa": "・VISA",
-      "mastercard": "・Mastercard",
-      "amex": "・American Express",
-      "jcb": "・JCB"
-    }
-  },
-  "billing": {
-    "label": "Billing Timing",
-    "timing": "Payment on monthly renewal date",
-    "autoCharge": "* For credit card payments, automatic billing occurs on the renewal date"
-  },
-  "additionalFees": {
-    "label": "Additional Fees",
-    "none": "No additional fees other than the stated service fee.",
-    "internet": "However, internet connection and device communication charges are the responsibility of the customer."
-  },
-  "delivery": {
-    "label": "Service Start",
-    "immediate": "Service is available immediately after registration."
-  },
-  "cancellation": {
-    "label": "Cancellation Policy",
-    "about": {
-      "title": "[About Cancellation]",
-      "anytime": "You can cancel at any time during the contract period",
-      "mypage": "Cancellation can be processed through My Page",
-      "untilEnd": "After cancellation, you can continue using the service until the end of the current period",
-      "noRefund": "No refunds for cancellations during the contract period"
-    },
-    "process": {
-      "title": "[Cancellation Process]",
-      "login": "Log in to My Page",
-      "menu": "Select 'Cancel Subscription' from settings menu",
-      "follow": "Follow the on-screen instructions to complete"
-    }
-  },
-  "requirements": {
-    "label": "System Requirements",
-    "title": "[Recommended Environment]",
-    "pc": "・PC: Chrome (latest), Firefox (latest), Safari (latest), Edge (latest)",
-    "mobile": "・Smartphone/Tablet: iOS 14.0 or later, Android 8.0 or later",
-    "note": "* May work in other environments but not officially supported"
+    "period": "Duration: 7 days from registration"
   }
 }

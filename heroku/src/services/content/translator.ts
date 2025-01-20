@@ -62,44 +62,52 @@ export class ContentTranslator {
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
 
     const promptTemplate = ChatPromptTemplate.fromTemplate(`
-      You are an editor well-versed in the startup and technology industry. 
-      Please translate and summarize the following article:
+    You are an editor specialized in startup and technology industry analysis.
+    Please translate and analyze the following article with a focus on business value and technical insights:
 
-      Source Language: {source_language}
-      Target Language: {target_language}
+    Source Language: {source_language}
+    Target Language: {target_language}
 
-      Translation Requirements:
+    Translation Requirements:
 
-      1. Length Requirements:
+    1. Length Requirements:
       - Summary must be VERY concise (max 350 characters)
       - Each key point must be under 300 characters
       - Title should be clear but brief
 
-      2. Content Guidelines:
-      - Focus on essential information only
-      - Avoid redundant expressions
-      - Use simple, clear language
-      - For non-Latin scripts (like Hindi, Chinese, etc.), be extra concise
-      - Ensure proper handling of technical terms
+    2. Key Points Extraction Guidelines:
+      - Business Impact: Identify specific market opportunities, revenue potential, or competitive advantages
+      - Technical Innovation: Highlight unique technological solutions or breakthroughs
+      - Growth Metrics: Extract specific numbers about user growth, funding, or market size
+      - Strategic Moves: Note important partnerships, acquisitions, or market expansions
+      - Future Implications: Point out potential industry changes or future developments
 
-      3. Structure Requirements:
-      - Keep summaries extremely focused
-      - Prioritize clarity over detail
-      - Maintain contextual accuracy
+    3. Summary Structure:
+      - Problem/Opportunity: What market need or challenge is being addressed?
+      - Solution/Innovation: What unique approach or technology is being used?
+      - Market Impact: What are the business implications or market effects?
+      - Competitive Edge: What distinguishes this from existing solutions?
 
-      Chunk Information:
-      - Total Chunks: {total_chunks}
-      - Current Chunk: {current_chunk}
-      
-      {is_first_chunk_instructions}
+    4. Content Guidelines:
+      - Use industry-standard terminology
+      - Include specific metrics and numbers when available
+      - Maintain technical accuracy in translations
+      - Focus on actionable insights
+      - For non-Latin scripts, prioritize clarity while maintaining technical precision
 
-      Original Title: {title}
-      Original Text: {content}
-      
-      Previous Context (if any): {previous_context}
-      
-      {format_instructions}
-    `);
+    Chunk Information:
+    - Total Chunks: {total_chunks}
+    - Current Chunk: {current_chunk}
+    
+    {is_first_chunk_instructions}
+
+    Original Title: {title}
+    Original Text: {content}
+    
+    Previous Context (if any): {previous_context}
+    
+    {format_instructions}
+  `);
 
     this.chain = RunnableSequence.from([
       promptTemplate,

@@ -1,6 +1,6 @@
-import { BatchResults } from "../../../types/batch";
-import { FeedCollector } from "../../feed/collector";
-import { FeedCollectionStepResult, StepProcessor} from "./stepProcessor.types";
+import type { BatchResults } from "../../../types/batch";
+import type { FeedCollector } from "../../feed/collector";
+import type { FeedCollectionStepResult, StepProcessor} from "./stepProcessor.types";
 
 export class FeedCollectionStep implements StepProcessor {
   constructor(private readonly feedCollector: FeedCollector) {}

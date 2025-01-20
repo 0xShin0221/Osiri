@@ -1,7 +1,7 @@
-import { BatchResults } from "../../../types/batch";
-import { ContentScraper } from "../../content/scraper";
-import { ArticleRepository } from "../../../repositories/article.repository";
-import { ScrapingStepResult, StepProcessor } from "./stepProcessor.types";
+import type { BatchResults } from "../../../types/batch";
+import type { ContentScraper } from "../../content/scraper";
+import type { ArticleRepository } from "../../../repositories/article.repository";
+import type { ScrapingStepResult, StepProcessor } from "./stepProcessor.types";
 
 
 export class ContentScrapingStep implements StepProcessor {

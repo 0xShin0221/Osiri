@@ -16,7 +16,7 @@ const LegalNotice = () => {
                 <th className="py-4 pr-4 text-left align-top w-1/4">
                   {t("seller.label")}
                 </th>
-                <td className="py-4">{t("seller.value")}</td>
+                <td className="py-4">Osiri</td>
               </tr>
 
               <tr className="border-b">

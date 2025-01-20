@@ -20,7 +20,7 @@ export class BatchProcessor {
   private readonly feedProcessingStep: FeedProcessingStep;
   private readonly contentScrapingStep: ContentScrapingStep;
   private readonly contentTranslationStep: ContentTranslationStep;
-  private readonly DEFAULT_BATCH_SIZE = 10;
+  private readonly DEFAULT_BATCH_SIZE = 20;
 
   constructor(
     private readonly feedRepository: FeedRepository,

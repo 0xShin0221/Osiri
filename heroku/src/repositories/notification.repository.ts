@@ -3,7 +3,10 @@ import type { Database } from "../types/database.types";
 import type { ServiceResponse } from "../types/models";
 
 type NotificationLog = Database["public"]["Tables"]["notification_logs"]["Row"];
-type InsertNotificationLog =
+type NotificationPlatform =
+  Database["public"]["Enums"]["notification_platform"];
+type NotificationStatus = Database["public"]["Enums"]["notification_status"];
+type NotificationLogInsert =
   Database["public"]["Tables"]["notification_logs"]["Insert"];
 
 type CreatePendingResult = {
@@ -12,6 +15,7 @@ type CreatePendingResult = {
   skippedCount: number;
   newNotifications: NotificationLog[];
 };
+
 export class NotificationRepository extends BaseRepository {
   private readonly channelsTable = "notification_channels";
   private readonly logsTable = "notification_logs";
@@ -86,33 +90,6 @@ export class NotificationRepository extends BaseRepository {
     }
   }
 
-  async logNotification(
-    channelId: string,
-    status: Database["public"]["Enums"]["notification_status"],
-    recipient: string,
-    error?: string,
-  ): Promise<ServiceResponse<void>> {
-    try {
-      const { error: insertError } = await this.client
-        .from(this.logsTable)
-        .insert({
-          channel_id: channelId,
-          status,
-          recipient,
-          error,
-          platform: "slack",
-        });
-
-      if (insertError) throw insertError;
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-      };
-    }
-  }
-
   async getChannelsForFeed(
     feedId: string,
   ): Promise<
@@ -147,89 +124,164 @@ export class NotificationRepository extends BaseRepository {
     ServiceResponse<CreatePendingResult>
   > {
     try {
-      // 1. Get completed translations
-      const query = this.client
-        .from("translations")
-        .select("article_id")
-        .eq("status", "completed");
+      console.log(
+        "[NotificationRepository] Starting createPendingNotifications",
+      );
 
-      const { data: translations, error: translationsError } = await query;
+      // First get all completed translations
+      const { data: translations, error: translationsError } = await this.client
+        .from("translations")
+        .select(`
+          article_id
+        `)
+        .eq("status", "completed")
+        .order("updated_at", { ascending: false })
+        .limit(50); // Limit to prevent processing too many at once
+
       if (translationsError) throw translationsError;
 
+      console.log("[NotificationRepository] Found completed translations:", {
+        count: translations?.length || 0,
+      });
+
       if (!translations?.length) {
-        return {
-          success: true,
-          data: {
-            processedCount: 0,
-            insertedCount: 0,
-            skippedCount: 0,
-            newNotifications: [],
-          },
-        };
+        return this.createEmptyResult(0);
       }
 
-      // 2. Get article_id that is not yet registered in notification_logs
-      const logsQuery = this.client
-        .from("notification_logs")
-        .select("article_id")
-        .in("article_id", translations.map((t) => t.article_id));
+      // Filter out articles that already have notifications
+      const articleIds = translations.map((t) => t.article_id).filter(Boolean);
 
-      const { data: existingLogs, error: logsError } = await logsQuery;
+      // Get existing notifications for these articles
+      const { data: existingLogs, error: logsError } = await this.client
+        .from(this.logsTable)
+        .select("article_id")
+        .in("article_id", articleIds);
+
       if (logsError) throw logsError;
 
+      // Filter out articles that already have notifications
       const existingArticleIds = new Set(
-        existingLogs?.map((log) => log.article_id),
+        existingLogs?.map((log) => log.article_id) || [],
       );
-      const newArticleIds = translations
-        .map((t) => t.article_id)
-        .filter((id) => !existingArticleIds.has(id));
+      const newArticleIds = articleIds.filter((id) =>
+        !existingArticleIds.has(id)
+      );
 
-      if (!newArticleIds.length) {
-        return {
-          success: true,
-          data: {
-            processedCount: translations.length,
-            insertedCount: 0,
-            skippedCount: translations.length,
-            newNotifications: [],
-          },
-        };
+      console.log("[NotificationRepository] Filtered article IDs:", {
+        total: articleIds.length,
+        existing: existingArticleIds.size,
+        new: newArticleIds.length,
+      });
+
+      if (newArticleIds.length === 0) {
+        return this.createEmptyResult(translations.length);
       }
 
-      const insertData: InsertNotificationLog[] = newArticleIds.map(
-        (articleId) => ({
-          article_id: articleId,
-          status: "pending",
-          recipient: "",
-        }),
-      );
+      // Get articles and their feed IDs
+      const { data: articles, error: articlesError } = await this.client
+        .from("articles")
+        .select("id, feed_id")
+        .in("id", newArticleIds);
+
+      if (articlesError) throw articlesError;
+
+      if (!articles?.length) {
+        return this.createEmptyResult(translations.length);
+      }
+
+      const feedIds = [
+        ...new Set(
+          articles
+            .map((a) => a.feed_id)
+            .filter(Boolean),
+        ),
+      ];
+
+      if (feedIds.length === 0) {
+        return this.createEmptyResult(translations.length);
+      }
+
+      // Get channels for these feeds
+      const { data: channelFeeds, error: channelFeedsError } = await this.client
+        .from("notification_channel_feeds")
+        .select("channel_id")
+        .in("feed_id", feedIds);
+
+      if (channelFeedsError) throw channelFeedsError;
+
+      if (!channelFeeds?.length) {
+        return this.createEmptyResult(translations.length);
+      }
+
+      const channelIds = [
+        ...new Set(
+          channelFeeds
+            .map((cf) => cf.channel_id)
+            .filter(Boolean),
+        ),
+      ];
+
+      const { data: channels, error: channelsError } = await this.client
+        .from("notification_channels")
+        .select()
+        .in("id", channelIds)
+        .eq("is_active", true);
+
+      if (channelsError) throw channelsError;
+
+      if (!channels?.length) {
+        return this.createEmptyResult(translations.length);
+      }
+
+      console.log("[NotificationRepository] Found active channels:", {
+        count: channels.length,
+      });
+
+      // Create notifications
+      const insertData: NotificationLogInsert[] = [];
+      for (const article of articles) {
+        for (const channel of channels) {
+          if (!channel.organization_id || !channel.is_active) continue;
+
+          insertData.push({
+            article_id: article.id,
+            channel_id: channel.id,
+            platform: channel.platform,
+            organization_id: channel.organization_id,
+            status: "pending",
+            recipient: channel.channel_identifier_id || "",
+          });
+        }
+      }
+
+      if (insertData.length === 0) {
+        return this.createEmptyResult(translations.length);
+      }
 
       const { data: insertedData, error: insertError } = await this.client
-        .from("notification_logs")
+        .from(this.logsTable)
         .insert(insertData)
         .select();
 
       if (insertError) throw insertError;
 
-      console.log("[NotificationRepository] Created pending notifications:", {
-        totalProcessed: translations.length,
-        totalInserted: insertedData?.length || 0,
-        totalSkipped: translations.length - (insertedData?.length || 0),
-        newNotificationIds: insertedData?.map((n) => n.id) || [],
+      const result = {
+        processedCount: translations.length,
+        insertedCount: insertedData?.length || 0,
+        skippedCount: translations.length - (insertedData?.length || 0),
+        newNotifications: insertedData || [],
+      };
+
+      console.log("[NotificationRepository] Created notifications:", {
+        processedCount: result.processedCount,
+        insertedCount: result.insertedCount,
+        skippedCount: result.skippedCount,
       });
 
-      return {
-        success: true,
-        data: {
-          processedCount: translations.length,
-          insertedCount: insertedData?.length || 0,
-          skippedCount: translations.length - (insertedData?.length || 0),
-          newNotifications: insertedData || [],
-        },
-      };
+      return { success: true, data: result };
     } catch (error) {
       console.error(
-        "[NotificationRepository] Error creating pending notifications:",
+        "[NotificationRepository] Error in createPendingNotifications:",
         error,
       );
       return {
@@ -321,20 +373,27 @@ export class NotificationRepository extends BaseRepository {
 
   async updateNotificationStatus(
     id: string,
-    status: Database["public"]["Enums"]["notification_status"],
+    status: NotificationStatus,
     recipient: string,
     error?: string,
+    platform?: NotificationPlatform,
+    organization_id?: string,
   ): Promise<ServiceResponse<void>> {
     try {
-      console.log("updateNotificationStatus", { id, status, recipient, error });
+      const updateData: Partial<NotificationLog> = {
+        status,
+        recipient,
+        error,
+        updated_at: new Date().toISOString(),
+      };
+
+      // Add platform and organization_id if provided (for backward compatibility)
+      if (platform) updateData.platform = platform;
+      if (organization_id) updateData.organization_id = organization_id;
+
       const { error: updateError } = await this.client
-        .from("notification_logs")
-        .update({
-          status,
-          recipient,
-          error,
-          updated_at: new Date().toISOString(),
-        })
+        .from(this.logsTable)
+        .update(updateData)
         .eq("id", id);
 
       if (updateError) {
@@ -342,6 +401,65 @@ export class NotificationRepository extends BaseRepository {
         throw updateError;
       }
       return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  private createEmptyResult(
+    totalProcessed: number,
+  ): ServiceResponse<CreatePendingResult> {
+    return {
+      success: true,
+      data: {
+        processedCount: totalProcessed,
+        insertedCount: 0,
+        skippedCount: totalProcessed,
+        newNotifications: [],
+      },
+    };
+  }
+
+  // Added monitoring methods
+  async getMonthlyNotificationStats(
+    organizationId: string,
+    year: number,
+    month: number,
+  ): Promise<
+    ServiceResponse<{
+      total: number;
+      successful: number;
+      failed: number;
+      platforms: Record<NotificationPlatform, number>;
+    }>
+  > {
+    try {
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0);
+
+      const { data, error } = await this.client
+        .from(this.logsTable)
+        .select("id, status, platform")
+        .eq("organization_id", organizationId)
+        .gte("created_at", startDate.toISOString())
+        .lt("created_at", endDate.toISOString());
+
+      if (error) throw error;
+
+      const stats = {
+        total: data.length,
+        successful: data.filter((log) => log.status === "success").length,
+        failed: data.filter((log) => log.status === "failed").length,
+        platforms: data.reduce((acc, log) => {
+          acc[log.platform] = (acc[log.platform] || 0) + 1;
+          return acc;
+        }, {} as Record<NotificationPlatform, number>),
+      };
+
+      return { success: true, data: stats };
     } catch (error) {
       return {
         success: false,
@@ -361,6 +479,61 @@ export class NotificationRepository extends BaseRepository {
 
       if (error) throw error;
       return { success: true, data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async createNotificationLog(
+    data: NotificationLogInsert,
+  ): Promise<ServiceResponse<NotificationLog>> {
+    try {
+      const { data: existingLogs, error: existingError } = await this.client
+        .from(this.logsTable)
+        .select()
+        .match({
+          article_id: data.article_id,
+          channel_id: data.channel_id,
+          status: "success",
+        })
+        .maybeSingle();
+
+      if (existingError) throw existingError;
+
+      // If this combination already exists and was successful, skip
+      if (existingLogs) {
+        console.log(
+          "[NotificationRepository] Skipping duplicate notification:",
+          {
+            articleId: data.article_id,
+            channelId: data.channel_id,
+            existingLogId: existingLogs.id,
+          },
+        );
+        return {
+          success: false,
+          error: "Notification already exists and was successful",
+        };
+      }
+
+      // Create new notification log if no successful one exists
+      const { data: result, error: insertError } = await this.client
+        .from(this.logsTable)
+        .insert(data)
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
+
+      console.log("[NotificationRepository] Created notification log:", {
+        logId: result.id,
+        articleId: data.article_id,
+        channelId: data.channel_id,
+      });
+      return { success: true, data: result };
     } catch (error) {
       return {
         success: false,

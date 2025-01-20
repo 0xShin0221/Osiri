@@ -112,7 +112,7 @@ create table notification_schedules (
 -- Notification channels table
 create table notification_channels (
   id uuid primary key default gen_random_uuid(),
-  organization_id uuid references organizations(id) on delete cascade,
+  organization_id uuid references organizations(id) on delete cascade not null,
   workspace_connection_id uuid references workspace_connections(id) on delete cascade,
   notification_language feed_language not null,
   platform notification_platform not null,
@@ -135,8 +135,9 @@ create table notification_channels (
 -- Notification logs table
 create table notification_logs (
   id uuid primary key default gen_random_uuid(),
-  platform notification_platform,
-  channel_id uuid references notification_channels(id),
+  platform notification_platform not null,
+  channel_id uuid references notification_channels(id) not null,
+  organization_id uuid not null references organizations(id) on delete cascade,
   article_id uuid references articles(id) on delete cascade,
   recipient text not null,
   status notification_status not null,
@@ -181,6 +182,9 @@ create index idx_notification_logs_channel on notification_logs(channel_id);
 create index idx_notification_logs_article on notification_logs(article_id);
 create index idx_notification_logs_created on notification_logs(created_at);
 create index idx_notification_logs_status on notification_logs(status);
+create index idx_notification_logs_org_date ON notification_logs(organization_id, created_at);
+create index idx_notification_logs_channel_date ON notification_logs(channel_id, created_at);
+
 
 -- Add indexes for notification_channel_feeds
 CREATE INDEX idx_notification_channel_feeds_channel ON notification_channel_feeds(channel_id);
@@ -471,3 +475,92 @@ create trigger set_notification_channel_feeds_updated_at
   before update on notification_channel_feeds
   for each row
   execute function moddatetime(updated_at);
+
+  -- Monitoring query for monthly notifications per organization
+CREATE OR REPLACE VIEW monthly_org_notifications AS
+SELECT 
+  o.name as organization_name,
+  o.id as organization_id,
+  DATE_TRUNC('month', nl.created_at) as month,
+  COUNT(*) as total_notifications,
+  COUNT(CASE WHEN nl.status = 'success' THEN 1 END) as successful_notifications,
+  COUNT(CASE WHEN nl.status = 'failed' THEN 1 END) as failed_notifications
+FROM organizations o
+LEFT JOIN notification_logs nl ON o.id = nl.organization_id
+GROUP BY o.id, o.name, DATE_TRUNC('month', nl.created_at)
+ORDER BY o.name, month DESC;
+CREATE OR REPLACE VIEW inactive_channels AS
+WITH last_notification AS (
+  SELECT 
+    channel_id,
+    MAX(created_at) as last_notification_date
+  FROM notification_logs
+  GROUP BY channel_id
+)
+SELECT 
+  nc.organization_id,
+  o.name as organization_name,
+  nc.id as channel_id,
+  nc.channel_identifier,
+  nc.platform,
+  ln.last_notification_date,
+  CASE 
+    WHEN ln.last_notification_date IS NULL THEN 'Never Used'
+    ELSE CONCAT(
+      EXTRACT(DAY FROM NOW() - ln.last_notification_date)::INTEGER,
+      ' days ago'
+    )
+  END as last_used
+FROM notification_channels nc
+LEFT JOIN last_notification ln ON nc.id = ln.channel_id
+JOIN organizations o ON nc.organization_id = o.id
+WHERE nc.is_active = true
+  AND (
+    ln.last_notification_date IS NULL 
+    OR ln.last_notification_date < NOW() - INTERVAL '30 days'
+  )
+ORDER BY o.name, nc.platform, ln.last_notification_date NULLS FIRST;
+
+-- Create function to get channel notification stats
+CREATE OR REPLACE FUNCTION get_channel_notification_stats(
+  p_days integer DEFAULT 30
+)
+RETURNS TABLE (
+  organization_name text,
+  channel_identifier text,
+  platform notification_platform,
+  total_notifications bigint,
+  successful_notifications bigint,
+  failed_notifications bigint,
+  last_notification timestamp with time zone,
+  avg_daily_notifications numeric
+)
+LANGUAGE sql
+AS $$
+  SELECT 
+    o.name as organization_name,
+    nc.channel_identifier,
+    nc.platform,
+    COUNT(nl.id) as total_notifications,
+    COUNT(CASE WHEN nl.status = 'success' THEN 1 END) as successful_notifications,
+    COUNT(CASE WHEN nl.status = 'failed' THEN 1 END) as failed_notifications,
+    MAX(nl.created_at) as last_notification,
+    ROUND(COUNT(nl.id)::numeric / p_days, 2) as avg_daily_notifications
+  FROM notification_channels nc
+  JOIN organizations o ON nc.organization_id = o.id
+  LEFT JOIN notification_logs nl ON nc.id = nl.channel_id
+    AND nl.created_at > NOW() - (p_days || ' days')::interval
+  WHERE nc.is_active = true
+  GROUP BY o.name, nc.channel_identifier, nc.platform
+  ORDER BY o.name, nc.platform;
+$$;
+
+-- -- Can be used to monitor monthly notifications per organization
+-- SELECT * FROM monthly_org_notifications 
+-- WHERE month = DATE_TRUNC('month', CURRENT_DATE);
+
+-- -- Can be used to monitor inactive channels
+-- SELECT * FROM inactive_channels;
+
+-- -- Can be used to monitor channel stats for the last 30 days
+-- SELECT * FROM get_channel_notification_stats(30);
