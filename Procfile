@@ -1,1 +1,1 @@
-web: npm run heroku:build && npm run heroku:start
+web: cd heroku && npm install && npm run build && npm star
