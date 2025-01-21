@@ -140,6 +140,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.15)
+      typescript:
+        specifier: ^5.6.3
+        version: 5.6.3
       zustand:
         specifier: ^5.0.2
         version: 5.0.2(@types/react@18.3.12)(react@18.3.1)
@@ -213,9 +216,6 @@ importers:
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.15
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.3
       vite:
         specifier: ^5.2.13
         version: 5.4.11(@types/node@20.17.6)
