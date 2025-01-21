@@ -51,11 +51,11 @@ export const ruTemplate = (data?: Record<string, any>) => {
 
             <p>Мы свяжемся с вами снова, как только бета-версия станет доступна. Спасибо за ожидание.</p>
             
-            <a href="https://osiri.xyz" class="cta-button">Посетить сайт</a>
+            <a href="https://o-siri.com" class="cta-button">Посетить сайт</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. Все права защищены.</p>
-              <p>Если у вас есть вопросы, пожалуйста, свяжитесь с нами по адресу support@osiri.xyz.</p>
+              <p>Если у вас есть вопросы, пожалуйста, свяжитесь с нами по адресу support@o-siri.com.</p>
             </div>
           </div>
         </div>

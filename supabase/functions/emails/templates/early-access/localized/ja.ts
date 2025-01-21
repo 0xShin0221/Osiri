@@ -52,11 +52,11 @@ export const jaTemplate = (data?: Record<string, any>) => {
 
            <p>ベータ版サービス開始時に改めてご連絡させていただきます。今しばらくお待ちください。</p>
            
-           <a href="https://osiri.xyz" class="cta-button">ウェブサイトを見る</a>
+           <a href="https://o-siri.com" class="cta-button">ウェブサイトを見る</a>
            
            <div class="footer">
              <p>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</p>
-             <p>ご不明な点がございましたら、support@osiri.xyz までお気軽にお問い合わせください。</p>
+             <p>ご不明な点がございましたら、support@o-siri.com までお気軽にお問い合わせください。</p>
            </div>
          </div>
        </div>

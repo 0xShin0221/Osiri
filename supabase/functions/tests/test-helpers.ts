@@ -22,7 +22,7 @@ export class TestContext {
   }
 
   generateTestEmail(prefix: string = "test"): string {
-    return `${this.testRunId}.${prefix}@osiri.xyz`;
+    return `${this.testRunId}.${prefix}@o-siri.com`;
   }
 
   async cleanup() {

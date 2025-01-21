@@ -3,7 +3,7 @@
   "description": "Global news reader with AI-powered summarization and translation capabilities",
   "author": {
     "name": "DigDaTech",
-    "url": "https://osiri.xyz"
+    "url": "https://o-siri.com"
   },
   "license": "MIT",
   "keywords": [
@@ -14,7 +14,7 @@
     "multilingual"
   ],
   "private": true,
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "scripts": {
     "dev": "vite",

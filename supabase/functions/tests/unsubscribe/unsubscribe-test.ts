@@ -26,7 +26,7 @@ Deno.test("URL format", () => {
   const url = generateUnsubscribeUrl(testEmail, "en");
 
   assert(
-    url.startsWith("https://osiri.xyz/en/unsubscribe?token="),
+    url.startsWith("https://o-siri.com/en/unsubscribe?token="),
     "URL should have correct format",
   );
 

@@ -58,12 +58,12 @@ export const enTemplate = (
 
             <p>Stay tuned for our next update!</p>
             
-            <a href="https://osiri.xyz" class="cta-button">Visit Our Website</a>
+            <a href="https://o-siri.com" class="cta-button">Visit Our Website</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</p>
               <p>If you wish to unsubscribe, <a href="${unsubscribeUrl}">click here</a>.</p>
-              <p>If you have any questions, please contact us at support@osiri.xyz</p>
+              <p>If you have any questions, please contact us at support@o-siri.com</p>
             </div>
           </div>
         </div>
