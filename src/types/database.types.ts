@@ -95,6 +95,9 @@ export type Database = {
           feed_id: string
           id: string
           last_scraping_attempt: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
           published_at: string | null
           scraping_attempt_count: number
           scraping_error: string | null
@@ -109,6 +112,9 @@ export type Database = {
           feed_id: string
           id?: string
           last_scraping_attempt?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
           published_at?: string | null
           scraping_attempt_count?: number
           scraping_error?: string | null
@@ -123,6 +129,9 @@ export type Database = {
           feed_id?: string
           id?: string
           last_scraping_attempt?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
           published_at?: string | null
           scraping_attempt_count?: number
           scraping_error?: string | null

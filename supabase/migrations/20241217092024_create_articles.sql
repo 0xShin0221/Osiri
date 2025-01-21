@@ -14,6 +14,9 @@ create table articles (
   feed_id uuid not null references rss_feeds(id) on delete cascade,
   title text not null,
   content text,
+  og_title text,
+  og_description text,
+  og_image text,
   url text not null,
   scraping_status article_scraping_status not null default 'pending',
   scraping_attempt_count integer not null default 0,
@@ -60,6 +63,9 @@ comment on column articles.scraping_status is 'Current status of article content
 comment on column articles.scraping_attempt_count is 'Number of times scraping has been attempted';
 comment on column articles.last_scraping_attempt is 'Timestamp of the last scraping attempt';
 comment on column articles.scraping_error is 'Error message from the last failed scraping attempt';
+comment on column articles.og_image is 'Open Graph image URL from article';
+comment on column articles.og_title is 'Open Graph title from article';
+comment on column articles.og_description is 'Open Graph description from article';
 
 
 create policy "Service role can insert articles"
