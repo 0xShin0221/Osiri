@@ -10,7 +10,6 @@ Stay updated with global startup and tech trends in your native language. Osiri 
 - **AI-Powered Insights**: Convert long articles into concise summaries using the latest GPT technology
 - **Effortless Discovery**: Break through language barriers and access local information in your native language
 
-
 ## 🌐 Supported Languages
 
 The following languages are currently supported in our application:
@@ -32,15 +31,15 @@ MIT License - see the [LICENSE](LICENSE) file for details
 
 ## 🔗 Links
 
-- Website: [osiri.xyz](https://osiri.xyz)
+- Website: [o-siri.com](https://o-siri.com)
 - Twitter: [@OsiriApp](https://twitter.com/OsiriApp)
 - LinkedIn: [Osiri](https://www.linkedin.com/company/osiri)
 - GitHub: [osiriapp](https://github.com/osiriapp)
 
 ## 📫 Contact
 
-For support or inquiries, please email: support@osiri.xyz
+For support or inquiries, please email: support@o-siri.com
 
 ---
 
-Developed with ❤️ by [DigDaTech](https://osiri.xyz)
+Developed with ❤️ by [DigDaTech](https://o-siri.com)

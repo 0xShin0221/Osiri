@@ -1,6 +1,6 @@
 export const sendEmail = async (to: string, subject: string, html: string) => {
   const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-  const FROM_EMAIL = "noreply@osiri.xyz";
+  const FROM_EMAIL = "noreply@o-siri.com";
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",

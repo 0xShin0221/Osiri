@@ -51,11 +51,11 @@ export const ptTemplate = (data?: Record<string, any>) => {
 
             <p>Entraremos em contato novamente quando o serviço beta estiver disponível. Por favor, aguarde.</p>
             
-            <a href="https://osiri.xyz" class="cta-button">Visite nosso site</a>
+            <a href="https://o-siri.com" class="cta-button">Visite nosso site</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. Todos os direitos reservados.</p>
-              <p>Se tiver dúvidas, entre em contato via support@osiri.xyz.</p>
+              <p>Se tiver dúvidas, entre em contato via support@o-siri.com.</p>
             </div>
           </div>
         </div>

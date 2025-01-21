@@ -58,7 +58,7 @@ const getFooterSections = (): FooterSection[] => {
       links: [
         {
           label: t("footer.support.help"),
-          href: "mailto:support@osiri.xyz",
+          href: "mailto:support@o-siri.com",
         },
         {
           label: t("footer.support.terms"),

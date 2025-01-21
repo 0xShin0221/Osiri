@@ -6,5 +6,5 @@ export const generateUnsubscribeUrl = (
   language: SupportedLanguage,
 ): string => {
   const base64Email = encodeBase64Url(email);
-  return `https://osiri.xyz/${language}/unsubscribe?token=${base64Email}`;
+  return `https://o-siri.com/${language}/unsubscribe?token=${base64Email}`;
 };

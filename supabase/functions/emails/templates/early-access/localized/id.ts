@@ -51,11 +51,11 @@ export const idTemplate = (data?: Record<string, any>) => {
 
             <p>Kami akan menghubungi Anda lagi saat layanan beta diluncurkan. Harap tunggu.</p>
             
-            <a href="https://osiri.xyz" class="cta-button">Kunjungi Situs</a>
+            <a href="https://o-siri.com" class="cta-button">Kunjungi Situs</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. Hak cipta dilindungi undang-undang.</p>
-              <p>Jika ada pertanyaan, silakan hubungi kami di support@osiri.xyz.</p>
+              <p>Jika ada pertanyaan, silakan hubungi kami di support@o-siri.com.</p>
             </div>
           </div>
         </div>

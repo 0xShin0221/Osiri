@@ -58,12 +58,12 @@ export const jaTemplate = (
 
             <p>次回のアップデート情報をお楽しみに！</p>
             
-            <a href="https://osiri.xyz" class="cta-button">ウェブサイトを見る</a>
+            <a href="https://o-siri.com" class="cta-button">ウェブサイトを見る</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</p>
              <p>配信停止をご希望の場合は、<a href="${unsubscribeUrl}">こちらをクリック</a>してください。</p>
-              <p>ご不明な点がございましたら、support@osiri.xyz までお問い合わせください。</p>
+              <p>ご不明な点がございましたら、support@o-siri.com までお問い合わせください。</p>
             </div>
           </div>
         </div>

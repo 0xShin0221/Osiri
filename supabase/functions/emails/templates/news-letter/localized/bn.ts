@@ -57,12 +57,12 @@ export const bnTemplate = (
 
             <p>আমাদের পরবর্তী আপডেটের জন্য অপেক্ষা করুন!</p>
             
-            <a href="https://osiri.xyz" class="cta-button">ওয়েবসাইট দেখুন</a>
+            <a href="https://o-siri.com" class="cta-button">ওয়েবসাইট দেখুন</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. সর্বস্বত্ব সংরক্ষিত।</p>
               <p>আপনি যদি সাবস্ক্রিপশন বাতিল করতে চান, <a href="${unsubscribeUrl}">এখানে ক্লিক করুন</a>।</p>
-              <p>কোনো প্রশ্ন থাকলে, support@osiri.xyz-তে যোগাযোগ করুন</p>
+              <p>কোনো প্রশ্ন থাকলে, support@o-siri.com-তে যোগাযোগ করুন</p>
             </div>
           </div>
         </div>

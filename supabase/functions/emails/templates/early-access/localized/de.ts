@@ -52,11 +52,11 @@ export const deTemplate = (data?: Record<string, any>) => {
 
             <p>Wir werden uns erneut bei Ihnen melden, sobald der Beta-Dienst verfügbar ist. Vielen Dank für Ihre Geduld.</p>
             
-            <a href="https://osiri.xyz" class="cta-button">Besuchen Sie unsere Website</a>
+            <a href="https://o-siri.com" class="cta-button">Besuchen Sie unsere Website</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. Alle Rechte vorbehalten.</p>
-              <p>Bei Fragen kontaktieren Sie uns bitte unter support@osiri.xyz.</p>
+              <p>Bei Fragen kontaktieren Sie uns bitte unter support@o-siri.com.</p>
             </div>
           </div>
         </div>
