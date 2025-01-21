@@ -7,6 +7,7 @@ import { TranslationWithRelations } from "@/services/translation";
 import { MediaCard } from "./MediaCard";
 import { Button } from "@/components/ui/button";
 import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
+import { useState } from "react";
 
 interface NotificationCardProps {
   translation: TranslationWithRelations;
@@ -31,6 +32,7 @@ const getStatusBadge = (
   status: Database["public"]["Enums"]["translation_status"]
 ) => {
   const { t } = useTranslation("dashboard");
+
   const statusText = t(`notifications.status.${status}`);
 
   switch (status) {
@@ -49,6 +51,7 @@ const getStatusBadge = (
 
 export function NotificationCard({ translation }: NotificationCardProps) {
   const { t } = useTranslation("dashboard");
+  const [expanded, setExpanded] = useState(false);
 
   const successfulLogs =
     translation.notification_logs?.filter((log) => log.status === "success") ||
@@ -119,9 +122,25 @@ export function NotificationCard({ translation }: NotificationCardProps) {
 
           {/* Summary */}
           <div className="mb-4">
-            <p className="text-sm text-muted-foreground line-clamp-3">
-              {translation.summary}
-            </p>
+            <div className="text-sm text-muted-foreground">
+              {/* Increase line-clamp from 3 to 5 */}
+              <p
+                className={`line-clamp-5 ${expanded ? "line-clamp-none" : ""}`}
+              >
+                {translation.summary}
+              </p>
+              {/* Add show more/less toggle if summary is long */}
+              {translation.summary && translation.summary.length > 300 && (
+                <button
+                  onClick={() => setExpanded(!expanded)}
+                  className="text-primary hover:text-primary/90 text-sm mt-1"
+                >
+                  {expanded
+                    ? t("notifications.card.showLess")
+                    : t("notifications.card.showMore")}
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Key Points */}

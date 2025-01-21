@@ -3,7 +3,9 @@
     "card": {
       "channels": "配信先",
       "keyPoints": "重要ポイント",
-      "readOriginal": "元の記事を読む"
+      "readOriginal": "元の記事を読む",
+      "showLess": "閉じる",
+      "showMore": "もっと見る"
     },
     "status": {
       "completed": "完了",
