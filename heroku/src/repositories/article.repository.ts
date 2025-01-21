@@ -1,21 +1,29 @@
-import { Article, ArticleInsert, ArticleScrapingStatus, ServiceResponse } from "../types/models";
+import {
+  Article,
+  ArticleInsert,
+  ArticleScrapingStatus,
+  ScrapedContent,
+  ServiceResponse,
+} from "../types/models";
 import { BaseRepository } from "./base.repository";
 
 export class ArticleRepository extends BaseRepository {
-  private readonly table = 'articles';
+  private readonly table = "articles";
 
-  async saveMany(articles: Omit<ArticleInsert, 'created_at' | 'updated_at'>[]): Promise<Article[]> {
+  async saveMany(
+    articles: Omit<ArticleInsert, "created_at" | "updated_at">[],
+  ): Promise<Article[]> {
     try {
       const now = new Date().toISOString();
-      const articlesWithTimestamps = articles.map(article => ({
+      const articlesWithTimestamps = articles.map((article) => ({
         ...article,
       }));
 
       const { data, error } = await this.client
         .from(this.table)
         .upsert(articlesWithTimestamps, {
-          onConflict: 'url',
-          ignoreDuplicates: true
+          onConflict: "url",
+          ignoreDuplicates: true,
         })
         .select();
 
@@ -25,27 +33,31 @@ export class ArticleRepository extends BaseRepository {
       return this.handleError(error);
     }
   }
-  async getUnprocessedArticles(limit: number = 50): Promise<ServiceResponse<Article[]>> {
+  async getUnprocessedArticles(
+    limit: number = 50,
+  ): Promise<ServiceResponse<Article[]>> {
     try {
       const { data, error } = await this.client
         .from(this.table)
         .select()
-        .in('scraping_status', ['pending'])
-        .lt('scraping_attempt_count', 3)  // Limit retry attempts
-        .order('scraping_attempt_count', { ascending: true })
-        .order('created_at', { ascending: true })
-        // .limit(limit);
+        .in("scraping_status", ["pending"])
+        .lt("scraping_attempt_count", 3) // Limit retry attempts
+        .order("scraping_attempt_count", { ascending: true })
+        .order("created_at", { ascending: true });
+      // .limit(limit);
 
       if (error) throw error;
 
       return {
         success: true,
-        data
+        data,
       };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error getting unprocessed articles'
+        error: error instanceof Error
+          ? error.message
+          : "Unknown error getting unprocessed articles",
       };
     }
   }
@@ -53,66 +65,74 @@ export class ArticleRepository extends BaseRepository {
   async updateScrapingStatus(
     id: string,
     status: ArticleScrapingStatus,
-    error?: string
+    error?: string,
   ): Promise<ServiceResponse<void>> {
     try {
       const now = new Date().toISOString();
       const { data: currentArticle, error: fetchError } = await this.client
-      .from(this.table)
-      .select('scraping_attempt_count')
-      .eq('id', id)
-      .single();
+        .from(this.table)
+        .select("scraping_attempt_count")
+        .eq("id", id)
+        .single();
 
-    if (fetchError) throw fetchError;
+      if (fetchError) throw fetchError;
       const { error: updateError } = await this.client
         .from(this.table)
         .update({
           scraping_status: status,
-          scraping_attempt_count: (currentArticle?.scraping_attempt_count ?? 0) + 1,
+          scraping_attempt_count:
+            (currentArticle?.scraping_attempt_count ?? 0) + 1,
           last_scraping_attempt: now,
           scraping_error: error || null,
-          updated_at: now
+          updated_at: now,
         })
-        .eq('id', id);
+        .eq("id", id);
 
       if (updateError) throw updateError;
 
       return {
-        success: true
+        success: true,
       };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error updating scraping status'
+        error: error instanceof Error
+          ? error.message
+          : "Unknown error updating scraping status",
       };
     }
   }
 
   async updateScrapedContent(
-    id: string, 
-    content: string
+    id: string,
+    content: ScrapedContent,
   ): Promise<ServiceResponse<void>> {
     try {
       const now = new Date().toISOString();
       const { error } = await this.client
         .from(this.table)
         .update({
-          content,
-          scraping_status: 'completed' as ArticleScrapingStatus,
+          content: content.content,
+          og_image: content.ogImage,
+          og_title: content.ogTitle,
+          og_description: content.ogDescription,
+          scraping_status: "completed" as ArticleScrapingStatus,
           last_scraping_attempt: now,
-          updated_at: now
+          updated_at: now,
         })
-        .eq('id', id);
+        .eq("id", id);
 
       if (error) throw error;
 
       return {
-        success: true
+        success: true,
       };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error updating scraped content'
+        error: error instanceof Error
+          ? error.message
+          : "Unknown error updating scraped content",
       };
     }
   }
@@ -122,11 +142,11 @@ export class ArticleRepository extends BaseRepository {
       const { data, error } = await this.client
         .from(this.table)
         .select()
-        .eq('url', url)
+        .eq("url", url)
         .single();
 
       if (error) {
-        if (error.code === 'PGRST116') return null;
+        if (error.code === "PGRST116") return null;
         throw error;
       }
       return data;
