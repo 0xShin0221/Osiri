@@ -36,7 +36,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function WeeklyChart({ weeklyStats }: WeeklyChartProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("dashboard");
 
   return (
     <Card>

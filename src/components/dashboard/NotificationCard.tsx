@@ -67,7 +67,7 @@ export function NotificationCard({ translation }: NotificationCardProps) {
         <div className="relative h-48">
           <MediaCard
             imageUrl={translation.article.og_image}
-            fallbackImage="/assets/default-article.jpg"
+            fallbackImage="https://o-siri.com/assets/default-article.jpg"
             className="h-full"
             onError={() => {
               console.warn(
