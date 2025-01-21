@@ -348,10 +348,9 @@ export class NotificationRepository extends BaseRepository {
         return { success: true, data: [] };
       }
 
-      const channelIds = channelFeeds.map((cf) => cf.channel_id).filter(
-        Boolean,
-      );
-
+      const channelIds = channelFeeds.map((cf) => cf.channel_id).filter((
+        id,
+      ): id is string => id !== null);
       // Then get the active channels
       const { data: channels, error: channelsError } = await this.client
         .from("notification_channels")
