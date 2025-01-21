@@ -18,8 +18,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "npm run heroku:start",
-    "build": "npm run heroku:build && tsc && vite build",
+    "build": "tsc && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "i18next-extract": "babel 'src/**/*.{js,jsx,ts,tsx}' --config-file ./babel.config.cjs --extensions '.js,.jsx,.ts,.tsx' --out-file /dev/null",
