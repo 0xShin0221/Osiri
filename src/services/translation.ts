@@ -24,7 +24,7 @@ export class TranslationService {
                 `)
                 .eq("status", "completed")
                 .order("created_at", { ascending: false })
-                .limit(10);
+                .limit(30);
 
             if (error) {
                 console.error("Error fetching translations:", error);
