@@ -1,6 +1,6 @@
 import { ContentCleaner } from "./cleaner";
 import type { ScrapedContent, ServiceResponse } from "../../types/models";
-import { Browser, BrowserContext, chromium } from "playwright";
+import { Browser, BrowserContext, chromium } from "playwright-chromium";
 
 export interface ScraperOptions {
   timeout?: number;
@@ -49,30 +49,14 @@ export class ContentScraper {
       try {
         this.browser = await chromium.launch({
           headless: true,
+          chromiumSandbox: false, // Required for Heroku
           args: [
-            "--headless=new",
             "--disable-dev-shm-usage",
-            "--no-sandbox",
+            "--no-sandbox", // Required for Heroku
             "--disable-setuid-sandbox",
-            "--disable-gpu",
             "--single-process",
             "--no-zygote",
-            "--disable-extensions",
-            "--disable-background-networking",
-            "--disable-background-timer-throttling",
-            "--disable-backgrounding-occluded-windows",
-            "--disable-breakpad",
-            "--disable-component-extensions-with-background-pages",
-            "--disable-features=TranslateUI,BlinkGenPropertyTrees",
-            "--disable-ipc-flooding-protection",
-            "--disable-renderer-backgrounding",
-            "--enable-features=NetworkService,NetworkServiceInProcess",
-            "--force-color-profile=srgb",
-            "--mute-audio",
           ],
-          timeout: 30000,
-          executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-          ignoreDefaultArgs: ["--enable-automation"],
         });
       } catch (error) {
         console.error("Failed to launch browser:", error);
@@ -89,14 +73,9 @@ export class ContentScraper {
         userAgent:
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         viewport: { width: 1280, height: 720 },
-        javaScriptEnabled: true,
       });
     }
     return this.browserContext;
-  }
-
-  private async delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private log(
@@ -110,6 +89,10 @@ export class ContentScraper {
         details ? ` - ${details}` : ""
       }`,
     );
+  }
+
+  private async delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private async withRetry<T>(
@@ -132,7 +115,6 @@ export class ContentScraper {
 
         if (attempt === retries) break;
 
-        // Cleanup and reset on failure
         await this.cleanup();
         await this.delay(delay);
       }
@@ -153,7 +135,6 @@ export class ContentScraper {
         return null;
       };
 
-      // Define selectors for each meta tag type
       const selectors = {
         image: [
           'meta[property="og:image"]',
@@ -211,24 +192,17 @@ export class ContentScraper {
               }
             });
 
-            // Navigate to page
-            const response = await page.goto(url, {
+            await page.goto(url, {
               waitUntil: opts.waitUntil
                 ? waitUntilMapping[opts.waitUntil]
                 : "domcontentloaded",
               timeout: opts.timeout,
             });
 
-            if (!response) {
-              throw new Error("Failed to get response from page");
-            }
-
-            // Get page content and meta tags
             const content = await page.content();
             const metaTags = await this.getMetaTags(page);
             const cleanedContent = this.cleaner.clean(content);
 
-            // Close the page to free up resources
             await page.close();
 
             return {

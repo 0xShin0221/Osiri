@@ -375,8 +375,8 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
 ),
 ('Canva Engineering', 
  'Engineering at Canva', 
- 'https://canva.com/favicon.ico', 
- 'https://engineering.canva.com/rss', 
+ 'https://static.canva.com/web/images/d7a4c70a506473e1870bee733c76b365.svg', 
+ 'https://www.canva.dev/blog/engineering/feed.xml', 
  'en', 
  false,
  array['engineering_general', 'frontend_engineering', 'infrastructure']::feed_category[]
@@ -451,7 +451,7 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
 ('OpenAI', 
  'Advanced AI research and deployment', 
  'https://openai.com/favicon.ico', 
- 'https://blog.openai.com/rss/', 
+ 'https://openai.com/news/rss.xml', 
  'en', 
  false,
  array['artificial_intelligence', 'machine_learning', 'nlp']::feed_category[]
