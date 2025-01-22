@@ -287,6 +287,13 @@ export type Database = {
             foreignKeyName: "notification_channels_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_subscription_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -376,6 +383,13 @@ export type Database = {
             foreignKeyName: "notification_logs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_subscription_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -452,6 +466,13 @@ export type Database = {
             foreignKeyName: "organization_feed_follows_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_subscription_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_feed_follows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -494,6 +515,13 @@ export type Database = {
             foreignKeyName: "organization_members_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_subscription_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -504,18 +532,30 @@ export type Database = {
           created_at: string | null
           id: string
           name: string
+          stripe_customer_id: string | null
+          subscription_status: string | null
+          trial_end_date: string | null
+          trial_start_date: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
           id?: string
           name: string
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
+          trial_end_date?: string | null
+          trial_start_date?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
           name?: string
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
+          trial_end_date?: string | null
+          trial_start_date?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -603,6 +643,58 @@ export type Database = {
           url?: string
         }
         Relationships: []
+      }
+      subscription_limits: {
+        Row: {
+          created_at: string
+          max_channels: number
+          max_feeds_per_channel: number
+          max_notifications_per_day: number
+          notification_frequency_minutes: number
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          max_channels?: number
+          max_feeds_per_channel?: number
+          max_notifications_per_day?: number
+          notification_frequency_minutes?: number
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          max_channels?: number
+          max_feeds_per_channel?: number
+          max_notifications_per_day?: number
+          notification_frequency_minutes?: number
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_limits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "monthly_org_notifications"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "subscription_limits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organization_subscription_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_limits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       translations: {
         Row: {
@@ -757,6 +849,13 @@ export type Database = {
             foreignKeyName: "workspace_connections_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_subscription_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workspace_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -786,6 +885,13 @@ export type Database = {
             foreignKeyName: "notification_channels_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_subscription_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -799,6 +905,20 @@ export type Database = {
           organization_name: string | null
           successful_notifications: number | null
           total_notifications: number | null
+        }
+        Relationships: []
+      }
+      organization_subscription_status: {
+        Row: {
+          id: string | null
+          max_channels: number | null
+          max_feeds_per_channel: number | null
+          max_notifications_per_day: number | null
+          notification_frequency_minutes: number | null
+          stripe_customer_id: string | null
+          subscription_status: string | null
+          trial_end_date: string | null
+          trial_start_date: string | null
         }
         Relationships: []
       }
@@ -823,6 +943,12 @@ export type Database = {
       }
     }
     Functions: {
+      calculate_trial_end_date: {
+        Args: {
+          start_date: string
+        }
+        Returns: string
+      }
       create_smart_translation_tasks: {
         Args: {
           p_article_ids: string[]
