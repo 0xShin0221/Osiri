@@ -31,7 +31,7 @@ export class ContentScraper {
   private readonly defaultOptions: Required<ScraperOptions> = {
     timeout: 30000,
     waitUntil: "domcontentloaded",
-    batchSize: 5,
+    batchSize: 3,
     delayBetweenBatches: 500,
     maxRetries: 3,
     retryDelay: 2000,
