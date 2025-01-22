@@ -333,10 +333,10 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  false,
  array['engineering_general', 'data_engineering', 'infrastructure']::feed_category[]
 ),
-('Twitter Engineering', 
- 'Building Twitter', 
- 'https://twitter.com/favicon.ico', 
- 'https://blog.twitter.com/engineering/en_us/blog.rss', 
+('X (Twitter) Engineering', 
+ 'Building X (Twitter)', 
+ 'https://x.com/favicon.ico', 
+ 'https://blog.X.com/engineering/en_us/blog.rss', 
  'en', 
  false,
  array['engineering_general', 'infrastructure', 'system_design']::feed_category[]
