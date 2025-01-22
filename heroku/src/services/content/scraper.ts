@@ -31,8 +31,13 @@ export class ContentScraper {
   private readonly defaultOptions: Required<ScraperOptions> = {
     timeout: 30000,
     waitUntil: "domcontentloaded",
+    // TODO: Performance optimization considerations
+    // - batchSize: Limited by server worker memory (current limit ~512MB on basic dyno)
+    //   Can be increased with higher dyno tiers (e.g., Standard-2X: 1GB)
     batchSize: 3,
-    delayBetweenBatches: 500,
+    // - delayBetweenBatches: Prevents memory spikes and worker overload
+    //   Adjust based on server capacity and monitoring results
+    delayBetweenBatches: 800, // Limited by Server Worker
     maxRetries: 3,
     retryDelay: 2000,
   };
