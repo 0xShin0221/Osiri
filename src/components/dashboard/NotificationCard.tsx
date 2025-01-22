@@ -1,57 +1,61 @@
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, MessageSquare, Pin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { Database } from "@/types/database.types";
-import { TranslationWithRelations } from "@/services/translation";
-import { MediaCard } from "./MediaCard";
 import { Button } from "@/components/ui/button";
 import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
-import { useState } from "react";
+import { MediaCard } from "./MediaCard";
+
+type Translation = Database["public"]["Tables"]["translations"]["Row"];
+type Article = Database["public"]["Tables"]["articles"]["Row"] & {
+  feed: Database["public"]["Tables"]["rss_feeds"]["Row"];
+};
+type NotificationLog = Database["public"]["Tables"]["notification_logs"]["Row"];
+
+interface TranslationWithRelations extends Translation {
+  article: Article;
+  notification_logs?: NotificationLog[];
+}
 
 interface NotificationCardProps {
   translation: TranslationWithRelations;
 }
 
-const getPlatformIcon = (
-  platform: Database["public"]["Enums"]["notification_platform"]
-) => {
-  switch (platform) {
-    case "slack":
-      return <SlackIcon className="w-4 h-4" />;
-    case "discord":
-      return <DiscordIcon className="w-4 h-4" />;
-    case "email":
-      return <EmailIcon className="w-4 h-4" />;
-    default:
-      return "📱";
-  }
-};
-
-const getStatusBadge = (
-  status: Database["public"]["Enums"]["translation_status"]
-) => {
-  const { t } = useTranslation("dashboard");
-
-  const statusText = t(`notifications.status.${status}`);
-
-  switch (status) {
-    case "completed":
-      return <Badge className="bg-green-500">{statusText}</Badge>;
-    case "failed":
-      return <Badge variant="destructive">{statusText}</Badge>;
-    case "processing":
-      return <Badge variant="secondary">{statusText}</Badge>;
-    case "pending":
-      return <Badge variant="outline">{statusText}</Badge>;
-    default:
-      return <Badge variant="outline">{statusText}</Badge>;
-  }
-};
-
 export function NotificationCard({ translation }: NotificationCardProps) {
   const { t } = useTranslation("dashboard");
   const [expanded, setExpanded] = useState(false);
+
+  const platformIcons: Record<
+    Database["public"]["Enums"]["notification_platform"],
+    React.ReactNode
+  > = {
+    slack: <SlackIcon className="w-4 h-4" />,
+    discord: <DiscordIcon className="w-4 h-4" />,
+    email: <EmailIcon className="w-4 h-4" />,
+    twitter: null,
+    line: null,
+    chatwork: null,
+    kakaotalk: null,
+    wechat: null,
+    facebook_messenger: null,
+    google_chat: null,
+    whatsapp: null,
+    telegram: null,
+    webhook: null,
+  };
+
+  const statusVariants: Record<
+    Database["public"]["Enums"]["translation_status"],
+    string
+  > = {
+    completed: "bg-green-500",
+    failed: "bg-red-500",
+    processing: "bg-blue-500",
+    pending: "bg-gray-500",
+    skipped: "bg-yellow-500",
+  };
 
   const successfulLogs =
     translation.notification_logs?.filter((log) => log.status === "success") ||
@@ -61,16 +65,25 @@ export function NotificationCard({ translation }: NotificationCardProps) {
     translation.key_point1,
     translation.key_point2,
     translation.key_point3,
+    translation.key_point4,
+    translation.key_point5,
   ].filter(Boolean);
 
+  const getStatusTranslation = (
+    status: Database["public"]["Enums"]["translation_status"]
+  ) => {
+    /* i18next-extract-disable-next-line */
+    return t(`notifications.status.${status}`);
+  };
+
   return (
-    <Card className="overflow-hidden h-full flex flex-col">
-      <CardContent className="p-0 flex flex-col h-full">
-        {/* Image Section */}
+    <Card className="overflow-hidden">
+      <CardContent className="p-0">
+        {/* Header Image */}
         <div className="relative h-48">
           <MediaCard
             imageUrl={translation.article.og_image}
-            fallbackImage="https://fkmjhtjgaeoqbgzpwxif.supabase.co/storage/v1/object/public/assets/loader.gif"
+            fallbackImage="https://fkmjhtjgaeoqbgzpwxif.supabase.co/storage/v1/object/public/assets/osiri-loader-dark_caab40cf.gif?t=2025-01-22T04%3A27%3A38.464Z"
             className="h-full"
             onError={() => {
               console.warn(
@@ -78,13 +91,15 @@ export function NotificationCard({ translation }: NotificationCardProps) {
               );
             }}
           />
-          <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-            {getStatusBadge(translation.status)}
+          <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
+            <Badge className={statusVariants[translation.status]}>
+              {getStatusTranslation(translation.status)}
+            </Badge>
             {translation.article.feed.categories
               ?.slice(0, 2)
-              .map((category, index) => (
+              .map((category, i) => (
                 <Badge
-                  key={index}
+                  key={i}
                   variant="outline"
                   className="bg-black/50 backdrop-blur-sm text-white border-none"
                 >
@@ -94,8 +109,8 @@ export function NotificationCard({ translation }: NotificationCardProps) {
           </div>
         </div>
 
-        {/* Content Section */}
-        <div className="p-4 flex flex-col flex-1">
+        {/* Content */}
+        <div className="p-4">
           {/* Feed Info */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <img
@@ -109,7 +124,7 @@ export function NotificationCard({ translation }: NotificationCardProps) {
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-bold mb-3">
+          <h3 className="text-lg font-semibold mb-3">
             <a
               href={translation.article.url}
               target="_blank"
@@ -122,25 +137,23 @@ export function NotificationCard({ translation }: NotificationCardProps) {
 
           {/* Summary */}
           <div className="mb-4">
-            <div className="text-sm text-muted-foreground">
-              {/* Increase line-clamp from 3 to 5 */}
-              <p
-                className={`line-clamp-5 ${expanded ? "line-clamp-none" : ""}`}
+            <p
+              className={`text-sm text-muted-foreground ${
+                expanded ? "" : "line-clamp-3"
+              }`}
+            >
+              {translation.summary}
+            </p>
+            {translation.summary && translation.summary.length > 300 && (
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="text-primary hover:text-primary/90 text-sm mt-1"
               >
-                {translation.summary}
-              </p>
-              {/* Add show more/less toggle if summary is long */}
-              {translation.summary && translation.summary.length > 300 && (
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="text-primary hover:text-primary/90 text-sm mt-1"
-                >
-                  {expanded
-                    ? t("notifications.card.showLess")
-                    : t("notifications.card.showMore")}
-                </button>
-              )}
-            </div>
+                {expanded
+                  ? t("notifications.card.showLess")
+                  : t("notifications.card.showMore")}
+              </button>
+            )}
           </div>
 
           {/* Key Points */}
@@ -172,10 +185,10 @@ export function NotificationCard({ translation }: NotificationCardProps) {
                   <Badge
                     key={log.id}
                     variant="outline"
-                    className="flex items-center gap-1 px-2 py-0.5 text-xs"
+                    className="flex items-center gap-1"
                   >
-                    {getPlatformIcon(log.platform)}
-                    {log.recipient}
+                    {platformIcons[log.platform]}
+                    <span className="text-xs">{log.recipient}</span>
                   </Badge>
                 ))}
               </div>
