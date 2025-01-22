@@ -17,6 +17,12 @@ export const OrgAuthContainer = ({ children }: OrgAuthContainerProps) => {
   const currentLang = i18n.language;
 
   useEffect(() => {
+    console.log({
+      isLoading,
+      session: !!session,
+      organization: !!organization,
+    });
+
     if (isLoading) return;
 
     if (!session?.user) return;

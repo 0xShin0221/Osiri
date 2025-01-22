@@ -3,7 +3,7 @@ import { AuthContainer } from "@/components/auth/AuthSupabase";
 import { NotFound } from "@/pages/NotFound";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { ROUTE_CONFIGS } from "./config";
-import { OrgAuthContainer } from "./OrgAuthContainer";
+import { OrgAuthContainer } from "../components/auth/OrgAuthContainer";
 
 const ProtectedRoute = ({
   children,
@@ -12,13 +12,11 @@ const ProtectedRoute = ({
   children: React.ReactNode;
   requireOrg?: boolean;
 }) => {
-  const element = <AuthContainer>{children}</AuthContainer>;
-
-  if (requireOrg) {
-    return <OrgAuthContainer>{element}</OrgAuthContainer>;
-  }
-
-  return element;
+  return (
+    <AuthContainer>
+      {requireOrg ? <OrgAuthContainer>{children}</OrgAuthContainer> : children}
+    </AuthContainer>
+  );
 };
 
 function Layout({ children }: { children: React.ReactNode }) {
