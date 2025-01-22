@@ -28,13 +28,18 @@ const translationSchema = z.object({
       "3-5 key points that are important for understanding the article, each should be concise.",
     ),
   summary: z.string()
-    .max(350) // Reduced from 400 to give some buffer for different character encodings
+    .max(1300) // Increased to accommodate different languages (約1000字の日本語 or 2000-2500 characters in English)
     .describe(
-      "A focused summary capturing the article's essence in about 300 characters. Include:\n" +
-        "1. Main topic\n" +
-        "2. Key findings\n" +
-        "3. Business implications\n" +
-        "Keep it very concise, especially for non-Latin scripts.",
+      "A comprehensive summary that captures the complete essence of the article. Include:\n" +
+        "1. Background context and problem statement\n" +
+        "2. Main topic and key findings\n" +
+        "3. Business implications and market impact\n" +
+        "4. Technical insights if applicable\n" +
+        "5. Future implications or next steps\n\n" +
+        "Note: Create a complete, self-contained summary without truncation.\n" +
+        "- For Japanese: Aim for approximately 1000 characters\n" +
+        "- For English/Latin scripts: Aim for approximately 1500 characters\n" +
+        "- For other scripts: Adjust length while maintaining comprehensive coverage",
     ),
 });
 
@@ -62,7 +67,7 @@ export class ContentTranslator {
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
 
     const promptTemplate = ChatPromptTemplate.fromTemplate(`
-    You are an editor specialized in startup and technology industry analysis.
+      You are an editor specialized in startup and technology industry analysis.
     Please translate and analyze the following article with a focus on business value and technical insights:
 
     Source Language: {source_language}
@@ -71,7 +76,10 @@ export class ContentTranslator {
     Translation Requirements:
 
     1. Length Requirements:
-      - Summary must be VERY concise (max 350 characters)
+      - Summary should be comprehensive but concise:
+        * For Japanese: approximately 1000 characters
+        * For English/Latin scripts: approximately 1500 characters
+        * For other scripts: adjust while maintaining comprehensive coverage
       - Each key point must be under 300 characters
       - Title should be clear but brief
 
@@ -87,6 +95,7 @@ export class ContentTranslator {
       - Solution/Innovation: What unique approach or technology is being used?
       - Market Impact: What are the business implications or market effects?
       - Competitive Edge: What distinguishes this from existing solutions?
+      - Create a complete, self-contained summary without truncation or ellipsis
 
     4. Content Guidelines:
       - Use industry-standard terminology
@@ -393,7 +402,8 @@ export class ContentTranslator {
           title: translatedTitle,
           translation: finalTranslation,
           key_points: allKeyPoints,
-          summary: summary || `${finalTranslation.slice(0, 500)}...`,
+          summary: summary ||
+            await this.generateCompleteSummary(finalTranslation, targetLang),
         },
       };
     } catch (error) {
@@ -404,6 +414,31 @@ export class ContentTranslator {
           ? error.message
           : "Translation process failed",
       };
+    }
+  }
+  private async generateCompleteSummary(
+    content: string,
+    targetLang: string,
+  ): Promise<string> {
+    try {
+      const result = await this.translateChunk(
+        "", // Empty title since we're just generating summary
+        content,
+        targetLang, // Source language is same as target since we're not translating
+        targetLang,
+        0, // First chunk
+        1, // Only one chunk
+      );
+
+      if (!result.success || !result.data) {
+        console.error("Failed to generate summary", result.error);
+        return content.slice(0, 1000); // Fallback to simple truncation if summary generation fails
+      }
+
+      return result.data.translation;
+    } catch (error) {
+      console.error("Summary generation failed:", error);
+      return content.slice(0, 1000); // Fallback
     }
   }
 }

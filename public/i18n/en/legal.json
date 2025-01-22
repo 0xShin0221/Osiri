@@ -1,53 +1,51 @@
 {
   "additionalFees": {
-    "internet": "* Internet connection and device communication charges are the responsibility of the customer",
-    "label": "Additional Fees",
-    "none": "No additional fees other than the stated service fee"
+    "internet": "Internet connection and device communication fees are the responsibility of the customer",
+    "none": "No additional fees other than the stated service fee",
+    "title": "Additional Fees"
   },
-  "address": {
-    "label": "Address",
-    "value": "Disclosed upon request without delay"
-  },
+  "address": "Address",
   "billing": {
-    "autoCharge": "* For credit card payments, automatic billing occurs on the renewal date",
-    "label": "Billing Timing",
-    "timing": "Automatic billing on monthly renewal date"
+    "note": "For credit card payments, billing occurs automatically on the renewal date",
+    "timing": "Automatic billing on monthly renewal date",
+    "title": "Billing Timing"
   },
-  "cancellation": {
+  "cancel": {
     "about": {
-      "anytime": "You can cancel at any time during the contract period",
-      "mypage": "Cancellation can be processed through My Page",
-      "noRefund": "No refunds for cancellations during the contract period",
-      "title": "[About Cancellation]",
-      "untilEnd": "After cancellation, you can continue using the service until the end of the current period"
+      "items": {
+        "anytime": "You can cancel at any time during the contract period",
+        "mypage": "Cancellation can be processed through My Page",
+        "noRefund": "No refunds for cancellations during the contract period",
+        "untilEnd": "Service remains available until the end of the current billing period after cancellation"
+      },
+      "title": "About Cancellation:"
     },
-    "label": "Cancellation Policy",
     "process": {
-      "follow": "Follow the on-screen instructions to complete",
-      "login": "Log in to My Page",
-      "menu": "Select 'Cancel Subscription' from settings menu",
-      "title": "[Cancellation Process]"
-    }
+      "steps": {
+        "follow": "Follow the on-screen instructions to complete",
+        "login": "Log in to My Page",
+        "menu": "Select 'Cancel Subscription' from settings menu"
+      },
+      "title": "Cancellation Process:"
+    },
+    "title": "Cancellation Policy"
   },
   "contact": {
-    "email": {
-      "label": "Email",
-      "value": "support@o-siri.com"
-    },
-    "hours": {
-      "label": "Business Hours",
-      "value": "Weekdays 10:00-18:00 JST (Excluding weekends, holidays, and year-end/new year)"
-    },
-    "label": "Contact Information",
-    "note": "* Please contact us via email",
-    "phone": {
-      "label": "Phone",
-      "value": "Disclosed upon request without delay"
-    }
+    "email": "Email",
+    "emailValue": "support@o-siri.com",
+    "hours": "Business Hours",
+    "hoursValue": "Weekdays 10:00-18:00 (Excluding weekends, holidays, and year-end/new-year)",
+    "phone": "Phone",
+    "phoneValue": "Will be disclosed upon request",
+    "title": "Contact Information"
+  },
+  "data": {
+    "retention": "Service data is retained for 30 days after cancellation, then deleted",
+    "title": "Data Handling"
   },
   "delivery": {
     "immediate": "Service is available immediately after registration",
-    "label": "Service Start"
+    "title": "Service Start"
   },
   "payment": {
     "cards": {
@@ -56,51 +54,44 @@
       "mastercard": "・Mastercard",
       "visa": "・VISA"
     },
-    "label": "Payment Method",
     "method": "Credit Card",
-    "processor": "* Credit card processing is provided by Stripe",
-    "security": "* Credit card information is protected by SSL encryption"
+    "title": "Payment Method"
   },
   "price": {
-    "label": "Price",
-    "monthly": "Monthly fee: ¥980 (tax included)",
-    "taxIncluded": "* All prices include consumption tax"
+    "amount": "Monthly fee: ¥980 (tax included)",
+    "note": "All prices include tax",
+    "title": "Price"
   },
-  "representative": {
-    "label": "Representative",
-    "value": "Shintaro Nakagawa"
-  },
+  "representative": "Representative",
   "requirements": {
-    "label": "System Requirements",
     "mobile": "・Smartphone/Tablet: iOS 14.0 or later, Android 8.0 or later",
-    "note": "* May work in other environments but not officially supported",
+    "note": "May work in other environments but not officially supported",
     "pc": "・PC: Chrome (latest), Firefox (latest), Safari (latest), Edge (latest)",
-    "title": "[Recommended Environment]"
+    "subtitle": "Recommended Environment:",
+    "title": "System Requirements"
   },
-  "seller": {
-    "label": "Seller",
-    "value": "Osiri"
-  },
-  "service": {
-    "description": {
-      "items": [
-        "Automated collection of overseas startup news",
-        "AI-powered summarization",
-        "Multi-language translation",
-        "Slack/Discord integration",
-        "Customizable news delivery"
-      ],
-      "title": "Service Details"
+  "restrictions": {
+    "items": {
+      "channels": "Maximum of 5 channels per account",
+      "frequency": "Up to 24 deliveries per day per channel",
+      "sharing": "Account sharing is prohibited"
     },
-    "label": "Service Name",
+    "title": "Usage Restrictions"
+  },
+  "seller": "Seller",
+  "service": {
+    "description": "A service that automatically collects, summarizes, and translates overseas startup news using AI, delivering to your specified destinations (Slack/Discord/Email).",
     "name": "Osiri - Global AI summarized News Reader",
-    "nameJp": "(Osiri - Global AI News Reader)"
+    "nameJp": "オシリス - グローバルAIニュースリーダー",
+    "title": "Service Name"
   },
   "title": "Specified Commercial Transaction Act",
   "trial": {
-    "fullAccess": "* Full access to all features during trial period",
-    "label": "Free Trial",
-    "noCard": "* No credit card required",
-    "period": "Duration: 7 days from registration"
+    "after": "After Trial Period",
+    "billing": "Monthly fee will be automatically charged to your registered credit card after the trial period",
+    "cancel": "You can cancel anytime during the trial period",
+    "noCard": "No credit card required",
+    "period": "7 days from registration",
+    "title": "Free Trial"
   }
 }
