@@ -1,7 +1,6 @@
 // AppSettingsPage.tsx
 import { Building2, Users } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
 import { PageLoading } from "@/components/ui/page-loading";
 import { OrganizationMembers } from "@/components/settings/OrganizationMembers";
@@ -12,14 +11,13 @@ import { CreateOrganization } from "@/components/settings/CreateOrganization";
 
 export default function AppSettingsPage() {
   const { t } = useTranslation("settings");
-  const { session } = useAuth();
   const {
     organization,
     isLoading,
     error: orgError,
     createOrganization,
     updateOrganization,
-  } = useOrganization({ session });
+  } = useOrganization();
 
   if (isLoading) {
     return <PageLoading />;
@@ -36,51 +34,53 @@ export default function AppSettingsPage() {
         </div>
       </div>
     );
-  }
+  } else {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              {t("settings.title")}
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              {t("settings.description")}
+            </p>
+          </div>
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-            {t("settings.title")}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {t("settings.description")}
-          </p>
+          <Tabs defaultValue="organization" className="space-y-4">
+            <TabsList className="bg-white/50 backdrop-blur-sm dark:bg-gray-950/50 border-0">
+              <TabsTrigger
+                value="organization"
+                className="data-[state=active]:bg-blue-100 dark:data-[state=active]:bg-blue-900/20"
+              >
+                <Building2 className="w-4 h-4 mr-2" />
+                {t("tabs.organization")}
+              </TabsTrigger>
+              <TabsTrigger
+                value="members"
+                className="data-[state=active]:bg-blue-100 dark:data-[state=active]:bg-blue-900/20"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                {t("tabs.members")}
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="organization" className="space-y-4">
+              <OrganizationSettings
+                organization={organization}
+                error={orgError}
+                onUpdateOrganization={updateOrganization}
+              />
+            </TabsContent>
+
+            <TabsContent value="members">
+              {organization.id && (
+                <OrganizationMembers organizationId={organization.id} />
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
-
-        <Tabs defaultValue="organization" className="space-y-4">
-          <TabsList className="bg-white/50 backdrop-blur-sm dark:bg-gray-950/50 border-0">
-            <TabsTrigger
-              value="organization"
-              className="data-[state=active]:bg-blue-100 dark:data-[state=active]:bg-blue-900/20"
-            >
-              <Building2 className="w-4 h-4 mr-2" />
-              {t("tabs.organization")}
-            </TabsTrigger>
-            <TabsTrigger
-              value="members"
-              className="data-[state=active]:bg-blue-100 dark:data-[state=active]:bg-blue-900/20"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              {t("tabs.members")}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="organization" className="space-y-4">
-            <OrganizationSettings
-              organization={organization}
-              error={orgError}
-              onUpdateOrganization={updateOrganization}
-            />
-          </TabsContent>
-
-          <TabsContent value="members">
-            <OrganizationMembers organizationId={organization.id} />
-          </TabsContent>
-        </Tabs>
       </div>
-    </div>
-  );
+    );
+  }
 }

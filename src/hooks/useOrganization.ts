@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Tables } from "@/types/database.types";
+import type { Database } from "@/types/database.types";
 import { OrganizationService } from "@/services/organization";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "./useAuth";
 
-type Organization = Tables<"organizations">;
-type OrganizationSubscriptionStatus = Tables<
-    "organization_subscription_status"
->;
+type OrganizationUpdate =
+    Database["public"]["Tables"]["organizations"]["Update"];
+type OrganizationSubscriptionStatusRow =
+    Database["public"]["Views"]["organization_subscription_status"]["Row"];
 
 export function useOrganization() {
     const [organization, setOrganization] = useState<
-        OrganizationSubscriptionStatus | null
+        OrganizationSubscriptionStatusRow | null
     >(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -93,7 +93,9 @@ export function useOrganization() {
         }
     };
 
-    const updateOrganization = async (data: Partial<Organization>) => {
+    const updateOrganization = async (
+        data: Pick<OrganizationUpdate, "name">,
+    ) => {
         if (!organization?.id) return null;
 
         setError(null);

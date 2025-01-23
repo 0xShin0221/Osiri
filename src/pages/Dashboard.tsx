@@ -1,4 +1,3 @@
-import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useStats } from "@/hooks/useStats";
 import { StatsCards } from "@/components/dashboard/StatsCards";
@@ -7,8 +6,7 @@ import { NotificationList } from "@/components/dashboard/NotificationList";
 import { useTranslations } from "@/hooks/useTranslations";
 
 export function Dashboard() {
-  const { session } = useAuth();
-  const { organization } = useOrganization({ session });
+  const { organization } = useOrganization();
   const {
     dailyCount,
     weeklyStats,
