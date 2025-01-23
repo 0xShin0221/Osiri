@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { Database } from "@/types/database.types";
+import { Database } from "@/types/database.types";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
@@ -28,7 +28,7 @@ export class ProfileService {
                 .getUser();
             if (userError) throw userError;
 
-            const profileData: ProfileInsert = {
+            const newProfile: ProfileInsert = {
                 id: userId,
                 email: user?.email ?? null,
                 onboarding_completed: false,
@@ -36,12 +36,12 @@ export class ProfileService {
 
             const { data: profile, error } = await supabase
                 .from("profiles")
-                .insert([profileData])
+                .insert([newProfile])
                 .select()
                 .single();
 
             if (error) {
-                if (error.code === "23505") { // unique violation error code
+                if (error.code === "23505") {
                     return await this.getProfile(userId);
                 }
                 throw error;
@@ -56,7 +56,7 @@ export class ProfileService {
 
     async updateProfile(
         userId: string,
-        data: Partial<Omit<ProfileUpdate, "id" | "created_at">>,
+        data: Omit<ProfileUpdate, "id" | "created_at">,
     ): Promise<ProfileRow | null> {
         try {
             const { data: profile, error } = await supabase
@@ -79,22 +79,14 @@ export class ProfileService {
 
     async getOrCreateProfile(userId: string): Promise<ProfileRow | null> {
         try {
-            let profile = await this.getProfile(userId);
+            const profile = await this.getProfile(userId);
             if (!profile) {
-                profile = await this.createProfile(userId);
+                return await this.createProfile(userId);
             }
             return profile;
         } catch (error) {
             console.error("Error in getOrCreateProfile:", error);
             return null;
         }
-    }
-
-    async updateOnboardingCompleted(
-        userId: string,
-    ): Promise<ProfileRow | null> {
-        return await this.updateProfile(userId, {
-            onboarding_completed: true,
-        });
     }
 }
