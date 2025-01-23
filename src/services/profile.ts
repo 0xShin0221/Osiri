@@ -1,16 +1,18 @@
 import { supabase } from "@/lib/supabase";
-import type { Tables } from "@/types/database.types";
+import type { Database } from "@/types/database.types";
 
-type Profile = Tables<"profiles">;
+type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
+type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
 
 export class ProfileService {
-    async getProfile(userId: string): Promise<Profile | null> {
+    async getProfile(userId: string): Promise<ProfileRow | null> {
         try {
             const { data: profile, error } = await supabase
                 .from("profiles")
                 .select("*")
                 .eq("id", userId)
-                .single();
+                .maybeSingle();
 
             if (error) throw error;
             return profile;
@@ -20,19 +22,25 @@ export class ProfileService {
         }
     }
 
-    async createProfile(userId: string): Promise<Profile | null> {
+    async createProfile(userId: string): Promise<ProfileRow | null> {
         try {
+            const { data: { user }, error: userError } = await supabase.auth
+                .getUser();
+            if (userError) throw userError;
+
+            const profileData: ProfileInsert = {
+                id: userId,
+                email: user?.email ?? null,
+                onboarding_completed: false,
+            };
+
             const { data: profile, error } = await supabase
                 .from("profiles")
-                .insert([{
-                    id: userId,
-                    onboarding_completed: false,
-                }])
+                .insert([profileData])
                 .select()
                 .single();
 
             if (error) {
-                // If profile already exists, try to fetch it
                 if (error.code === "23505") { // unique violation error code
                     return await this.getProfile(userId);
                 }
@@ -48,8 +56,8 @@ export class ProfileService {
 
     async updateProfile(
         userId: string,
-        data: Partial<Omit<Profile, "id" | "created_at">>,
-    ): Promise<Profile | null> {
+        data: Partial<Omit<ProfileUpdate, "id" | "created_at">>,
+    ): Promise<ProfileRow | null> {
         try {
             const { data: profile, error } = await supabase
                 .from("profiles")
@@ -59,7 +67,7 @@ export class ProfileService {
                 })
                 .eq("id", userId)
                 .select()
-                .single();
+                .maybeSingle();
 
             if (error) throw error;
             return profile;
@@ -69,14 +77,12 @@ export class ProfileService {
         }
     }
 
-    async getOrCreateProfile(userId: string): Promise<Profile | null> {
+    async getOrCreateProfile(userId: string): Promise<ProfileRow | null> {
         try {
             let profile = await this.getProfile(userId);
-
             if (!profile) {
                 profile = await this.createProfile(userId);
             }
-
             return profile;
         } catch (error) {
             console.error("Error in getOrCreateProfile:", error);
@@ -84,7 +90,9 @@ export class ProfileService {
         }
     }
 
-    async updateOnboardingCompleted(userId: string): Promise<Profile | null> {
+    async updateOnboardingCompleted(
+        userId: string,
+    ): Promise<ProfileRow | null> {
         return await this.updateProfile(userId, {
             onboarding_completed: true,
         });

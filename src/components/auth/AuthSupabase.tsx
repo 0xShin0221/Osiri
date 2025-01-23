@@ -42,18 +42,9 @@ export function AuthContainer({
         if (!mounted) return;
         if (profile) {
           setSession(session);
-          if (!profile.onboarding_completed) {
-            navigate(`/${currentLang}/onboarding`);
-          }
-        } else {
-          console.error(
-            "Something went wrong with the profile creation or fetching"
-          );
-          throw new Error("Profile creation or fetching failed");
         }
       } catch (error) {
         console.error("Error handling session:", error);
-        throw new Error("Error handling session");
       } finally {
         if (mounted) {
           setIsLoading(false);

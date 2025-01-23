@@ -17,16 +17,8 @@ export const OrgAuthContainer = ({ children }: OrgAuthContainerProps) => {
   const currentLang = i18n.language;
 
   useEffect(() => {
-    console.log({
-      isLoading,
-      session: !!session,
-      organization: !!organization,
-    });
-
     if (isLoading) return;
-
     if (!session?.user) return;
-
     if (!organization) {
       navigate(`/${currentLang}/settings`, { replace: true });
       return;
@@ -43,13 +35,8 @@ export const OrgAuthContainer = ({ children }: OrgAuthContainerProps) => {
     }
   }, [session, organization, isLoading, navigate, currentLang]);
 
-  if (isLoading) {
-    return <PageLoading />;
-  }
-
-  if (!session?.user || !organization) {
-    return null;
-  }
+  if (isLoading) return <PageLoading />;
+  if (!session?.user || !organization) return null;
 
   return <>{children}</>;
 };
