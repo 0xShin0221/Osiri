@@ -36,7 +36,7 @@ export function useOrganization() {
                 .from("organization_members")
                 .select("organization_id")
                 .eq("user_id", session.user.id)
-                .single();
+                .maybeSingle();
 
             if (memberError) {
                 if (memberError.code === "PGRST116") {
@@ -46,7 +46,7 @@ export function useOrganization() {
                 }
                 throw memberError;
             }
-
+            if (!memberData) return;
             const { data: org, error: orgError } = await supabase
                 .from("organizations")
                 .select(`

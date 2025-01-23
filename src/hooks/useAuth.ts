@@ -19,11 +19,11 @@ export function useAuth() {
         }
 
         try {
-            const { data: orgMembers, error: orgError } = await supabase
+            const { data: orgMember, error: orgError } = await supabase
                 .from("organization_members")
                 .select("organization_id")
                 .eq("user_id", baseUser.id)
-                .limit(1);
+                .maybeSingle();
 
             if (orgError) {
                 if (orgError.code === "PGRST116") {
@@ -35,7 +35,7 @@ export function useAuth() {
                 }
                 throw orgError;
             }
-            const orgMember = orgMembers?.[0];
+
             setUser({
                 ...baseUser,
                 organization_id: orgMember?.organization_id,
