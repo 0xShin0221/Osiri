@@ -564,11 +564,9 @@ export type Database = {
           notifications_used_this_month: number | null
           plan_id: string | null
           stripe_customer_id: string | null
-          subscription_status:
-            | Database["public"]["Enums"]["subscription_status"]
-            | null
+          subscription_status: Database["public"]["Enums"]["subscription_status"]
           trial_end_date: string | null
-          trial_start_date: string | null
+          trial_start_date: string
           updated_at: string | null
         }
         Insert: {
@@ -579,11 +577,9 @@ export type Database = {
           notifications_used_this_month?: number | null
           plan_id?: string | null
           stripe_customer_id?: string | null
-          subscription_status?:
-            | Database["public"]["Enums"]["subscription_status"]
-            | null
+          subscription_status?: Database["public"]["Enums"]["subscription_status"]
           trial_end_date?: string | null
-          trial_start_date?: string | null
+          trial_start_date?: string
           updated_at?: string | null
         }
         Update: {
@@ -594,11 +590,9 @@ export type Database = {
           notifications_used_this_month?: number | null
           plan_id?: string | null
           stripe_customer_id?: string | null
-          subscription_status?:
-            | Database["public"]["Enums"]["subscription_status"]
-            | null
+          subscription_status?: Database["public"]["Enums"]["subscription_status"]
           trial_end_date?: string | null
-          trial_start_date?: string | null
+          trial_start_date?: string
           updated_at?: string | null
         }
         Relationships: [

@@ -124,10 +124,10 @@
 -- ADD COLUMN plan_id uuid REFERENCES subscription_plans(id),
 -- ADD COLUMN notifications_used_this_month int DEFAULT 0,
 -- ADD COLUMN last_usage_reset timestamptz,
--- ADD COLUMN trial_start_date timestamptz,
+-- ADD COLUMN trial_start_date timestamptz not null default CURRENT_TIMESTAMP,
 -- ADD COLUMN trial_end_date timestamptz,
 -- ADD COLUMN stripe_customer_id text,
--- ADD COLUMN subscription_status subscription_status;
+-- ADD COLUMN subscription_status subscription_status not null default 'trialing';
 
 -- -- Usage tracking
 -- CREATE OR REPLACE FUNCTION increment_notification_usage()
