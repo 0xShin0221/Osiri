@@ -1,4 +1,4 @@
--- -- CRON for invoke-notifications-process every 3 minutes
+-- -- 1.CRON for invoke-notifications-process every 3 minutes
 -- select
 --   cron.schedule(
 --     'invoke-notifications-process-3m', -- Unique name for the schedule
@@ -12,7 +12,7 @@
 --     $$
 --   );
 
--- -- CRON for invoke-batch-run every 10 minutes
+-- -- 2.CRON for invoke-batch-run every 10 minutes
 -- select
 --   cron.schedule(
 --     'invoke-batch-run-10m', -- Unique name for the schedule

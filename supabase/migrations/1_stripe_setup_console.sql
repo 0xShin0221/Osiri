@@ -1,0 +1,216 @@
+-- CREATE SCHEMA IF NOT EXISTS stripe;
+-- CREATE EXTENSION IF NOT EXISTS wrappers WITH SCHEMA extensions;
+
+-- -- Create FDW
+-- CREATE FOREIGN DATA WRAPPER stripe_wrapper
+--  HANDLER stripe_fdw_handler
+--  VALIDATOR stripe_fdw_validator;
+
+-- -- Create server
+-- CREATE SERVER stripe_server
+--  FOREIGN DATA WRAPPER stripe_wrapper
+--  OPTIONS (
+--    api_key '', 　-- Add your Stripe API key here
+--    api_url 'https://api.stripe.com/v1/',
+--    api_version '2024-06-20'
+--  );
+
+-- -- Create foreign tables
+-- CREATE FOREIGN TABLE stripe.products (
+--  id text,
+--  name text,
+--  active boolean,
+--  description text,
+--  default_price text,
+--  created timestamp,
+--  updated timestamp,
+--  attrs jsonb
+-- )
+--  SERVER stripe_server
+--  OPTIONS (
+--    object 'products',
+--    rowid_column 'id'
+--  );
+
+-- CREATE FOREIGN TABLE stripe.prices (
+--  id text,
+--  active boolean,
+--  currency text,
+--  product text,
+--  unit_amount bigint,
+--  type text,
+--  created timestamp,
+--  attrs jsonb
+-- )
+--  SERVER stripe_server
+--  OPTIONS (
+--    object 'prices'
+--  );
+
+--  CREATE FOREIGN TABLE stripe.subscriptions (
+--   id text,
+--   customer text,
+--   currency text,
+--   current_period_start timestamp,
+--   current_period_end timestamp,
+--   status text,
+--   cancel_at_period_end boolean,
+--   created timestamp,
+--   attrs jsonb
+-- )
+--   SERVER stripe_server
+--   OPTIONS (
+--     object 'subscriptions',
+--     rowid_column 'id'
+--   );
+
+-- CREATE TYPE subscription_status AS ENUM ('trialing', 'active', 'past_due', 'canceled');
+
+-- -- Plans and limits tables
+-- CREATE TABLE subscription_plans (
+--  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+--  name text NOT NULL,
+--  description text,
+--  stripe_product_id text,
+--  stripe_base_price_id text,
+--  stripe_metered_price_id text,
+--  base_notifications_per_day int NOT NULL,
+--  has_usage_billing boolean DEFAULT false,
+--  sort_order int DEFAULT 0,
+--  is_active boolean DEFAULT true,
+--  created_at timestamptz DEFAULT CURRENT_TIMESTAMP,
+--  updated_at timestamptz DEFAULT CURRENT_TIMESTAMP,
+--  CONSTRAINT valid_pricing CHECK (
+--    (has_usage_billing = false AND stripe_metered_price_id IS NULL) OR
+--    (has_usage_billing = true AND stripe_metered_price_id IS NOT NULL)
+--  )
+-- );
+
+-- CREATE OR REPLACE FUNCTION check_stripe_refs()
+-- RETURNS trigger AS $$
+-- BEGIN
+--  -- Check product ID
+--  IF NEW.stripe_product_id IS NOT NULL AND 
+--     NOT EXISTS (SELECT 1 FROM stripe.products WHERE id = NEW.stripe_product_id) THEN
+--    RAISE EXCEPTION 'Invalid stripe_product_id';
+--  END IF;
+--  -- Check price IDs
+--  IF NEW.stripe_base_price_id IS NOT NULL AND 
+--     NOT EXISTS (SELECT 1 FROM stripe.prices WHERE id = NEW.stripe_base_price_id) THEN
+--    RAISE EXCEPTION 'Invalid stripe_base_price_id';
+--  END IF;
+--  IF NEW.stripe_metered_price_id IS NOT NULL AND 
+--     NOT EXISTS (SELECT 1 FROM stripe.prices WHERE id = NEW.stripe_metered_price_id) THEN
+--    RAISE EXCEPTION 'Invalid stripe_metered_price_id';
+--  END IF;
+--  RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER check_stripe_refs_trigger
+--  BEFORE INSERT OR UPDATE ON subscription_plans
+--  FOR EACH ROW
+--  EXECUTE FUNCTION check_stripe_refs();
+
+-- CREATE TABLE subscription_plan_limits (
+--  plan_id uuid REFERENCES subscription_plans(id),
+--  max_notifications_per_day int NOT NULL,
+--  usage_rate numeric(10,2),
+--  PRIMARY KEY (plan_id)
+-- );
+
+-- -- Add subscription columns to organizations
+-- ALTER TABLE organizations 
+-- ADD COLUMN plan_id uuid REFERENCES subscription_plans(id),
+-- ADD COLUMN notifications_used_this_month int DEFAULT 0,
+-- ADD COLUMN last_usage_reset timestamptz,
+-- ADD COLUMN trial_start_date timestamptz,
+-- ADD COLUMN trial_end_date timestamptz,
+-- ADD COLUMN stripe_customer_id text,
+-- ADD COLUMN subscription_status subscription_status;
+
+-- -- Usage tracking
+-- CREATE OR REPLACE FUNCTION increment_notification_usage()
+-- RETURNS trigger AS $$
+-- BEGIN
+--  UPDATE organizations 
+--  SET 
+--    notifications_used_this_month = CASE 
+--      WHEN last_usage_reset IS NULL OR 
+--           EXTRACT(month FROM last_usage_reset) != EXTRACT(month FROM CURRENT_TIMESTAMP)
+--      THEN 1
+--      ELSE notifications_used_this_month + 1
+--    END,
+--    last_usage_reset = CASE 
+--      WHEN last_usage_reset IS NULL OR 
+--           EXTRACT(month FROM last_usage_reset) != EXTRACT(month FROM CURRENT_TIMESTAMP)
+--      THEN CURRENT_TIMESTAMP 
+--      ELSE last_usage_reset
+--    END
+--  WHERE id = NEW.organization_id;
+--  RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE OR REPLACE TRIGGER track_notification_usage
+--  AFTER INSERT ON notification_logs
+--  FOR EACH ROW 
+--  WHEN (NEW.status = 'success')
+--  EXECUTE FUNCTION increment_notification_usage();
+
+-- -- Views for monitoring
+-- CREATE OR REPLACE VIEW organization_subscription_status AS 
+-- SELECT 
+--   o.*,
+--   sp.name as plan_name,
+--   sp.stripe_base_price_id,
+--   sp.stripe_metered_price_id,
+--   sp.has_usage_billing,
+--   spl.max_notifications_per_day,
+--   spl.usage_rate,
+--   stripe_sub.current_period_end as subscription_end_date,
+--   stripe_sub.status as stripe_status
+-- FROM organizations o
+-- LEFT JOIN subscription_plans sp ON o.plan_id = sp.id
+-- LEFT JOIN subscription_plan_limits spl ON sp.id = spl.plan_id
+-- LEFT JOIN stripe.subscriptions stripe_sub ON o.stripe_customer_id = stripe_sub.customer;
+
+-- CREATE OR REPLACE VIEW organization_notification_stats AS
+-- SELECT 
+--  o.name as organization_name,
+--  o.id as organization_id,
+--  o.notifications_used_this_month,
+--  sp.name as plan_name,
+--  sp.base_notifications_per_day,
+--  spl.max_notifications_per_day,
+--  DATE_TRUNC('month', nl.created_at) as month,
+--  COUNT(*) as total_notifications,
+--  COUNT(CASE WHEN nl.status = 'success' THEN 1 END) as successful_notifications,
+--  COUNT(CASE WHEN nl.status = 'failed' THEN 1 END) as failed_notifications,
+--  ROUND(COUNT(*)::numeric / EXTRACT(DAY FROM CURRENT_DATE)::numeric, 2) as avg_daily_notifications,
+--  CASE 
+--    WHEN o.notifications_used_this_month >= spl.max_notifications_per_day * EXTRACT(DAY FROM CURRENT_DATE)::integer 
+--    THEN true 
+--    ELSE false 
+--  END as limit_reached
+-- FROM organizations o
+-- LEFT JOIN subscription_plans sp ON o.plan_id = sp.id
+-- LEFT JOIN subscription_plan_limits spl ON sp.id = spl.plan_id
+-- LEFT JOIN notification_logs nl ON o.id = nl.organization_id
+--  AND nl.created_at >= DATE_TRUNC('month', CURRENT_DATE)
+-- GROUP BY 
+--  o.id, o.name, o.notifications_used_this_month,
+--  sp.name, sp.base_notifications_per_day,
+--  spl.max_notifications_per_day,
+--  DATE_TRUNC('month', nl.created_at)
+-- ORDER BY o.name, month DESC;
+
+
+-- GRANT SELECT ON subscription_plans TO anon, authenticated;
+-- GRANT SELECT ON subscription_plan_limits TO anon, authenticated;
+-- GRANT SELECT ON stripe.products TO anon, authenticated;
+-- GRANT SELECT ON stripe.prices TO anon, authenticated;
+
+-- GRANT SELECT ON organization_subscription_status TO authenticated;
+-- GRANT SELECT ON stripe.subscriptions TO authenticated;
+-- GRANT SELECT ON wrappers_fdw_stats TO authenticated;

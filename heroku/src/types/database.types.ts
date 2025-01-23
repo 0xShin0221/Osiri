@@ -287,6 +287,13 @@ export type Database = {
             foreignKeyName: "notification_channels_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_notification_stats"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -383,6 +390,13 @@ export type Database = {
             foreignKeyName: "notification_logs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_notification_stats"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "notification_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -466,6 +480,13 @@ export type Database = {
             foreignKeyName: "organization_feed_follows_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_notification_stats"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "organization_feed_follows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -515,6 +536,13 @@ export type Database = {
             foreignKeyName: "organization_members_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_notification_stats"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -531,9 +559,14 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          last_usage_reset: string | null
           name: string
+          notifications_used_this_month: number | null
+          plan_id: string | null
           stripe_customer_id: string | null
-          subscription_status: string | null
+          subscription_status:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           trial_end_date: string | null
           trial_start_date: string | null
           updated_at: string | null
@@ -541,9 +574,14 @@ export type Database = {
         Insert: {
           created_at?: string | null
           id?: string
+          last_usage_reset?: string | null
           name: string
+          notifications_used_this_month?: number | null
+          plan_id?: string | null
           stripe_customer_id?: string | null
-          subscription_status?: string | null
+          subscription_status?:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string | null
@@ -551,14 +589,27 @@ export type Database = {
         Update: {
           created_at?: string | null
           id?: string
+          last_usage_reset?: string | null
           name?: string
+          notifications_used_this_month?: number | null
+          plan_id?: string | null
           stripe_customer_id?: string | null
-          subscription_status?: string | null
+          subscription_status?:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organizations_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -644,57 +695,76 @@ export type Database = {
         }
         Relationships: []
       }
-      subscription_limits: {
+      subscription_plan_limits: {
         Row: {
-          created_at: string
-          max_channels: number
-          max_feeds_per_channel: number
           max_notifications_per_day: number
-          notification_frequency_minutes: number
-          organization_id: string
-          updated_at: string
+          plan_id: string
+          usage_rate: number | null
         }
         Insert: {
-          created_at?: string
-          max_channels?: number
-          max_feeds_per_channel?: number
-          max_notifications_per_day?: number
-          notification_frequency_minutes?: number
-          organization_id: string
-          updated_at?: string
+          max_notifications_per_day: number
+          plan_id: string
+          usage_rate?: number | null
         }
         Update: {
-          created_at?: string
-          max_channels?: number
-          max_feeds_per_channel?: number
           max_notifications_per_day?: number
-          notification_frequency_minutes?: number
-          organization_id?: string
-          updated_at?: string
+          plan_id?: string
+          usage_rate?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "subscription_limits_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: "subscription_plan_limits_plan_id_fkey"
+            columns: ["plan_id"]
             isOneToOne: true
-            referencedRelation: "monthly_org_notifications"
-            referencedColumns: ["organization_id"]
-          },
-          {
-            foreignKeyName: "subscription_limits_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: true
-            referencedRelation: "organization_subscription_status"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_limits_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: true
-            referencedRelation: "organizations"
+            referencedRelation: "subscription_plans"
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscription_plans: {
+        Row: {
+          base_notifications_per_day: number
+          created_at: string | null
+          description: string | null
+          has_usage_billing: boolean | null
+          id: string
+          is_active: boolean | null
+          name: string
+          sort_order: number | null
+          stripe_base_price_id: string | null
+          stripe_metered_price_id: string | null
+          stripe_product_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          base_notifications_per_day: number
+          created_at?: string | null
+          description?: string | null
+          has_usage_billing?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          sort_order?: number | null
+          stripe_base_price_id?: string | null
+          stripe_metered_price_id?: string | null
+          stripe_product_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          base_notifications_per_day?: number
+          created_at?: string | null
+          description?: string | null
+          has_usage_billing?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          sort_order?: number | null
+          stripe_base_price_id?: string | null
+          stripe_metered_price_id?: string | null
+          stripe_product_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       translations: {
         Row: {
@@ -849,6 +919,13 @@ export type Database = {
             foreignKeyName: "workspace_connections_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_notification_stats"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "workspace_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -885,6 +962,13 @@ export type Database = {
             foreignKeyName: "notification_channels_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organization_notification_stats"
+            referencedColumns: ["organization_id"]
+          },
+          {
+            foreignKeyName: "notification_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -908,19 +992,56 @@ export type Database = {
         }
         Relationships: []
       }
-      organization_subscription_status: {
+      organization_notification_stats: {
         Row: {
-          id: string | null
-          max_channels: number | null
-          max_feeds_per_channel: number | null
+          avg_daily_notifications: number | null
+          base_notifications_per_day: number | null
+          failed_notifications: number | null
+          limit_reached: boolean | null
           max_notifications_per_day: number | null
-          notification_frequency_minutes: number | null
-          stripe_customer_id: string | null
-          subscription_status: string | null
-          trial_end_date: string | null
-          trial_start_date: string | null
+          month: string | null
+          notifications_used_this_month: number | null
+          organization_id: string | null
+          organization_name: string | null
+          plan_name: string | null
+          successful_notifications: number | null
+          total_notifications: number | null
         }
         Relationships: []
+      }
+      organization_subscription_status: {
+        Row: {
+          created_at: string | null
+          has_usage_billing: boolean | null
+          id: string | null
+          last_usage_reset: string | null
+          max_notifications_per_day: number | null
+          name: string | null
+          notifications_used_this_month: number | null
+          plan_id: string | null
+          plan_name: string | null
+          stripe_base_price_id: string | null
+          stripe_customer_id: string | null
+          stripe_metered_price_id: string | null
+          stripe_status: string | null
+          subscription_end_date: string | null
+          subscription_status:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
+          trial_end_date: string | null
+          trial_start_date: string | null
+          updated_at: string | null
+          usage_rate: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pending_translations: {
         Row: {
@@ -943,12 +1064,6 @@ export type Database = {
       }
     }
     Functions: {
-      calculate_trial_end_date: {
-        Args: {
-          start_date: string
-        }
-        Returns: string
-      }
       create_smart_translation_tasks: {
         Args: {
           p_article_ids: string[]
@@ -1281,6 +1396,7 @@ export type Database = {
         | "failed"
         | "retrying"
         | "skipped"
+      subscription_status: "trialing" | "active" | "past_due" | "canceled"
       translation_status:
         | "pending"
         | "processing"
