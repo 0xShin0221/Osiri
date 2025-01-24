@@ -35,8 +35,42 @@
     "description": "組織の設定とチームメンバーを管理します。",
     "title": "設定"
   },
+  "subscription": {
+    "billingPeriod": "請求期間",
+    "description": "サブスクリプションの管理と更新",
+    "descriptionSelect": "ニーズに合わせて最適なプランをお選びください",
+    "error": {
+      "unknown": "エラーが発生しました"
+    },
+    "features": "含まれる機能",
+    "freePlan": "無料プラン",
+    "manageBilling": "支払い管理",
+    "notApplicable": "適用なし",
+    "notificationsPerDay_0": "{{count}}件/日の通知",
+    "payAsYouGo": "追加使用分は従量課金",
+    "perMonth": "/月",
+    "plan": "プラン",
+    "processing": "処理中...",
+    "selectPlan": "プランを選択してください",
+    "settings": {
+      "description": "サブスクリプションと支払い方法の管理",
+      "title": "サブスクリプション設定"
+    },
+    "status": {
+      "active": "有効",
+      "pastDue": "支払い期限超過",
+      "trial": "トライアル"
+    },
+    "title": "サブスクリプション",
+    "titleUpgrade": "プランのアップグレード",
+    "trialEnds": "トライアル終了日",
+    "upgrade": "アップグレード",
+    "upgradePlan": "プランをアップグレード",
+    "usage": "利用状況"
+  },
   "tabs": {
     "members": "メンバー",
-    "organization": "組織"
+    "organization": "組織",
+    "subscription": "サブスクリプション"
   }
 }
