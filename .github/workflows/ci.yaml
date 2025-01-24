@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       # Supabase Setup
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Database Tests
         run: supabase test db
-      
+
       # Type Check
       - name: Generate and Verify Types
         run: |
@@ -56,7 +56,7 @@ jobs:
           cd supabase/functions
           deno task test
         env:
-          SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_URL || secrets.STAGING_URL }}
+          SUPABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_SUPABASE_URL || secrets.STAGING__SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
           SLACK_WAITLIST_WEBHOOK_URL: ${{ secrets.SLACK_WAITLIST_WEBHOOK_URL }}
 
@@ -70,7 +70,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       # PNPM Setup
       - name: Setup PNPM
@@ -107,22 +107,22 @@ jobs:
           SUPABASE_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_ANON_KEY || secrets.STAGING_ANON_KEY }}
 
   database-validation:
-    if: always()  # supabase-test または heroku-test が実行された場合に続行
+    if: always() # supabase-test または heroku-test が実行された場合に続行
     needs: [supabase-test, heroku-test]
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
       SUPABASE_PROJECT_ID: ${{ github.ref == 'refs/heads/main' && secrets.PRODUCTION_PROJECT_ID || secrets.STAGING_PROJECT_ID }}
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
-      
+
       - name: Validate Database Changes
         run: |
           supabase link --project-ref $SUPABASE_PROJECT_ID
