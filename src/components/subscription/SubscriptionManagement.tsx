@@ -1,4 +1,3 @@
-// components/subscription/SubscriptionManagement.tsx
 import { useTranslation } from "react-i18next";
 import {
   Card,
@@ -72,9 +71,9 @@ export default function SubscriptionManagement({
 
   const usagePercentage =
     organization?.notifications_used_this_month &&
-    organization.max_notifications_per_day
+    organization.base_notifications_per_day
       ? (organization.notifications_used_this_month /
-          organization.max_notifications_per_day) *
+          organization.base_notifications_per_day) *
         100
       : 0;
 
@@ -100,7 +99,7 @@ export default function SubscriptionManagement({
             </span>
             <span className="text-sm font-medium">
               {organization?.notifications_used_this_month || 0} /{" "}
-              {organization?.max_notifications_per_day || 0}
+              {organization?.base_notifications_per_day || 0}
             </span>
           </div>
           <Progress value={usagePercentage} className="h-2" />

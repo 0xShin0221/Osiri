@@ -1,19 +1,10 @@
+import { LANGUAGE_CURRENCY_MAP } from "@/lib/i18n/languages";
 import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/database.types";
 
-type SubscriptionPlanLimits =
-    Database["public"]["Tables"]["subscription_plan_limits"]["Row"];
-
 type SubscriptionPlan =
-    & Database["public"]["Tables"]["subscription_plans"]["Row"]
-    & {
-        subscription_plan_limits:
-            | Pick<
-                SubscriptionPlanLimits,
-                "max_notifications_per_day" | "usage_rate"
-            >
-            | null;
-    };
+    Database["public"]["Tables"]["subscription_plans"]["Row"];
+type FeedLanguage = Database["public"]["Enums"]["feed_language"];
 
 interface CheckoutSession {
     url: string;
@@ -75,22 +66,22 @@ export class SubscriptionService {
         }
     }
 
-    async getSubscriptionPlans(): Promise<SubscriptionPlan[]> {
+    async getSubscriptionPlans(
+        language: FeedLanguage,
+    ): Promise<SubscriptionPlan[]> {
         try {
+            const currency = LANGUAGE_CURRENCY_MAP[language];
+
             const { data, error } = await supabase
                 .from("subscription_plans")
-                .select(`
-          *,
-          subscription_plan_limits (
-            max_notifications_per_day,
-            usage_rate
-          )
-        `)
+                .select(`*`)
+                .eq("currency", currency)
+                .eq("has_usage_billing", false)
                 .eq("is_active", true)
                 .order("sort_order");
 
             if (error) throw error;
-            return data as SubscriptionPlan[];
+            return data || [];
         } catch (error) {
             console.error("Error fetching subscription plans:", error);
             throw error;

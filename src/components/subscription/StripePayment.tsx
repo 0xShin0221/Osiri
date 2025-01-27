@@ -12,16 +12,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import type { Database } from "@/types/database.types";
-type SubscriptionPlanLimits =
-  Database["public"]["Tables"]["subscription_plan_limits"]["Row"];
+import { formatPrice } from "@/lib/utils";
 
 type SubscriptionPlan =
-  Database["public"]["Tables"]["subscription_plans"]["Row"] & {
-    subscription_plan_limits: Pick<
-      SubscriptionPlanLimits,
-      "max_notifications_per_day" | "usage_rate"
-    > | null;
-  };
+  Database["public"]["Tables"]["subscription_plans"]["Row"];
 
 interface StripePaymentProps {
   isOpen: boolean;
@@ -59,7 +53,6 @@ export default function StripePayment({
       );
     }
   };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg">
@@ -90,7 +83,7 @@ export default function StripePayment({
                   <div className="flex justify-between">
                     <span className="text-lg font-medium">{plan.name}</span>
                     <span className="text-lg font-bold">
-                      ${plan.base_notifications_per_day}
+                      {formatPrice(plan.base_price_amount, plan.currency)}
                       {t("subscription.perMonth")}
                     </span>
                   </div>
