@@ -927,18 +927,32 @@ export type Database = {
       organization_subscription_status: {
         Row: {
           base_notifications_per_day: number | null
+          billing_interval: string | null
+          cancel_at: string | null
+          canceled_at: string | null
+          collection_method: string | null
           created_at: string | null
+          default_payment_method: string | null
           has_usage_billing: boolean | null
           id: string | null
           last_usage_reset: string | null
+          latest_invoice: string | null
           name: string | null
           notifications_used_this_month: number | null
+          plan_amount: number | null
+          plan_currency: string | null
           plan_id: string | null
+          plan_language: string | null
           plan_name: string | null
+          plan_type: string | null
           stripe_base_price_id: string | null
           stripe_customer_id: string | null
           stripe_metered_price_id: string | null
+          stripe_period_end: string | null
+          stripe_period_start: string | null
           stripe_status: string | null
+          stripe_trial_end: string | null
+          stripe_trial_start: string | null
           subscription_end_date: string | null
           subscription_status:
             | Database["public"]["Enums"]["subscription_status"]
@@ -946,6 +960,7 @@ export type Database = {
           trial_end_date: string | null
           trial_start_date: string | null
           updated_at: string | null
+          will_cancel: string | null
         }
         Relationships: [
           {

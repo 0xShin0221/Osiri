@@ -47,7 +47,7 @@
 --    object 'prices'
 --  );
 
---  CREATE FOREIGN TABLE stripe.subscriptions (
+-- CREATE FOREIGN TABLE stripe.subscriptions (
 --   id text,
 --   customer text,
 --   currency text,
@@ -139,11 +139,29 @@
 --   sp.has_usage_billing,
 --   sp.base_notifications_per_day,
 --   stripe_sub.current_period_end as subscription_end_date,
---   stripe_sub.status as stripe_status
+--   stripe_sub.attrs->>'status' as stripe_status,
+--   -- Relates to the current billing period
+--   to_timestamp((stripe_sub.attrs->>'current_period_start')::bigint) as stripe_period_start,
+--   to_timestamp((stripe_sub.attrs->>'current_period_end')::bigint) as stripe_period_end,
+--   to_timestamp((stripe_sub.attrs->>'trial_start')::bigint) as stripe_trial_start,
+--   to_timestamp((stripe_sub.attrs->>'trial_end')::bigint) as stripe_trial_end,
+--   -- Relates to the current billing period
+--   stripe_sub.attrs->>'cancel_at_period_end' as will_cancel,
+--   to_timestamp((stripe_sub.attrs->>'cancel_at')::bigint) as cancel_at,
+--   to_timestamp((stripe_sub.attrs->>'canceled_at')::bigint) as canceled_at,
+--   stripe_sub.attrs->>'default_payment_method' as default_payment_method,
+--   stripe_sub.attrs->>'latest_invoice' as latest_invoice,
+--   stripe_sub.attrs->>'collection_method' as collection_method,
+--   -- Relates to the current billing period
+--   stripe_sub.attrs->'plan'->>'interval' as billing_interval,
+--   (stripe_sub.attrs->'plan'->>'amount')::integer as plan_amount,
+--   stripe_sub.attrs->'plan'->>'currency' as plan_currency,
+--   stripe_sub.attrs->'plan'->'metadata'->>'planType' as plan_type,
+--   stripe_sub.attrs->'plan'->'metadata'->>'language' as plan_language
 -- FROM organizations o
 -- LEFT JOIN subscription_plans sp ON o.plan_id = sp.id
--- LEFT JOIN stripe.subscriptions stripe_sub ON o.stripe_customer_id = stripe_sub.customer;
-
+-- LEFT JOIN stripe.subscriptions stripe_sub 
+--   ON o.stripe_customer_id = stripe_sub.customer;
 
 -- grant select on subscription_plans TO anon, authenticated;
 -- grant select on stripe.products TO anon, authenticated;
