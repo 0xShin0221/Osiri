@@ -36,6 +36,7 @@
     "genType:heroku": "npx supabase gen types typescript --local > heroku/src/types/database.types.ts",
     "genType:frontend": "npx supabase gen types typescript --local > src/types/database.types.ts",
     "genType:supabase": "npx supabase gen types typescript --local > supabase/functions/_shared/database.types.ts",
+    "genType:script": "npx supabase gen types typescript --local > scripts/types/database.types.ts",
     "genType": "npm-run-all -s genType:*"
   },
   "dependencies": {
@@ -84,6 +85,7 @@
     "stripe": "^17.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.1",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
@@ -109,6 +111,7 @@
     "i18next-parser": "^9.0.2",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.38",
+    "sql-formatter": "^15.4.9",
     "tailwindcss": "^3.4.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",

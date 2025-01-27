@@ -66,11 +66,15 @@
 
 -- CREATE TYPE subscription_status AS ENUM ('trialing', 'active', 'past_due', 'canceled');
 
+-- create type subscription_currency as enum ( 'usd', 'jpy', 'cny', 'krw', 'eur', 'inr', 'brl', 'bdt', 'rub', 'idr');
+
 -- -- Plans and limits tables
 -- CREATE TABLE subscription_plans (
 --  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 --  name text NOT NULL,
 --  description text,
+--  currency subscription_currency NOT NULL DEFAULT 'usd',
+--  base_price_amount integer NOT NULL DEFAULT 0,
 --  stripe_product_id text,
 --  stripe_base_price_id text,
 --  stripe_metered_price_id text,
@@ -84,39 +88,6 @@
 --    (has_usage_billing = false AND stripe_metered_price_id IS NULL) OR
 --    (has_usage_billing = true AND stripe_metered_price_id IS NOT NULL)
 --  )
--- );
-
--- CREATE OR REPLACE FUNCTION check_stripe_refs()
--- RETURNS trigger AS $$
--- BEGIN
---  -- Check product ID
---  IF NEW.stripe_product_id IS NOT NULL AND 
---     NOT EXISTS (SELECT 1 FROM stripe.products WHERE id = NEW.stripe_product_id) THEN
---    RAISE EXCEPTION 'Invalid stripe_product_id';
---  END IF;
---  -- Check price IDs
---  IF NEW.stripe_base_price_id IS NOT NULL AND 
---     NOT EXISTS (SELECT 1 FROM stripe.prices WHERE id = NEW.stripe_base_price_id) THEN
---    RAISE EXCEPTION 'Invalid stripe_base_price_id';
---  END IF;
---  IF NEW.stripe_metered_price_id IS NOT NULL AND 
---     NOT EXISTS (SELECT 1 FROM stripe.prices WHERE id = NEW.stripe_metered_price_id) THEN
---    RAISE EXCEPTION 'Invalid stripe_metered_price_id';
---  END IF;
---  RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER check_stripe_refs_trigger
---  BEFORE INSERT OR UPDATE ON subscription_plans
---  FOR EACH ROW
---  EXECUTE FUNCTION check_stripe_refs();
-
--- CREATE TABLE subscription_plan_limits (
---  plan_id uuid REFERENCES subscription_plans(id),
---  max_notifications_per_day int NOT NULL,
---  usage_rate numeric(10,2),
---  PRIMARY KEY (plan_id)
 -- );
 
 -- -- Add subscription columns to organizations
@@ -166,51 +137,23 @@
 --   sp.stripe_base_price_id,
 --   sp.stripe_metered_price_id,
 --   sp.has_usage_billing,
---   spl.max_notifications_per_day,
---   spl.usage_rate,
+--   sp.base_notifications_per_day,
 --   stripe_sub.current_period_end as subscription_end_date,
 --   stripe_sub.status as stripe_status
 -- FROM organizations o
 -- LEFT JOIN subscription_plans sp ON o.plan_id = sp.id
--- LEFT JOIN subscription_plan_limits spl ON sp.id = spl.plan_id
 -- LEFT JOIN stripe.subscriptions stripe_sub ON o.stripe_customer_id = stripe_sub.customer;
 
--- CREATE OR REPLACE VIEW organization_notification_stats AS
--- SELECT 
---  o.name as organization_name,
---  o.id as organization_id,
---  o.notifications_used_this_month,
---  sp.name as plan_name,
---  sp.base_notifications_per_day,
---  spl.max_notifications_per_day,
---  DATE_TRUNC('month', nl.created_at) as month,
---  COUNT(*) as total_notifications,
---  COUNT(CASE WHEN nl.status = 'success' THEN 1 END) as successful_notifications,
---  COUNT(CASE WHEN nl.status = 'failed' THEN 1 END) as failed_notifications,
---  ROUND(COUNT(*)::numeric / EXTRACT(DAY FROM CURRENT_DATE)::numeric, 2) as avg_daily_notifications,
---  CASE 
---    WHEN o.notifications_used_this_month >= spl.max_notifications_per_day * EXTRACT(DAY FROM CURRENT_DATE)::integer 
---    THEN true 
---    ELSE false 
---  END as limit_reached
--- FROM organizations o
--- LEFT JOIN subscription_plans sp ON o.plan_id = sp.id
--- LEFT JOIN subscription_plan_limits spl ON sp.id = spl.plan_id
--- LEFT JOIN notification_logs nl ON o.id = nl.organization_id
---  AND nl.created_at >= DATE_TRUNC('month', CURRENT_DATE)
--- GROUP BY 
---  o.id, o.name, o.notifications_used_this_month,
---  sp.name, sp.base_notifications_per_day,
---  spl.max_notifications_per_day,
---  DATE_TRUNC('month', nl.created_at)
--- ORDER BY o.name, month DESC;
 
+-- grant select on subscription_plans TO anon, authenticated;
+-- grant select on stripe.products TO anon, authenticated;
+-- grant select on stripe.prices TO anon, authenticated;
 
--- GRANT SELECT ON subscription_plans TO anon, authenticated;
--- GRANT SELECT ON subscription_plan_limits TO anon, authenticated;
--- GRANT SELECT ON stripe.products TO anon, authenticated;
--- GRANT SELECT ON stripe.prices TO anon, authenticated;
-
--- GRANT SELECT ON organization_subscription_status TO authenticated;
--- GRANT SELECT ON stripe.subscriptions TO authenticated;
--- GRANT SELECT ON wrappers_fdw_stats TO authenticated;
+-- grant select on organization_subscription_status TO authenticated;
+-- grant select on stripe.subscriptions TO authenticated;
+-- grant select on wrappers_fdw_stats TO authenticated;
+-- grant usage on schema stripe to service_role;
+-- grant all on all tables in schema stripe to service_role;
+-- alter default privileges in schema stripe grant all on tables to service_role;
+-- grant usage on schema extensions to service_role;
+-- grant all on extensions.wrappers_fdw_stats to service_role;

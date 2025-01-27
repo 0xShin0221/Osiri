@@ -38,7 +38,7 @@
   "subscription": {
     "billingPeriod": "請求期間",
     "description": "サブスクリプションの管理と更新",
-    "descriptionSelect": "ニーズに合わせて最適なプランをお選びください",
+    "descriptionSelect": "ニーズに合わせて最適なプランをお選びください。別途+プランの契約で無制限となります。",
     "error": {
       "unknown": "エラーが発生しました"
     },
@@ -46,6 +46,7 @@
     "freePlan": "無料プラン",
     "manageBilling": "支払い管理",
     "notApplicable": "適用なし",
+    "notificationsPerDay": "1日あたり{{count}}件の通知",
     "notificationsPerDay_0": "{{count}}件/日の通知",
     "payAsYouGo": "追加使用分は従量課金",
     "perMonth": "/月",

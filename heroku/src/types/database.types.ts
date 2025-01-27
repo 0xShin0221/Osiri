@@ -287,13 +287,6 @@ export type Database = {
             foreignKeyName: "notification_channels_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
-            referencedRelation: "organization_notification_stats"
-            referencedColumns: ["organization_id"]
-          },
-          {
-            foreignKeyName: "notification_channels_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -390,13 +383,6 @@ export type Database = {
             foreignKeyName: "notification_logs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
-            referencedRelation: "organization_notification_stats"
-            referencedColumns: ["organization_id"]
-          },
-          {
-            foreignKeyName: "notification_logs_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -480,13 +466,6 @@ export type Database = {
             foreignKeyName: "organization_feed_follows_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
-            referencedRelation: "organization_notification_stats"
-            referencedColumns: ["organization_id"]
-          },
-          {
-            foreignKeyName: "organization_feed_follows_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -530,13 +509,6 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "monthly_org_notifications"
-            referencedColumns: ["organization_id"]
-          },
-          {
-            foreignKeyName: "organization_members_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organization_notification_stats"
             referencedColumns: ["organization_id"]
           },
           {
@@ -689,36 +661,12 @@ export type Database = {
         }
         Relationships: []
       }
-      subscription_plan_limits: {
-        Row: {
-          max_notifications_per_day: number
-          plan_id: string
-          usage_rate: number | null
-        }
-        Insert: {
-          max_notifications_per_day: number
-          plan_id: string
-          usage_rate?: number | null
-        }
-        Update: {
-          max_notifications_per_day?: number
-          plan_id?: string
-          usage_rate?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "subscription_plan_limits_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: true
-            referencedRelation: "subscription_plans"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       subscription_plans: {
         Row: {
           base_notifications_per_day: number
+          base_price_amount: number
           created_at: string | null
+          currency: Database["public"]["Enums"]["subscription_currency"]
           description: string | null
           has_usage_billing: boolean | null
           id: string
@@ -732,7 +680,9 @@ export type Database = {
         }
         Insert: {
           base_notifications_per_day: number
+          base_price_amount?: number
           created_at?: string | null
+          currency?: Database["public"]["Enums"]["subscription_currency"]
           description?: string | null
           has_usage_billing?: boolean | null
           id?: string
@@ -746,7 +696,9 @@ export type Database = {
         }
         Update: {
           base_notifications_per_day?: number
+          base_price_amount?: number
           created_at?: string | null
+          currency?: Database["public"]["Enums"]["subscription_currency"]
           description?: string | null
           has_usage_billing?: boolean | null
           id?: string
@@ -913,13 +865,6 @@ export type Database = {
             foreignKeyName: "workspace_connections_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
-            referencedRelation: "organization_notification_stats"
-            referencedColumns: ["organization_id"]
-          },
-          {
-            foreignKeyName: "workspace_connections_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -956,13 +901,6 @@ export type Database = {
             foreignKeyName: "notification_channels_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
-            referencedRelation: "organization_notification_stats"
-            referencedColumns: ["organization_id"]
-          },
-          {
-            foreignKeyName: "notification_channels_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
             referencedRelation: "organization_subscription_status"
             referencedColumns: ["id"]
           },
@@ -986,30 +924,13 @@ export type Database = {
         }
         Relationships: []
       }
-      organization_notification_stats: {
-        Row: {
-          avg_daily_notifications: number | null
-          base_notifications_per_day: number | null
-          failed_notifications: number | null
-          limit_reached: boolean | null
-          max_notifications_per_day: number | null
-          month: string | null
-          notifications_used_this_month: number | null
-          organization_id: string | null
-          organization_name: string | null
-          plan_name: string | null
-          successful_notifications: number | null
-          total_notifications: number | null
-        }
-        Relationships: []
-      }
       organization_subscription_status: {
         Row: {
+          base_notifications_per_day: number | null
           created_at: string | null
           has_usage_billing: boolean | null
           id: string | null
           last_usage_reset: string | null
-          max_notifications_per_day: number | null
           name: string | null
           notifications_used_this_month: number | null
           plan_id: string | null
@@ -1025,7 +946,6 @@ export type Database = {
           trial_end_date: string | null
           trial_start_date: string | null
           updated_at: string | null
-          usage_rate: number | null
         }
         Relationships: [
           {
@@ -1390,6 +1310,17 @@ export type Database = {
         | "failed"
         | "retrying"
         | "skipped"
+      subscription_currency:
+        | "usd"
+        | "jpy"
+        | "cny"
+        | "krw"
+        | "eur"
+        | "inr"
+        | "brl"
+        | "bdt"
+        | "rub"
+        | "idr"
       subscription_status: "trialing" | "active" | "past_due" | "canceled"
       translation_status:
         | "pending"

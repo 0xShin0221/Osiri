@@ -1,21 +1,15 @@
-// scripts/stripe/config.ts
-import { LANGUAGES } from "../../src/lib/i18n/languages";
-import { CurrencyConfig, Plan, PricingConfig } from "./types";
+// scripts/constants.ts
+import type { Plan, PlanId } from "./types/models";
+import { Database } from "./types/database.types";
+import { PLAN_TRANSLATIONS } from "./translations";
 
-type LanguageCode = typeof LANGUAGES.SUPPORTED[number]["code"];
-type Currency =
-    | "usd"
-    | "jpy"
-    | "cny"
-    | "krw"
-    | "eur"
-    | "inr"
-    | "brl"
-    | "bdt"
-    | "rub"
-    | "idr";
+export type Currency = Database["public"]["Enums"]["subscription_currency"];
+export type FeedLanguage = Database["public"]["Enums"]["feed_language"];
 
-export const CURRENCY_CONFIG: Record<Currency, CurrencyConfig> = {
+export const CURRENCY_CONFIG: Record<
+    Currency,
+    { symbol: string; decimalPlaces: number }
+> = {
     usd: { symbol: "$", decimalPlaces: 2 },
     jpy: { symbol: "¥", decimalPlaces: 0 },
     cny: { symbol: "¥", decimalPlaces: 2 },
@@ -26,7 +20,7 @@ export const CURRENCY_CONFIG: Record<Currency, CurrencyConfig> = {
     bdt: { symbol: "৳", decimalPlaces: 2 },
     rub: { symbol: "₽", decimalPlaces: 2 },
     idr: { symbol: "Rp", decimalPlaces: 3 },
-} as const;
+};
 
 export const NOTIFICATION_TIERS = {
     FREE: 10,
@@ -35,6 +29,14 @@ export const NOTIFICATION_TIERS = {
     BUSINESS: 200,
     BUSINESS_PLUS: 500,
 } as const;
+
+export const PLAN_SORT_ORDER: Record<PlanId, number> = {
+    free: 1,
+    pro: 2,
+    pro_plus: 3,
+    business: 4,
+    business_plus: 5,
+};
 
 export const PRICE_CONFIG: Record<Currency, {
     pro: number;
@@ -104,102 +106,69 @@ export const PRICE_CONFIG: Record<Currency, {
     },
 } as const;
 
-export const LANGUAGE_CURRENCY_MAP: Record<LanguageCode, Currency> = {
-    en: "usd",
-    ja: "jpy",
-    zh: "cny",
-    ko: "krw",
-    fr: "eur",
-    es: "eur",
-    hi: "inr",
-    pt: "brl",
-    bn: "bdt",
-    ru: "rub",
-    id: "idr",
-    de: "eur",
-};
-
-export const PLAN_SORT_ORDER = {
-    "free": 1,
-    "pro": 2,
-    "pro_plus": 3,
-    "business": 4,
-    "business_plus": 5,
-} as const;
-
-export function getPlanSortOrder(planType: keyof typeof PLAN_SORT_ORDER) {
-    return PLAN_SORT_ORDER[planType];
+function calculateBasePrice(price: number, currency: Currency): number {
+    const config = CURRENCY_CONFIG[currency];
+    return Math.round(price * Math.pow(10, config.decimalPlaces));
 }
 
-export function createPlansForLanguage(languageCode: LanguageCode): Plan[] {
-    const currency = LANGUAGE_CURRENCY_MAP[languageCode];
+export function createPlansForLanguage(
+    language: FeedLanguage,
+    currency: Currency,
+): Plan[] {
     const prices = PRICE_CONFIG[currency];
-    const config = CURRENCY_CONFIG[currency];
 
     return [
         {
             id: "free",
-            name: "Free",
-            description: "Basic free plan with essential features",
-            basePrice: 0,
+            ...PLAN_TRANSLATIONS.free[language],
+            base_price_amount: 0,
             currency,
-            notificationsPerDay: NOTIFICATION_TIERS.FREE,
+            base_notifications_per_day: NOTIFICATION_TIERS.FREE,
+            sort_order: PLAN_SORT_ORDER.free,
         },
         {
             id: "pro",
-            name: "Pro",
-            description: "Professional plan with advanced features",
-            basePrice: Math.round(
-                prices.pro * Math.pow(10, config.decimalPlaces),
-            ),
+            ...PLAN_TRANSLATIONS.pro[language],
+            base_price_amount: calculateBasePrice(prices.pro, currency),
             currency,
-            notificationsPerDay: NOTIFICATION_TIERS.PRO,
+            base_notifications_per_day: NOTIFICATION_TIERS.PRO,
+            sort_order: PLAN_SORT_ORDER.pro,
         },
         {
             id: "pro_plus",
-            name: "Pro+",
-            description: "Pro plan with usage-based billing",
-            basePrice: Math.round(
-                prices.pro_plus.base * Math.pow(10, config.decimalPlaces),
+            ...PLAN_TRANSLATIONS.pro_plus[language],
+            base_price_amount: calculateBasePrice(
+                prices.pro_plus.base,
+                currency,
             ),
             currency,
-            notificationsPerDay: NOTIFICATION_TIERS.PRO_PLUS,
+            base_notifications_per_day: NOTIFICATION_TIERS.PRO_PLUS,
+            sort_order: PLAN_SORT_ORDER.pro_plus,
             metered: {
-                unitAmount: prices.pro_plus.metered, // No longer multiply by Math.pow()
+                unitAmount: prices.pro_plus.metered,
             },
         },
         {
             id: "business",
-            name: "Business",
-            description: "Enterprise-grade features and support",
-            basePrice: Math.round(
-                prices.business * Math.pow(10, config.decimalPlaces),
-            ),
+            ...PLAN_TRANSLATIONS.business[language],
+            base_price_amount: calculateBasePrice(prices.business, currency),
             currency,
-            notificationsPerDay: NOTIFICATION_TIERS.BUSINESS,
+            base_notifications_per_day: NOTIFICATION_TIERS.BUSINESS,
+            sort_order: PLAN_SORT_ORDER.business,
         },
         {
             id: "business_plus",
-            name: "Business+",
-            description: "Enterprise plan with flexible usage",
-            basePrice: Math.round(
-                prices.business_plus.base * Math.pow(10, config.decimalPlaces),
+            ...PLAN_TRANSLATIONS.business_plus[language],
+            base_price_amount: calculateBasePrice(
+                prices.business_plus.base,
+                currency,
             ),
             currency,
-            notificationsPerDay: NOTIFICATION_TIERS.BUSINESS_PLUS,
+            base_notifications_per_day: NOTIFICATION_TIERS.BUSINESS_PLUS,
+            sort_order: PLAN_SORT_ORDER.business_plus,
             metered: {
-                unitAmount: prices.business_plus.metered, // No longer multiply by Math.pow()
+                unitAmount: prices.business_plus.metered,
             },
         },
     ];
-}
-
-export function createConfigForLanguage(
-    languageCode: LanguageCode,
-): PricingConfig {
-    return {
-        currency: LANGUAGE_CURRENCY_MAP[languageCode],
-        interval: "month",
-        plans: createPlansForLanguage(languageCode),
-    };
 }
