@@ -1,8 +1,9 @@
 import Stripe from "stripe";
 import { createPlansForLanguage } from "../constants";
 import { LANGUAGES } from "../../src/lib/i18n/languages";
-import { FeedLanguage, Plan, StripeResult } from "../types/models";
+import { FeedLanguage, StripeResult } from "../types/models";
 import { planSchema, ValidatedPlan } from "../supabase/plans/schema";
+import * as dotenv from "dotenv";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: "2024-12-18.acacia",

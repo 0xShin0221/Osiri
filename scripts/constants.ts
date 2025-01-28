@@ -8,20 +8,19 @@ export type FeedLanguage = Database["public"]["Enums"]["feed_language"];
 
 export const CURRENCY_CONFIG: Record<
     Currency,
-    { symbol: string; decimalPlaces: number }
+    { symbol: string; decimalPlaces: number; smallestUnitMultiplier: number }
 > = {
-    usd: { symbol: "$", decimalPlaces: 2 },
-    jpy: { symbol: "¥", decimalPlaces: 0 },
-    cny: { symbol: "¥", decimalPlaces: 2 },
-    krw: { symbol: "₩", decimalPlaces: 0 },
-    eur: { symbol: "€", decimalPlaces: 2 },
-    inr: { symbol: "₹", decimalPlaces: 2 },
-    brl: { symbol: "R$", decimalPlaces: 2 },
-    bdt: { symbol: "৳", decimalPlaces: 2 },
-    rub: { symbol: "₽", decimalPlaces: 2 },
-    idr: { symbol: "Rp", decimalPlaces: 3 },
+    usd: { symbol: "$", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 USD = 100 cents
+    jpy: { symbol: "¥", decimalPlaces: 0, smallestUnitMultiplier: 1 }, // JPY has no sub-units
+    cny: { symbol: "¥", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 CNY = 100 fen
+    krw: { symbol: "₩", decimalPlaces: 0, smallestUnitMultiplier: 1 }, // KRW has no sub-units
+    eur: { symbol: "€", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 EUR = 100 cents
+    inr: { symbol: "₹", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 INR = 100 paise
+    brl: { symbol: "R$", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 BRL = 100 centavos
+    bdt: { symbol: "৳", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 BDT = 100 poisha
+    rub: { symbol: "₽", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 RUB = 100 kopeks
+    idr: { symbol: "Rp", decimalPlaces: 2, smallestUnitMultiplier: 100 }, // 1 IDR = 100 sen
 };
-
 export const NOTIFICATION_TIERS = {
     FREE: 10,
     PRO: 30,
@@ -38,6 +37,10 @@ export const PLAN_SORT_ORDER: Record<PlanId, number> = {
     business_plus: 5,
 };
 
+function calculateBasePrice(price: number): number {
+    return Math.round(price);
+}
+
 export const PRICE_CONFIG: Record<Currency, {
     pro: number;
     pro_plus: { base: number; metered: number };
@@ -45,10 +48,10 @@ export const PRICE_CONFIG: Record<Currency, {
     business_plus: { base: number; metered: number };
 }> = {
     usd: {
-        pro: 8.00,
-        pro_plus: { base: 8.00, metered: 0.0025 },
-        business: 22.00,
-        business_plus: { base: 22.00, metered: 0.0015 },
+        pro: 8,
+        pro_plus: { base: 8, metered: 0.0025 },
+        business: 22,
+        business_plus: { base: 22, metered: 0.0015 },
     },
     jpy: {
         pro: 980,
@@ -69,10 +72,10 @@ export const PRICE_CONFIG: Record<Currency, {
         business_plus: { base: 26000, metered: 2.5 },
     },
     eur: {
-        pro: 7.50,
-        pro_plus: { base: 7.50, metered: 0.0025 },
-        business: 20.00,
-        business_plus: { base: 20.00, metered: 0.0015 },
+        pro: 8,
+        pro_plus: { base: 8, metered: 0.0025 },
+        business: 20,
+        business_plus: { base: 20, metered: 0.0015 },
     },
     inr: {
         pro: 550,
@@ -106,11 +109,6 @@ export const PRICE_CONFIG: Record<Currency, {
     },
 } as const;
 
-function calculateBasePrice(price: number, currency: Currency): number {
-    const config = CURRENCY_CONFIG[currency];
-    return Math.round(price * Math.pow(10, config.decimalPlaces));
-}
-
 export function createPlansForLanguage(
     language: FeedLanguage,
     currency: Currency,
@@ -129,7 +127,7 @@ export function createPlansForLanguage(
         {
             id: "pro",
             ...PLAN_TRANSLATIONS.pro[language],
-            base_price_amount: calculateBasePrice(prices.pro, currency),
+            base_price_amount: calculateBasePrice(prices.pro),
             currency,
             base_notifications_per_day: NOTIFICATION_TIERS.PRO,
             sort_order: PLAN_SORT_ORDER.pro,
@@ -139,7 +137,6 @@ export function createPlansForLanguage(
             ...PLAN_TRANSLATIONS.pro_plus[language],
             base_price_amount: calculateBasePrice(
                 prices.pro_plus.base,
-                currency,
             ),
             currency,
             base_notifications_per_day: NOTIFICATION_TIERS.PRO_PLUS,
@@ -151,7 +148,7 @@ export function createPlansForLanguage(
         {
             id: "business",
             ...PLAN_TRANSLATIONS.business[language],
-            base_price_amount: calculateBasePrice(prices.business, currency),
+            base_price_amount: calculateBasePrice(prices.business),
             currency,
             base_notifications_per_day: NOTIFICATION_TIERS.BUSINESS,
             sort_order: PLAN_SORT_ORDER.business,
@@ -161,7 +158,6 @@ export function createPlansForLanguage(
             ...PLAN_TRANSLATIONS.business_plus[language],
             base_price_amount: calculateBasePrice(
                 prices.business_plus.base,
-                currency,
             ),
             currency,
             base_notifications_per_day: NOTIFICATION_TIERS.BUSINESS_PLUS,
