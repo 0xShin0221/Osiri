@@ -18,7 +18,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Get organization and subscription plan
     const organization = await stripeRepository.getOrganization(organizationId);
-    const plan = await stripeRepository.getSubscriptionPlan(priceId);
+    const plan = await stripeRepository.getSubscriptionBasePlan(priceId);
 
     if (!plan.stripe_base_price_id) {
       throw new Error("Invalid stripe price ID");

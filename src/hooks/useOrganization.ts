@@ -147,6 +147,75 @@ export function useOrganization() {
         }
     };
 
+    const changePlan = async (newPlanId: string) => {
+        if (!organization?.id) return null;
+
+        try {
+            // Check current subscription status
+            if (
+                organization.stripe_status === "active" ||
+                organization.stripe_status === "trialing"
+            ) {
+                // Cancel current subscription first
+                const { error: cancelError } = await supabase
+                    .functions.invoke("cancel-subscription", {
+                        body: {
+                            organizationId: organization.id,
+                            subscriptionId: organization.subscription_id,
+                        },
+                    });
+
+                if (cancelError) throw cancelError;
+            }
+
+            // Create new subscription
+            const { error: updateError } = await supabase
+                .from("organizations")
+                .update({
+                    plan_id: newPlanId,
+                    subscription_status: "active",
+                    trial_end_date: null,
+                })
+                .eq("id", organization.id)
+                .single();
+
+            if (updateError) throw updateError;
+
+            // Create new Stripe subscription
+            const { error: stripeError } = await supabase
+                .functions.invoke("create-subscription", {
+                    body: {
+                        organizationId: organization.id,
+                        planId: newPlanId,
+                    },
+                });
+
+            if (stripeError) throw stripeError;
+
+            await fetchOrganization();
+            return true;
+        } catch (err) {
+            console.error("Error changing plan:", err);
+            setError(
+                err instanceof Error ? err.message : "Failed to change plan",
+            );
+            return null;
+        }
+    };
+
+    const getCurrentSubscriptionDetails = useCallback(() => {
+        if (!organization) return null;
+
+        return {
+            isActive: organization.stripe_status === "active",
+            isTrialing: organization.stripe_status === "trialing",
+            currentPlanId: organization.plan_id,
+            subscriptionId: organization.subscription_id,
+            willCancelAtPeriodEnd: organization.will_cancel === "true",
+            currentPeriodEnd: organization.stripe_period_end,
+        };
+    }, [organization]);
+
     useEffect(() => {
         fetchOrganization();
     }, [fetchOrganization]);
@@ -154,18 +223,42 @@ export function useOrganization() {
     const isSubscriptionValid = useCallback(() => {
         if (!organization) return false;
 
-        if (organization.subscription_status === "active") {
+        if (
+            organization.subscription_status === "active" ||
+            organization.stripe_status === "active"
+        ) {
             return true;
         }
 
-        if (
-            organization.subscription_status === "trialing" &&
-            organization.trial_end_date
-        ) {
-            return new Date(organization.trial_end_date) > new Date();
+        if (organization.subscription_status === "trialing") {
+            const trialEnd = organization.trial_end_date ||
+                organization.stripe_trial_end;
+            if (trialEnd) {
+                return new Date(trialEnd) > new Date();
+            }
         }
 
         return false;
+    }, [organization]);
+
+    const hasScheduledCancellation = useCallback(() => {
+        return organization?.will_cancel === "true" ||
+            Boolean(organization?.cancel_at);
+    }, [organization]);
+
+    const hasPaymentMethod = useCallback(() => {
+        return Boolean(organization?.default_payment_method);
+    }, [organization]);
+
+    const getBillingDetails = useCallback(() => {
+        if (!organization) return null;
+
+        return {
+            amount: organization.plan_amount,
+            currency: organization.plan_currency,
+            interval: organization.billing_interval,
+            collection_method: organization.collection_method,
+        };
     }, [organization]);
 
     return {
@@ -175,7 +268,12 @@ export function useOrganization() {
         createOrganization,
         updateOrganization,
         startTrial,
+        changePlan,
+        getCurrentSubscriptionDetails,
         isSubscriptionValid,
+        hasScheduledCancellation,
+        hasPaymentMethod,
+        getBillingDetails,
         refetch: fetchOrganization,
     };
 }

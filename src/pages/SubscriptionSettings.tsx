@@ -1,27 +1,13 @@
-import { useState } from "react";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useOrganization } from "@/hooks/useOrganization";
-import SubscriptionManagement from "@/components/subscription/SubscriptionManagement";
-import StripePayment from "@/components/subscription/StripePayment";
+import SubscriptionPlans from "@/components/subscription/SubscriptionPlans";
 import { CreditCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function SubscriptionPage() {
   const { t } = useTranslation("settings");
-  const [showPlans, setShowPlans] = useState(false);
   const { organization } = useOrganization();
-  const { isLoading, plans, handleCheckout, handlePortal } = useSubscription();
-
-  const handleUpgrade = async () => {
-    if (
-      organization?.subscription_status === "trialing" ||
-      !organization?.stripe_customer_id
-    ) {
-      setShowPlans(true);
-    } else {
-      await handlePortal();
-    }
-  };
+  const { isLoading, plans, handleCheckout } = useSubscription();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -39,21 +25,13 @@ export default function SubscriptionPage() {
         </div>
 
         <div className="grid gap-6">
-          <SubscriptionManagement
+          <SubscriptionPlans
+            plans={plans}
+            onSubscribe={handleCheckout}
             organization={organization}
-            onUpgrade={handleUpgrade}
-            isUpgrading={isLoading}
+            isLoading={isLoading}
           />
         </div>
-
-        <StripePayment
-          isOpen={showPlans}
-          onClose={() => setShowPlans(false)}
-          plans={plans}
-          onSubscribe={handleCheckout}
-          currentPlanId={organization?.plan_id ?? null}
-          isLoading={isLoading}
-        />
       </div>
     </div>
   );

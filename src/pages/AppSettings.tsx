@@ -6,14 +6,12 @@ import { OrganizationMembers } from "@/components/settings/OrganizationMembers";
 import { useTranslation } from "react-i18next";
 import { OrganizationSettings } from "@/components/settings/OrganizationSettings";
 import { CreateOrganization } from "@/components/settings/CreateOrganization";
-import SubscriptionManagement from "@/components/subscription/SubscriptionManagement";
+
 import { useSubscription } from "@/hooks/useSubscription";
-import StripePayment from "@/components/subscription/StripePayment";
-import { useState } from "react";
+import SubscriptionPlans from "@/components/subscription/SubscriptionPlans";
 
 export default function AppSettingsPage() {
   const { t } = useTranslation("settings");
-  const [showPlans, setShowPlans] = useState(false);
   const {
     organization,
     isLoading: orgLoading,
@@ -22,28 +20,14 @@ export default function AppSettingsPage() {
     updateOrganization,
   } = useOrganization();
 
-  const {
-    isLoading: subLoading,
-    plans,
-    handleCheckout,
-    handlePortal,
-  } = useSubscription();
+  const { isLoading: subLoading, plans, handleCheckout } = useSubscription();
 
   if (orgLoading) {
     return <PageLoading />;
   }
-
-  const handleUpgrade = async () => {
-    if (
-      organization?.subscription_status === "trialing" ||
-      !organization?.stripe_customer_id
-    ) {
-      setShowPlans(true);
-    } else {
-      await handlePortal();
-    }
-  };
-
+  {
+    console.log("organization", organization);
+  }
   if (!organization) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -103,18 +87,10 @@ export default function AppSettingsPage() {
           </TabsContent>
 
           <TabsContent value="subscription">
-            <SubscriptionManagement
-              organization={organization}
-              onUpgrade={handleUpgrade}
-              isUpgrading={subLoading}
-            />
-
-            <StripePayment
-              isOpen={showPlans}
-              onClose={() => setShowPlans(false)}
+            <SubscriptionPlans
               plans={plans}
               onSubscribe={handleCheckout}
-              currentPlanId={organization.plan_id}
+              organization={organization}
               isLoading={subLoading}
             />
           </TabsContent>

@@ -933,7 +933,6 @@ export type Database = {
           collection_method: string | null
           created_at: string | null
           default_payment_method: string | null
-          has_usage_billing: boolean | null
           id: string | null
           last_usage_reset: string | null
           latest_invoice: string | null
@@ -941,7 +940,6 @@ export type Database = {
           notifications_used_this_month: number | null
           plan_amount: number | null
           plan_currency: string | null
-          plan_id: string | null
           plan_language: string | null
           plan_name: string | null
           plan_type: string | null
@@ -950,10 +948,12 @@ export type Database = {
           stripe_metered_price_id: string | null
           stripe_period_end: string | null
           stripe_period_start: string | null
+          stripe_product_id: string | null
           stripe_status: string | null
           stripe_trial_end: string | null
           stripe_trial_start: string | null
           subscription_end_date: string | null
+          subscription_id: string | null
           subscription_status:
             | Database["public"]["Enums"]["subscription_status"]
             | null
@@ -962,15 +962,7 @@ export type Database = {
           updated_at: string | null
           will_cancel: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "organizations_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: false
-            referencedRelation: "subscription_plans"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       pending_translations: {
         Row: {

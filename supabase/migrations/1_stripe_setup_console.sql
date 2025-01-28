@@ -10,7 +10,7 @@
 -- CREATE SERVER stripe_server
 --  FOREIGN DATA WRAPPER stripe_wrapper
 --  OPTIONS (
---    api_key '', 　-- Add your Stripe API key here
+--    api_key '', -- Set this to your Stripe API key
 --    api_url 'https://api.stripe.com/v1/',
 --    api_version '2024-06-20'
 --  );
@@ -132,27 +132,43 @@
 -- -- Views for monitoring
 -- CREATE OR REPLACE VIEW organization_subscription_status AS 
 -- SELECT 
---   o.*,
---   sp.name as plan_name,
---   sp.stripe_base_price_id,
+--   o.id,
+--   o.name,
+--   o.created_at,
+--   o.updated_at,
+--   o.notifications_used_this_month,
+--   o.last_usage_reset,
+--   o.trial_start_date,
+--   o.trial_end_date,
+--   o.stripe_customer_id,
+--   o.subscription_status,
+--   COALESCE(
+--     o.plan_id::text,
+--     stripe_sub.attrs->'plan'->>'product'
+--   ) as stripe_product_id,
+--   INITCAP(COALESCE(
+--     sp.name, 
+--     stripe_sub.attrs->'plan'->'metadata'->>'planType'
+--   )) as plan_name,
+--   COALESCE(
+--     sp.stripe_base_price_id,
+--     stripe_sub.attrs->'plan'->>'id'
+--   ) as stripe_base_price_id,
 --   sp.stripe_metered_price_id,
---   sp.has_usage_billing,
 --   sp.base_notifications_per_day,
 --   stripe_sub.current_period_end as subscription_end_date,
+--   stripe_sub.id as subscription_id,
 --   stripe_sub.attrs->>'status' as stripe_status,
---   -- Relates to the current billing period
 --   to_timestamp((stripe_sub.attrs->>'current_period_start')::bigint) as stripe_period_start,
 --   to_timestamp((stripe_sub.attrs->>'current_period_end')::bigint) as stripe_period_end,
 --   to_timestamp((stripe_sub.attrs->>'trial_start')::bigint) as stripe_trial_start,
 --   to_timestamp((stripe_sub.attrs->>'trial_end')::bigint) as stripe_trial_end,
---   -- Relates to the current billing period
 --   stripe_sub.attrs->>'cancel_at_period_end' as will_cancel,
 --   to_timestamp((stripe_sub.attrs->>'cancel_at')::bigint) as cancel_at,
 --   to_timestamp((stripe_sub.attrs->>'canceled_at')::bigint) as canceled_at,
 --   stripe_sub.attrs->>'default_payment_method' as default_payment_method,
 --   stripe_sub.attrs->>'latest_invoice' as latest_invoice,
 --   stripe_sub.attrs->>'collection_method' as collection_method,
---   -- Relates to the current billing period
 --   stripe_sub.attrs->'plan'->>'interval' as billing_interval,
 --   (stripe_sub.attrs->'plan'->>'amount')::integer as plan_amount,
 --   stripe_sub.attrs->'plan'->>'currency' as plan_currency,

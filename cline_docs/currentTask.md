@@ -9,9 +9,8 @@
 
 #### Objectives
 
-1. Enhance channel configuration system
-2. Implement channel settings management
-3. Create platform connection controls
+1. Subscription での料金登録
+2. Supabase への Subscription 各種の登録 Script
 
 #### Implementation Tasks
 

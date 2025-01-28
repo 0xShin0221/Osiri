@@ -3,7 +3,8 @@ import { supabase } from "./client.ts";
 import type { Database } from "../database.types.ts";
 
 type Organization = Database["public"]["Tables"]["organizations"]["Row"];
-type SubscriptionPlan = Database["public"]["Tables"]["subscription_plans"]["Row"];
+type SubscriptionPlan =
+  Database["public"]["Tables"]["subscription_plans"]["Row"];
 
 export const stripeRepository = {
   getOrganization: async (organizationId: string): Promise<Organization> => {
@@ -18,12 +19,13 @@ export const stripeRepository = {
     return data;
   },
 
-  getSubscriptionPlan: async (planId: string): Promise<SubscriptionPlan> => {
+  getSubscriptionBasePlan: async (
+    planId: string,
+  ): Promise<SubscriptionPlan> => {
     const { data, error } = await supabase
       .from("subscription_plans")
       .select("*")
-      .eq("id", planId)
-      .eq("is_active", true)
+      .eq("stripe_base_price_id", planId)
       .single();
 
     if (error) throw error;
@@ -32,8 +34,8 @@ export const stripeRepository = {
   },
 
   updateOrganizationStripeCustomer: async (
-    organizationId: string, 
-    stripeCustomerId: string
+    organizationId: string,
+    stripeCustomerId: string,
   ): Promise<void> => {
     const { error } = await supabase
       .from("organizations")
@@ -41,5 +43,35 @@ export const stripeRepository = {
       .eq("id", organizationId);
 
     if (error) throw error;
-  }
+  },
+  async getSubscriptionPlanByProductId(productId: string) {
+    const { data, error } = await supabase
+      .from("subscription_plans")
+      .select("*")
+      .eq("stripe_product_id", productId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async updateOrganizationPlan(organizationId: string, planId: string) {
+    const { error } = await supabase
+      .from("organizations")
+      .update({ plan_id: planId })
+      .eq("id", organizationId);
+
+    if (error) throw error;
+  },
+
+  async getOrganizationIdByCustomerId(customerId: string) {
+    const { data, error } = await supabase
+      .from("organizations")
+      .select("id")
+      .eq("stripe_customer_id", customerId)
+      .single();
+
+    if (error) throw error;
+    return data.id;
+  },
 };

@@ -41,6 +41,21 @@ export const hasValidSubscription = (org: Organization | null): boolean => {
 };
 
 export class SubscriptionService {
+    private async getStripePriceId(productId: string): Promise<string> {
+        const { data: plan, error } = await supabase
+            .from("subscription_plans")
+            .select("stripe_base_price_id")
+            .eq("stripe_product_id", productId)
+            .single();
+
+        if (error || !plan) {
+            console.error("Error fetching stripe price ID:", error);
+            throw new Error("Failed to get Stripe price ID");
+        }
+
+        return plan.stripe_base_price_id;
+    }
+
     async createCheckoutSession(
         organizationId: string,
         priceId: string,
@@ -49,9 +64,12 @@ export class SubscriptionService {
             const { data, error } = await supabase.functions.invoke<
                 CheckoutSession
             >(
-                "create-checkout-session",
+                "stripe-create-checkout-session",
                 {
-                    body: { organizationId, priceId },
+                    body: {
+                        organizationId,
+                        priceId: await this.getStripePriceId(priceId),
+                    },
                 },
             );
 
