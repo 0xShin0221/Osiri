@@ -1,12 +1,12 @@
 FROM node:20-slim
+RUN npx playwright install --with-deps chromium
 
 ENV HOME="/home"
 WORKDIR /app
 COPY . .
-RUN npm install
-RUN npm ci && npx playwright install --with-deps chromium
+RUN npm ci --only=production
 
 
 EXPOSE 3000
 
-CMD ["npm", "run", "heroku:start"]
+CMD ["npm", "run", "start"]
