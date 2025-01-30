@@ -3,6 +3,7 @@ FROM node:20-slim
 ENV HOME="/home"
 WORKDIR /app
 COPY . .
+RUN npm install
 RUN npm ci && npx playwright install --with-deps chromium
 
 
