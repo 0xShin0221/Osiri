@@ -74,7 +74,6 @@
 --  name text NOT NULL,
 --  description text,
 --  currency subscription_currency NOT NULL DEFAULT 'usd',
---  base_price_amount integer NOT NULL DEFAULT 0,
 --  stripe_product_id text,
 --  stripe_base_price_id text,
 --  stripe_metered_price_id text,
@@ -170,7 +169,7 @@
 --   stripe_sub.attrs->>'latest_invoice' as latest_invoice,
 --   stripe_sub.attrs->>'collection_method' as collection_method,
 --   stripe_sub.attrs->'plan'->>'interval' as billing_interval,
---   (stripe_sub.attrs->'plan'->>'amount')::integer as plan_amount,
+--   (stripe_sub.attrs->'plan'->>'amount')::integer as plan_price_amount,
 --   stripe_sub.attrs->'plan'->>'currency' as plan_currency,
 --   stripe_sub.attrs->'plan'->'metadata'->>'planType' as plan_type,
 --   stripe_sub.attrs->'plan'->'metadata'->>'language' as plan_language
@@ -178,6 +177,23 @@
 -- LEFT JOIN subscription_plans sp ON o.plan_id = sp.id
 -- LEFT JOIN stripe.subscriptions stripe_sub 
 --   ON o.stripe_customer_id = stripe_sub.customer;
+
+-- CREATE OR REPLACE VIEW subscription_plans_with_pricing AS 
+-- SELECT 
+--   p.*,
+--   b.base_price_amount,
+--   b.base_price_currency,
+--   b.base_price_active
+-- FROM subscription_plans p
+-- LEFT JOIN (
+--   SELECT 
+--     id as price_id,
+--     COALESCE(unit_amount, (attrs->>'unit_amount')::bigint) as base_price_amount,
+--     COALESCE(currency, attrs->>'currency') as base_price_currency,
+--     active as base_price_active
+--   FROM stripe.prices
+--   WHERE id IN (SELECT stripe_base_price_id FROM subscription_plans WHERE stripe_base_price_id IS NOT NULL)
+-- ) b ON p.stripe_base_price_id = b.price_id;
 
 -- grant select on subscription_plans TO anon, authenticated;
 -- grant select on stripe.products TO anon, authenticated;

@@ -1,69 +1,170 @@
-// supabase/functions/stripe-webhook/index.ts
+import { Buffer } from "node:buffer";
 import { stripeRepository } from "../_shared/db/stripe.ts";
 import Stripe from "npm:stripe";
 
+// Initialize Stripe with the fetch HTTP client
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
   apiVersion: "2024-12-18.acacia",
   httpClient: Stripe.createFetchHttpClient(),
 });
 
+// Create a buffer from string utility function
+const createBuffer = (str: string): Uint8Array => {
+  return new TextEncoder().encode(str);
+};
+
+// Get active subscriptions for a customer
+async function getActiveSubscriptions(customerId: string) {
+  const subscriptions = await stripe.subscriptions.list({
+    customer: customerId,
+    status: "active",
+  });
+  return subscriptions.data;
+}
+
+// Cancel all subscriptions except the newest one
+async function cancelOldSubscriptions(
+  customerId: string,
+  newSubscriptionId: string,
+) {
+  const activeSubscriptions = await getActiveSubscriptions(customerId);
+
+  for (const subscription of activeSubscriptions) {
+    if (subscription.id !== newSubscriptionId) {
+      await stripe.subscriptions.cancel(subscription.id);
+      console.log(`Cancelled old subscription: ${subscription.id}`);
+    }
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
   try {
-    const body = await req.text();
+    // Get the raw body as text
+    const rawBody = await req.text();
     const signature = req.headers.get("stripe-signature");
-    
+
     if (!signature) {
-      throw new Error("No signature provided");
+      return new Response(
+        JSON.stringify({ error: "No signature provided" }),
+        { status: 400 },
+      );
     }
 
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      Deno.env.get("STRIPE_WEBHOOK_SECRET") || ""
-    );
+    // Create buffer from the raw body
+    const payload = Buffer.from(createBuffer(rawBody));
 
+    let event: Stripe.Event;
+
+    try {
+      // Construct event with the buffer
+      event = await stripe.webhooks.constructEventAsync(
+        payload,
+        signature,
+        Deno.env.get("STRIPE_WEBHOOK_SECRET") || (() => {
+          throw new Error("No webhook secret provided");
+        })(),
+      );
+    } catch (err) {
+      console.error("Signature verification failed:", err);
+      return new Response(
+        JSON.stringify({ error: "Webhook signature verification failed" }),
+        { status: 400 },
+      );
+    }
+
+    // Handle webhook events
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         const organizationId = session.metadata?.organization_id;
-        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+
+        if (!organizationId) {
+          console.error("No organization ID in session metadata");
+          break;
+        }
+
+        if (!session.subscription) {
+          console.error("No subscription in session");
+          break;
+        }
+
+        const subscription = await stripe.subscriptions.retrieve(
+          session.subscription as string,
+        );
+
         const productId = subscription.items.data[0].price.product as string;
-        
-        // Get subscription plan by stripe product id
-        const plan = await stripeRepository.getSubscriptionPlanByProductId(productId);
-        
-        if (organizationId && plan) {
-          // Update organization's plan_id
-          await stripeRepository.updateOrganizationPlan(organizationId, plan.id);
+        const plan = await stripeRepository.getSubscriptionPlanByProductId(
+          productId,
+        );
+
+        if (plan) {
+          await stripeRepository.updateOrganizationPlan(
+            organizationId,
+            plan.id,
+          );
+          // Cancel old subscriptions
+          await cancelOldSubscriptions(
+            subscription.customer as string,
+            subscription.id,
+          );
+        } else {
+          console.error("No matching plan found for product:", productId);
         }
         break;
       }
-      
+
       case "customer.subscription.created":
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
-        const organizationId = await stripeRepository.getOrganizationIdByCustomerId(subscription.customer as string);
+        const customerId = subscription.customer as string;
+        const organizationId = await stripeRepository
+          .getOrganizationIdByCustomerId(customerId);
+
+        if (!organizationId) {
+          console.error("No organization found for customer:", customerId);
+          break;
+        }
+
         const productId = subscription.items.data[0].price.product as string;
-        
-        // Get subscription plan by stripe product id
-        const plan = await stripeRepository.getSubscriptionPlanByProductId(productId);
-        
-        if (organizationId && plan) {
-          // Update organization's plan_id
-          await stripeRepository.updateOrganizationPlan(organizationId, plan.id);
+        const plan = await stripeRepository.getSubscriptionPlanByProductId(
+          productId,
+        );
+
+        if (plan) {
+          await stripeRepository.updateOrganizationPlan(
+            organizationId,
+            plan.id,
+          );
+          // Cancel old subscriptions for subscription updates
+          if (event.type === "customer.subscription.created") {
+            await cancelOldSubscriptions(customerId, subscription.id);
+          }
+        } else {
+          console.error("No matching plan found for product:", productId);
         }
         break;
       }
+
+      case "customer.subscription.deleted": {
+        // Handle subscription cancellation if needed
+        break;
+      }
+
+      default:
+        console.log(`Unhandled event type: ${event.type}`);
     }
 
-    return new Response(JSON.stringify({ received: true }), {
-      status: 200,
-    });
-  } catch (err) {
-    console.error('Webhook error:', err);
     return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : "Unknown error" }),
-      { status: 400 }
+      JSON.stringify({ received: true }),
+      { status: 200 },
+    );
+  } catch (err) {
+    console.error("Webhook processing error:", err);
+    return new Response(
+      JSON.stringify({
+        error: err instanceof Error ? err.message : "Unknown error occurred",
+      }),
+      { status: 500 },
     );
   }
 };

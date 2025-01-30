@@ -575,6 +575,13 @@ export type Database = {
             referencedRelation: "subscription_plans"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "organizations_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans_with_pricing"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -664,7 +671,6 @@ export type Database = {
       subscription_plans: {
         Row: {
           base_notifications_per_day: number
-          base_price_amount: number
           created_at: string | null
           currency: Database["public"]["Enums"]["subscription_currency"]
           description: string | null
@@ -680,7 +686,6 @@ export type Database = {
         }
         Insert: {
           base_notifications_per_day: number
-          base_price_amount?: number
           created_at?: string | null
           currency?: Database["public"]["Enums"]["subscription_currency"]
           description?: string | null
@@ -696,7 +701,6 @@ export type Database = {
         }
         Update: {
           base_notifications_per_day?: number
-          base_price_amount?: number
           created_at?: string | null
           currency?: Database["public"]["Enums"]["subscription_currency"]
           description?: string | null
@@ -938,10 +942,10 @@ export type Database = {
           latest_invoice: string | null
           name: string | null
           notifications_used_this_month: number | null
-          plan_amount: number | null
           plan_currency: string | null
           plan_language: string | null
           plan_name: string | null
+          plan_price_amount: number | null
           plan_type: string | null
           stripe_base_price_id: string | null
           stripe_customer_id: string | null
@@ -982,6 +986,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscription_plans_with_pricing: {
+        Row: {
+          base_notifications_per_day: number | null
+          base_price_active: boolean | null
+          base_price_amount: number | null
+          base_price_currency: string | null
+          created_at: string | null
+          currency: Database["public"]["Enums"]["subscription_currency"] | null
+          description: string | null
+          has_usage_billing: boolean | null
+          id: string | null
+          is_active: boolean | null
+          name: string | null
+          sort_order: number | null
+          stripe_base_price_id: string | null
+          stripe_metered_price_id: string | null
+          stripe_product_id: string | null
+          updated_at: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {
