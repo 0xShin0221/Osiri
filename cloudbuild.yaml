@@ -27,6 +27,7 @@ steps:
   - name: google/cloud-sdk
     args:
       &deploy_args [
+        "gcloud",
         "run",
         "deploy",
         "${_IMAGE_NAME}-$BRANCH_NAME",
