@@ -5,3 +5,6 @@ steps:
     dir: "cloudrun"
     args: ["install"]
     id: install-dependencies
+
+options:
+  logging: "CLOUD_LOGGING_ONLY"
