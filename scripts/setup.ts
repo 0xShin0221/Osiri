@@ -7,9 +7,40 @@ import { StripeResult } from "./types/models";
 const currentDir = process.cwd();
 console.log("Current Directory:", currentDir);
 
-// Load environment variables from project root
+// Define env path consistently for both reading and writing
 const envPath = path.resolve(currentDir, "../.env");
 console.log("Env Path:", envPath);
+
+// Function to update environment variables
+async function updateEnvFile(newVars: Record<string, string>): Promise<void> {
+    try {
+        // Read existing .env content
+        let envContent = "";
+        try {
+            envContent = await fs.readFile(envPath, "utf-8");
+        } catch (error) {
+            console.log("No existing .env file, creating new one");
+        }
+
+        // Parse existing variables
+        const envVars = dotenv.parse(envContent);
+
+        // Merge with new variables
+        const updatedVars = { ...envVars, ...newVars };
+
+        // Convert to .env format
+        const newEnvContent = Object.entries(updatedVars)
+            .map(([key, value]) => `${key}=${value}`)
+            .join("\n");
+
+        // Write back to .env file
+        await fs.writeFile(envPath, newEnvContent);
+        console.log("Environment variables updated successfully");
+    } catch (error) {
+        console.error("Error updating .env file:", error);
+        throw error;
+    }
+}
 
 // Try to read .env file directly
 try {
@@ -100,6 +131,17 @@ class StripeSetupManager {
             throw error;
         }
     }
+
+    async updateEnvironmentVariables(
+        variables: Record<string, string>,
+    ): Promise<void> {
+        try {
+            await updateEnvFile(variables);
+        } catch (error) {
+            console.error("Error updating environment variables:", error);
+            throw error;
+        }
+    }
 }
 
 async function main() {
@@ -108,6 +150,12 @@ async function main() {
         "http://localhost:54321";
 
     try {
+        // Update environment variables if needed
+        await setupManager.updateEnvironmentVariables({
+            STRIPE_WEBHOOK_BASE_URL: BASE_URL,
+            // Add other variables as needed
+        });
+
         // 1. Register plans to Stripe
         await setupManager.registerPlansToStripe();
 

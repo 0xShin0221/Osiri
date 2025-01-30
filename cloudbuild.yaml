@@ -14,7 +14,7 @@ steps:
         "-t",
         "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
         "-f",
-        "cloudrun/server.Dockerfile",
+        "cloudrun/docker/server.Dockerfile",
         ".",
       ]
   - name: "gcr.io/cloud-builders/docker"
