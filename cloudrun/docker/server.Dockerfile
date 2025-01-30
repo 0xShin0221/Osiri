@@ -4,9 +4,9 @@ RUN npx playwright install --with-deps chromium
 ENV HOME="/home"
 WORKDIR /app
 COPY ./cloudrun .
-RUN npm ci --only=production
+RUN pnpm ci --only=production
 
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]
