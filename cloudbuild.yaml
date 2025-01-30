@@ -23,12 +23,33 @@ steps:
         "push",
         "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
       ]
+  # Deploy to Cloud Run
+  - name: google/cloud-sdk
+    args:
+      &deploy_args [
+        "run",
+        "deploy",
+        "${_IMAGE_NAME}-$BRANCH_NAME",
+        "--port=3000",
+        "--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
+        "--region",
+        "${_REGION}",
+        "--update-env-vars",
+        "${_LANGCHAIN_ENV_VARS}",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+      ]
 
 substitutions:
   _REPO_NAME: osiri-repository
   _IMAGE_NAME: osiri-image
   _GCP_PROJECT_NUMBER: "671459818925"
   _REGION: us-central1
+  _LANGCHAIN_ENV_VARS: >-
+    LANGCHAIN_TRACING_V2=true,
+    LANGCHAIN_PROJECT=Osiri-${_REPO_NAME}-${_DEV_ENV},
+    LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
 
 options:
   logging: "CLOUD_LOGGING_ONLY"
