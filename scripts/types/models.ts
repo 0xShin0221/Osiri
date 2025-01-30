@@ -11,7 +11,6 @@ export type StripeResult = {
     description: string;
     language: FeedLanguage;
     currency: Currency;
-    base_price_amount: number;
     stripe_product_id: string;
     stripe_base_price_id: string;
     stripe_metered_price_id: string | null;

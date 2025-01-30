@@ -1,14 +1,11 @@
-import Stripe from "stripe";
+// stripe/plan.ts
 import { createPlansForLanguage } from "../constants";
 import { LANGUAGES } from "../../src/lib/i18n/languages";
-import { FeedLanguage, StripeResult } from "../types/models";
+import { Currency, FeedLanguage, StripeResult } from "../types/models";
 import { planSchema, ValidatedPlan } from "../supabase/plans/schema";
-import * as dotenv from "dotenv";
+import { getStripeInstance } from "./client";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2024-12-18.acacia",
-});
-
+// Sleep utility for rate limiting
 async function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -17,9 +14,11 @@ async function createStripePlan(
     plan: ValidatedPlan,
     language: FeedLanguage,
 ): Promise<StripeResult> {
+    const stripe = getStripeInstance();
     console.log(`\n=== Creating plan: ${plan.id} for ${language} ===`);
     const productName = `${plan.name} (${language})`;
 
+    // Step 1: Create Stripe product
     console.log("Creating Stripe product...");
     const product = await stripe.products.create({
         name: productName,
@@ -29,6 +28,7 @@ async function createStripePlan(
     console.log("Created product:", product.id);
     await sleep(1000);
 
+    // Step 2: Create base price
     console.log("Creating base price...");
     const basePrice = await stripe.prices.create({
         product: product.id,
@@ -40,10 +40,19 @@ async function createStripePlan(
     console.log("Created base price:", basePrice.id);
     await sleep(1000);
 
-    let meteredPrice: Stripe.Response<Stripe.Price> | null = null;
+    // Step 3: Create metered price if applicable
+    let meteredPriceID = "";
     if (plan.metered) {
         console.log("Creating metered price...");
-        meteredPrice = await stripe.prices.create({
+
+        // The metered price should be used directly as it's already in the correct format
+        const rawMeteredPrice = plan.metered.unitAmount;
+        const unitAmountDecimal = (rawMeteredPrice * 100).toString();
+        console.log(
+            `Setting metered price for ${plan.currency}: ${unitAmountDecimal} per unit`,
+        );
+
+        const meteredPriceResponse = await stripe.prices.create({
             product: product.id,
             currency: plan.currency,
             recurring: {
@@ -51,23 +60,22 @@ async function createStripePlan(
                 usage_type: "metered",
             },
             billing_scheme: "per_unit",
-            unit_amount_decimal: plan.metered.unitAmount.toString(),
+            unit_amount_decimal: unitAmountDecimal,
             metadata: { language, planType: plan.id },
         });
-        console.log("Created metered price:", meteredPrice.id);
+        console.log("Created metered price:", meteredPriceResponse.id);
+        meteredPriceID = meteredPriceResponse.id;
         await sleep(1000);
     }
-
     return {
         id: plan.id,
         name: plan.name,
         description: plan.description,
         language,
         currency: plan.currency,
-        base_price_amount: plan.base_price_amount,
         stripe_product_id: product.id,
         stripe_base_price_id: basePrice.id,
-        stripe_metered_price_id: meteredPrice?.id || null,
+        stripe_metered_price_id: meteredPriceID,
         base_notifications_per_day: plan.base_notifications_per_day,
         has_usage_billing: !!plan.metered,
         sort_order: plan.sort_order,
@@ -83,7 +91,8 @@ export async function createStripePlans(): Promise<StripeResult[]> {
             throw new Error(`Invalid language code: ${code}`);
         }
 
-        const plans = createPlansForLanguage(language, currency);
+        const plans = createPlansForLanguage(language, currency as Currency);
+
         for (const plan of plans) {
             try {
                 const validatedPlan = planSchema.parse(plan);

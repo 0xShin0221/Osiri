@@ -14,7 +14,6 @@ export async function generateInsertSql(results: StripeResult[]) {
             escapeSqlString(r.name),
             escapeSqlString(r.description),
             escapeSqlString(r.currency),
-            r.base_price_amount,
             escapeSqlString(r.stripe_product_id),
             escapeSqlString(r.stripe_base_price_id),
             r.stripe_metered_price_id
@@ -31,7 +30,6 @@ export async function generateInsertSql(results: StripeResult[]) {
             name,
             description,
             currency,
-            base_price_amount,
             stripe_product_id,
             stripe_base_price_id,
             stripe_metered_price_id,

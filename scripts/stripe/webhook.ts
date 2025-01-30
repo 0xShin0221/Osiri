@@ -1,12 +1,9 @@
-import Stripe from "stripe";
 import fs from "fs/promises";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2024-12-18.acacia",
-});
+import { getStripeInstance } from "./client";
 
 export async function setupWebhooks(baseUrl: string) {
     try {
+        const stripe = getStripeInstance();
         console.log("Setting up Stripe webhooks...");
 
         // Delete existing webhooks
@@ -36,14 +33,11 @@ export async function setupWebhooks(baseUrl: string) {
             secret: endpoint.secret,
         });
 
-        // Save webhook secret to .env file if it doesn't exist
-        if (!process.env.STRIPE_WEBHOOK_SECRET) {
-            const envContent = await fs.readFile(".env", "utf-8");
-            const newEnvContent = envContent +
-                `\nSTRIPE_WEBHOOK_SECRET=${endpoint.secret}`;
-            await fs.writeFile(".env", newEnvContent);
-            console.log("Added webhook secret to .env file");
-        }
+        const envContent = await fs.readFile("../.env", "utf-8");
+        const newEnvContent = envContent +
+            `\nSTRIPE_WEBHOOK_SECRET=${endpoint.secret}`;
+        await fs.writeFile(".env", newEnvContent);
+        console.log("Added webhook secret to .env file");
 
         return endpoint;
     } catch (error) {
