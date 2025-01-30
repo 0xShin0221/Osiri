@@ -6,5 +6,29 @@ steps:
     args: ["install"]
     id: install-dependencies
 
+  # Build and push Docker images
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      &build_args [
+        "build",
+        "-t",
+        "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
+        "-f",
+        "cloudrun/server.Dockerfile",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
+      ]
+
+substitutions:
+  _REPO_NAME: osiri-repository
+  _IMAGE_NAME: osiri-image
+  _GCP_PROJECT_NUMBER: "671459818925"
+  _REGION: us-central1
+
 options:
   logging: "CLOUD_LOGGING_ONLY"
