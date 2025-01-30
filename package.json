@@ -37,7 +37,8 @@
     "genType:frontend": "npx supabase gen types typescript --local > src/types/database.types.ts",
     "genType:supabase": "npx supabase gen types typescript --local > supabase/functions/_shared/database.types.ts",
     "genType:script": "npx supabase gen types typescript --local > scripts/types/database.types.ts",
-    "genType": "npm-run-all -s genType:*"
+    "genType": "npm-run-all -s genType:*",
+    "cloudrun:create": "source .env &&gcloud artifacts repositories create $GOOGLE_CLOUD_PROJECT_REPOSITORY --location $GOOGLE_CLOUD_REGION --repository-format 'docker'"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.9",
