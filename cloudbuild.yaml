@@ -39,6 +39,7 @@ steps:
         "--platform",
         "managed",
         "--allow-unauthenticated",
+        "--no-cpu-throttling",
       ]
 
 substitutions:
@@ -53,3 +54,5 @@ substitutions:
 
 options:
   logging: "CLOUD_LOGGING_ONLY"
+  automapSubstitutions: true
+  dynamicSubstitutions: true
