@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -16,15 +16,16 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { AlertCircle, CheckCircle2, CreditCard } from "lucide-react";
+import { Currency } from "@/lib/i18n/languages";
 
-type SubscriptionPlan =
-  Database["public"]["Tables"]["subscription_plans"]["Row"];
+type SubscriptionPlanWithPricing =
+  Database["public"]["Views"]["subscription_plans_with_pricing"]["Row"];
 type OrganizationSubscriptionStatus =
   Database["public"]["Views"]["organization_subscription_status"]["Row"];
 
 interface SubscriptionPlansProps {
   organization: OrganizationSubscriptionStatus | null;
-  plans: SubscriptionPlan[] | null;
+  plans: SubscriptionPlanWithPricing[] | null;
   onSubscribe: (priceId: string) => Promise<void>;
   isLoading: boolean;
 }
@@ -205,7 +206,10 @@ export default function SubscriptionPlans({
               return (
                 <div
                   key={plan.id}
-                  onClick={() => handlePlanClick(plan.stripe_product_id)}
+                  onClick={() =>
+                    plan.stripe_product_id &&
+                    handlePlanClick(plan.stripe_product_id)
+                  }
                   className={`
                     p-4 border rounded-lg cursor-pointer transition-all
                     dark:border-gray-700 
@@ -238,7 +242,10 @@ export default function SubscriptionPlans({
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold">
-                        {formatPrice(plan.base_price_amount, plan.currency)}
+                        {formatPrice(
+                          plan.base_price_amount ?? 0,
+                          (plan.base_price_currency as Currency) ?? "usd"
+                        )}
                       </div>
                       <div className="text-sm text-gray-500 dark:text-gray-400">
                         {t("subscription.perMonth")}
@@ -256,7 +263,7 @@ export default function SubscriptionPlans({
                           ✓
                         </span>
                         {t("subscription.notificationsPerDay", {
-                          count: plan.base_notifications_per_day,
+                          count: plan.base_notifications_per_day ?? 0,
                         })}
                       </li>
                       {plan.has_usage_billing && (

@@ -7,7 +7,11 @@ import { useAuth } from "./useAuth";
 type OrganizationUpdate =
     Database["public"]["Tables"]["organizations"]["Update"];
 type OrganizationSubscriptionStatusRow =
-    Database["public"]["Views"]["organization_subscription_status"]["Row"];
+    & Database["public"]["Views"]["organization_subscription_status"]["Row"]
+    & {
+        plan_id: string | null;
+        plan_amount: number | null; // Add this line
+    };
 
 export function useOrganization() {
     const [organization, setOrganization] = useState<

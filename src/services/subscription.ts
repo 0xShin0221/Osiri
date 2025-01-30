@@ -2,8 +2,8 @@ import { LANGUAGE_CURRENCY_MAP } from "@/lib/i18n/languages";
 import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/database.types";
 
-type SubscriptionPlan =
-    Database["public"]["Tables"]["subscription_plans"]["Row"];
+type SubscriptionPlanWithPricing =
+    Database["public"]["Views"]["subscription_plans_with_pricing"]["Row"];
 type FeedLanguage = Database["public"]["Enums"]["feed_language"];
 
 interface CheckoutSession {
@@ -86,12 +86,12 @@ export class SubscriptionService {
 
     async getSubscriptionPlans(
         language: FeedLanguage,
-    ): Promise<SubscriptionPlan[]> {
+    ): Promise<SubscriptionPlanWithPricing[]> {
         try {
             const currency = LANGUAGE_CURRENCY_MAP[language];
 
             const { data, error } = await supabase
-                .from("subscription_plans")
+                .from("subscription_plans_with_pricing")
                 .select(`*`)
                 .eq("currency", currency)
                 .eq("has_usage_billing", false)

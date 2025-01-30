@@ -8,20 +8,22 @@ import { LANGUAGES } from "@/lib/i18n/languages";
 interface UseSubscriptionReturn {
     isLoading: boolean;
     error: string | null;
-    plans: SubscriptionPlan[] | null;
+    plans: SubscriptionPlanWithPricing[] | null;
     handleCheckout: (priceId: string) => Promise<void>;
     handlePortal: () => Promise<void>;
 }
 
 type FeedLanguage = Database["public"]["Enums"]["feed_language"];
-type SubscriptionPlan =
-    Database["public"]["Tables"]["subscription_plans"]["Row"];
+type SubscriptionPlanWithPricing =
+    Database["public"]["Views"]["subscription_plans_with_pricing"]["Row"];
 
 export function useSubscription(): UseSubscriptionReturn {
     const { i18n } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [plans, setPlans] = useState<SubscriptionPlan[] | null>(null);
+    const [plans, setPlans] = useState<SubscriptionPlanWithPricing[] | null>(
+        null,
+    );
     const { organization } = useOrganization();
     const subscriptionService = new SubscriptionService();
 
@@ -30,9 +32,10 @@ export function useSubscription(): UseSubscriptionReturn {
             const language: FeedLanguage =
                 i18n.resolvedLanguage as FeedLanguage ||
                 LANGUAGES.DEFAULT;
-            const fetchedPlans = await subscriptionService.getSubscriptionPlans(
-                language,
-            );
+            const fetchedPlans = await subscriptionService
+                .getSubscriptionPlans(
+                    language,
+                );
 
             if (!fetchedPlans?.length) {
                 const defaultPlans = await subscriptionService
