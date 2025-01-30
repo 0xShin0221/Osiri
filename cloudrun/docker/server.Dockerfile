@@ -3,7 +3,7 @@ RUN npx playwright install --with-deps chromium
 
 ENV HOME="/home"
 WORKDIR /app
-COPY . .
+COPY ./cloudrun .
 RUN npm ci --only=production
 
 
