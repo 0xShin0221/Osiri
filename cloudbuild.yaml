@@ -58,6 +58,7 @@ substitutions:
   _REGION: us-central1
   _LANGCHAIN_ENV_VARS: >-
     LANGCHAIN_TRACING_V2=true,
+    LANGSMITH_TRACING=true
 
 options:
   logging: "CLOUD_LOGGING_ONLY"
