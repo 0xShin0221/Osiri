@@ -11,7 +11,7 @@ export async function generateInsertSql(results: StripeResult[]) {
     const insertPlans = results.map((r) => {
         const values = [
             "gen_random_uuid()", // id
-            escapeSqlString(r.name),
+            escapeSqlString(r.name + "(" + r.language + ")"),
             escapeSqlString(r.description),
             escapeSqlString(r.currency),
             escapeSqlString(r.stripe_product_id),
