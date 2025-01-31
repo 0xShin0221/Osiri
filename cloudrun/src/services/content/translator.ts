@@ -6,7 +6,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { Client } from "langsmith";
 import { decode, encode } from "gpt-tokenizer";
 import { ConfigManager } from "../../lib/config";
-import { LangChainTracer } from "@langchain/core/dist/tracers/tracer_langchain";
+import { LangChainTracer } from "@langchain/core/tracers/tracer_langchain";
 import type { ServiceResponse } from "../../types/models";
 
 interface TranslationChunk {
