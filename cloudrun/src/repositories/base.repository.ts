@@ -1,34 +1,32 @@
-import { createClient, SupabaseClient, PostgrestError } from '@supabase/supabase-js';
-import type { Database } from '../types/database.types';
-import dotenv from 'dotenv';
+import {
+  createClient,
+  PostgrestError,
+  SupabaseClient,
+} from "@supabase/supabase-js";
+import type { Database } from "../types/database.types";
+import { ConfigManager } from "../lib/config";
 
 export abstract class BaseRepository {
   protected client: SupabaseClient<Database>;
 
   constructor() {
-    dotenv.config();
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing Supabase credentials');
-    }
-
-    this.client = createClient<Database>(supabaseUrl, supabaseKey);
+    const config = ConfigManager.getInstance();
+    const { url, serviceKey } = config.getSupabaseConfig();
+    this.client = createClient<Database>(url, serviceKey);
   }
 
   protected isPostgrestError(error: unknown): error is PostgrestError {
     return (
-      typeof error === 'object' &&
+      typeof error === "object" &&
       error !== null &&
-      'code' in error &&
-      typeof (error as PostgrestError).code === 'string'
+      "code" in error &&
+      typeof (error as PostgrestError).code === "string"
     );
   }
 
   protected handleError(error: unknown): never {
-    console.error('Database error:', error);
-    
+    console.error("Database error:", error);
+
     if (this.isPostgrestError(error)) {
       throw new Error(`Database error: ${error.message}`);
     }
@@ -37,6 +35,6 @@ export abstract class BaseRepository {
       throw new Error(`Unexpected error: ${error.message}`);
     }
 
-    throw new Error('An unknown error occurred');
+    throw new Error("An unknown error occurred");
   }
 }
