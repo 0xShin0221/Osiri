@@ -1,0 +1,21 @@
+{
+  "active": {
+    "manage": "プラン管理",
+    "title": "アクティブなサブスクリプション"
+  },
+  "cancelScheduled": {
+    "description": "サブスクリプションは次の請求期間でキャンセルされます",
+    "manage": "プラン管理",
+    "title": "キャンセル予定"
+  },
+  "pastDue": {
+    "description": "サービスを継続するには支払い情報を更新してください",
+    "manage": "支払い管理",
+    "title": "支払いが必要です"
+  },
+  "trial": {
+    "description": "トライアル期間は{{timeLeft}}に終了します",
+    "title": "トライアル期間中",
+    "upgrade": "アップグレード"
+  }
+}

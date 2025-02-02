@@ -1,6 +1,7 @@
 import { Buffer } from "node:buffer";
 import { stripeRepository } from "../_shared/db/stripe.ts";
 import Stripe from "npm:stripe";
+import { Database } from "../_shared/database.types.ts";
 
 // Initialize Stripe with the fetch HTTP client
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
@@ -102,6 +103,31 @@ const handler = async (req: Request): Promise<Response> => {
             organizationId,
             plan.id,
           );
+          let subscription_status:
+            Database["public"]["Enums"]["subscription_status"];
+          switch (subscription.status) {
+            case "trialing":
+              subscription_status = "trialing";
+              break;
+            case "active":
+              subscription_status = "active";
+              break;
+            case "past_due":
+              subscription_status = "past_due";
+              break;
+            case "canceled":
+              subscription_status = "canceled";
+              break;
+            default:
+              subscription_status = "canceled";
+          }
+
+          // Update subscription status
+          await stripeRepository.updateOrganizationSubscriptionStatus(
+            organizationId,
+            subscription_status,
+          );
+
           // Cancel old subscriptions
           await cancelOldSubscriptions(
             subscription.customer as string,

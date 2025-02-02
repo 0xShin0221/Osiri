@@ -74,4 +74,16 @@ export const stripeRepository = {
     if (error) throw error;
     return data.id;
   },
+
+  async updateOrganizationSubscriptionStatus(
+    organizationId: string,
+    subscription_status: Database["public"]["Enums"]["subscription_status"],
+  ) {
+    const { error } = await supabase
+      .from("organizations")
+      .update({ subscription_status })
+      .eq("id", organizationId);
+
+    if (error) throw error;
+  },
 };
