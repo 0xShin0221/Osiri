@@ -54,10 +54,10 @@ export class ContentScraper {
       try {
         this.browser = await chromium.launch({
           headless: true,
-          chromiumSandbox: false, // Required for Heroku
+          chromiumSandbox: false,
           args: [
             "--disable-dev-shm-usage",
-            "--no-sandbox", // Required for Heroku
+            "--no-sandbox",
             "--disable-setuid-sandbox",
             "--single-process",
             "--no-zygote",
