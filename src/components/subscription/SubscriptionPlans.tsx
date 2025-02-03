@@ -124,6 +124,98 @@ export default function SubscriptionPlans({
     return null;
   };
 
+  const renderPlan = (plan: SubscriptionPlanWithPricing) => {
+    const isCurrentPlan =
+      plan.stripe_product_id === organization?.stripe_product_id;
+    const isSelected = plan.stripe_product_id === selectedPlan;
+    const isFreePlan = plan.sort_order === 1;
+
+    return (
+      <div
+        key={plan.id}
+        onClick={() =>
+          !isFreePlan &&
+          plan.stripe_product_id &&
+          handlePlanClick(plan.stripe_product_id)
+        }
+        className={`
+          p-4 border rounded-lg transition-all
+          dark:border-gray-700 
+          ${
+            !isFreePlan
+              ? "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+              : ""
+          }
+          ${
+            isSelected && !isFreePlan
+              ? "border-blue-500 ring-1 ring-blue-500 dark:border-blue-400 dark:ring-blue-400"
+              : ""
+          }
+          ${
+            isCurrentPlan
+              ? "border-blue-200 bg-blue-50 dark:bg-blue-900/20"
+              : ""
+          }
+        `}
+      >
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-medium">
+                {formatPlanName(plan.name || "")}
+              </span>
+              {isCurrentPlan && (
+                <span className="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-100">
+                  {t("subscription.currentPlan")}
+                </span>
+              )}
+            </div>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+              {plan.description}
+            </p>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-bold">
+              {isFreePlan
+                ? t("subscription.free")
+                : formatPrice(
+                    plan.base_price_amount ?? 0,
+                    (plan.base_price_currency as Currency) ?? "usd"
+                  )}
+            </div>
+            {!isFreePlan && (
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                {t("subscription.perMonth")}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <div className="text-sm font-semibold mb-2">
+            {t("subscription.features")}:
+          </div>
+          <ul className="space-y-2">
+            <li className="flex items-center text-sm">
+              <span className="mr-2 text-green-600 dark:text-green-400">✓</span>
+              {t("subscription.notificationsPerDay", {
+                count: plan.base_notifications_per_day ?? 0,
+              })}
+            </li>
+            {plan.has_usage_billing && (
+              <li className="flex items-center text-sm">
+                <span className="mr-2 text-green-600 dark:text-green-400">
+                  ✓
+                </span>
+                {t("subscription.payAsYouGo")}
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Card className="border-0 shadow-lg bg-white/50 backdrop-blur-sm dark:bg-gray-950/50">
       <CardHeader>
@@ -202,89 +294,7 @@ export default function SubscriptionPlans({
           </div>
 
           <div className="grid gap-4">
-            {plans?.map((plan) => {
-              const isCurrentPlan =
-                plan.stripe_product_id === organization?.stripe_product_id;
-              const isSelected = plan.stripe_product_id === selectedPlan;
-
-              return (
-                <div
-                  key={plan.id}
-                  onClick={() =>
-                    plan.stripe_product_id &&
-                    handlePlanClick(plan.stripe_product_id)
-                  }
-                  className={`
-                    p-4 border rounded-lg cursor-pointer transition-all
-                    dark:border-gray-700 
-                    hover:bg-gray-100 dark:hover:bg-gray-800
-                    ${
-                      isSelected
-                        ? "border-blue-500 ring-1 ring-blue-500 dark:border-blue-400 dark:ring-blue-400"
-                        : ""
-                    }
-                    ${
-                      isCurrentPlan
-                        ? "border-blue-200 bg-blue-50 dark:bg-blue-900/20"
-                        : ""
-                    }
-                  `}
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-medium">
-                          {formatPlanName(plan.name || "")}
-                        </span>
-                        {isCurrentPlan && (
-                          <span className="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-100">
-                            {t("subscription.currentPlan")}
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                        {plan.description}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">
-                        {formatPrice(
-                          plan.base_price_amount ?? 0,
-                          (plan.base_price_currency as Currency) ?? "usd"
-                        )}
-                      </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {t("subscription.perMonth")}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <div className="text-sm font-semibold mb-2">
-                      {t("subscription.features")}:
-                    </div>
-                    <ul className="space-y-2">
-                      <li className="flex items-center text-sm">
-                        <span className="mr-2 text-green-600 dark:text-green-400">
-                          ✓
-                        </span>
-                        {t("subscription.notificationsPerDay", {
-                          count: plan.base_notifications_per_day ?? 0,
-                        })}
-                      </li>
-                      {plan.has_usage_billing && (
-                        <li className="flex items-center text-sm">
-                          <span className="mr-2 text-green-600 dark:text-green-400">
-                            ✓
-                          </span>
-                          {t("subscription.payAsYouGo")}
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                </div>
-              );
-            })}
+            {plans?.map((plan) => renderPlan(plan))}
           </div>
 
           {error && (
