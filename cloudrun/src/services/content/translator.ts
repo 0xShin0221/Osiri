@@ -9,26 +9,33 @@ import { ConfigManager } from "../../lib/config";
 import { LangChainTracer } from "@langchain/core/tracers/tracer_langchain";
 import type { ServiceResponse } from "../../types/models";
 
+// Define the structure for translation chunks
 interface TranslationChunk {
   translation: string;
-  title?: string;
+  titleTranslated?: string;
+  titleOriginal?: string;
   key_points: string[];
 }
 
-// Modify the schema to be more strict with character limits
+// Define the translation schema with Zod for validation
 const translationSchema = z.object({
-  title: z.string()
+  titleTranslated: z.string()
     .max(200)
     .describe(
-      "Translated title in the target language, keeping it concise and clear.",
+      "Translated title in the target language. Keep technical terms in their original form when appropriate. Format should be natural in the target language.",
+    ),
+  titleOriginal: z.string()
+    .max(200)
+    .describe(
+      "Original title preserved for reference.",
     ),
   translation: z.string().describe(
     "Translated content in the target language.",
   ),
-  key_points: z.array(z.string().max(300)) // Explicit limit per key point
+  key_points: z.array(z.string().max(300))
     .max(5)
     .describe(
-      "3-5 key points that are important for understanding the article, each should be concise.",
+      "3-5 key points that are important for understanding the article.",
     ),
   summary: z.string()
     .max(1300) // Increased to accommodate different languages
@@ -46,6 +53,7 @@ const translationSchema = z.object({
     ),
 });
 
+// Constants for translation processing
 const CHUNK_SIZE = 12000;
 const OVERLAP_SIZE = 200;
 const MAX_RETRIES = 3;
@@ -63,17 +71,17 @@ export class ContentTranslator {
     console.info("Initializing ContentTranslator");
     this.config = ConfigManager.getInstance();
 
-    // Get configurations using helper methods
+    // Initialize configurations
     const openAIConfig = this.config.getOpenAIConfig();
     const langchainConfig = this.config.getLangChainConfig();
 
-    // Initialize LangSmith client
+    // Setup LangSmith client
     const client = new Client({
       apiKey: langchainConfig.langsmithApiKey,
       apiUrl: langchainConfig.endpoint,
     });
 
-    // Initialize tracer
+    // Setup tracer
     this.tracer = new LangChainTracer({
       client,
       projectName: langchainConfig.projectName,
@@ -82,7 +90,7 @@ export class ContentTranslator {
     // Initialize OpenAI model
     this.model = new ChatOpenAI({
       temperature: 0.2,
-      model: "gpt-4-turbo-preview",
+      model: "gpt-4o-mini",
       timeout: INITIAL_TIMEOUT,
       maxRetries: MAX_RETRIES,
       apiKey: openAIConfig.apiKey,
@@ -90,6 +98,7 @@ export class ContentTranslator {
 
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
 
+    // Setup translation prompt template
     const promptTemplate = ChatPromptTemplate.fromTemplate(`
       You are an editor specialized in startup and technology industry analysis.
       Please translate and analyze the following article with a focus on business value and technical insights.
@@ -99,10 +108,17 @@ export class ContentTranslator {
 
       Translation Requirements:
       
-      1. **Title Translation**:
-      - Translate the title accurately and concisely into the target language.
-      - The translated title should be clear and natural in the target language.
-      - Retain technical terms and industry-specific jargon in their original language whenever possible.
+      1. **Title Translation Rules**:
+      - Preserve technical terms, product names, and established industry terms in their original form
+      - Follow target language conventions for displaying foreign terms (e.g., parentheses, specific scripts, or transliteration)
+      - When technical terms have widely accepted local translations, use both:
+        * Primary: locally accepted translation
+        * Secondary: original term in parentheses when needed for clarity
+      - Maintain word order and grammar structure natural to the target language
+      - Keep proper nouns in their original form unless they have widely accepted translations in the target language
+      - For industry-specific abbreviations (API, SDK, UI/UX, etc.):
+        * Keep them in their original form if commonly used in the target region
+        * Add explanatory text if the abbreviation is not commonly known in the target region
 
       
       2. **Content and Summary Translation**:
@@ -140,34 +156,48 @@ export class ContentTranslator {
     ]);
   }
 
+  // Normalize translation response to ensure it meets length constraints
   private normalizeTranslationResponse(
     response: z.infer<typeof translationSchema>,
   ): z.infer<typeof translationSchema> {
-    if (response.summary) {
-      response.summary = response.summary.slice(0, 1300);
+    const normalized = { ...response };
+    if (normalized.titleTranslated) {
+      normalized.titleTranslated = normalized.titleTranslated.slice(0, 200);
+    }
+    if (normalized.titleOriginal) {
+      normalized.titleOriginal = normalized.titleOriginal.slice(0, 200);
     }
 
-    if (response.key_points) {
-      response.key_points = response.key_points.map((point) =>
+    // Normalize other fields
+    if (normalized.summary) {
+      normalized.summary = normalized.summary.slice(0, 1300);
+    }
+
+    if (normalized.key_points) {
+      normalized.key_points = normalized.key_points.map((point) =>
         point.slice(0, 300)
       );
     }
 
-    if (response.title) {
-      response.title = response.title.slice(0, 200);
+    // Ensure translation is a string
+    if (normalized.translation) {
+      normalized.translation = String(normalized.translation);
     }
 
-    return response;
+    return normalized;
   }
 
+  // Count tokens in text using GPT tokenizer
   private countTokens(text: string): number {
     return encode(text).length;
   }
 
+  // Utility function for delay between retries
   private async delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  // Split content into manageable chunks for translation
   private splitIntoChunks(content: string): string[] {
     const tokens = encode(content);
     const chunks: string[] = [];
@@ -185,6 +215,7 @@ export class ContentTranslator {
     return chunks;
   }
 
+  // Translate a single chunk of content
   private async translateChunk(
     title: string,
     content: string,
@@ -196,12 +227,10 @@ export class ContentTranslator {
     retryCount = 0,
   ): Promise<ServiceResponse<TranslationChunk>> {
     const isFirstChunk = chunkIndex === 0;
+    const isTitleOnlyTranslation = content === title;
 
     try {
-      const isFirstChunkInstructions = isFirstChunk
-        ? "This is the first chunk. Please extract key points and write a summary. The response must be valid JSON, with properly escaped characters."
-        : "This is a continuation chunk. Focus on maintaining content flow.";
-
+      // Prepare the context for the AI model
       const chainResponse = await this.chain.invoke({
         title,
         content,
@@ -209,29 +238,43 @@ export class ContentTranslator {
         target_language: targetLang,
         total_chunks: totalChunks,
         current_chunk: chunkIndex + 1,
-        is_first_chunk_instructions: isFirstChunkInstructions,
+        is_first_chunk: isFirstChunk,
+        is_title_translation: isTitleOnlyTranslation,
         previous_context: previousContext,
         format_instructions: this.parser.getFormatInstructions(),
       }, { callbacks: [this.tracer] });
 
       const response = this.normalizeTranslationResponse(chainResponse);
 
-      console.debug("Translation response:", {
-        summaryLength: Buffer.byteLength(response.summary, "utf8"),
-        summary: response.summary,
-      });
-
-      return {
-        success: true,
-        data: {
-          title: response.title,
-          translation: response.translation,
-          key_points: isFirstChunk ? response.key_points : [],
-        },
-      };
+      if (isTitleOnlyTranslation) {
+        // For title-only translation, return both original and translated
+        return {
+          success: true,
+          data: {
+            titleTranslated: response.titleTranslated,
+            titleOriginal: title,
+            translation: response.translation, // In case we need the raw translation
+            key_points: [], // Empty for title-only translations
+          },
+        };
+      } else {
+        // For content chunks, only include title information in first chunk
+        return {
+          success: true,
+          data: {
+            titleTranslated: isFirstChunk
+              ? response.titleTranslated
+              : undefined,
+            titleOriginal: isFirstChunk ? title : undefined,
+            translation: response.translation,
+            key_points: isFirstChunk ? response.key_points : [],
+          },
+        };
+      }
     } catch (error) {
       console.error("Translation error:", error);
 
+      // Handle JSON parsing errors
       if (
         error instanceof Error &&
         error.message.includes("OUTPUT_PARSING_FAILURE")
@@ -247,18 +290,37 @@ export class ContentTranslator {
           const normalizedResponse = this.normalizeTranslationResponse(
             parsedResponse,
           );
-          return {
-            success: true,
-            data: {
-              translation: normalizedResponse.translation,
-              key_points: isFirstChunk ? normalizedResponse.key_points : [],
-            },
-          };
+
+          // Apply the same logic as above for the cleaned response
+          if (isTitleOnlyTranslation) {
+            return {
+              success: true,
+              data: {
+                titleTranslated: normalizedResponse.titleTranslated,
+                titleOriginal: title,
+                translation: normalizedResponse.translation,
+                key_points: [],
+              },
+            };
+          } else {
+            return {
+              success: true,
+              data: {
+                titleTranslated: isFirstChunk
+                  ? normalizedResponse.titleTranslated
+                  : undefined,
+                titleOriginal: isFirstChunk ? title : undefined,
+                translation: normalizedResponse.translation,
+                key_points: isFirstChunk ? normalizedResponse.key_points : [],
+              },
+            };
+          }
         } catch (cleanupError) {
           console.error("Failed to clean and parse response:", cleanupError);
         }
       }
 
+      // Handle retries
       if (retryCount < MAX_RETRIES) {
         console.warn(
           `Translation attempt ${retryCount + 1} failed, retrying...`,
@@ -276,7 +338,6 @@ export class ContentTranslator {
         );
       }
 
-      console.error("Translation process failed after all retries", error);
       return {
         success: false,
         error: error instanceof Error
@@ -285,7 +346,7 @@ export class ContentTranslator {
       };
     }
   }
-
+  // Clean up JSON string for parsing
   private cleanupJsonString(text: string): string {
     let cleanedText = text.replace(/```json\n?/, "").replace(/\n?```$/, "");
 
@@ -311,6 +372,7 @@ export class ContentTranslator {
     return cleanedText;
   }
 
+  // Main translation method
   async translate(
     title: string,
     content: string,
@@ -318,7 +380,8 @@ export class ContentTranslator {
     targetLang: string,
   ): Promise<
     ServiceResponse<{
-      title: string;
+      titleTranslated: string;
+      titleOriginal: string;
       translation: string;
       key_points: string[];
       summary: string;
@@ -331,10 +394,30 @@ export class ContentTranslator {
       targetLang,
     });
 
-    const totalTokens = this.countTokens(content);
-    console.info(`Content tokens: ${totalTokens}`);
-
     try {
+      // First translate the title separately
+      const titleResult = await this.translateChunk(
+        title,
+        title,
+        sourceLang,
+        targetLang,
+        0,
+        1,
+      );
+
+      if (!titleResult.success || !titleResult.data) {
+        return {
+          success: false,
+          error: titleResult.error || "Failed to translate title",
+        };
+      }
+
+      // Store both original and translated titles
+      const translatedTitle = titleResult.data.titleTranslated || title;
+      const originalTitle = title;
+
+      // Process content translation as before...
+      const totalTokens = this.countTokens(content);
       const chunks = totalTokens > CHUNK_SIZE
         ? this.splitIntoChunks(content)
         : [content];
@@ -347,7 +430,7 @@ export class ContentTranslator {
 
       for (let i = 0; i < chunks.length; i++) {
         const chunkResult = await this.translateChunk(
-          title,
+          translatedTitle, // Use translated title for context
           chunks[i],
           sourceLang,
           targetLang,
@@ -372,27 +455,12 @@ export class ContentTranslator {
         previousContext = decode(chunkTokens.slice(-OVERLAP_SIZE));
       }
 
-      let translatedTitle = title;
-      if (chunks.length > 1) {
-        const titleResult = await this.translateChunk(
-          title,
-          title,
-          sourceLang,
-          targetLang,
-          0,
-          1,
-        );
-        if (titleResult.success && titleResult.data) {
-          translatedTitle = titleResult.data.translation;
-        }
-      }
-
       const finalTranslation = translatedChunks.join(" ");
 
       let summary = "";
       if (chunks.length > 1) {
         const summaryResult = await this.translateChunk(
-          title,
+          translatedTitle,
           `${finalTranslation.slice(0, 1000)}...`,
           targetLang,
           targetLang,
@@ -407,7 +475,8 @@ export class ContentTranslator {
       return {
         success: true,
         data: {
-          title: translatedTitle,
+          titleTranslated: translatedTitle,
+          titleOriginal: originalTitle,
           translation: finalTranslation,
           key_points: allKeyPoints,
           summary: summary ||
@@ -425,6 +494,7 @@ export class ContentTranslator {
     }
   }
 
+  // Generate a complete summary for the translated content
   private async generateCompleteSummary(
     content: string,
     targetLang: string,

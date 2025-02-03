@@ -1,13 +1,5 @@
 -- Learning Category
 insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
-('The Decision Lab', 
- 'Research and insights on decision making and behavioral science', 
- 'https://thedecisionlab.com/favicon.ico', 
- 'https://thedecisionlab.com/feed/', 
- 'en', 
- false,
- array['critical_thinking', 'cognitive_science', 'psychology']::feed_category[]
-),
 ('Ness Labs', 
  'The science of learning and mindful productivity', 
  'https://nesslabs.com/wp-content/uploads/2022/10/nl-logo-retina.png', 
@@ -178,8 +170,8 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
 ),
 ('SlashGear', 
  'Latest technology news and reviews', 
- 'https://pbs.twimg.com/profile_images/1471150492952768519/KC9pX4CT_400x400.png', 
- 'http://feeds.slashgear.com/slashgear', 
+ 'https://www.slashgear.com/img/SlashGear-Logo-RGB-White-SingleLine.svg', 
+ 'https://www.slashgear.com/category/technology/feed/', 
  'en', 
  false,
  array['tech_news', 'product_design', 'mobile_development']::feed_category[]

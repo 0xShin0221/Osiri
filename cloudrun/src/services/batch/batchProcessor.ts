@@ -15,6 +15,11 @@ import { FeedParser } from "../feed/parser";
 import { ContentScraper } from "../content/scraper";
 import { ContentTranslator } from "../content/translator";
 
+function generateUUID(): string {
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 100000);
+  return `batch-${timestamp}-${random}`;
+}
 export class BatchProcessor {
   private readonly feedCollectionStep: FeedCollectionStep;
   private readonly feedProcessingStep: FeedProcessingStep;
@@ -54,7 +59,7 @@ export class BatchProcessor {
 
   async process(options: BatchOptions = {}): Promise<BatchProcessResult> {
     const startTime = Date.now();
-    const batchId = crypto.randomUUID();
+    const batchId = generateUUID();
     const {
       onProgress,
       onError,
