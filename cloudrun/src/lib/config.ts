@@ -8,6 +8,7 @@ export interface AppSecrets {
     LANGSMITH_API_KEY: string;
     LANGSMITH_PROJECT_NAME: string;
     API_KEYS: string;
+    GOOGLE_API_KEY: string;
 }
 
 export interface AppConfig {
@@ -50,6 +51,7 @@ export class ConfigManager {
                 "LANGSMITH_API_KEY",
                 "LANGSMITH_PROJECT_NAME",
                 "API_KEYS",
+                "GOOGLE_API_KEY",
             ];
 
             const secrets: Partial<AppSecrets> = {};
@@ -82,6 +84,7 @@ export class ConfigManager {
             "SUPABASE_SERVICE_KEY",
             "LANGCHAIN_API_KEY", // LangChain API Key
             "LANGSMITH_API_KEY", // LangSmith API Key
+            "GOOGLE_API_KEY",
         ];
 
         const missingKeys = requiredKeys.filter((key) => !this.get(key));
@@ -129,6 +132,12 @@ export class ConfigManager {
         return {
             url: this.getOrThrow("SUPABASE_URL"),
             serviceKey: this.getOrThrow("SUPABASE_SERVICE_KEY"),
+        };
+    }
+
+    public getGoogleGeminiConfig() {
+        return {
+            apiKey: this.getOrThrow("GOOGLE_API_KEY"),
         };
     }
 }
