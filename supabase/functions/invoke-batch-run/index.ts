@@ -2,12 +2,12 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 Deno.serve(async () => {
   try {
-    const API_URL = Deno.env.get("HEROKU_APP_API_URL");
-    const API_KEY = Deno.env.get("HEROKU_APP_API_KEY");
+    const API_URL = Deno.env.get("APP_API_URL");
+    const API_KEY = Deno.env.get("APP_API_KEY");
 
     if (!API_URL || !API_KEY) {
       throw new Error(
-        "Missing environment variables HEROKU_APP_API_URL or HEROKU_APP_API_KEY",
+        "Missing environment variables APP_API_URL or APP_API_KEY",
       );
     }
 
