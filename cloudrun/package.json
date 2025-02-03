@@ -5,9 +5,8 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "postinstall": "npx playwright install chromium",
-    "dev": "DEBUG=app:*,server:*,-server:verbose,-app:debug ts-node-dev src/server.ts",
-    "test": "jest",
-    "heroku-cleanup": "yarn run playwright install chromium"
+    "dev": "NODE_ENV=development DEBUG=app:*,server:*,-server:verbose,-app:debug ts-node-dev src/server.ts",
+    "test": "jest"
   },
   "dependencies": {
     "@jest/globals": "^29.7.0",

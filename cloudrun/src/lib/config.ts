@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+import path from "path";
 export interface AppSecrets {
     OPENAI_API_KEY: string;
     SUPABASE_URL: string;
@@ -20,8 +22,10 @@ export interface AppConfig {
 export class ConfigManager {
     private static instance: ConfigManager;
     private secrets: Partial<AppSecrets> = {};
+    private readonly isDevelopment: boolean;
 
     private constructor() {
+        this.isDevelopment = process.env.NODE_ENV === "development";
         this.loadSecrets();
     }
 
@@ -33,7 +37,33 @@ export class ConfigManager {
     }
 
     private loadSecrets(): void {
+        if (this.isDevelopment) {
+            const envPath = path.resolve(process.cwd(), ".env");
+            dotenv.config({ path: envPath });
+
+            // In development, construct APP_SECRETS from individual environment variables
+            const secretKeys: (keyof AppSecrets)[] = [
+                "OPENAI_API_KEY",
+                "SUPABASE_URL",
+                "SUPABASE_SERVICE_KEY",
+                "LANGCHAIN_API_KEY",
+                "LANGSMITH_API_KEY",
+                "LANGSMITH_PROJECT_NAME",
+                "API_KEYS",
+            ];
+
+            const secrets: Partial<AppSecrets> = {};
+            secretKeys.forEach((key) => {
+                if (process.env[key]) {
+                    secrets[key] = process.env[key] as string;
+                }
+            });
+
+            // Set APP_SECRETS environment variable
+            process.env.APP_SECRETS = JSON.stringify(secrets);
+        }
         const appSecrets = process.env.APP_SECRETS;
+
         if (appSecrets) {
             try {
                 this.secrets = JSON.parse(appSecrets);
