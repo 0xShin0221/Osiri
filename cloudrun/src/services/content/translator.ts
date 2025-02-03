@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ChatOpenAI } from "@langchain/openai";
+// import { ChatOpenAI } from "@langchain/openai";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
@@ -8,6 +8,7 @@ import { decode, encode } from "gpt-tokenizer";
 import { ConfigManager } from "../../lib/config";
 import { LangChainTracer } from "@langchain/core/tracers/tracer_langchain";
 import type { ServiceResponse } from "../../types/models";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 // Define the structure for translation chunks
 interface TranslationChunk {
@@ -61,7 +62,8 @@ const INITIAL_TIMEOUT = 30000;
 const RETRY_DELAY = 1000;
 
 export class ContentTranslator {
-  private model: ChatOpenAI;
+  // private model: ChatOpenAI;
+  private model: ChatGoogleGenerativeAI;
   private chain: RunnableSequence;
   private parser: StructuredOutputParser<typeof translationSchema>;
   private config: ConfigManager;
@@ -72,8 +74,9 @@ export class ContentTranslator {
     this.config = ConfigManager.getInstance();
 
     // Initialize configurations
-    const openAIConfig = this.config.getOpenAIConfig();
+    // const openAIConfig = this.config.getOpenAIConfig();
     const langchainConfig = this.config.getLangChainConfig();
+    const googleGeminiConfig = this.config.getGoogleGeminiConfig();
 
     // Setup LangSmith client
     const client = new Client({
@@ -88,14 +91,19 @@ export class ContentTranslator {
     });
 
     // Initialize OpenAI model
-    this.model = new ChatOpenAI({
+    // this.model = new ChatOpenAI({
+    //   temperature: 0.2,
+    //   model: "gpt-4o-mini",
+    //   timeout: INITIAL_TIMEOUT,
+    //   maxRetries: MAX_RETRIES,
+    //   apiKey: openAIConfig.apiKey,
+    // });
+    this.model = new ChatGoogleGenerativeAI({
       temperature: 0.2,
-      model: "gpt-4o-mini",
-      timeout: INITIAL_TIMEOUT,
+      model: "gemini-1.5-flash",
+      apiKey: googleGeminiConfig.apiKey,
       maxRetries: MAX_RETRIES,
-      apiKey: openAIConfig.apiKey,
     });
-
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
 
     // Setup translation prompt template
