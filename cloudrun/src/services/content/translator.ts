@@ -3,12 +3,15 @@ import { ChatOpenAI } from "@langchain/openai";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-
+import { Client } from "langsmith";
 import { decode, encode } from "gpt-tokenizer";
+import { ConfigManager } from "../../lib/config";
+import { LangChainTracer } from "@langchain/core/tracers/tracer_langchain";
 import type { ServiceResponse } from "../../types/models";
 
 interface TranslationChunk {
   translation: string;
+  title?: string;
   key_points: string[];
 }
 
@@ -28,7 +31,7 @@ const translationSchema = z.object({
       "3-5 key points that are important for understanding the article, each should be concise.",
     ),
   summary: z.string()
-    .max(1300) // Increased to accommodate different languages (約1000字の日本語 or 2000-2500 characters in English)
+    .max(1300) // Increased to accommodate different languages
     .describe(
       "A comprehensive summary that captures the complete essence of the article. Include:\n" +
         "1. Background context and problem statement\n" +
@@ -53,70 +56,82 @@ export class ContentTranslator {
   private model: ChatOpenAI;
   private chain: RunnableSequence;
   private parser: StructuredOutputParser<typeof translationSchema>;
+  private config: ConfigManager;
+  private tracer: LangChainTracer;
 
   constructor() {
     console.info("Initializing ContentTranslator");
+    this.config = ConfigManager.getInstance();
 
+    // Get configurations using helper methods
+    const openAIConfig = this.config.getOpenAIConfig();
+    const langchainConfig = this.config.getLangChainConfig();
+
+    // Initialize LangSmith client
+    const client = new Client({
+      apiKey: langchainConfig.langsmithApiKey,
+      apiUrl: langchainConfig.endpoint,
+    });
+
+    // Initialize tracer
+    this.tracer = new LangChainTracer({
+      client,
+      projectName: langchainConfig.projectName,
+    });
+
+    // Initialize OpenAI model
     this.model = new ChatOpenAI({
       temperature: 0.2,
-      model: "gpt-4o-mini",
+      model: "gpt-4-turbo-preview",
       timeout: INITIAL_TIMEOUT,
       maxRetries: MAX_RETRIES,
+      apiKey: openAIConfig.apiKey,
     });
 
     this.parser = StructuredOutputParser.fromZodSchema(translationSchema);
 
     const promptTemplate = ChatPromptTemplate.fromTemplate(`
       You are an editor specialized in startup and technology industry analysis.
-    Please translate and analyze the following article with a focus on business value and technical insights:
+      Please translate and analyze the following article with a focus on business value and technical insights.
 
-    Source Language: {source_language}
-    Target Language: {target_language}
+      Source Language: {source_language}
+      Target Language: {target_language}
 
-    Translation Requirements:
+      Translation Requirements:
+      
+      1. **Title Translation**:
+      - Translate the title accurately and concisely into the target language.
+      - The translated title should be clear and natural in the target language.
+      - Retain technical terms and industry-specific jargon in their original language whenever possible.
 
-    1. Length Requirements:
-      - Summary should be comprehensive but concise:
-        * For Japanese: approximately 1000 characters
-        * For English/Latin scripts: approximately 1500 characters
-        * For other scripts: adjust while maintaining comprehensive coverage
-      - Each key point must be under 300 characters
-      - Title should be clear but brief
+      
+      2. **Content and Summary Translation**:
+        - Ensure summaries are comprehensive but concise:
+          * Japanese: ~1000 characters
+          * English/Latin scripts: ~1500 characters
+          * Other scripts: Adjust while maintaining comprehensive coverage
+        - Each key point must be under 300 characters.
+      
+      3. **Key Points Extraction Guidelines**:
+        - Business Impact: Identify specific market opportunities, revenue potential, or competitive advantages
+        - Technical Innovation: Highlight unique technological solutions or breakthroughs
+        - Growth Metrics: Extract specific numbers about user growth, funding, or market size
+        - Strategic Moves: Note important partnerships, acquisitions, or market expansions
+        - Future Implications: Point out potential industry changes or future developments
 
-    2. Key Points Extraction Guidelines:
-      - Business Impact: Identify specific market opportunities, revenue potential, or competitive advantages
-      - Technical Innovation: Highlight unique technological solutions or breakthroughs
-      - Growth Metrics: Extract specific numbers about user growth, funding, or market size
-      - Strategic Moves: Note important partnerships, acquisitions, or market expansions
-      - Future Implications: Point out potential industry changes or future developments
+      4. **Summary Structure**:
+        - Problem/Opportunity: What market need or challenge is being addressed?
+        - Solution/Innovation: What unique approach or technology is being used?
+        - Market Impact: What are the business implications or market effects?
+        - Competitive Edge: What distinguishes this from existing solutions?
 
-    3. Summary Structure:
-      - Problem/Opportunity: What market need or challenge is being addressed?
-      - Solution/Innovation: What unique approach or technology is being used?
-      - Market Impact: What are the business implications or market effects?
-      - Competitive Edge: What distinguishes this from existing solutions?
-      - Create a complete, self-contained summary without truncation or ellipsis
-
-    4. Content Guidelines:
-      - Use industry-standard terminology
-      - Include specific metrics and numbers when available
-      - Maintain technical accuracy in translations
-      - Focus on actionable insights
-      - For non-Latin scripts, prioritize clarity while maintaining technical precision
-
-    Chunk Information:
-    - Total Chunks: {total_chunks}
-    - Current Chunk: {current_chunk}
-    
-    {is_first_chunk_instructions}
-
-    Original Title: {title}
-    Original Text: {content}
-    
-    Previous Context (if any): {previous_context}
-    
-    {format_instructions}
-  `);
+      Original Title: {title}
+      Original Text: {content}
+      
+      Previous Context (if any): {previous_context}
+      
+      {format_instructions}
+    `);
 
     this.chain = RunnableSequence.from([
       promptTemplate,
@@ -128,19 +143,16 @@ export class ContentTranslator {
   private normalizeTranslationResponse(
     response: z.infer<typeof translationSchema>,
   ): z.infer<typeof translationSchema> {
-    // Ensure summary is well within length limit
     if (response.summary) {
-      response.summary = response.summary.slice(0, 350);
+      response.summary = response.summary.slice(0, 1300);
     }
 
-    // Normalize key points
     if (response.key_points) {
       response.key_points = response.key_points.map((point) =>
         point.slice(0, 300)
       );
     }
 
-    // Normalize title
     if (response.title) {
       response.title = response.title.slice(0, 200);
     }
@@ -183,7 +195,6 @@ export class ContentTranslator {
     previousContext = "",
     retryCount = 0,
   ): Promise<ServiceResponse<TranslationChunk>> {
-    // Move isFirstChunk outside of try block to make it available in catch block
     const isFirstChunk = chunkIndex === 0;
 
     try {
@@ -201,7 +212,7 @@ export class ContentTranslator {
         is_first_chunk_instructions: isFirstChunkInstructions,
         previous_context: previousContext,
         format_instructions: this.parser.getFormatInstructions(),
-      });
+      }, { callbacks: [this.tracer] });
 
       const response = this.normalizeTranslationResponse(chainResponse);
 
@@ -213,6 +224,7 @@ export class ContentTranslator {
       return {
         success: true,
         data: {
+          title: response.title,
           translation: response.translation,
           key_points: isFirstChunk ? response.key_points : [],
         },
@@ -228,7 +240,6 @@ export class ContentTranslator {
           "JSON parsing error detected, attempting to clean response",
         );
         try {
-          // Type assertion to access cause property
           const rawResponse =
             (error as { cause?: { message: string } }).cause?.message || "";
           const cleanedJson = this.cleanupJsonString(rawResponse);
@@ -274,25 +285,22 @@ export class ContentTranslator {
       };
     }
   }
+
   private cleanupJsonString(text: string): string {
-    // First, remove markdown code block if present
     let cleanedText = text.replace(/```json\n?/, "").replace(/\n?```$/, "");
 
-    // Try to find the start of the JSON object
     const jsonStart = cleanedText.indexOf("{");
     if (jsonStart !== -1) {
       cleanedText = cleanedText.slice(jsonStart);
     }
 
-    // Clean up whitespace and special characters
     cleanedText = cleanedText
-      .replace(/[\n\r\t]/g, " ") // Replace newlines, tabs with spaces
-      .replace(/\s+/g, " ") // Collapse multiple spaces
-      .replace(/\\/g, "\\\\") // Escape backslashes
-      .replace(/"/g, '\\"') // Escape quotes
-      .trim(); // Remove leading/trailing whitespace
+      .replace(/[\n\r\t]/g, " ")
+      .replace(/\s+/g, " ")
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"')
+      .trim();
 
-    // Ensure the text starts with { and ends with }
     if (!cleanedText.startsWith("{")) {
       cleanedText = `{${cleanedText}`;
     }
@@ -416,29 +424,30 @@ export class ContentTranslator {
       };
     }
   }
+
   private async generateCompleteSummary(
     content: string,
     targetLang: string,
   ): Promise<string> {
     try {
       const result = await this.translateChunk(
-        "", // Empty title since we're just generating summary
+        "",
         content,
-        targetLang, // Source language is same as target since we're not translating
         targetLang,
-        0, // First chunk
-        1, // Only one chunk
+        targetLang,
+        0,
+        1,
       );
 
       if (!result.success || !result.data) {
         console.error("Failed to generate summary", result.error);
-        return content.slice(0, 1000); // Fallback to simple truncation if summary generation fails
+        return content.slice(0, 1000);
       }
 
       return result.data.translation;
     } catch (error) {
       console.error("Summary generation failed:", error);
-      return content.slice(0, 1000); // Fallback
+      return content.slice(0, 1000);
     }
   }
 }

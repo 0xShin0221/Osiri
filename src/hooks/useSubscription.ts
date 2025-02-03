@@ -32,6 +32,7 @@ export function useSubscription(): UseSubscriptionReturn {
             const language: FeedLanguage =
                 i18n.resolvedLanguage as FeedLanguage ||
                 LANGUAGES.DEFAULT;
+
             const fetchedPlans = await subscriptionService
                 .getSubscriptionPlans(
                     language,

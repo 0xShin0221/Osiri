@@ -37,12 +37,15 @@
   },
   "subscription": {
     "billingPeriod": "請求期間",
+    "changePlan": "プランを変更する",
+    "currentPlan": "現在のプラン",
     "description": "サブスクリプションの管理と更新",
     "descriptionSelect": "ニーズに合わせて最適なプランをお選びください。別途+プランの契約で無制限となります。",
     "error": {
       "unknown": "エラーが発生しました"
     },
     "features": "含まれる機能",
+    "free": "無料",
     "freePlan": "無料プラン",
     "manageBilling": "支払い管理",
     "notApplicable": "適用なし",
@@ -53,6 +56,8 @@
     "plan": "プラン",
     "processing": "処理中...",
     "selectPlan": "プランを選択してください",
+    "selectPlanDescription": "以下のプランをお選び下さい。お支払いはクレジットカードにてお支払いとなります。",
+    "selectPlanTitle": "プラン一覧",
     "settings": {
       "description": "サブスクリプションと支払い方法の管理",
       "title": "サブスクリプション設定"
@@ -60,7 +65,8 @@
     "status": {
       "active": "有効",
       "pastDue": "支払い期限超過",
-      "trial": "トライアル"
+      "trial": "トライアル",
+      "trialExpired": "トライアル終了"
     },
     "title": "サブスクリプション",
     "titleUpgrade": "プランのアップグレード",

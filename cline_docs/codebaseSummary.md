@@ -22,7 +22,7 @@ src/
 ### Backend Services
 
 ```
-heroku/
+cloudrun/
 ├── src/
 │   ├── repositories/   # Data access
 │   ├── services/       # Business logic

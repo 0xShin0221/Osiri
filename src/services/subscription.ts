@@ -89,17 +89,37 @@ export class SubscriptionService {
     ): Promise<SubscriptionPlanWithPricing[]> {
         try {
             const currency = LANGUAGE_CURRENCY_MAP[language];
-
             const { data, error } = await supabase
                 .from("subscription_plans_with_pricing")
                 .select(`*`)
+                .filter("name", "ilike", `%(${language})`)
                 .eq("currency", currency)
                 .eq("has_usage_billing", false)
                 .eq("is_active", true)
                 .order("sort_order");
 
             if (error) throw error;
-            return data || [];
+
+            if (!data?.length) {
+                console.log(
+                    "No plans found for",
+                    language,
+                    "falling back to English",
+                );
+                const { data: enData, error: enError } = await supabase
+                    .from("subscription_plans_with_pricing")
+                    .select(`*`)
+                    .filter("name", "ilike", `%(en)`)
+                    .eq("currency", currency)
+                    .eq("has_usage_billing", false)
+                    .eq("is_active", true)
+                    .order("sort_order");
+
+                if (enError) throw enError;
+                return enData || [];
+            }
+
+            return data;
         } catch (error) {
             console.error("Error fetching subscription plans:", error);
             throw error;

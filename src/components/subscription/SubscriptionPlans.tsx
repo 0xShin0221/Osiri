@@ -30,6 +30,10 @@ interface SubscriptionPlansProps {
   isLoading: boolean;
 }
 
+function formatPlanName(name: string): string {
+  return name.replace(/\([a-z]{2}\)$/, "").trim();
+}
+
 export default function SubscriptionPlans({
   organization,
   plans,
@@ -229,7 +233,9 @@ export default function SubscriptionPlans({
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-medium">{plan.name}</span>
+                        <span className="text-lg font-medium">
+                          {formatPlanName(plan.name || "")}
+                        </span>
                         {isCurrentPlan && (
                           <span className="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-100">
                             {t("subscription.currentPlan")}
