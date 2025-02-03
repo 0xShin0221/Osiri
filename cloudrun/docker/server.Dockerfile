@@ -8,6 +8,6 @@ RUN npm run build
 RUN npm ci --only=production
 
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["npm", "run", "start"]
