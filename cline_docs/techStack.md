@@ -39,7 +39,7 @@
 
 ### Background Processing
 
-- Heroku
+- Cloudrun
   - Worker processes
   - Scheduled tasks
   - Heavy computation
@@ -65,7 +65,7 @@
 ### Testing
 
 - Playwright
-- Jest (Heroku services)
+- Jest (Cloudrun services)
 - Deno testing (Supabase functions)
 
 ### DevOps
@@ -86,7 +86,7 @@
 ### Infrastructure Monitoring
 
 - Supabase metrics
-- Heroku logs
+- Cloudrun logs
 - Custom monitoring
 
 ## Database Schema
