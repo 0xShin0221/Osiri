@@ -50,11 +50,11 @@ export const ptTemplate = (
                 </div>
               </div>
               <p>Fique atento à nossa próxima atualização!</p>
-              <a href="https://osiri.xyz" class="cta-button">Visite nosso site</a>
+              <a href="https://o-siri.com" class="cta-button">Visite nosso site</a>
               <div class="footer">
                 <p>© 2024 Osiri by Dig Da Tech LLC. Todos os direitos reservados.</p>
                 <p>Se desejar cancelar sua assinatura, <a href="${unsubscribeUrl}">clique aqui</a>.</p>
-                <p>Se tiver alguma dúvida, entre em contato conosco em support@osiri.xyz</p>
+                <p>Se tiver alguma dúvida, entre em contato conosco em support@o-siri.com</p>
               </div>
             </div>
           </div>

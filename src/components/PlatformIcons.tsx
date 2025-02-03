@@ -1,10 +1,10 @@
 import type { Database } from "@/types/database.types";
 type Platform = Database["public"]["Enums"]["notification_platform"];
 
-export const SlackIcon = () => (
+export const SlackIcon = ({ className = "w-8 h-8" }) => (
   <svg
     viewBox="0 0 54 54"
-    className="w-8 h-8"
+    className={className}
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>Slack Icon</title>
@@ -27,10 +27,10 @@ export const SlackIcon = () => (
   </svg>
 );
 
-export const DiscordIcon = () => (
+export const DiscordIcon = ({ className = "w-8 h-8" }) => (
   <svg
     viewBox="0 -28.5 256 256"
-    className="w-8 h-8"
+    className={className}
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>Discord Icon</title>
@@ -41,10 +41,10 @@ export const DiscordIcon = () => (
   </svg>
 );
 
-export const EmailIcon = () => (
+export const EmailIcon = ({ className = "w-8 h-8" }) => (
   <svg
     viewBox="0 0 24 24"
-    className="w-8 h-8"
+    className={className}
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     stroke="currentColor"
@@ -58,10 +58,10 @@ export const EmailIcon = () => (
   </svg>
 );
 
-export const LineIcon = () => (
+export const LineIcon = ({ className = "w-8 h-8" }) => (
   <svg
     viewBox="0 0 24 24"
-    className="w-8 h-8"
+    className={className}
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>LINE Icon</title>
@@ -76,10 +76,10 @@ export const LineIcon = () => (
   </svg>
 );
 
-export const ChatworkIcon = () => (
+export const ChatworkIcon = ({ className = "w-8 h-8" }) => (
   <svg
     viewBox="0 0 24 24"
-    className="w-8 h-8"
+    className={className}
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>Chatwork Icon</title>

@@ -149,7 +149,9 @@ export class NotificationRepository extends BaseRepository {
       }
 
       // Filter out articles that already have notifications
-      const articleIds = translations.map((t) => t.article_id).filter(Boolean);
+      const articleIds = translations.map((t) => t.article_id).filter((
+        id,
+      ): id is string => id !== null);
 
       // Get existing notifications for these articles
       const { data: existingLogs, error: logsError } = await this.client
@@ -193,7 +195,7 @@ export class NotificationRepository extends BaseRepository {
         ...new Set(
           articles
             .map((a) => a.feed_id)
-            .filter(Boolean),
+            .filter((id): id is string => id !== null),
         ),
       ];
 
@@ -217,7 +219,7 @@ export class NotificationRepository extends BaseRepository {
         ...new Set(
           channelFeeds
             .map((cf) => cf.channel_id)
-            .filter(Boolean),
+            .filter((id): id is string => id !== null),
         ),
       ];
 
@@ -348,10 +350,9 @@ export class NotificationRepository extends BaseRepository {
         return { success: true, data: [] };
       }
 
-      const channelIds = channelFeeds.map((cf) => cf.channel_id).filter(
-        Boolean,
-      );
-
+      const channelIds = channelFeeds.map((cf) => cf.channel_id).filter((
+        id,
+      ): id is string => id !== null);
       // Then get the active channels
       const { data: channels, error: channelsError } = await this.client
         .from("notification_channels")

@@ -76,10 +76,10 @@ export const FAQ = () => {
         {t("faq.contact.text")}{" "}
         <a
           rel="noreferrer noopener"
-          href="mailto:support@osiri.xyz"
+          href="mailto:support@o-siri.com"
           className="text-primary transition-all border-primary hover:border-b-2"
         >
-          {t("faq.contact.link")} support[at]osiri.xyz
+          {t("faq.contact.link")} support[at]o-siri.com
         </a>
       </h3>
     </section>

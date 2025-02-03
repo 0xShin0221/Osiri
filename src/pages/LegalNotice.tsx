@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
 
-const LegalNotice = () => {
+export default function LegalNotice() {
   const { t } = useTranslation("legal");
 
   return (
@@ -14,78 +14,83 @@ const LegalNotice = () => {
             <tbody>
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top w-1/4">
-                  {t("seller.label")}
+                  {t("seller")}
                 </th>
                 <td className="py-4">Osiri</td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("representative.label")}
+                  {t("representative")}
                 </th>
-                <td className="py-4">{t("representative.value")}</td>
+                <td className="py-4">中川真太郎</td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("address.label")}
+                  {t("address")}
                 </th>
-                <td className="py-4">{t("address.value")}</td>
+                <td className="py-4">{t("contact.phoneValue")}</td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("contact.label")}
+                  {t("contact.title")}
                 </th>
                 <td className="py-4">
-                  {t("contact.email.label")}: {t("contact.email.value")}
+                  {t("contact.email")}: {t("contact.emailValue")}
                   <br />
-                  {t("contact.phone.label")}: {t("contact.phone.value")}
+                  {t("contact.phone")}: {t("contact.phoneValue")}
                   <br />
-                  {t("contact.hours.label")}: {t("contact.hours.value")}
+                  {t("contact.hours")}: {t("contact.hoursValue")}
                 </td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("service.label")}
+                  {t("service.title")}
                 </th>
                 <td className="py-4">
                   {t("service.name")}
                   <br />
                   {t("service.nameJp")}
+                  <br />
+                  <p className="mt-2">{t("service.description")}</p>
                 </td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("price.label")}
+                  {t("price.title")}
                 </th>
                 <td className="py-4">
-                  {t("price.monthly")}
+                  {t("price.amount")}
                   <br />
                   <span className="text-sm text-gray-600">
-                    {t("price.taxIncluded")}
+                    {t("price.note")}
                   </span>
                 </td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("trial.label")}
+                  {t("trial.title")}
                 </th>
                 <td className="py-4">
                   {t("trial.period")}
                   <br />
                   {t("trial.noCard")}
                   <br />
-                  {t("trial.fullAccess")}
+                  <p className="mt-2 font-medium">{t("trial.after")}</p>
+                  {t("trial.billing")}
+                  <br />
+                  {t("trial.cancel")}
                 </td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("payment.label")}
+                  {t("payment.title")}
                 </th>
                 <td className="py-4">
                   {t("payment.method")}
@@ -102,18 +107,18 @@ const LegalNotice = () => {
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("billing.label")}
+                  {t("billing.title")}
                 </th>
                 <td className="py-4">
                   {t("billing.timing")}
                   <br />
-                  {t("billing.autoCharge")}
+                  {t("billing.note")}
                 </td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("additionalFees.label")}
+                  {t("additionalFees.title")}
                 </th>
                 <td className="py-4">
                   {t("additionalFees.none")}
@@ -124,39 +129,59 @@ const LegalNotice = () => {
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("delivery.label")}
+                  {t("delivery.title")}
                 </th>
                 <td className="py-4">{t("delivery.immediate")}</td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("cancellation.label")}
+                  {t("restrictions.title")}
                 </th>
                 <td className="py-4">
-                  <p className="mb-2">{t("cancellation.about.title")}</p>
+                  <ul className="list-disc pl-5">
+                    <li>{t("restrictions.items.sharing")}</li>
+                    <li>{t("restrictions.items.channels")}</li>
+                    <li>{t("restrictions.items.frequency")}</li>
+                  </ul>
+                </td>
+              </tr>
+
+              <tr className="border-b">
+                <th className="py-4 pr-4 text-left align-top">
+                  {t("cancel.title")}
+                </th>
+                <td className="py-4">
+                  <p className="mb-2">{t("cancel.about.title")}</p>
                   <ul className="list-disc pl-5 mb-4">
-                    <li>{t("cancellation.about.anytime")}</li>
-                    <li>{t("cancellation.about.mypage")}</li>
-                    <li>{t("cancellation.about.untilEnd")}</li>
-                    <li>{t("cancellation.about.noRefund")}</li>
+                    <li>{t("cancel.about.items.anytime")}</li>
+                    <li>{t("cancel.about.items.mypage")}</li>
+                    <li>{t("cancel.about.items.untilEnd")}</li>
+                    <li>{t("cancel.about.items.noRefund")}</li>
                   </ul>
 
-                  <p className="mb-2">{t("cancellation.process.title")}</p>
+                  <p className="mb-2">{t("cancel.process.title")}</p>
                   <ol className="list-decimal pl-5">
-                    <li>{t("cancellation.process.login")}</li>
-                    <li>{t("cancellation.process.menu")}</li>
-                    <li>{t("cancellation.process.follow")}</li>
+                    <li>{t("cancel.process.steps.login")}</li>
+                    <li>{t("cancel.process.steps.menu")}</li>
+                    <li>{t("cancel.process.steps.follow")}</li>
                   </ol>
                 </td>
               </tr>
 
               <tr className="border-b">
                 <th className="py-4 pr-4 text-left align-top">
-                  {t("requirements.label")}
+                  {t("data.title")}
+                </th>
+                <td className="py-4">{t("data.retention")}</td>
+              </tr>
+
+              <tr className="border-b">
+                <th className="py-4 pr-4 text-left align-top">
+                  {t("requirements.title")}
                 </th>
                 <td className="py-4">
-                  {t("requirements.title")}
+                  {t("requirements.subtitle")}
                   <br />
                   {t("requirements.pc")}
                   <br />
@@ -171,6 +196,4 @@ const LegalNotice = () => {
       </Card>
     </div>
   );
-};
-
-export default LegalNotice;
+}

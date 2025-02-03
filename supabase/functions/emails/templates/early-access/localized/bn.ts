@@ -51,11 +51,11 @@ export const bnTemplate = (data?: Record<string, any>) => {
 
             <p>আমরা বিটা পরিষেবা চালু হলে আবার আপনার সাথে যোগাযোগ করব। অনুগ্রহ করে অপেক্ষা করুন।</p>
             
-            <a href="https://osiri.xyz" class="cta-button">ওয়েবসাইট দেখুন</a>
+            <a href="https://o-siri.com" class="cta-button">ওয়েবসাইট দেখুন</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. সর্বস্বত্ব সংরক্ষিত।</p>
-              <p>যদি আপনার কোনও প্রশ্ন থাকে, দয়া করে support@osiri.xyz-এ যোগাযোগ করুন।</p>
+              <p>যদি আপনার কোনও প্রশ্ন থাকে, দয়া করে support@o-siri.com-এ যোগাযোগ করুন।</p>
             </div>
           </div>
         </div>

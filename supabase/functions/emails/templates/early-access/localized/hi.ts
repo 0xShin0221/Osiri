@@ -51,11 +51,11 @@ export const hiTemplate = (data?: Record<string, any>) => {
 
             <p>हम बीटा सेवा के शुरू होने पर आपसे फिर से संपर्क करेंगे। कृपया प्रतीक्षा करें।</p>
             
-            <a href="https://osiri.xyz" class="cta-button">वेबसाइट देखें</a>
+            <a href="https://o-siri.com" class="cta-button">वेबसाइट देखें</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. सर्वाधिकार सुरक्षित।</p>
-              <p>अगर आपके कोई प्रश्न हैं, तो support@osiri.xyz पर संपर्क करें।</p>
+              <p>अगर आपके कोई प्रश्न हैं, तो support@o-siri.com पर संपर्क करें।</p>
             </div>
           </div>
         </div>

@@ -51,11 +51,11 @@ export const zhTemplate = (data?: Record<string, any>) => {
 
             <p>我们将在测试版服务上线时再次联系您，敬请期待。</p>
             
-            <a href="https://osiri.xyz" class="cta-button">访问官网</a>
+            <a href="https://o-siri.com" class="cta-button">访问官网</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. 版权所有。</p>
-              <p>如有疑问，请发送邮件至 support@osiri.xyz 联系我们。</p>
+              <p>如有疑问，请发送邮件至 support@o-siri.com 联系我们。</p>
             </div>
           </div>
         </div>

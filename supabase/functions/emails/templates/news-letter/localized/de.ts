@@ -58,12 +58,12 @@ export const deTemplate = (
   
               <p>Bleiben Sie gespannt auf unser nächstes Update!</p>
               
-              <a href="https://osiri.xyz" class="cta-button">Besuchen Sie unsere Website</a>
+              <a href="https://o-siri.com" class="cta-button">Besuchen Sie unsere Website</a>
               
               <div class="footer">
                 <p>© 2024 Osiri by Dig Da Tech LLC. Alle Rechte vorbehalten.</p>
                  <p>Wenn Sie das Abonnement abbestellen möchten, <a href="${unsubscribeUrl}">klicken Sie hier</a>.</p>
-                <p>Bei Fragen kontaktieren Sie uns bitte unter support@osiri.xyz</p>
+                <p>Bei Fragen kontaktieren Sie uns bitte unter support@o-siri.com</p>
               </div>
             </div>
           </div>

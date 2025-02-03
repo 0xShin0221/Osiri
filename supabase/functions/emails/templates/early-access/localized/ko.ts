@@ -51,11 +51,11 @@ export const koTemplate = (data?: Record<string, any>) => {
 
             <p>베타 서비스가 시작되면 다시 연락드리겠습니다. 조금만 기다려 주세요.</p>
             
-            <a href="https://osiri.xyz" class="cta-button">웹사이트 방문하기</a>
+            <a href="https://o-siri.com" class="cta-button">웹사이트 방문하기</a>
             
             <div class="footer">
               <p>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</p>
-              <p>문의 사항이 있으시면 support@osiri.xyz로 연락해 주세요.</p>
+              <p>문의 사항이 있으시면 support@o-siri.com로 연락해 주세요.</p>
             </div>
           </div>
         </div>

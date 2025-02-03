@@ -58,12 +58,12 @@ export const idTemplate = (
   
               <p>Tunggu update kami berikutnya!</p>
               
-              <a href="https://osiri.xyz" class="cta-button">Kunjungi Website Kami</a>
+              <a href="https://o-siri.com" class="cta-button">Kunjungi Website Kami</a>
               
               <div class="footer">
                 <p>© 2024 Osiri by Dig Da Tech LLC. Hak cipta dilindungi undang-undang.</p>
                 <p>Jika Anda ingin berhenti berlangganan, <a href="${unsubscribeUrl}">klik di sini</a>.</p>
-                <p>Jika Anda memiliki pertanyaan, silakan hubungi kami di support@osiri.xyz</p>
+                <p>Jika Anda memiliki pertanyaan, silakan hubungi kami di support@o-siri.com</p>
               </div>
             </div>
           </div>

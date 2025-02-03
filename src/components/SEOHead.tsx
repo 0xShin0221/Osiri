@@ -15,7 +15,7 @@ export function SEOHead({
   noindex = false,
 }: SEOProps) {
   const location = useLocation();
-  const canonical = `https://osiri.xyz${location.pathname}`;
+  const canonical = `https://o-siri.com${location.pathname}`;
 
   return (
     <Helmet>

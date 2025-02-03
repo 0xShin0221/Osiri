@@ -1,0 +1,34 @@
+{
+  "notifications": {
+    "card": {
+      "channels": "配信先",
+      "keyPoints": "重要ポイント",
+      "readOriginal": "元の記事を読む",
+      "showLess": "閉じる",
+      "showMore": "もっと見る"
+    },
+    "status": {
+      "completed": "完了",
+      "failed": "失敗",
+      "pending": "待機中",
+      "processing": "処理中",
+      "skipped": "スキップ"
+    },
+    "title": "最新の記事"
+  },
+  "stats": {
+    "month": {
+      "title": "今月の合計"
+    },
+    "today": {
+      "title": "本日"
+    },
+    "week": {
+      "title": "今週の合計"
+    },
+    "weekly": {
+      "completed": "記事数",
+      "title": "直近7日間のサマリー"
+    }
+  }
+}

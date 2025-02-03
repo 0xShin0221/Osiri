@@ -1,0 +1,45 @@
+import { corsHeaders } from "../_shared/cors.ts";
+
+Deno.serve(async () => {
+  try {
+    const API_URL = Deno.env.get("HEROKU_APP_API_URL");
+    const API_KEY = Deno.env.get("HEROKU_APP_API_KEY");
+
+    if (!API_URL || !API_KEY) {
+      throw new Error(
+        "Missing environment variables HEROKU_APP_API_URL or HEROKU_APP_API_KEY",
+      );
+    }
+
+    const response = await fetch(`${API_URL}/notifications/process`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": API_KEY,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Request failed: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const result = await response.json();
+
+    return new Response(
+      JSON.stringify(result),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  } catch (error) {
+    console.error("Error:", error);
+
+    return new Response(
+      JSON.stringify({ error: (error as Error).message }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      },
+    );
+  }
+});

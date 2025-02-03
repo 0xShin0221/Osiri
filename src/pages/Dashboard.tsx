@@ -1,29 +1,48 @@
+import { useAuth } from "@/hooks/useAuth";
+import { useOrganization } from "@/hooks/useOrganization";
+import { useStats } from "@/hooks/useStats";
+import { StatsCards } from "@/components/dashboard/StatsCards";
+import { WeeklyChart } from "@/components/dashboard/WeeklyChart";
+import { NotificationList } from "@/components/dashboard/NotificationList";
+import { useTranslations } from "@/hooks/useTranslations";
+
 export function Dashboard() {
+  const { session } = useAuth();
+  const { organization } = useOrganization({ session });
+  const {
+    dailyCount,
+    weeklyStats,
+    monthlyCount,
+    loading: statsLoading,
+  } = useStats({
+    organizationId: organization?.id,
+  });
+
+  const { translations, loading: translationsLoading } = useTranslations({
+    organizationId: organization?.id,
+  });
+
+  if (statsLoading || translationsLoading) {
     return (
-      <>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Feed Categories */}
-          <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Your Feed Categories</h2>
-            {/* Category content */}
-          </div>
-  
-          {/* Latest Articles */}
-          <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Latest Articles</h2>
-            {/* Articles content */}
-          </div>
-  
-          {/* Integrations */}
-          <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Integrations</h2>
-            {/* Integrations content */}
-          </div>
+      <div className="container mx-auto p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
         </div>
       </div>
-      </>
     );
-    
   }
+
+  return (
+    <div className="container mx-auto p-6">
+      <div className="space-y-6">
+        <StatsCards
+          dailyCount={dailyCount}
+          weeklyStats={weeklyStats}
+          monthlyCount={monthlyCount}
+        />
+        <WeeklyChart weeklyStats={weeklyStats} />
+        <NotificationList translations={translations} />
+      </div>
+    </div>
+  );
+}

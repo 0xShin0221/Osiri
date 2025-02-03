@@ -1,0 +1,34 @@
+{
+  "notifications": {
+    "card": {
+      "channels": "Distribution channels",
+      "keyPoints": "Key Points",
+      "readOriginal": "Read Original",
+      "showLess": "Show less",
+      "showMore": "Show more"
+    },
+    "status": {
+      "completed": "Completed",
+      "failed": "Failed",
+      "pending": "Pending",
+      "processing": "Processing",
+      "skipped": "Skipped"
+    },
+    "title": "Latest Articles"
+  },
+  "stats": {
+    "month": {
+      "title": "Monthly Total"
+    },
+    "today": {
+      "title": "Today"
+    },
+    "week": {
+      "title": "Weekly Total"
+    },
+    "weekly": {
+      "completed": "Articles",
+      "title": "Last 7 Days Summary"
+    }
+  }
+}
