@@ -1,0 +1,209 @@
+-- CREATE SCHEMA IF NOT EXISTS stripe;
+-- CREATE EXTENSION IF NOT EXISTS wrappers WITH SCHEMA extensions;
+
+-- -- Create FDW
+-- CREATE FOREIGN DATA WRAPPER stripe_wrapper
+--  HANDLER stripe_fdw_handler
+--  VALIDATOR stripe_fdw_validator;
+
+-- -- Create server
+-- CREATE SERVER stripe_server
+--  FOREIGN DATA WRAPPER stripe_wrapper
+--  OPTIONS (
+--    api_key '', -- Set this to your Stripe API key
+--    api_url 'https://api.stripe.com/v1/',
+--    api_version '2024-06-20'
+--  );
+
+-- -- Create foreign tables
+-- CREATE FOREIGN TABLE stripe.products (
+--  id text,
+--  name text,
+--  active boolean,
+--  description text,
+--  default_price text,
+--  created timestamp,
+--  updated timestamp,
+--  attrs jsonb
+-- )
+--  SERVER stripe_server
+--  OPTIONS (
+--    object 'products',
+--    rowid_column 'id'
+--  );
+
+-- CREATE FOREIGN TABLE stripe.prices (
+--  id text,
+--  active boolean,
+--  currency text,
+--  product text,
+--  unit_amount bigint,
+--  type text,
+--  created timestamp,
+--  attrs jsonb
+-- )
+--  SERVER stripe_server
+--  OPTIONS (
+--    object 'prices'
+--  );
+
+-- CREATE FOREIGN TABLE stripe.subscriptions (
+--   id text,
+--   customer text,
+--   currency text,
+--   current_period_start timestamp,
+--   current_period_end timestamp,
+--   status text,
+--   cancel_at_period_end boolean,
+--   created timestamp,
+--   attrs jsonb
+-- )
+--   SERVER stripe_server
+--   OPTIONS (
+--     object 'subscriptions',
+--     rowid_column 'id'
+--   );
+
+-- CREATE TYPE subscription_status AS ENUM ('trialing', 'active', 'past_due', 'canceled');
+
+-- create type subscription_currency as enum ( 'usd', 'jpy', 'cny', 'krw', 'eur', 'inr', 'brl', 'bdt', 'rub', 'idr');
+
+-- -- Plans and limits tables
+-- CREATE TABLE subscription_plans (
+--  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+--  name text NOT NULL,
+--  description text,
+--  currency subscription_currency NOT NULL DEFAULT 'usd',
+--  stripe_product_id text,
+--  stripe_base_price_id text,
+--  stripe_metered_price_id text,
+--  base_notifications_per_day int NOT NULL,
+--  has_usage_billing boolean DEFAULT false,
+--  sort_order int DEFAULT 0,
+--  is_active boolean DEFAULT true,
+--  created_at timestamptz DEFAULT CURRENT_TIMESTAMP,
+--  updated_at timestamptz DEFAULT CURRENT_TIMESTAMP,
+--  CONSTRAINT valid_pricing CHECK (
+--    (has_usage_billing = false AND stripe_metered_price_id IS NULL) OR
+--    (has_usage_billing = true AND stripe_metered_price_id IS NOT NULL)
+--  )
+-- );
+
+-- -- Add subscription columns to organizations
+-- ALTER TABLE organizations 
+-- ADD COLUMN plan_id uuid REFERENCES subscription_plans(id),
+-- ADD COLUMN notifications_used_this_month int DEFAULT 0,
+-- ADD COLUMN last_usage_reset timestamptz,
+-- ADD COLUMN trial_start_date timestamptz not null default CURRENT_TIMESTAMP,
+-- ADD COLUMN trial_end_date timestamptz,
+-- ADD COLUMN stripe_customer_id text,
+-- ADD COLUMN subscription_status subscription_status not null default 'trialing';
+
+-- -- Usage tracking
+-- CREATE OR REPLACE FUNCTION increment_notification_usage()
+-- RETURNS trigger AS $$
+-- BEGIN
+--  UPDATE organizations 
+--  SET 
+--    notifications_used_this_month = CASE 
+--      WHEN last_usage_reset IS NULL OR 
+--           EXTRACT(month FROM last_usage_reset) != EXTRACT(month FROM CURRENT_TIMESTAMP)
+--      THEN 1
+--      ELSE notifications_used_this_month + 1
+--    END,
+--    last_usage_reset = CASE 
+--      WHEN last_usage_reset IS NULL OR 
+--           EXTRACT(month FROM last_usage_reset) != EXTRACT(month FROM CURRENT_TIMESTAMP)
+--      THEN CURRENT_TIMESTAMP 
+--      ELSE last_usage_reset
+--    END
+--  WHERE id = NEW.organization_id;
+--  RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE OR REPLACE TRIGGER track_notification_usage
+--  AFTER INSERT ON notification_logs
+--  FOR EACH ROW 
+--  WHEN (NEW.status = 'success')
+--  EXECUTE FUNCTION increment_notification_usage();
+
+-- -- Views for monitoring
+-- CREATE OR REPLACE VIEW organization_subscription_status AS 
+-- SELECT 
+--   o.id,
+--   o.name,
+--   o.created_at,
+--   o.updated_at,
+--   o.notifications_used_this_month,
+--   o.last_usage_reset,
+--   o.trial_start_date,
+--   o.trial_end_date,
+--   o.stripe_customer_id,
+--   o.subscription_status,
+--   COALESCE(
+--     o.plan_id::text,
+--     stripe_sub.attrs->'plan'->>'product'
+--   ) as stripe_product_id,
+--   INITCAP(COALESCE(
+--     sp.name, 
+--     stripe_sub.attrs->'plan'->'metadata'->>'planType'
+--   )) as plan_name,
+--   COALESCE(
+--     sp.stripe_base_price_id,
+--     stripe_sub.attrs->'plan'->>'id'
+--   ) as stripe_base_price_id,
+--   sp.stripe_metered_price_id,
+--   sp.base_notifications_per_day,
+--   stripe_sub.current_period_end as subscription_end_date,
+--   stripe_sub.id as subscription_id,
+--   stripe_sub.attrs->>'status' as stripe_status,
+--   to_timestamp((stripe_sub.attrs->>'current_period_start')::bigint) as stripe_period_start,
+--   to_timestamp((stripe_sub.attrs->>'current_period_end')::bigint) as stripe_period_end,
+--   to_timestamp((stripe_sub.attrs->>'trial_start')::bigint) as stripe_trial_start,
+--   to_timestamp((stripe_sub.attrs->>'trial_end')::bigint) as stripe_trial_end,
+--   stripe_sub.attrs->>'cancel_at_period_end' as will_cancel,
+--   to_timestamp((stripe_sub.attrs->>'cancel_at')::bigint) as cancel_at,
+--   to_timestamp((stripe_sub.attrs->>'canceled_at')::bigint) as canceled_at,
+--   stripe_sub.attrs->>'default_payment_method' as default_payment_method,
+--   stripe_sub.attrs->>'latest_invoice' as latest_invoice,
+--   stripe_sub.attrs->>'collection_method' as collection_method,
+--   stripe_sub.attrs->'plan'->>'interval' as billing_interval,
+--   (stripe_sub.attrs->'plan'->>'amount')::integer as plan_price_amount,
+--   stripe_sub.attrs->'plan'->>'currency' as plan_currency,
+--   stripe_sub.attrs->'plan'->'metadata'->>'planType' as plan_type,
+--   stripe_sub.attrs->'plan'->'metadata'->>'language' as plan_language
+-- FROM organizations o
+-- LEFT JOIN subscription_plans sp ON o.plan_id = sp.id
+-- LEFT JOIN stripe.subscriptions stripe_sub 
+--   ON o.stripe_customer_id = stripe_sub.customer;
+
+-- CREATE OR REPLACE VIEW subscription_plans_with_pricing AS 
+-- SELECT 
+--   p.*,
+--   b.base_price_amount,
+--   b.base_price_currency,
+--   b.base_price_active
+-- FROM subscription_plans p
+-- LEFT JOIN (
+--   SELECT 
+--     id as price_id,
+--     COALESCE(unit_amount, (attrs->>'unit_amount')::bigint) as base_price_amount,
+--     COALESCE(currency, attrs->>'currency') as base_price_currency,
+--     active as base_price_active
+--   FROM stripe.prices
+--   WHERE id IN (SELECT stripe_base_price_id FROM subscription_plans WHERE stripe_base_price_id IS NOT NULL)
+-- ) b ON p.stripe_base_price_id = b.price_id;
+
+-- grant select on subscription_plans TO anon, authenticated;
+-- grant select on stripe.products TO anon, authenticated;
+-- grant select on stripe.prices TO anon, authenticated;
+
+-- grant select on organization_subscription_status TO authenticated;
+-- grant select on stripe.subscriptions TO authenticated;
+-- grant select on wrappers_fdw_stats TO authenticated;
+-- grant usage on schema stripe to service_role;
+-- grant all on all tables in schema stripe to service_role;
+-- alter default privileges in schema stripe grant all on tables to service_role;
+-- grant usage on schema extensions to service_role;
+-- grant all on extensions.wrappers_fdw_stats to service_role;

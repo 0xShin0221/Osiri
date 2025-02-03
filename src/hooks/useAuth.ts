@@ -23,77 +23,134 @@ export function useAuth() {
                 .from("organization_members")
                 .select("organization_id")
                 .eq("user_id", baseUser.id)
-                .single();
+                .maybeSingle();
 
-            if (orgError) throw orgError;
+            if (orgError) {
+                if (orgError.code === "PGRST116") {
+                    setUser({
+                        ...baseUser,
+                        organization_id: undefined,
+                    });
+                    return;
+                }
+                throw orgError;
+            }
 
-            // Combine user data with organization info
             setUser({
                 ...baseUser,
                 organization_id: orgMember?.organization_id,
             });
         } catch (error) {
-            console.error("Error fetching organization:", error);
-            // Still set the user, just without organization info
-            setUser(baseUser);
+            if ((error as { code?: string })?.code !== "PGRST116") {
+                console.error("Error fetching organization data:", error);
+            }
+
+            setUser({
+                ...baseUser,
+                organization_id: undefined,
+            });
         }
     };
 
     useEffect(() => {
-        // Get initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            fetchUserWithOrg(session?.user ?? null);
-            setLoading(false);
-        });
+        let mounted = true;
 
-        // Listen for auth changes
+        const initializeAuth = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!mounted) return;
+
+                setSession(session);
+                await fetchUserWithOrg(session?.user ?? null);
+            } catch (error) {
+                console.error("Error initializing auth:", error);
+            } finally {
+                if (mounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        initializeAuth();
+
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            if (!mounted) return;
+
             setSession(session);
             await fetchUserWithOrg(session?.user ?? null);
             setLoading(false);
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            mounted = false;
+            subscription.unsubscribe();
+        };
     }, []);
 
     const signIn = async (email: string, password: string) => {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-        if (error) throw error;
-        return data;
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+            if (error) throw error;
+            return data;
+        } finally {
+            setLoading(false);
+        }
     };
 
     const signUp = async (email: string, password: string) => {
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-        });
-        if (error) throw error;
-        return data;
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+            });
+            if (error) throw error;
+            return data;
+        } finally {
+            setLoading(false);
+        }
     };
 
     const signOut = async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
+        setLoading(true);
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+            setUser(null);
+            setSession(null);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const resetPassword = async (email: string) => {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/reset-password`,
-        });
-        if (error) throw error;
+        setLoading(true);
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/reset-password`,
+            });
+            if (error) throw error;
+        } finally {
+            setLoading(false);
+        }
     };
 
     const updatePassword = async (newPassword: string) => {
-        const { error } = await supabase.auth.updateUser({
-            password: newPassword,
-        });
-        if (error) throw error;
+        setLoading(true);
+        try {
+            const { error } = await supabase.auth.updateUser({
+                password: newPassword,
+            });
+            if (error) throw error;
+        } finally {
+            setLoading(false);
+        }
     };
 
     return {

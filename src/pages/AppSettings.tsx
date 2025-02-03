@@ -1,27 +1,27 @@
-// AppSettingsPage.tsx
-import { Building2, Users } from "lucide-react";
+import { Building2, CreditCard } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
 import { PageLoading } from "@/components/ui/page-loading";
 import { OrganizationMembers } from "@/components/settings/OrganizationMembers";
-
 import { useTranslation } from "react-i18next";
 import { OrganizationSettings } from "@/components/settings/OrganizationSettings";
 import { CreateOrganization } from "@/components/settings/CreateOrganization";
+import { useSubscription } from "@/hooks/useSubscription";
+import SubscriptionPlans from "@/components/subscription/SubscriptionPlans";
 
 export default function AppSettingsPage() {
   const { t } = useTranslation("settings");
-  const { session } = useAuth();
   const {
     organization,
-    isLoading,
+    isLoading: orgLoading,
     error: orgError,
     createOrganization,
     updateOrganization,
-  } = useOrganization({ session });
+  } = useOrganization();
 
-  if (isLoading) {
+  const { isLoading: subLoading, plans, handleCheckout } = useSubscription();
+
+  if (orgLoading) {
     return <PageLoading />;
   }
 
@@ -60,24 +60,31 @@ export default function AppSettingsPage() {
               {t("tabs.organization")}
             </TabsTrigger>
             <TabsTrigger
-              value="members"
+              value="subscription"
               className="data-[state=active]:bg-blue-100 dark:data-[state=active]:bg-blue-900/20"
             >
-              <Users className="w-4 h-4 mr-2" />
-              {t("tabs.members")}
+              <CreditCard className="w-4 h-4 mr-2" />
+              {t("tabs.subscription")}
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="organization" className="space-y-4">
+          <TabsContent value="organization" className="space-y-8">
             <OrganizationSettings
               organization={organization}
               error={orgError}
               onUpdateOrganization={updateOrganization}
             />
+
+            <OrganizationMembers organizationId={organization.id!} />
           </TabsContent>
 
-          <TabsContent value="members">
-            <OrganizationMembers organizationId={organization.id} />
+          <TabsContent value="subscription">
+            <SubscriptionPlans
+              plans={plans}
+              onSubscribe={handleCheckout}
+              organization={organization}
+              isLoading={subLoading}
+            />
           </TabsContent>
         </Tabs>
       </div>

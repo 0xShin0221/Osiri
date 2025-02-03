@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { StatsService, WeeklyStats } from "@/services/stats";
 
 interface UseStatsOptions {
-    organizationId?: string;
+    organizationId?: string | null;
 }
 
 export function useStats({ organizationId }: UseStatsOptions) {

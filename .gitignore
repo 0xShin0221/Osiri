@@ -27,4 +27,7 @@ dist-ssr
 
 deno.lock
 
-heroku/test-results/
+cloudrun/test-results/
+
+insert_plans.sql
+stripe_results.json

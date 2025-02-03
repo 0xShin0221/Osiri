@@ -14,17 +14,17 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { Database } from "@/types/database.types";
 
-type Organization = Database["public"]["Tables"]["organizations"]["Row"];
+type OrganizationSubscriptionStatusRow =
+  Database["public"]["Views"]["organization_subscription_status"]["Row"];
+type OrganizationUpdate =
+  Database["public"]["Tables"]["organizations"]["Update"];
 
 interface OrganizationSettingsProps {
-  organization: {
-    id: string;
-    name: string;
-  };
+  organization: OrganizationSubscriptionStatusRow;
   error?: string | null;
   onUpdateOrganization: (
-    data: Partial<Organization>
-  ) => Promise<Organization | null>;
+    data: Pick<OrganizationUpdate, "name">
+  ) => Promise<OrganizationSubscriptionStatusRow | null>;
 }
 
 export function OrganizationSettings({
@@ -38,7 +38,7 @@ export function OrganizationSettings({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleStartEditing = () => {
-    setNewOrgName(organization.name);
+    setNewOrgName(organization.name ?? "");
     setIsEditing(true);
   };
 
@@ -81,7 +81,7 @@ export function OrganizationSettings({
                   <Input
                     value={newOrgName}
                     onChange={(e) => setNewOrgName(e.target.value)}
-                    placeholder={organization.name}
+                    placeholder={organization.name ?? ""}
                     className="max-w-md"
                   />
                   <Button

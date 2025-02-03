@@ -35,8 +35,50 @@
     "description": "Manage your organization settings and team members.",
     "title": "Settings"
   },
+  "subscription": {
+    "billingPeriod": "Billing Period",
+    "changePlan": "Change Plan",
+    "currentPlan": "Current Plan",
+    "description": "Manage subscription and renewal",
+    "descriptionSelect": "Choose a plan that best fits your needs",
+    "error": {
+      "unknown": "An error occurred"
+    },
+    "features": "Features included",
+    "free": "Free",
+    "freePlan": "Free Plan",
+    "manageBilling": "Manage Billing",
+    "notApplicable": "N/A",
+    "notificationsPerDay": "{{count}} notifications per day",
+    "notificationsPerDay_0": "{{count}} notifications/day",
+    "notificationsPerDay_plural": "{{count}} notifications per day",
+    "payAsYouGo": "Pay as you go for additional usage",
+    "perMonth": "/mo",
+    "plan": "Plan",
+    "processing": "Processing...",
+    "selectPlan": "Please select a plan",
+    "selectPlanDescription": "Select a plan below. Payment will be processed via credit card.",
+    "selectPlanTitle": "Plans",
+    "settings": {
+      "description": "Manage your subscription and payment methods",
+      "title": "Subscription Settings"
+    },
+    "status": {
+      "active": "Active",
+      "pastDue": "Past Due",
+      "trial": "Trial",
+      "trialExpired": "Trial Expired"
+    },
+    "title": "Subscription",
+    "titleUpgrade": "Upgrade Plan",
+    "trialEnds": "Trial Ends",
+    "upgrade": "Upgrade",
+    "upgradePlan": "Upgrade Plan",
+    "usage": "Usage"
+  },
   "tabs": {
     "members": "Members",
-    "organization": "Organization"
+    "organization": "Organization",
+    "subscription": "Subscription"
   }
 }

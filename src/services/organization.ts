@@ -1,9 +1,19 @@
 import { supabase } from "@/lib/supabase";
-import type { Tables } from "@/types/database.types";
+import { Database } from "@/types/database.types";
 
-type Organization = Tables<"organizations">;
-type OrganizationMember = Tables<"organization_members">;
-interface MemberWithProfile extends OrganizationMember {
+type OrganizationInsert =
+    Database["public"]["Tables"]["organizations"]["Insert"];
+type OrganizationUpdate =
+    Database["public"]["Tables"]["organizations"]["Update"];
+type OrganizationMemberRow =
+    Database["public"]["Tables"]["organization_members"]["Row"];
+
+type MemberRoleEnum = Database["public"]["Enums"]["member_role"];
+
+type OrganizationSubscriptionStatusRow =
+    Database["public"]["Views"]["organization_subscription_status"]["Row"];
+
+interface MemberWithProfile extends OrganizationMemberRow {
     user: {
         id: string;
         email: string | null;
@@ -13,17 +23,11 @@ interface MemberWithProfile extends OrganizationMember {
 export class OrganizationService {
     async getOrganization(
         organizationId: string,
-    ): Promise<Organization | null> {
+    ): Promise<OrganizationSubscriptionStatusRow | null> {
         try {
             const { data, error } = await supabase
-                .from("organizations")
-                .select(`
-          *,
-          organization_members (
-            user_id,
-            role
-          )
-        `)
+                .from("organization_subscription_status")
+                .select("*")
                 .eq("id", organizationId)
                 .single();
 
@@ -38,27 +42,47 @@ export class OrganizationService {
     async createOrganization(
         name: string,
         userId: string,
-    ): Promise<Organization | null> {
+        subscriptionData?: Partial<
+            Pick<
+                OrganizationInsert,
+                "trial_start_date" | "trial_end_date" | "subscription_status"
+            >
+        >,
+    ): Promise<OrganizationSubscriptionStatusRow | null> {
         try {
-            // Insert new organization
+            const defaultTrialData: Required<
+                Pick<
+                    OrganizationInsert,
+                    | "trial_start_date"
+                    | "trial_end_date"
+                    | "subscription_status"
+                >
+            > = {
+                trial_start_date: new Date().toISOString(),
+                trial_end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                    .toISOString(),
+                subscription_status: "trialing",
+            };
+
             const { data: orgData, error: orgError } = await supabase
                 .from("organizations")
-                .insert([{ name: name.trim() }])
+                .insert([{
+                    name: name.trim(),
+                    ...defaultTrialData,
+                    ...subscriptionData,
+                }])
                 .select()
                 .single();
 
             if (orgError) throw orgError;
 
-            // Create organization member record
             const { error: memberError } = await supabase
                 .from("organization_members")
-                .insert([
-                    {
-                        user_id: userId,
-                        organization_id: orgData.id,
-                        role: "admin",
-                    },
-                ]);
+                .insert([{
+                    user_id: userId,
+                    organization_id: orgData.id,
+                    role: "admin" as MemberRoleEnum,
+                }]);
 
             if (memberError) throw memberError;
 
@@ -71,8 +95,8 @@ export class OrganizationService {
 
     async updateOrganization(
         organizationId: string,
-        data: Partial<Organization>,
-    ): Promise<Organization | null> {
+        data: Partial<OrganizationUpdate>,
+    ): Promise<OrganizationSubscriptionStatusRow | null> {
         try {
             const { error: updateError } = await supabase
                 .from("organizations")
@@ -88,7 +112,9 @@ export class OrganizationService {
         }
     }
 
-    async getUserOrganization(userId: string): Promise<Organization | null> {
+    async getUserOrganization(
+        userId: string,
+    ): Promise<OrganizationSubscriptionStatusRow | null> {
         try {
             const { data: member, error: memberError } = await supabase
                 .from("organization_members")
@@ -110,7 +136,6 @@ export class OrganizationService {
         organizationId: string,
     ): Promise<MemberWithProfile[]> {
         try {
-            // First, get organization members
             const { data: members, error: membersError } = await supabase
                 .from("organization_members")
                 .select("*")
@@ -119,7 +144,6 @@ export class OrganizationService {
             if (membersError) throw membersError;
             if (!members || members.length === 0) return [];
 
-            // Then, get profiles for all members
             const userIds = members.map((member) => member.user_id);
             const { data: profiles, error: profilesError } = await supabase
                 .from("profiles")
@@ -128,17 +152,15 @@ export class OrganizationService {
 
             if (profilesError) throw profilesError;
 
-            // Create a map of profiles for easy lookup
             const profileMap = new Map(
                 profiles?.map((profile) => [profile.id, profile]) ?? [],
             );
 
-            // Combine member data with profile data
             return members.map((member) => ({
                 ...member,
                 user: {
-                    id: member.user_id,
-                    email: profileMap.get(member.user_id)?.email ?? null,
+                    id: member.user_id!,
+                    email: profileMap.get(member.user_id!)?.email ?? null,
                 },
             }));
         } catch (error) {
@@ -149,7 +171,6 @@ export class OrganizationService {
 
     async removeMember(organizationId: string, userId: string): Promise<void> {
         try {
-            // Check if user is owner before removal
             const { data: member, error: memberError } = await supabase
                 .from("organization_members")
                 .select("role")
@@ -178,10 +199,9 @@ export class OrganizationService {
     async updateMemberRole(
         organizationId: string,
         userId: string,
-        role: OrganizationMember["role"],
+        role: MemberRoleEnum,
     ): Promise<void> {
         try {
-            // Check if target user is owner
             const { data: member, error: memberError } = await supabase
                 .from("organization_members")
                 .select("role")
