@@ -30,7 +30,7 @@ export const CURRENCY_CONFIG: Record<
 };
 
 export const NOTIFICATION_TIERS = {
-    FREE: 10,
+    FREE: 5,
     PRO: 30,
     PRO_PLUS: 100,
     BUSINESS: 200,

@@ -16,7 +16,7 @@ type CreatePendingResult = {
   newNotifications: NotificationLog[];
 };
 
-const DEFAULT_DAILY_LIMIT = 10; // Default limit for free plan
+const DEFAULT_DAILY_LIMIT = 5; // Default limit for free plan
 
 export class NotificationRepository extends BaseRepository {
   private readonly channelsTable = "notification_channels";

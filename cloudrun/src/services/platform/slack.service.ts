@@ -121,7 +121,10 @@ export class SlackService {
                 throw new Error("Workspace connection not found or invalid");
             }
 
-            const message = createLimitNotificationMessage(status);
+            const message = createLimitNotificationMessage(
+                status,
+                channel.notification_language,
+            );
 
             const response = await axios.post(
                 "https://slack.com/api/chat.postMessage",

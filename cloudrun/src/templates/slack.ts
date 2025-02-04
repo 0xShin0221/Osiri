@@ -1,15 +1,18 @@
 import type { Database } from "../types/database.types";
 import type {
+    ButtonElement,
     ContextBlock,
     DividerBlock,
     HeaderBlock,
     SectionBlock,
     SlackMessage,
 } from "../types/slack";
+import { getLimitNotificationMessages } from "./limitNotification.i18n";
 
 type Translation = Database["public"]["Tables"]["translations"]["Row"];
 type OrganizationStatus =
     Database["public"]["Views"]["organization_subscription_status"]["Row"];
+type FeedLanguage = Database["public"]["Enums"]["feed_language"];
 
 // Function to safely truncate text while preserving words
 const truncateText = (text: string, maxLength: number): string => {
@@ -120,14 +123,39 @@ export const createArticleMessage = (
 
 export const createLimitNotificationMessage = (
     status: OrganizationStatus,
+    language: FeedLanguage = "en",
 ): SlackMessage => {
+    const messages = getLimitNotificationMessages(language);
+    const baseUrl = "https://o-siri.com";
+
+    const upgradeButton: ButtonElement = {
+        type: "button",
+        text: {
+            type: "plain_text",
+            text: messages.upgradeButton,
+            emoji: true,
+        },
+        url: `${baseUrl}/settings/subscription`,
+        style: "primary",
+    };
+
+    const manageButton: ButtonElement = {
+        type: "button",
+        text: {
+            type: "plain_text",
+            text: messages.managePlan,
+            emoji: true,
+        },
+        url: `${baseUrl}/settings`,
+    };
+
     return {
         blocks: [
             {
                 type: "header",
                 text: {
                     type: "plain_text",
-                    text: "🚨 Daily Notification Limit Reached",
+                    text: messages.header,
                     emoji: true,
                 },
             },
@@ -135,26 +163,44 @@ export const createLimitNotificationMessage = (
                 type: "section",
                 text: {
                     type: "mrkdwn",
-                    text:
-                        `The daily notification limit (${status.base_notifications_per_day}) has been reached. Notifications will resume tomorrow.`,
+                    text: messages.limitReachedMessage,
                 },
+            },
+            {
+                type: "divider",
             },
             {
                 type: "section",
                 fields: [
                     {
                         type: "mrkdwn",
-                        text: `*Plan:*\n${status.plan_name || "Current Plan"}`,
+                        text: `*${messages.plan}*\n${
+                            status.plan_name || "Free Plan"
+                        }`,
                     },
                     {
                         type: "mrkdwn",
                         text:
-                            `*Daily Limit:*\n${status.base_notifications_per_day} notifications`,
+                            `*${messages.dailyLimit}*\n${status.base_notifications_per_day} notifications/day`,
+                    },
+                    {
+                        type: "mrkdwn",
+                        text: `*${messages.usageStats}*\n${
+                            status.notifications_used_this_month || 0
+                        }/${status.base_notifications_per_day} used`,
                     },
                 ],
             },
             {
-                type: "divider",
+                type: "section",
+                text: {
+                    type: "mrkdwn",
+                    text: `:bulb: ${messages.upgradeHint}`,
+                },
+            },
+            {
+                type: "actions",
+                elements: [upgradeButton, manageButton],
             },
             {
                 type: "context",
@@ -162,11 +208,11 @@ export const createLimitNotificationMessage = (
                     {
                         type: "mrkdwn",
                         text:
-                            "💡 Consider upgrading your plan if you need more notifications.",
+                            `Visit <${baseUrl}|o-siri.com> for more information`,
                     },
                 ],
             },
         ],
-        text: "Daily Notification Limit Reached", // フォールバックテキスト
+        text: messages.fallbackText,
     };
 };
