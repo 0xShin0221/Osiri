@@ -91,6 +91,7 @@
 
 -- -- Add subscription columns to organizations
 -- ALTER TABLE organizations 
+-- ADD COLUMN last_limit_notification_at timestamp with time zone;
 -- ADD COLUMN plan_id uuid REFERENCES subscription_plans(id),
 -- ADD COLUMN notifications_used_this_month int DEFAULT 0,
 -- ADD COLUMN last_usage_reset timestamptz,
@@ -121,6 +122,40 @@
 --  RETURN NEW;
 -- END;
 -- $$ LANGUAGE plpgsql;
+
+-- create or replace function increment_notification_count(p_organization_id uuid)
+-- returns void as $$
+-- begin
+--   -- Get a lock for concurrency control
+--   perform pg_advisory_xact_lock(hashtext(p_organization_id::text));
+  
+--   -- Reset check
+--   with org_data as (
+--     select last_usage_reset, notifications_used_this_month
+--     from organizations
+--     where id = p_organization_id
+--     for update
+--   ),
+--   should_reset as (
+--     select 
+--       case when last_usage_reset is null 
+--            or last_usage_reset::date < current_date
+--       then true else false end as need_reset
+--     from org_data
+--   )
+--   update organizations
+--   set 
+--     notifications_used_this_month = case 
+--       when (select need_reset from should_reset) then 1
+--       else coalesce(notifications_used_this_month, 0) + 1
+--     end,
+--     last_usage_reset = case 
+--       when (select need_reset from should_reset) then current_timestamp
+--       else last_usage_reset
+--     end
+--   where id = p_organization_id;
+-- end;
+-- $$ language plpgsql;
 
 -- CREATE OR REPLACE TRIGGER track_notification_usage
 --  AFTER INSERT ON notification_logs
