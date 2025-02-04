@@ -2,7 +2,10 @@ import { NotificationRepository } from "../../repositories/notification.reposito
 import type { ServiceResponse } from "../../types/models";
 import axios from "axios";
 import type { Database } from "../../types/database.types";
-import { createArticleMessage } from "../../templates/slack";
+import {
+    createArticleMessage,
+    createLimitNotificationMessage,
+} from "../../templates/slack";
 
 export class SlackService {
     private repository: NotificationRepository;
@@ -85,6 +88,67 @@ export class SlackService {
             return { success: true };
         } catch (error) {
             console.error("[SlackService] Error sending message:", error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error",
+            };
+        }
+    }
+
+    async sendLimitNotification(
+        channel: Database["public"]["Tables"]["notification_channels"]["Row"],
+    ): Promise<ServiceResponse<void>> {
+        try {
+            if (!channel.workspace_connection_id) {
+                throw new Error(
+                    "Channel has no associated workspace connection",
+                );
+            }
+
+            const { data: status } = await this.repository
+                .getOrganizationSubscriptionStatus(channel.organization_id);
+
+            if (!status) {
+                throw new Error("Organization status not found");
+            }
+
+            const { data: connection, error: connectionError } = await this
+                .repository.getWorkspaceConnection(
+                    channel.workspace_connection_id,
+                );
+
+            if (connectionError || !connection?.access_token) {
+                throw new Error("Workspace connection not found or invalid");
+            }
+
+            const message = createLimitNotificationMessage(status);
+
+            const response = await axios.post(
+                "https://slack.com/api/chat.postMessage",
+                {
+                    channel: channel.channel_identifier_id,
+                    ...message,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${connection.access_token}`,
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                },
+            );
+
+            if (!response.data.ok) {
+                throw new Error(
+                    response.data.error || "Failed to send limit notification",
+                );
+            }
+
+            return { success: true };
+        } catch (error) {
+            console.error(
+                "[SlackService] Error sending limit notification:",
+                error,
+            );
             return {
                 success: false,
                 error: error instanceof Error ? error.message : "Unknown error",

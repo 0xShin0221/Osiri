@@ -24,7 +24,7 @@ export type DividerBlock = SlackBlock & {
 
 export type SectionBlock = SlackBlock & {
     type: "section";
-    text: SlackTextObject;
+    text?: SlackTextObject;
     accessory?: any;
     fields?: SlackTextObject[];
 };

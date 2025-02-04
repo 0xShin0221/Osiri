@@ -8,6 +8,8 @@ import type {
 } from "../types/slack";
 
 type Translation = Database["public"]["Tables"]["translations"]["Row"];
+type OrganizationStatus =
+    Database["public"]["Views"]["organization_subscription_status"]["Row"];
 
 // Function to safely truncate text while preserving words
 const truncateText = (text: string, maxLength: number): string => {
@@ -113,5 +115,58 @@ export const createArticleMessage = (
     return {
         blocks,
         text: headerTitle,
+    };
+};
+
+export const createLimitNotificationMessage = (
+    status: OrganizationStatus,
+): SlackMessage => {
+    return {
+        blocks: [
+            {
+                type: "header",
+                text: {
+                    type: "plain_text",
+                    text: "🚨 Daily Notification Limit Reached",
+                    emoji: true,
+                },
+            },
+            {
+                type: "section",
+                text: {
+                    type: "mrkdwn",
+                    text:
+                        `The daily notification limit (${status.base_notifications_per_day}) has been reached. Notifications will resume tomorrow.`,
+                },
+            },
+            {
+                type: "section",
+                fields: [
+                    {
+                        type: "mrkdwn",
+                        text: `*Plan:*\n${status.plan_name || "Current Plan"}`,
+                    },
+                    {
+                        type: "mrkdwn",
+                        text:
+                            `*Daily Limit:*\n${status.base_notifications_per_day} notifications`,
+                    },
+                ],
+            },
+            {
+                type: "divider",
+            },
+            {
+                type: "context",
+                elements: [
+                    {
+                        type: "mrkdwn",
+                        text:
+                            "💡 Consider upgrading your plan if you need more notifications.",
+                    },
+                ],
+            },
+        ],
+        text: "Daily Notification Limit Reached", // フォールバックテキスト
     };
 };
