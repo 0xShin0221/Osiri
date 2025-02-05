@@ -583,7 +583,11 @@ export class NotificationRepository extends BaseRepository {
       if (data && data.base_notifications_per_day === null) {
         data.base_notifications_per_day = DEFAULT_DAILY_LIMIT;
       }
-      if (data && data.subscription_status === "trialing") {
+      if (
+        data &&
+        data.trial_end_date &&
+        new Date(data.trial_end_date) > new Date()
+      ) {
         data.base_notifications_per_day = TRIAL_DAILY_LIMIT;
       }
       if (error) throw error;
