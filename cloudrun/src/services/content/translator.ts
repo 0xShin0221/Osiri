@@ -39,17 +39,16 @@ const translationSchema = z.object({
       "3-5 key points that are important for understanding the article.",
     ),
   summary: z.string()
-    .max(1300) // Increased to accommodate different languages
+    .max(800) // Reduced max length for summaries
     .describe(
-      "A comprehensive summary that captures the complete essence of the article. Include:\n" +
-        "1. Background context and problem statement\n" +
-        "2. Main topic and key findings\n" +
-        "3. Business implications and market impact\n" +
-        "4. Technical insights if applicable\n" +
-        "5. Future implications or next steps\n\n" +
+      "A concise but comprehensive summary that captures the essence of the article. Include:\n" +
+        "1. Background context and key problem/opportunity\n" +
+        "2. Main solution or innovation\n" +
+        "3. Business impact and market significance\n" +
+        "4. Key technical insights (if relevant)\n\n" +
         "Note: Create a complete, self-contained summary without truncation.\n" +
-        "- For Japanese: Aim for approximately 1000 characters\n" +
-        "- For English/Latin scripts: Aim for approximately 1500 characters\n" +
+        "- For Japanese: Aim for 500-800 characters\n" +
+        "- For English/Latin scripts: Aim for 600-900 characters\n" +
         "- For other scripts: Adjust length while maintaining comprehensive coverage",
     ),
 });
@@ -176,9 +175,9 @@ export class ContentTranslator {
       normalized.titleOriginal = normalized.titleOriginal.slice(0, 200);
     }
 
-    // Normalize other fields
+    // Normalize summary to new shorter length
     if (normalized.summary) {
-      normalized.summary = normalized.summary.slice(0, 1300);
+      normalized.summary = normalized.summary.slice(0, 800);
     }
 
     if (normalized.key_points) {
@@ -194,7 +193,6 @@ export class ContentTranslator {
 
     return normalized;
   }
-
   // Count tokens in text using GPT tokenizer
   private countTokens(text: string): number {
     return encode(text).length;

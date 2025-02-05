@@ -61,17 +61,33 @@ router.post("/send", async (req, res) => {
     }
 });
 
-// Process pending notifications
-router.post("/process", async (req, res) => {
+async function processNotificationsBatch() {
     try {
+        console.info("Starting notifications batch process");
         const result = await batchProcessor.processNotifications();
-        return res.json(result);
+        console.info("Notifications batch process completed:", result);
     } catch (error) {
-        return res.status(500).json({
-            success: false,
+        console.error("Notifications batch process failed:", {
             error: error instanceof Error ? error.message : "Unknown error",
         });
     }
+}
+
+// Process pending notifications with immediate response
+router.post("/process", (req, res) => {
+    // Send immediate response
+    res.json({
+        success: true,
+        timestamp: new Date().toISOString(),
+        message: "Notifications processing started",
+    });
+
+    // Start batch process in background
+    setImmediate(() => {
+        processNotificationsBatch().catch((error) => {
+            console.error("Background notifications process failed:", error);
+        });
+    });
 });
 
 // Get pending notifications status

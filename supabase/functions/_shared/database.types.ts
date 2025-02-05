@@ -531,6 +531,7 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          last_limit_notification_at: string | null
           last_usage_reset: string | null
           name: string
           notifications_used_this_month: number | null
@@ -544,6 +545,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           id?: string
+          last_limit_notification_at?: string | null
           last_usage_reset?: string | null
           name: string
           notifications_used_this_month?: number | null
@@ -557,6 +559,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           id?: string
+          last_limit_notification_at?: string | null
           last_usage_reset?: string | null
           name?: string
           notifications_used_this_month?: number | null
@@ -1149,6 +1152,12 @@ export type Database = {
           row_id: string
         }
         Returns: number
+      }
+      increment_notification_count: {
+        Args: {
+          p_organization_id: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

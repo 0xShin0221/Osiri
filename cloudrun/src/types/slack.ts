@@ -1,3 +1,5 @@
+// types/slack.ts
+
 export type SlackTextObject = {
     type: "plain_text" | "mrkdwn";
     text: string;
@@ -24,7 +26,7 @@ export type DividerBlock = SlackBlock & {
 
 export type SectionBlock = SlackBlock & {
     type: "section";
-    text: SlackTextObject;
+    text?: SlackTextObject;
     accessory?: any;
     fields?: SlackTextObject[];
 };
@@ -38,7 +40,32 @@ export type ContextBlock = SlackBlock & {
     })[];
 };
 
+export type ButtonElement = {
+    type: "button";
+    text: {
+        type: "plain_text";
+        text: string;
+        emoji?: boolean;
+    };
+    url?: string;
+    value?: string;
+    style?: "primary" | "danger";
+    action_id?: string;
+};
+
+export type ActionsBlock = SlackBlock & {
+    type: "actions";
+    elements: ButtonElement[];
+};
+
 export type SlackMessage = {
-    blocks: (HeaderBlock | DividerBlock | SectionBlock | ContextBlock)[];
+    blocks:
+        (
+            | HeaderBlock
+            | DividerBlock
+            | SectionBlock
+            | ContextBlock
+            | ActionsBlock
+        )[];
     text?: string | null;
 };
