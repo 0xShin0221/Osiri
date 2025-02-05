@@ -81,6 +81,8 @@ If you need to reset a linked Supabase environment to sync with local:
 
 ```bash
 supabase db reset --linked
+# or you can linked it by the beta feature
+npx supabase@beta db reset --linked
 ```
 
 ### 5. Execute Stripe Console Setup
