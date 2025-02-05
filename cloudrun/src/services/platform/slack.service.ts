@@ -13,6 +13,67 @@ export class SlackService {
     constructor() {
         this.repository = new NotificationRepository();
     }
+    private async getValidAccessToken(
+        connection:
+            Database["public"]["Tables"]["workspace_connections"]["Row"],
+    ): Promise<string> {
+        if (!connection.access_token) {
+            throw new Error("No access token available");
+        }
+        if (connection.token_expires_at) {
+            const expiresAt = new Date(connection.token_expires_at);
+            if (expiresAt.getTime() - Date.now() > 3600000) {
+                return connection.access_token;
+            }
+        }
+
+        if (!connection.refresh_token) {
+            return connection.access_token;
+        }
+
+        try {
+            const response = await axios.post<{
+                ok: boolean;
+                access_token: string;
+                refresh_token: string;
+                expires_in: number;
+            }>(
+                "https://slack.com/api/oauth.v2.access",
+                new URLSearchParams({
+                    client_id: process.env.SLACK_CLIENT_ID || "",
+                    client_secret: process.env.SLACK_CLIENT_SECRET || "",
+                    grant_type: "refresh_token",
+                    refresh_token: connection.refresh_token,
+                }),
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                },
+            );
+
+            if (!response.data.ok) {
+                throw new Error("Failed to refresh token");
+            }
+
+            // Update tokens in database
+            await this.repository.updateWorkspaceConnectionTokens(
+                connection.id,
+                {
+                    access_token: response.data.access_token,
+                    refresh_token: response.data.refresh_token,
+                    token_expires_at: new Date(
+                        Date.now() + response.data.expires_in * 1000,
+                    ).toISOString(),
+                },
+            );
+
+            return response.data.access_token;
+        } catch (error) {
+            console.error("[SlackService] Token refresh failed:", error);
+            return connection.access_token;
+        }
+    }
 
     async sendMessage(
         articleId: string,
@@ -58,6 +119,7 @@ export class SlackService {
                 );
                 throw new Error("Workspace connection not found or invalid");
             }
+            const accessToken = await this.getValidAccessToken(connection);
 
             const message = createArticleMessage(translation, article.url);
             console.log("[SlackService] Sending message:", message);
@@ -69,7 +131,7 @@ export class SlackService {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${connection.access_token}`,
+                        Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json; charset=utf-8",
                     },
                 },
@@ -121,6 +183,8 @@ export class SlackService {
                 throw new Error("Workspace connection not found or invalid");
             }
 
+            const accessToken = await this.getValidAccessToken(connection);
+
             const message = createLimitNotificationMessage(
                 status,
                 channel.notification_language,
@@ -134,7 +198,7 @@ export class SlackService {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${connection.access_token}`,
+                        Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json; charset=utf-8",
                     },
                 },

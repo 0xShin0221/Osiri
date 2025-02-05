@@ -664,4 +664,28 @@ export class NotificationRepository extends BaseRepository {
       console.error("Error incrementing notification count:", error);
     }
   }
+
+  async updateWorkspaceConnectionTokens(
+    id: string,
+    updates: {
+      access_token: string;
+      refresh_token: string;
+      token_expires_at: string;
+    },
+  ): Promise<ServiceResponse<void>> {
+    try {
+      const { error } = await this.client
+        .from("workspace_connections")
+        .update(updates)
+        .eq("id", id);
+
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
 }

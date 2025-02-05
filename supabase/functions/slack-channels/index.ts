@@ -1,5 +1,6 @@
 import { corsHeaders } from "../_shared/cors.ts";
 import { supabase } from "../_shared/db/client.ts";
+import { refreshSlackToken } from "../_shared/slack.ts";
 
 const getSlackChannels = async (accessToken: string) => {
   try {
@@ -46,15 +47,27 @@ Deno.serve(async (req) => {
     // Get workspace connection
     const { data: workspace, error: workspaceError } = await supabase
       .from("workspace_connections")
-      .select("access_token")
+      .select("*")
       .eq("id", workspace_id)
       .single();
 
     if (workspaceError || !workspace) {
       throw new Error("Workspace not found");
     }
-
-    const slackData = await getSlackChannels(workspace.access_token);
+    let accessToken = workspace.access_token;
+    if (workspace.token_expires_at) {
+      const expiresAt = new Date(workspace.token_expires_at);
+      if (
+        expiresAt.getTime() - Date.now() <= 3600000 && workspace.refresh_token
+      ) {
+        try {
+          accessToken = await refreshSlackToken(workspace);
+        } catch (error) {
+          console.error("Token refresh failed, using existing token:", error);
+        }
+      }
+    }
+    const slackData = await getSlackChannels(accessToken);
 
     // Transform channels data
     const channels = slackData.channels

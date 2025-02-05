@@ -1,4 +1,10 @@
 // types/slack.ts
+export interface SlackTokenRefreshResponse {
+    ok: boolean;
+    access_token: string;
+    refresh_token: string;
+    expires_in: number;
+}
 
 export type SlackTextObject = {
     type: "plain_text" | "mrkdwn";
@@ -59,13 +65,12 @@ export type ActionsBlock = SlackBlock & {
 };
 
 export type SlackMessage = {
-    blocks:
-        (
-            | HeaderBlock
-            | DividerBlock
-            | SectionBlock
-            | ContextBlock
-            | ActionsBlock
-        )[];
+    blocks: (
+        | HeaderBlock
+        | DividerBlock
+        | SectionBlock
+        | ContextBlock
+        | ActionsBlock
+    )[];
     text?: string | null;
 };
