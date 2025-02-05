@@ -62,6 +62,12 @@ supabase db reset
 
 1. Navigate to your Stripe Dashboard
 2. Create a new environment for the project
+
+```
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_BASE_URL=
+```
+
 3. Note down the Secret Key for the next steps
 
 ### 3. Configure Environment and Run Setup Script
