@@ -91,7 +91,7 @@
 
 -- -- Add subscription columns to organizations
 -- ALTER TABLE organizations 
--- ADD COLUMN last_limit_notification_at timestamp with time zone;
+-- ADD COLUMN last_limit_notification_at timestamp with time zone,
 -- ADD COLUMN plan_id uuid REFERENCES subscription_plans(id),
 -- ADD COLUMN notifications_used_this_month int DEFAULT 0,
 -- ADD COLUMN last_usage_reset timestamptz,
