@@ -1,6 +1,7 @@
 // supabase/functions/slack-join-channel/index.ts
 import { corsHeaders } from "../_shared/cors.ts";
 import { supabase } from "../_shared/db/client.ts";
+import { refreshSlackToken } from "../_shared/slack.ts";
 
 const joinSlackChannel = async (accessToken: string, channelId: string) => {
   try {
@@ -47,7 +48,7 @@ Deno.serve(async (req) => {
     // Get workspace connection
     const { data: workspace, error: workspaceError } = await supabase
       .from("workspace_connections")
-      .select("access_token")
+      .select("*")
       .eq("id", workspace_id)
       .single();
 
@@ -55,7 +56,21 @@ Deno.serve(async (req) => {
       throw new Error("Workspace not found or missing access token");
     }
 
-    const result = await joinSlackChannel(workspace.access_token, channel_id);
+    let accessToken = workspace.access_token;
+    if (workspace.token_expires_at) {
+      const expiresAt = new Date(workspace.token_expires_at);
+      if (
+        expiresAt.getTime() - Date.now() <= 3600000 && workspace.refresh_token
+      ) {
+        try {
+          accessToken = await refreshSlackToken(workspace);
+        } catch (error) {
+          console.error("Token refresh failed, using existing token:", error);
+        }
+      }
+    }
+
+    const result = await joinSlackChannel(accessToken, channel_id);
 
     return new Response(
       JSON.stringify(result),

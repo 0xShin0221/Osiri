@@ -17,6 +17,7 @@ type CreatePendingResult = {
 };
 
 const DEFAULT_DAILY_LIMIT = 5; // Default limit for free plan
+const TRIAL_DAILY_LIMIT = 30;
 
 export class NotificationRepository extends BaseRepository {
   private readonly channelsTable = "notification_channels";
@@ -582,6 +583,13 @@ export class NotificationRepository extends BaseRepository {
       if (data && data.base_notifications_per_day === null) {
         data.base_notifications_per_day = DEFAULT_DAILY_LIMIT;
       }
+      if (
+        data &&
+        data.trial_end_date &&
+        new Date(data.trial_end_date) > new Date()
+      ) {
+        data.base_notifications_per_day = TRIAL_DAILY_LIMIT;
+      }
       if (error) throw error;
       return { success: true, data };
     } catch (error) {
@@ -654,6 +662,30 @@ export class NotificationRepository extends BaseRepository {
       });
     } catch (error) {
       console.error("Error incrementing notification count:", error);
+    }
+  }
+
+  async updateWorkspaceConnectionTokens(
+    id: string,
+    updates: {
+      access_token: string;
+      refresh_token: string;
+      token_expires_at: string;
+    },
+  ): Promise<ServiceResponse<void>> {
+    try {
+      const { error } = await this.client
+        .from("workspace_connections")
+        .update(updates)
+        .eq("id", id);
+
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   }
 }

@@ -81,17 +81,21 @@ Deno.serve(handleWithCors(async (req) => {
     if (!slackData.ok || !slackData.team?.name) {
       throw new Error(`Invalid Slack response: ${JSON.stringify(slackData)}`);
     }
-    console.log("Slack data:", slackData);
+
     const existingOrg = await getOrganizationByUserId(userId);
     if (existingOrg.length > 0 && existingOrg[0].organization_id) {
+      const tokenExpiresAt = slackData.expires_in
+        ? new Date(Date.now() + slackData.expires_in * 1000).toISOString()
+        : null;
+
       await addWorkspaceConnection(
         existingOrg[0].organization_id,
         "slack",
         slackData.team.id,
         slackData.team.name,
         slackData.access_token,
-        null,
-        null,
+        slackData.refresh_token || null,
+        tokenExpiresAt,
       );
     } else {
       const org = await createOrganization(slackData.team.name);
