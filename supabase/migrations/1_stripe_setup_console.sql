@@ -1,3 +1,8 @@
+
+-- 1. Create a new secret in the Supabase console with the name `stripe_secret` and the value of your Stripe secret key.
+-- select vault.create_secret('please_input_your_stripe_secret_key', 'stripe_secret', 'Stripe Secret Key');
+
+-- 2.Integrate Stripe with Supabase
 -- CREATE SCHEMA IF NOT EXISTS stripe;
 -- CREATE EXTENSION IF NOT EXISTS wrappers WITH SCHEMA extensions;
 
@@ -6,14 +11,14 @@
 --  HANDLER stripe_fdw_handler
 --  VALIDATOR stripe_fdw_validator;
 
--- -- Create server
 -- CREATE SERVER stripe_server
---  FOREIGN DATA WRAPPER stripe_wrapper
---  OPTIONS (
---    api_key '', -- Set this to your Stripe API key
---    api_url 'https://api.stripe.com/v1/',
---    api_version '2024-06-20'
---  );
+--   foreign data wrapper stripe_wrapper
+--   options (
+--     api_key_id '<key_ID>', -- The Key ID from above, required if api_key_name is not specified.Get it from the Supabase console like this:select * from vault.decrypted_secrets order by created_at desc 
+--     api_key_name 'stripe_secret',
+--     api_url 'https://api.stripe.com/v1/',
+--     api_version '2024-06-20'
+--   );
 
 -- -- Create foreign tables
 -- CREATE FOREIGN TABLE stripe.products (
