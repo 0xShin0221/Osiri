@@ -67,7 +67,7 @@ export default function AppIntegrationPage() {
     const combinedParam = `${currentLang}_${userId}`;
     const redirectUri = `${
       import.meta.env.VITE_SUPABASE_URL
-    }/functions/v1/discord-callback?lang_userId=${combinedParam}`;
+    }/functions/v1/discord-callback`;
 
     // Required scopes for similar functionality to Slack
     const scopes = [
@@ -85,6 +85,8 @@ export default function AppIntegrationPage() {
       import.meta.env.VITE_DISCORD_CLIENT_ID
     }&permissions=274877925376&response_type=code&redirect_uri=${encodeURIComponent(
       redirectUri
+    )}&state=${encodeURIComponent(
+      combinedParam
     )}&integration_type=0&scope=${encodeURIComponent(scopes)}`;
 
     window.location.href = discordAuthUrl;
