@@ -47,13 +47,6 @@ const getDiscordToken = async (
 ): Promise<DiscordOAuthResponse> => {
   const API_ENDPOINT = "https://discord.com/api/v10";
 
-  console.log("Token Request Parameters:", {
-    code,
-    clientId,
-    clientSecret,
-    redirectUri,
-  });
-
   const data = new URLSearchParams({
     "grant_type": "authorization_code",
     "code": code,
