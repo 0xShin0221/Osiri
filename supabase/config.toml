@@ -257,6 +257,8 @@ inspector_port = 8083
 
 [functions.slack-callback]
 verify_jwt = false
+[functions.discord-callback]
+verify_jwt = false
 
 [analytics]
 enabled = true
