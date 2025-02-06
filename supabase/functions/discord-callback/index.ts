@@ -38,6 +38,7 @@ const getEnvVars = () => {
   return vars as Record<string, string>;
 };
 
+// discord-callback/index.ts
 const getDiscordToken = async (
   code: string,
   clientId: string,
@@ -45,28 +46,23 @@ const getDiscordToken = async (
   redirectUri: string,
 ): Promise<DiscordOAuthResponse> => {
   console.log("Requesting Discord token with params:", {
-    code: code.substring(0, 4) + "...", // Only show first 4 chars
+    code: code.substring(0, 4) + "...",
     clientId,
     redirectUri,
   });
-
-  const params = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    code,
-    grant_type: "authorization_code",
-    redirect_uri: redirectUri,
-  });
-
-  console.log("Token request URL:", "https://discord.com/api/oauth2/token");
-  console.log("Token request body:", params.toString());
 
   const response = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: params,
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      code,
+      grant_type: "authorization_code",
+      redirect_uri: redirectUri,
+    }),
   });
 
   if (!response.ok) {
@@ -89,33 +85,6 @@ const getDiscordToken = async (
   return data;
 };
 
-const getGuildInfo = async (guildId: string, accessToken: string) => {
-  console.log("Fetching guild info for ID:", guildId);
-
-  const response = await fetch(
-    `https://discord.com/api/v10/guilds/${guildId}`,
-    {
-      headers: {
-        Authorization: `Bot ${accessToken}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Guild info error response:", {
-      status: response.status,
-      statusText: response.statusText,
-      body: errorText,
-    });
-    throw new Error(`Failed to fetch guild info: ${errorText}`);
-  }
-
-  const data = await response.json();
-  console.log("Guild info success response:", data);
-  return data;
-};
-
 Deno.serve(handleWithCors(async (req) => {
   console.log("Received request:", {
     url: req.url,
@@ -127,35 +96,34 @@ Deno.serve(handleWithCors(async (req) => {
     const vars = getEnvVars();
     const url = new URL(req.url);
     const code = url.searchParams.get("code");
+    const state = url.searchParams.get("state");
     const guildId = url.searchParams.get("guild_id");
-    const lang_userId = url.searchParams.get("lang_userId");
 
     console.log("URL parameters:", {
       code: code?.substring(0, 4) + "...",
+      state,
       guildId,
-      lang_userId,
     });
 
-    if (!code || !lang_userId) {
-      console.error("Missing required parameters:", { code, lang_userId });
+    if (!code || !state) {
+      console.error("Missing required parameters:", { code, state });
       return new Response(
         JSON.stringify({ error: "Missing required parameters" }),
         { status: 400 },
       );
     }
 
-    const [lang, userId] = lang_userId.split("_");
+    const [lang, userId] = state.split("_");
     if (!lang || !userId) {
-      console.error("Invalid lang_userId format:", { lang_userId });
+      console.error("Invalid state format:", { state });
       return new Response(
-        JSON.stringify({ error: "Invalid lang_userId format" }),
+        JSON.stringify({ error: "Invalid state format" }),
         { status: 400 },
       );
     }
 
     try {
-      const redirectUri =
-        `${vars.supabaseUrl}/functions/v1/discord-callback?lang_userId=${lang_userId}`;
+      const redirectUri = `${vars.supabaseUrl}/functions/v1/discord-callback`;
       console.log("Redirect URI:", redirectUri);
 
       const discordData = await getDiscordToken(
@@ -199,11 +167,11 @@ Deno.serve(handleWithCors(async (req) => {
       return Response.redirect(redirectUrl);
     } catch (error) {
       console.error("Error in Discord connection process:", error);
-      // Detailed error response
       return new Response(
         JSON.stringify({
           error: "Failed to connect Discord",
           details: (error as Error).message,
+          stack: (error as Error).stack,
         }),
         {
           status: 500,
@@ -219,6 +187,7 @@ Deno.serve(handleWithCors(async (req) => {
       JSON.stringify({
         error: "Critical error occurred",
         details: (error as Error).message,
+        stack: (error as Error).stack,
       }),
       {
         status: 500,
