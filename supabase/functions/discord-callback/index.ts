@@ -45,28 +45,51 @@ const getDiscordToken = async (
   clientSecret: string,
   redirectUri: string,
 ): Promise<DiscordOAuthResponse> => {
-  const data = new URLSearchParams({
+  const API_ENDPOINT = "https://discord.com/api/v10";
+
+  const data = {
     "grant_type": "authorization_code",
     "code": code,
     "redirect_uri": redirectUri,
+  };
+
+  console.log("Request details:", {
+    url: `${API_ENDPOINT}/oauth2/token`,
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    data,
+    auth: `${clientId}:${clientSecret}`,
   });
 
-  const response = await fetch("https://discord.com/api/v10/oauth2/token", {
+  const response = await fetch(`${API_ENDPOINT}/oauth2/token`, {
     method: "POST",
+    body: new URLSearchParams(data),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Basic " + btoa(`${clientId}:${clientSecret}`),
     },
-    body: data,
-    auth: clientId + ":" + clientSecret,
   });
 
   const responseText = await response.text();
+  console.log("Response:", {
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers),
+    body: responseText,
+  });
 
   if (!response.ok) {
     throw new Error(`Discord OAuth failed: ${responseText}`);
   }
 
-  return JSON.parse(responseText);
+  const responseData = JSON.parse(responseText);
+  console.log("Parsed response:", {
+    ...responseData,
+    access_token: responseData.access_token?.substring(0, 4) + "...",
+    refresh_token: responseData.refresh_token?.substring(0, 4) + "...",
+  });
+
+  return responseData;
 };
 Deno.serve(handleWithCors(async (req) => {
   console.log("Received request:", {
