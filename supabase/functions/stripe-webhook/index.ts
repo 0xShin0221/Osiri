@@ -38,6 +38,44 @@ async function cancelOldSubscriptions(
   }
 }
 
+// Update organization subscription status
+async function updateOrganizationSubscriptionStatus(
+  organizationId: string,
+  subscription: Stripe.Subscription,
+) {
+  let subscription_status: Database["public"]["Enums"]["subscription_status"];
+
+  switch (subscription.status) {
+    case "trialing":
+      subscription_status = "trialing";
+      break;
+    case "active":
+      subscription_status = "active";
+      break;
+    case "past_due":
+      subscription_status = "past_due";
+      break;
+    case "canceled":
+      subscription_status = "canceled";
+      break;
+    default:
+      subscription_status = "canceled";
+  }
+
+  await stripeRepository.updateOrganizationSubscriptionStatus(
+    organizationId,
+    subscription_status,
+  );
+
+  // Update will_cancel flag if scheduled for cancellation
+  if (subscription.cancel_at_period_end) {
+    await stripeRepository.updateWillCancel(
+      organizationId,
+      subscription.cancel_at,
+    );
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
   try {
     // Get the raw body as text
@@ -103,29 +141,10 @@ const handler = async (req: Request): Promise<Response> => {
             organizationId,
             plan.id,
           );
-          let subscription_status:
-            Database["public"]["Enums"]["subscription_status"];
-          switch (subscription.status) {
-            case "trialing":
-              subscription_status = "trialing";
-              break;
-            case "active":
-              subscription_status = "active";
-              break;
-            case "past_due":
-              subscription_status = "past_due";
-              break;
-            case "canceled":
-              subscription_status = "canceled";
-              break;
-            default:
-              subscription_status = "canceled";
-          }
 
-          // Update subscription status
-          await stripeRepository.updateOrganizationSubscriptionStatus(
+          await updateOrganizationSubscriptionStatus(
             organizationId,
-            subscription_status,
+            subscription,
           );
 
           // Cancel old subscriptions
@@ -161,6 +180,12 @@ const handler = async (req: Request): Promise<Response> => {
             organizationId,
             plan.id,
           );
+
+          await updateOrganizationSubscriptionStatus(
+            organizationId,
+            subscription,
+          );
+
           // Cancel old subscriptions for subscription updates
           if (event.type === "customer.subscription.created") {
             await cancelOldSubscriptions(customerId, subscription.id);
@@ -172,7 +197,25 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       case "customer.subscription.deleted": {
-        // Handle subscription cancellation if needed
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId = subscription.customer as string;
+        const organizationId = await stripeRepository
+          .getOrganizationIdByCustomerId(customerId);
+
+        if (!organizationId) {
+          console.error("No organization found for customer:", customerId);
+          break;
+        }
+
+        // Update subscription status to canceled
+        await stripeRepository.updateOrganizationSubscriptionStatus(
+          organizationId,
+          "canceled",
+        );
+
+        // Clear will_cancel flag if it exists
+        await stripeRepository.updateWillCancel(organizationId, null);
+
         break;
       }
 
