@@ -45,32 +45,22 @@ const getDiscordToken = async (
   clientSecret: string,
   redirectUri: string,
 ): Promise<DiscordOAuthResponse> => {
-  console.log("Token request params:", {
-    code: code.substring(0, 4) + "...",
-    redirectUri,
+  const data = new URLSearchParams({
+    "grant_type": "authorization_code",
+    "code": code,
+    "redirect_uri": redirectUri,
   });
 
-  const API_ENDPOINT = "https://discord.com/api/v10";
-  const response = await fetch(`${API_ENDPOINT}/oauth2/token`, {
+  const response = await fetch("https://discord.com/api/v10/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": "Basic " + btoa(`${clientId}:${clientSecret}`),
     },
-    body: new URLSearchParams({
-      grant_type: "authorization_code",
-      code,
-      redirect_uri: redirectUri,
-    }),
-    credentials: "include",
+    body: data,
+    auth: clientId + ":" + clientSecret,
   });
 
   const responseText = await response.text();
-  console.log("Discord API Response:", {
-    status: response.status,
-    statusText: response.statusText,
-    body: responseText,
-  });
 
   if (!response.ok) {
     throw new Error(`Discord OAuth failed: ${responseText}`);
