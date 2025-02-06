@@ -27,6 +27,7 @@ interface SubscriptionPlansProps {
   organization: OrganizationSubscriptionStatus | null;
   plans: SubscriptionPlanWithPricing[] | null;
   onSubscribe: (priceId: string) => Promise<void>;
+  onCancel: () => Promise<void>;
   isLoading: boolean;
 }
 
@@ -46,8 +47,10 @@ export default function SubscriptionPlans({
   const [isProcessing, setIsProcessing] = useState(false);
 
   const isTrialing = organization?.subscription_status === "trialing";
-  const isActive = organization?.subscription_status === "active";
+  const isActive = organization?.stripe_status === "active";
   const isPastDue = organization?.subscription_status === "past_due";
+  const hasScheduledCancellation =
+    organization?.will_cancel && organization.will_cancel !== "false";
 
   const usagePercentage =
     organization?.notifications_used_this_month &&
@@ -88,17 +91,6 @@ export default function SubscriptionPlans({
   };
 
   const getStatusBadge = () => {
-    if (isTrialing) {
-      return (
-        <Badge
-          variant="outline"
-          className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-200 dark:border-blue-800"
-        >
-          <AlertCircle className="w-3 h-3 mr-1" />
-          {t("subscription.status.trial")}
-        </Badge>
-      );
-    }
     if (isActive) {
       return (
         <Badge
@@ -107,6 +99,17 @@ export default function SubscriptionPlans({
         >
           <CheckCircle2 className="w-3 h-3 mr-1" />
           {t("subscription.status.active")}
+        </Badge>
+      );
+    }
+    if (isTrialing) {
+      return (
+        <Badge
+          variant="outline"
+          className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-200 dark:border-blue-800"
+        >
+          <AlertCircle className="w-3 h-3 mr-1" />
+          {t("subscription.status.trial")}
         </Badge>
       );
     }
@@ -250,9 +253,11 @@ export default function SubscriptionPlans({
             <span className="text-gray-600 dark:text-gray-300">
               {t("subscription.plan")}
             </span>
-            <span className="font-medium">
-              {organization?.plan_name || t("subscription.freePlan")}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="font-medium">
+                {organization?.plan_name || t("subscription.freePlan")}
+              </span>
+            </div>
           </div>
 
           <div className="flex justify-between py-3 border-b dark:border-gray-700">
@@ -268,7 +273,20 @@ export default function SubscriptionPlans({
             </span>
           </div>
 
-          {isTrialing && organization?.trial_end_date && (
+          {hasScheduledCancellation && (
+            <div className="flex justify-between py-3 border-b dark:border-gray-700">
+              <span className="text-gray-600 dark:text-gray-300">
+                {t("subscription.cancelDate")}
+              </span>
+              <span className="font-medium">
+                {organization.will_cancel
+                  ? new Date(organization.will_cancel).toLocaleDateString()
+                  : t("subscription.notApplicable")}
+              </span>
+            </div>
+          )}
+
+          {isTrialing && organization?.trial_end_date && !isActive && (
             <div className="flex justify-between py-3 border-b dark:border-gray-700">
               <span className="text-gray-600 dark:text-gray-300">
                 {t("subscription.trialEnds")}

@@ -10,10 +10,11 @@
 -- CREATE SERVER stripe_server
 --  FOREIGN DATA WRAPPER stripe_wrapper
 --  OPTIONS (
---    api_key '', -- Set this to your Stripe API key
+--    api_key '', -- Set this to your Stripe API key,Get it from the Supabase console like this:select * from vault.decrypted_secrets order by created_at desc 
 --    api_url 'https://api.stripe.com/v1/',
 --    api_version '2024-06-20'
 --  );
+
 
 -- -- Create foreign tables
 -- CREATE FOREIGN TABLE stripe.products (
@@ -91,7 +92,7 @@
 
 -- -- Add subscription columns to organizations
 -- ALTER TABLE organizations 
--- ADD COLUMN last_limit_notification_at timestamp with time zone;
+-- ADD COLUMN last_limit_notification_at timestamp with time zone,
 -- ADD COLUMN plan_id uuid REFERENCES subscription_plans(id),
 -- ADD COLUMN notifications_used_this_month int DEFAULT 0,
 -- ADD COLUMN last_usage_reset timestamptz,

@@ -86,4 +86,19 @@ export const stripeRepository = {
 
     if (error) throw error;
   },
+
+  async updateWillCancel(organizationId: string, cancelAt: number | null) {
+    const { error } = await supabase
+      .from("organizations")
+      .update({
+        will_cancel: cancelAt ? new Date(cancelAt * 1000).toISOString() : null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", organizationId);
+
+    if (error) {
+      console.error("Error updating will_cancel:", error);
+      throw error;
+    }
+  },
 };

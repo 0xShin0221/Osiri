@@ -1,4 +1,4 @@
-import { Building2, CreditCard } from "lucide-react";
+import { Building2, CreditCard, Wallet } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useOrganization } from "@/hooks/useOrganization";
 import { PageLoading } from "@/components/ui/page-loading";
@@ -8,6 +8,7 @@ import { OrganizationSettings } from "@/components/settings/OrganizationSettings
 import { CreateOrganization } from "@/components/settings/CreateOrganization";
 import { useSubscription } from "@/hooks/useSubscription";
 import SubscriptionPlans from "@/components/subscription/SubscriptionPlans";
+import CustomerPortal from "@/components/settings/CustomerPortal";
 
 export default function AppSettingsPage() {
   const { t } = useTranslation("settings");
@@ -19,7 +20,12 @@ export default function AppSettingsPage() {
     updateOrganization,
   } = useOrganization();
 
-  const { isLoading: subLoading, plans, handleCheckout } = useSubscription();
+  const {
+    isLoading: subLoading,
+    plans,
+    handleCheckout,
+    handlePortal,
+  } = useSubscription();
 
   if (orgLoading) {
     return <PageLoading />;
@@ -66,6 +72,13 @@ export default function AppSettingsPage() {
               <CreditCard className="w-4 h-4 mr-2" />
               {t("tabs.subscription")}
             </TabsTrigger>
+            <TabsTrigger
+              value="billing"
+              className="data-[state=active]:bg-blue-100 dark:data-[state=active]:bg-blue-900/20"
+            >
+              <Wallet className="w-4 h-4 mr-2" />
+              {t("tabs.billing")}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="organization" className="space-y-8">
@@ -74,15 +87,22 @@ export default function AppSettingsPage() {
               error={orgError}
               onUpdateOrganization={updateOrganization}
             />
-
             <OrganizationMembers organizationId={organization.id!} />
           </TabsContent>
 
           <TabsContent value="subscription">
             <SubscriptionPlans
               plans={plans}
+              onCancel={handlePortal}
               onSubscribe={handleCheckout}
               organization={organization}
+              isLoading={subLoading}
+            />
+          </TabsContent>
+
+          <TabsContent value="billing">
+            <CustomerPortal
+              onOpenPortal={handlePortal}
               isLoading={subLoading}
             />
           </TabsContent>
