@@ -45,40 +45,51 @@ const getDiscordToken = async (
   clientSecret: string,
   redirectUri: string,
 ): Promise<DiscordOAuthResponse> => {
-  const params = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    grant_type: "authorization_code",
-    code,
-    redirect_uri: redirectUri,
+  console.log("Requesting Discord token with params:", {
+    code: code.substring(0, 4) + "...",
+    clientId,
+    redirectUri,
   });
 
-  console.log("Token request params:", {
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    grant_type: "authorization_code",
-  });
+  const authString = btoa(`${clientId}:${clientSecret}`);
 
   const response = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": `Basic ${authString}`,
     },
-    body: params,
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: redirectUri,
+    }),
   });
 
   const responseText = await response.text();
+  console.log("Discord API Response:", {
+    status: response.status,
+    headers: Object.fromEntries(response.headers.entries()),
+    body: responseText,
+  });
+
   if (!response.ok) {
-    console.error("Discord API Error:", {
-      status: response.status,
-      text: responseText,
-    });
     throw new Error(`Discord OAuth failed: ${responseText}`);
   }
 
-  return JSON.parse(responseText);
+  try {
+    const data = JSON.parse(responseText);
+    console.log("Discord OAuth success response:", {
+      ...data,
+      access_token: data.access_token?.substring(0, 4) + "...",
+      refresh_token: data.refresh_token?.substring(0, 4) + "...",
+    });
+    return data;
+  } catch (error) {
+    console.error("Failed to parse response:", error);
+    throw new Error(`Failed to parse Discord response: ${responseText}`);
+  }
 };
-
 Deno.serve(handleWithCors(async (req) => {
   console.log("Received request:", {
     url: req.url,
