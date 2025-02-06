@@ -39,7 +39,6 @@ export default function SubscriptionPlans({
   organization,
   plans,
   onSubscribe,
-  onCancel,
   isLoading,
 }: SubscriptionPlansProps) {
   const { t } = useTranslation("settings");
@@ -52,9 +51,7 @@ export default function SubscriptionPlans({
   const isPastDue = organization?.subscription_status === "past_due";
   const hasScheduledCancellation =
     organization?.will_cancel && organization.will_cancel !== "false";
-  const hasActivePlan = Boolean(
-    organization?.stripe_product_id || !organization?.will_cancel == null
-  );
+
   const usagePercentage =
     organization?.notifications_used_this_month &&
     organization?.base_notifications_per_day
@@ -71,21 +68,6 @@ export default function SubscriptionPlans({
       setIsProcessing(true);
       setError(null);
       await onSubscribe(selectedPlan);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : t("subscription.error.unknown")
-      );
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-  const handleCancel = async () => {
-    if (isProcessing) return;
-
-    try {
-      setIsProcessing(true);
-      setError(null);
-      await onCancel();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : t("subscription.error.unknown")
@@ -275,18 +257,6 @@ export default function SubscriptionPlans({
               <span className="font-medium">
                 {organization?.plan_name || t("subscription.freePlan")}
               </span>
-              {/* {(isActive || isTrialing) &&
-                hasActivePlan &&
-                !hasScheduledCancellation && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCancel}
-                    disabled={isProcessing}
-                  >
-                    {t("subscription.cancel")}
-                  </Button>
-                )} */}
             </div>
           </div>
 
