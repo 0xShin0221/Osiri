@@ -51,7 +51,6 @@ const getDiscordToken = async (
     redirectUri,
   });
 
-  // Basic認証用のヘッダーを作成
   const authString = btoa(`${clientId}:${clientSecret}`);
 
   const response = await fetch("https://discord.com/api/oauth2/token", {
@@ -91,7 +90,6 @@ const getDiscordToken = async (
     throw new Error(`Failed to parse Discord response: ${responseText}`);
   }
 };
-
 Deno.serve(handleWithCors(async (req) => {
   console.log("Received request:", {
     url: req.url,
