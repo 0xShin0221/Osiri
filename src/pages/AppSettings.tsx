@@ -19,7 +19,12 @@ export default function AppSettingsPage() {
     updateOrganization,
   } = useOrganization();
 
-  const { isLoading: subLoading, plans, handleCheckout } = useSubscription();
+  const {
+    isLoading: subLoading,
+    plans,
+    handleCheckout,
+    handlePortal,
+  } = useSubscription();
 
   if (orgLoading) {
     return <PageLoading />;
@@ -81,6 +86,7 @@ export default function AppSettingsPage() {
           <TabsContent value="subscription">
             <SubscriptionPlans
               plans={plans}
+              onCancel={handlePortal}
               onSubscribe={handleCheckout}
               organization={organization}
               isLoading={subLoading}
