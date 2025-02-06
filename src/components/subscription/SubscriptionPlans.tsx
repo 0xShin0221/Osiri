@@ -275,7 +275,7 @@ export default function SubscriptionPlans({
               <span className="font-medium">
                 {organization?.plan_name || t("subscription.freePlan")}
               </span>
-              {(isActive || isTrialing) &&
+              {/* {(isActive || isTrialing) &&
                 hasActivePlan &&
                 !hasScheduledCancellation && (
                   <Button
@@ -286,7 +286,7 @@ export default function SubscriptionPlans({
                   >
                     {t("subscription.cancel")}
                   </Button>
-                )}
+                )} */}
             </div>
           </div>
 

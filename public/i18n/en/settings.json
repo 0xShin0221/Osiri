@@ -3,6 +3,29 @@
     "cancel": "Cancel",
     "loading": "Loading..."
   },
+  "customerPortal": {
+    "title": "Customer Portal",
+    "description": "Manage your subscription, payment methods, and billing history in one place.",
+    "openPortal": "Open Portal",
+    "features": {
+      "payment": {
+        "title": "Payment Methods",
+        "description": "Update your credit card information and manage your payment methods securely"
+      },
+      "billing": {
+        "title": "Billing History",
+        "description": "View and download your past invoices and billing statements"
+      },
+      "subscription": {
+        "title": "Subscription Management",
+        "description": "View your current plan, upgrade, or manage your subscription settings"
+      }
+    },
+    "security": {
+      "title": "Secure Access",
+      "description": "For your security, you'll need to verify your email address to access the portal. Each login link is valid for one-time use only."
+    }
+  },
   "organization": {
     "create": {
       "button": "Create Organization",
@@ -37,6 +60,7 @@
   },
   "subscription": {
     "billingPeriod": "Billing Period",
+    "cancelDate": "Cancel Date",
     "changePlan": "Change Plan",
     "currentPlan": "Current Plan",
     "description": "Manage subscription and renewal",
@@ -77,6 +101,7 @@
     "usage": "Usage"
   },
   "tabs": {
+    "billing": "Billing",
     "members": "Members",
     "organization": "Organization",
     "subscription": "Subscription"

@@ -3,6 +3,29 @@
     "cancel": "キャンセル",
     "loading": "読み込み中..."
   },
+  "customerPortal": {
+    "title": "お支払い管理ポータル",
+    "description": "サブスクリプション、お支払い方法、請求履歴をまとめて管理できます。",
+    "openPortal": "ポータルを開く",
+    "features": {
+      "payment": {
+        "title": "お支払い方法",
+        "description": "クレジットカード情報の更新や支払い方法を安全に管理できます"
+      },
+      "billing": {
+        "title": "請求履歴",
+        "description": "過去の請求書や明細書の閲覧・ダウンロードが可能です"
+      },
+      "subscription": {
+        "title": "プラン管理",
+        "description": "現在のプランの確認、アップグレード、サブスクリプション設定の管理ができます"
+      }
+    },
+    "security": {
+      "title": "セキュアアクセス",
+      "description": "セキュリティのため、ポータルへのアクセスにはメールアドレスの確認が必要です。ログインリンクは1回限り有効です。"
+    }
+  },
   "organization": {
     "create": {
       "button": "組織を作成",
@@ -37,6 +60,7 @@
   },
   "subscription": {
     "billingPeriod": "請求期間",
+    "cancelDate": "キャンセル日",
     "changePlan": "プランを変更する",
     "currentPlan": "現在のプラン",
     "description": "サブスクリプションの管理と更新",
@@ -76,6 +100,7 @@
     "usage": "利用状況"
   },
   "tabs": {
+    "billing": "請求管理",
     "members": "メンバー",
     "organization": "組織",
     "subscription": "サブスクリプション"
