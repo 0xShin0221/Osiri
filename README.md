@@ -126,4 +126,6 @@ If you encounter issues during setup:
 
 ---
 
-Developed with ❤️ by [DigDaTech](https://o-siri.com)
+Developed with ❤️ by
+X:[0xShin0221](https://x.com/0xShin0221_jp)
+Github[0xShin0221](https://github.com/0xShin0221)
