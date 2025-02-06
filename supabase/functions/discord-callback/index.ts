@@ -51,38 +51,45 @@ const getDiscordToken = async (
     redirectUri,
   });
 
+  // Basic認証用のヘッダーを作成
+  const authString = btoa(`${clientId}:${clientSecret}`);
+
   const response = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": `Basic ${authString}`,
     },
     body: new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
-      code,
       grant_type: "authorization_code",
+      code,
       redirect_uri: redirectUri,
     }),
   });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Discord OAuth error response:", {
-      status: response.status,
-      statusText: response.statusText,
-      body: errorText,
-    });
-    throw new Error(`Discord OAuth failed: ${errorText}`);
-  }
-
-  const data = await response.json();
-  console.log("Discord OAuth success response:", {
-    ...data,
-    access_token: data.access_token?.substring(0, 4) + "...",
-    refresh_token: data.refresh_token?.substring(0, 4) + "...",
+  const responseText = await response.text();
+  console.log("Discord API Response:", {
+    status: response.status,
+    headers: Object.fromEntries(response.headers.entries()),
+    body: responseText,
   });
 
-  return data;
+  if (!response.ok) {
+    throw new Error(`Discord OAuth failed: ${responseText}`);
+  }
+
+  try {
+    const data = JSON.parse(responseText);
+    console.log("Discord OAuth success response:", {
+      ...data,
+      access_token: data.access_token?.substring(0, 4) + "...",
+      refresh_token: data.refresh_token?.substring(0, 4) + "...",
+    });
+    return data;
+  } catch (error) {
+    console.error("Failed to parse response:", error);
+    throw new Error(`Failed to parse Discord response: ${responseText}`);
+  }
 };
 
 Deno.serve(handleWithCors(async (req) => {
