@@ -55,7 +55,7 @@ export const enTemplate = (data?: Record<string, any>) => {
             <a href="https://o-siri.com" class="cta-button">Visit Our Website</a>
             
             <div class="footer">
-              <p>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</p>
+              <p>© 2025 Osiri by Dig Da Tech LLC. All rights reserved.</p>
               <p>If you have any questions, please feel free to contact us at support@o-siri.com.</p>
             </div>
           </div>

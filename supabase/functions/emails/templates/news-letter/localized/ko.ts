@@ -52,7 +52,7 @@ export const koTemplate = (
               <p>다음 업데이트를 기대해 주세요!</p>
               <a href="https://o-siri.com" class="cta-button">웹사이트 방문하기</a>
               <div class="footer">
-                <p>© 2024 Osiri by Dig Da Tech LLC. 모든 권리 보유.</p>
+                <p>© 2025 Osiri by Dig Da Tech LLC. 모든 권리 보유.</p>
                <p>구독을 취소하려면 <a href="${unsubscribeUrl}">여기를 클릭하세요</a>.</p>
                 <p>문의사항이 있으시면 support@o-siri.com로 연락해 주세요</p>
               </div>

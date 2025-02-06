@@ -60,7 +60,7 @@ export const bnTemplate = (
             <a href="https://o-siri.com" class="cta-button">ওয়েবসাইট দেখুন</a>
             
             <div class="footer">
-              <p>© 2024 Osiri by Dig Da Tech LLC. সর্বস্বত্ব সংরক্ষিত।</p>
+              <p>© 2025 Osiri by Dig Da Tech LLC. সর্বস্বত্ব সংরক্ষিত।</p>
               <p>আপনি যদি সাবস্ক্রিপশন বাতিল করতে চান, <a href="${unsubscribeUrl}">এখানে ক্লিক করুন</a>।</p>
               <p>কোনো প্রশ্ন থাকলে, support@o-siri.com-তে যোগাযোগ করুন</p>
             </div>

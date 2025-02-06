@@ -52,7 +52,7 @@ export const ptTemplate = (
               <p>Fique atento à nossa próxima atualização!</p>
               <a href="https://o-siri.com" class="cta-button">Visite nosso site</a>
               <div class="footer">
-                <p>© 2024 Osiri by Dig Da Tech LLC. Todos os direitos reservados.</p>
+                <p>© 2025 Osiri by Dig Da Tech LLC. Todos os direitos reservados.</p>
                 <p>Se desejar cancelar sua assinatura, <a href="${unsubscribeUrl}">clique aqui</a>.</p>
                 <p>Se tiver alguma dúvida, entre em contato conosco em support@o-siri.com</p>
               </div>

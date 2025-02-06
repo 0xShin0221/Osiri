@@ -52,7 +52,7 @@ export const hiTemplate = (
               <p>हमारे अगले अपडेट का इंतजार करें!</p>
               <a href="https://o-siri.com" class="cta-button">हमारी वेबसाइट देखें</a>
               <div class="footer">
-                <p>© 2024 Osiri by Dig Da Tech LLC. सर्वाधिकार सुरक्षित।</p>
+                <p>© 2025 Osiri by Dig Da Tech LLC. सर्वाधिकार सुरक्षित।</p>
                 <p>यदि आप सदस्यता समाप्त करना चाहते हैं, तो <a href="${unsubscribeUrl}">यहां क्लिक करें</a>।</p>
                 <p>यदि आपके कोई प्रश्न हैं, तो कृपया हमें support@o-siri.com पर संपर्क करें</p>
               </div>

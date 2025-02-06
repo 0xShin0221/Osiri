@@ -50,7 +50,7 @@ export const frTemplate = (
               <p>Restez à l'écoute pour notre prochaine mise à jour !</p>
               <a href="https://o-siri.com" class="cta-button">Visitez notre site web</a>
               <div class="footer">
-                <p>© 2024 Osiri by Dig Da Tech LLC. Tous droits réservés.</p>
+                <p>© 2025 Osiri by Dig Da Tech LLC. Tous droits réservés.</p>
                  <p>Si vous souhaitez vous désabonner, <a href="${unsubscribeUrl}">cliquez ici</a>.</p>
                 <p>Si vous avez des questions, contactez-nous à support@o-siri.com</p>
               </div>
