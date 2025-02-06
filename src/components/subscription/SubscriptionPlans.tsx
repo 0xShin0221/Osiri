@@ -80,6 +80,8 @@ export default function SubscriptionPlans({
     }
   };
   const handleCancel = async () => {
+    if (isProcessing) return;
+
     try {
       setIsProcessing(true);
       setError(null);
@@ -301,18 +303,20 @@ export default function SubscriptionPlans({
             </span>
           </div>
 
-          {organization?.will_cancel && (
+          {hasScheduledCancellation && (
             <div className="flex justify-between py-3 border-b dark:border-gray-700">
               <span className="text-gray-600 dark:text-gray-300">
                 {t("subscription.cancelDate")}
               </span>
               <span className="font-medium">
-                {new Date(organization.will_cancel).toLocaleDateString()}
+                {organization.will_cancel
+                  ? new Date(organization.will_cancel).toLocaleDateString()
+                  : t("subscription.notApplicable")}
               </span>
             </div>
           )}
 
-          {isTrialing && organization?.trial_end_date && (
+          {isTrialing && organization?.trial_end_date && !isActive && (
             <div className="flex justify-between py-3 border-b dark:border-gray-700">
               <span className="text-gray-600 dark:text-gray-300">
                 {t("subscription.trialEnds")}
