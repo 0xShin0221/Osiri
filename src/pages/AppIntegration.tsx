@@ -71,14 +71,10 @@ export default function AppIntegrationPage() {
 
     // Required scopes for similar functionality to Slack
     const scopes = [
-      "activities.read",
-      "guilds",
-      "guilds.channels.read",
       "bot",
-      "guilds.members.read",
-      "guilds.join",
-      "messages.read",
       "applications.commands",
+      "guilds",
+      "guilds.members.read",
     ].join(" ");
 
     const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${
