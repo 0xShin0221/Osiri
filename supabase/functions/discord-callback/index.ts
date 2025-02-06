@@ -47,19 +47,26 @@ const getDiscordToken = async (
 ): Promise<DiscordOAuthResponse> => {
   const API_ENDPOINT = "https://discord.com/api/v10";
 
-  // Form data as per Python example
+  console.log("Token Request Parameters:", {
+    code,
+    clientId,
+    clientSecret,
+    redirectUri,
+  });
+
   const data = new URLSearchParams({
-    "client_id": clientId,
-    "client_secret": clientSecret,
     "grant_type": "authorization_code",
     "code": code,
     "redirect_uri": redirectUri,
   });
 
-  console.log("Request details:", {
+  console.log("Request Details:", {
     url: `${API_ENDPOINT}/oauth2/token`,
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    auth: `${clientId}:${clientSecret.substring(0, 4)}...`,
     data: Object.fromEntries(data),
   });
 
@@ -69,6 +76,7 @@ const getDiscordToken = async (
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: data,
+    auth: `${clientId}:${clientSecret}`,
   });
 
   const responseText = await response.text();
