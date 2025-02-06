@@ -62,7 +62,7 @@ export const ruTemplate = (
             <a href="https://o-siri.com" class="cta-button">Посетить наш сайт</a>
             
             <div class="footer">
-              <p>© 2024 Osiri by Dig Da Tech LLC. Все права защищены.</p>
+              <p>© 2025 Osiri by Dig Da Tech LLC. Все права защищены.</p>
               <p>Если вы хотите отписаться, <a href="${unsubscribeUrl}">нажмите здесь</a>.</p>
               <p>Если у вас есть вопросы, пожалуйста, свяжитесь с нами по адресу support@o-siri.com</p>
             </div>

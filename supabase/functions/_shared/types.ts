@@ -116,3 +116,15 @@ export interface SlackOAuthResponse {
   refresh_token?: string; // Token Rotation enabled
   is_enterprise_install: boolean;
 }
+
+export interface DiscordOAuthResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token: string;
+  guild_id: string;
+  guild: {
+    id: string;
+    name: string;
+  };
+}

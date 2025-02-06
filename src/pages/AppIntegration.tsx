@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { DiscordIcon, EmailIcon, SlackIcon } from "@/components/PlatformIcons";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { IntegrationCard } from "@/components/integration/IntegrationCard";
@@ -19,9 +19,7 @@ export default function AppIntegrationPage() {
   const { i18n } = useTranslation();
   const currentLang = i18n.resolvedLanguage;
   const [userId, setUserId] = useState<string | null>(null);
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const returnUrl = searchParams.get("returnUrl") || `/${currentLang}/channels`;
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -64,14 +62,32 @@ export default function AppIntegrationPage() {
   };
 
   const handleDiscordConnect = async () => {
+    if (!userId) return;
+
+    const combinedParam = `${currentLang}_${userId}`;
     const redirectUri = `${
-      import.meta.env.VITE_DISCORD_REDIRECT_URI
-    }?returnUrl=${encodeURIComponent(returnUrl)}`;
-    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${
+      import.meta.env.VITE_SUPABASE_URL
+    }/functions/v1/discord-callback?lang_userId=${combinedParam}`;
+
+    // Required scopes for similar functionality to Slack
+    const scopes = [
+      "activities.read",
+      "guilds",
+      "guilds.channels.read",
+      "bot",
+      "guilds.members.read",
+      "guilds.join",
+      "messages.read",
+      "applications.commands",
+    ].join(" ");
+
+    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${
       import.meta.env.VITE_DISCORD_CLIENT_ID
-    }&permissions=2048&scope=bot&redirect_uri=${encodeURIComponent(
+    }&permissions=274877925376&response_type=code&redirect_uri=${encodeURIComponent(
       redirectUri
-    )}`;
+    )}&integration_type=0&scope=${encodeURIComponent(scopes)}`;
+
+    window.location.href = discordAuthUrl;
   };
 
   const handleEmailConnect = () => {

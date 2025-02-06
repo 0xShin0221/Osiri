@@ -61,7 +61,7 @@ export const idTemplate = (
               <a href="https://o-siri.com" class="cta-button">Kunjungi Website Kami</a>
               
               <div class="footer">
-                <p>© 2024 Osiri by Dig Da Tech LLC. Hak cipta dilindungi undang-undang.</p>
+                <p>© 2025 Osiri by Dig Da Tech LLC. Hak cipta dilindungi undang-undang.</p>
                 <p>Jika Anda ingin berhenti berlangganan, <a href="${unsubscribeUrl}">klik di sini</a>.</p>
                 <p>Jika Anda memiliki pertanyaan, silakan hubungi kami di support@o-siri.com</p>
               </div>
