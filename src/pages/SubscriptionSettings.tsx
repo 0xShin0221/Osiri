@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 export default function SubscriptionPage() {
   const { t } = useTranslation("settings");
   const { organization } = useOrganization();
-  const { isLoading, plans, handleCheckout } = useSubscription();
+  const { isLoading, plans, handleCheckout, handlePortal } = useSubscription();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -26,6 +26,7 @@ export default function SubscriptionPage() {
 
         <div className="grid gap-6">
           <SubscriptionPlans
+            onCancel={handlePortal}
             plans={plans}
             onSubscribe={handleCheckout}
             organization={organization}
