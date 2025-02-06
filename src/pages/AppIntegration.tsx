@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { DiscordIcon, EmailIcon, SlackIcon } from "@/components/PlatformIcons";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { IntegrationCard } from "@/components/integration/IntegrationCard";
