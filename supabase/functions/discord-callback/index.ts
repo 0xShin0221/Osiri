@@ -48,9 +48,11 @@ const getDiscordToken = async (
   const API_ENDPOINT = "https://discord.com/api/v10";
 
   const data = new URLSearchParams({
-    "grant_type": "authorization_code",
-    "code": code,
-    "redirect_uri": redirectUri,
+    client_id: clientId,
+    client_secret: clientSecret,
+    grant_type: "authorization_code",
+    code: code,
+    redirect_uri: redirectUri,
   });
 
   console.log("Request Details:", {
@@ -59,7 +61,6 @@ const getDiscordToken = async (
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    auth: `${clientId}:${clientSecret.substring(0, 4)}...`,
     data: Object.fromEntries(data),
   });
 
@@ -68,23 +69,21 @@ const getDiscordToken = async (
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: data,
-    auth: `${clientId}:${clientSecret}`,
-  });
-
-  const responseText = await response.text();
-  console.log("Response:", {
-    status: response.status,
-    statusText: response.statusText,
-    headers: Object.fromEntries(response.headers),
-    body: responseText,
+    body: data.toString(),
   });
 
   if (!response.ok) {
-    throw new Error(`Discord OAuth failed: ${responseText}`);
+    const errorText = await response.text();
+    console.error("Discord API Error:", {
+      status: response.status,
+      statusText: response.statusText,
+      error: errorText,
+    });
+    throw new Error(`Discord OAuth failed: ${response.status} - ${errorText}`);
   }
 
-  return JSON.parse(responseText);
+  const responseData = await response.json();
+  return responseData;
 };
 Deno.serve(handleWithCors(async (req) => {
   console.log("Received request:", {
