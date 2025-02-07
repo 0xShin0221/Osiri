@@ -71,6 +71,7 @@ export default function AppIntegrationPage() {
 
     // Required scopes for similar functionality to Slack
     const scopes = [
+      "identify",
       "bot",
       "applications.commands",
       "guilds",
