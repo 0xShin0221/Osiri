@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -29,7 +28,7 @@ const getTeamList = (): TeamProps[] => {
   return [
     {
       imageUrl:
-        "https://media.licdn.com/dms/image/v2/C5103AQFDIRAQ64tRiQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1587511221183?e=1738195200&v=beta&t=S8b1-qU7RheuNkzQzawSDLH8bhyCZNYD9hUABeuR-Jk",
+        "https://pbs.twimg.com/profile_images/1620362917735698433/snBlqRsJ_400x400.jpg",
       nameKey: t("team.members.shin.name"),
       descriptionKey: t("team.members.shin.description"),
       positionKey: t("team.members.shin.position"),
@@ -48,18 +47,18 @@ const getTeamList = (): TeamProps[] => {
         },
       ],
     },
-    {
-      imageUrl: "https://i.pravatar.cc/150?img=60",
-      nameKey: t("team.members.leo.name"),
-      descriptionKey: t("team.members.leo.description"),
-      positionKey: t("team.members.leo.position"),
-      socialNetworks: [
-        {
-          name: "Linkedin",
-          url: "https://www.linkedin.com/in/leopoldo-miranda/",
-        },
-      ],
-    },
+    // {
+    //   imageUrl: "https://i.pravatar.cc/150?img=60",
+    //   nameKey: t("team.members.leo.name"),
+    //   descriptionKey: t("team.members.leo.description"),
+    //   positionKey: t("team.members.leo.position"),
+    //   socialNetworks: [
+    //     {
+    //       name: "Linkedin",
+    //       url: "https://www.linkedin.com/in/leopoldo-miranda/",
+    //     },
+    //   ],
+    // },
   ];
 };
 
