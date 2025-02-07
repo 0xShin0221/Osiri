@@ -1,7 +1,7 @@
 import { Building2, CreditCard, Wallet } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useOrganization } from "@/hooks/useOrganization";
-import { PageLoading } from "@/components/ui/page-loading";
+
 import { OrganizationMembers } from "@/components/settings/OrganizationMembers";
 import { useTranslation } from "react-i18next";
 import { OrganizationSettings } from "@/components/settings/OrganizationSettings";
@@ -9,6 +9,8 @@ import { CreateOrganization } from "@/components/settings/CreateOrganization";
 import { useSubscription } from "@/hooks/useSubscription";
 import SubscriptionPlans from "@/components/subscription/SubscriptionPlans";
 import CustomerPortal from "@/components/settings/CustomerPortal";
+import { SettingsSkeleton } from "@/components/settings/SettingsSkelton";
+import { SubscriptionSkeleton } from "@/components/settings/SubscriptionSkelton";
 
 export default function AppSettingsPage() {
   const { t } = useTranslation("settings");
@@ -27,10 +29,18 @@ export default function AppSettingsPage() {
     handlePortal,
   } = useSubscription();
 
+  // Show loading state while fetching initial organization data
   if (orgLoading) {
-    return <PageLoading />;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <SettingsSkeleton />
+        </div>
+      </div>
+    );
   }
 
+  // Show organization creation form if no organization exists
   if (!organization) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -91,13 +101,17 @@ export default function AppSettingsPage() {
           </TabsContent>
 
           <TabsContent value="subscription">
-            <SubscriptionPlans
-              plans={plans}
-              onCancel={handlePortal}
-              onSubscribe={handleCheckout}
-              organization={organization}
-              isLoading={subLoading}
-            />
+            {subLoading ? (
+              <SubscriptionSkeleton />
+            ) : (
+              <SubscriptionPlans
+                plans={plans}
+                onCancel={handlePortal}
+                onSubscribe={handleCheckout}
+                organization={organization}
+                isLoading={subLoading}
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="billing">

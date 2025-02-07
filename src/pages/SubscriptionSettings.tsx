@@ -4,10 +4,51 @@ import SubscriptionPlans from "@/components/subscription/SubscriptionPlans";
 import { CreditCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { CreateOrganization } from "@/components/settings/CreateOrganization";
+import { SubscriptionPageSkeleton } from "@/components/settings/SubscriptionPageSkelton";
+
 export default function SubscriptionPage() {
   const { t } = useTranslation("settings");
-  const { organization } = useOrganization();
-  const { isLoading, plans, handleCheckout, handlePortal } = useSubscription();
+  const {
+    organization,
+    isLoading: orgLoading,
+    error: orgError,
+    createOrganization,
+  } = useOrganization();
+
+  const {
+    isLoading: subLoading,
+    plans,
+    handleCheckout,
+    handlePortal,
+  } = useSubscription();
+
+  // Loading states
+  const isLoading = orgLoading || subLoading;
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <SubscriptionPageSkeleton />
+        </div>
+      </div>
+    );
+  }
+
+  // Show organization creation form if no organization exists
+  if (!organization) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <CreateOrganization
+            error={orgError}
+            onCreateOrganization={createOrganization}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -30,7 +71,7 @@ export default function SubscriptionPage() {
             plans={plans}
             onSubscribe={handleCheckout}
             organization={organization}
-            isLoading={isLoading}
+            isLoading={subLoading}
           />
         </div>
       </div>
