@@ -11,6 +11,7 @@ interface UseFeedsOptions {
 }
 
 export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [allFeeds, setAllFeeds] = useState<RssFeed[]>([]);
   const [organizationFollowingFeeds, setOrganizationFollowingFeeds] = useState<
     RssFeed[]
@@ -40,6 +41,8 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
         setOrganizationFollowingFeeds(feeds);
       } catch (error) {
         console.error("Error fetching organization feeds:", error);
+      } finally {
+        setIsInitialLoading(false);
       }
     }
 
@@ -150,6 +153,7 @@ export function useFeeds({ itemsPerPage = 10 }: UseFeedsOptions = {}) {
   };
 
   return {
+    isInitialLoading,
     allFeeds,
     followingFeeds: filteredFollowingFeeds,
     discoverFeeds: filteredDiscoverFeeds,

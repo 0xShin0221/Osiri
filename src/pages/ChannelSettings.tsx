@@ -55,13 +55,18 @@ export default function ChannelSettingsPage() {
     toggleChannelFeed,
   } = useChannels();
 
-  const { followingFeeds: organizationFeeds, isLoading: feedsLoading } =
-    useFeeds({
-      itemsPerPage: 100,
-    });
+  const {
+    followingFeeds: organizationFeeds,
+    isInitialLoading: isInitialFeedLoading,
+  } = useFeeds({
+    itemsPerPage: 100,
+  });
 
   const isLoading =
-    channelsLoading || connectionsLoading || feedsLoading || schedulesLoading;
+    channelsLoading ||
+    connectionsLoading ||
+    schedulesLoading ||
+    isInitialFeedLoading;
   const error = channelsError || connectionsError || schedulesError;
 
   const handleSelectChannel = (channel: NotificationChannel) => {
