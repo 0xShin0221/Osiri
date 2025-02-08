@@ -6,9 +6,11 @@ import {
     createArticleMessage,
     createLimitNotificationMessage,
 } from "../../templates/slack";
+import { ConfigManager } from "../../lib/config";
 
 export class SlackService {
     private repository: NotificationRepository;
+    private readonly config = ConfigManager.getInstance().getSlackConfig();
 
     constructor() {
         this.repository = new NotificationRepository();
@@ -28,8 +30,8 @@ export class SlackService {
 
             // Prepare form data for token refresh
             const params = new URLSearchParams({
-                client_id: process.env.SLACK_CLIENT_ID || "",
-                client_secret: process.env.SLACK_CLIENT_SECRET || "",
+                client_id: this.config.clientId,
+                client_secret: this.config.clientSecret,
                 grant_type: "refresh_token",
                 refresh_token: connection.refresh_token,
             });

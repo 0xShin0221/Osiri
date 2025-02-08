@@ -9,6 +9,8 @@ export interface AppSecrets {
     LANGSMITH_PROJECT_NAME: string;
     API_KEYS: string;
     GOOGLE_API_KEY: string;
+    SLACK_CLIENT_ID: string;
+    SLACK_CLIENT_SECRET: string;
 }
 
 export interface AppConfig {
@@ -85,6 +87,8 @@ export class ConfigManager {
             "LANGCHAIN_API_KEY", // LangChain API Key
             "LANGSMITH_API_KEY", // LangSmith API Key
             "GOOGLE_API_KEY",
+            "SLACK_CLIENT_ID", // Add Slack client ID
+            "SLACK_CLIENT_SECRET", // Add Slack client secret
         ];
 
         const missingKeys = requiredKeys.filter((key) => !this.get(key));
@@ -124,6 +128,13 @@ export class ConfigManager {
     public getOpenAIConfig() {
         return {
             apiKey: this.getOrThrow("OPENAI_API_KEY"),
+        };
+    }
+
+    public getSlackConfig() {
+        return {
+            clientId: this.getOrThrow("SLACK_CLIENT_ID"),
+            clientSecret: this.getOrThrow("SLACK_CLIENT_SECRET"),
         };
     }
 
