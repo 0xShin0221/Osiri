@@ -54,6 +54,8 @@ export class ConfigManager {
                 "LANGSMITH_PROJECT_NAME",
                 "API_KEYS",
                 "GOOGLE_API_KEY",
+                "SLACK_CLIENT_ID",
+                "SLACK_CLIENT_SECRET",
             ];
 
             const secrets: Partial<AppSecrets> = {};
