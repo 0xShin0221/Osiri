@@ -17,43 +17,44 @@ export class SlackService {
         connection:
             Database["public"]["Tables"]["workspace_connections"]["Row"],
     ): Promise<string> {
-        if (!connection.access_token) {
-            throw new Error("No access token available");
-        }
-        if (connection.token_expires_at) {
-            const expiresAt = new Date(connection.token_expires_at);
-            if (expiresAt.getTime() - Date.now() > 3600000) {
-                return connection.access_token;
-            }
-        }
-
-        if (!connection.refresh_token) {
-            return connection.access_token;
-        }
-
         try {
+            // Validate token existence
+            if (!connection.access_token) {
+                throw new Error("No access token available");
+            }
+            if (!connection.refresh_token) {
+                throw new Error("No refresh token available");
+            }
+
+            // Prepare form data for token refresh
+            const params = new URLSearchParams({
+                client_id: process.env.SLACK_CLIENT_ID || "",
+                client_secret: process.env.SLACK_CLIENT_SECRET || "",
+                grant_type: "refresh_token",
+                refresh_token: connection.refresh_token,
+            });
+
+            // Request new token from Slack OAuth endpoint
             const response = await axios.post<{
                 ok: boolean;
                 access_token: string;
                 refresh_token: string;
                 expires_in: number;
-            }>(
-                "https://slack.com/api/oauth.v2.access",
-                new URLSearchParams({
-                    client_id: process.env.SLACK_CLIENT_ID || "",
-                    client_secret: process.env.SLACK_CLIENT_SECRET || "",
-                    grant_type: "refresh_token",
-                    refresh_token: connection.refresh_token,
-                }),
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
+            }>("https://slack.com/api/oauth.v2.access", params, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
-            );
+            });
 
+            // Check if token refresh was successful
             if (!response.data.ok) {
-                throw new Error("Failed to refresh token");
+                console.error(
+                    "[SlackService] Token refresh response:",
+                    response.data,
+                );
+                throw new Error(
+                    `Failed to refresh token: ${"Unknown error"}`,
+                );
             }
 
             // Update tokens in database
@@ -70,8 +71,21 @@ export class SlackService {
 
             return response.data.access_token;
         } catch (error) {
-            console.error("[SlackService] Token refresh failed:", error);
-            return connection.access_token;
+            // Enhanced error logging for debugging
+            if (axios.isAxiosError(error)) {
+                console.error("[SlackService] HTTP Error:", {
+                    status: error.response?.status,
+                    data: error.response?.data,
+                    config: {
+                        url: error.config?.url,
+                        method: error.config?.method,
+                        headers: error.config?.headers,
+                    },
+                });
+            } else {
+                console.error("[SlackService] Non-HTTP Error:", error);
+            }
+            throw error;
         }
     }
 
