@@ -53,11 +53,11 @@ export default function FeedsPage() {
             <h1 className="text-3xl font-bold mb-2">{t("title")}</h1>
             <p className="text-muted-foreground">{t("description")}</p>
           </div>
-          <AddFeedRequestDialog
+          {/* <AddFeedRequestDialog
             onSubmit={async (request) => {
               console.log("Feed request:", request);
             }}
-          />
+          /> */}
         </div>
 
         {/* Following Feeds Section */}
