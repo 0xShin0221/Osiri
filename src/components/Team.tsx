@@ -47,18 +47,19 @@ const getTeamList = (): TeamProps[] => {
         },
       ],
     },
-    // {
-    //   imageUrl: "https://i.pravatar.cc/150?img=60",
-    //   nameKey: t("team.members.leo.name"),
-    //   descriptionKey: t("team.members.leo.description"),
-    //   positionKey: t("team.members.leo.position"),
-    //   socialNetworks: [
-    //     {
-    //       name: "Linkedin",
-    //       url: "https://www.linkedin.com/in/leopoldo-miranda/",
-    //     },
-    //   ],
-    // },
+    {
+      imageUrl:
+        "https://fkmjhtjgaeoqbgzpwxif.supabase.co/storage/v1/object/public/assets//hiroshi35sai.png",
+      nameKey: t("team.members.hiroshi.name"),
+      descriptionKey: t("team.members.hiroshi.description"),
+      positionKey: t("team.members.hiroshi.position"),
+      socialNetworks: [
+        {
+          name: "Linkedin",
+          url: "https://www.linkedin.com/in/h-iroshi-b11255350",
+        },
+      ],
+    },
   ];
 };
 
