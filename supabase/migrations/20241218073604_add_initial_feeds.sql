@@ -125,14 +125,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  false,
  array['startup_news', 'venture_capital', 'tech_news']::feed_category[]
 ),
-('OnStartups', 
- 'Practical advice for software entrepreneurs', 
- 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAMFBMVEVHcEzzeFrzeFvzeFvzeFvzeFvzeFvzeFvzeFvzeFvzeFvzeFvzeFvzeFvzeFvzeFtGhPZxAAAAD3RSTlMADrn6gDbqRsWP1W2lIVoR7q46AAABC0lEQVQ4ja2S0ZaFIAhFRU0zNf7/b4cDVLe7ph5mjS+K+3AENYR/GrO3kesR1Txanx942dhGRpQ92E5J43MUonJF+eKxUphILQlgEtVVFg18l8XiXtjkeFQi611mmXBY3ckU4HNHwYugEDpzNzUPKMAHm2sGi1BNK8rNo0UE9xgKr5rSanKF8FSb9hC5BHXeYENJBeCejERxiLopVdG4eNUeIyfUbfUux/nO0VuS87s2m13xwa23rPdAh2LcuBgAdduEwvMX58Vfw9P0yb74ahdzKX7nZ2mNnecvfioeuSlCuPHt/inN45mrorzx45GfuSnwCbcHrv+tTHrm/mdfuNfxwuUeWqtv/C/jB1tgFAg1obHTAAAAAElFTkSuQmCC', 
- 'http://feed.onstartups.com/onstartups', 
- 'en', 
- false,
- array['entrepreneurship', 'startup_news', 'software_development']::feed_category[]
-),
 ('The Black Box of Product Management', 
  'Insights into product management', 
  'https://i.scdn.co/image/ab67656300005f1fd7994d5e480a7ca202a5d466', 
