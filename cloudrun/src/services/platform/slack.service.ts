@@ -96,13 +96,28 @@ export class SlackService {
         channel: Database["public"]["Tables"]["notification_channels"]["Row"],
     ): Promise<ServiceResponse<void>> {
         try {
+            console.log("[SlackService] Starting sendMessage:", {
+                articleId,
+                channelId: channel.id,
+                workspaceConnectionId: channel.workspace_connection_id,
+                language: channel.notification_language,
+            });
+
             if (!channel.workspace_connection_id) {
+                console.error(
+                    "[SlackService] No workspace connection ID found for channel:",
+                    channel.id,
+                );
                 throw new Error(
                     "Channel has no associated workspace connection",
                 );
             }
 
-            // Get translation todo: move to service
+            // Get translation
+            console.log(
+                "[SlackService] Fetching translation for article:",
+                articleId,
+            );
             const { data: translation, error: translationError } = await this
                 .repository.getTranslation(
                     articleId,
@@ -111,34 +126,74 @@ export class SlackService {
 
             if (translationError || !translation) {
                 console.error(
-                    "[SlackService] Error getting translation:",
-                    translationError,
+                    "[SlackService] Translation error or not found:",
+                    {
+                        error: translationError,
+                        articleId,
+                        language: channel.notification_language,
+                    },
                 );
                 throw new Error(translationError || "Translation not found");
             }
+            console.log("[SlackService] Translation found:", {
+                translationId: translation.id,
+                status: translation.status,
+            });
+
+            // Get article
+            console.log("[SlackService] Fetching article:", articleId);
             const { data: article, error: articleError } = await this.repository
                 .getArticle(articleId);
 
             if (articleError || !article) {
+                console.error("[SlackService] Article error or not found:", {
+                    error: articleError,
+                    articleId,
+                });
                 throw new Error(articleError || "Article not found");
             }
+            console.log("[SlackService] Article found:", {
+                articleId: article.id,
+                url: article.url,
+            });
+
             // Get workspace connection
+            console.log(
+                "[SlackService] Fetching workspace connection:",
+                channel.workspace_connection_id,
+            );
             const { data: connection, error: connectionError } = await this
                 .repository.getWorkspaceConnection(
                     channel.workspace_connection_id,
                 );
 
             if (connectionError || !connection?.access_token) {
-                console.error(
-                    "[SlackService] Error getting workspace connection:",
-                    connectionError,
-                );
+                console.error("[SlackService] Workspace connection error:", {
+                    error: connectionError,
+                    connectionId: channel.workspace_connection_id,
+                    hasAccessToken: !!connection?.access_token,
+                });
                 throw new Error("Workspace connection not found or invalid");
             }
-            const accessToken = await this.getValidAccessToken(connection);
+            console.log(
+                "[SlackService] Workspace connection found,",
+                connection,
+            );
+            console.log(
+                "[SlackService] Workspace connection found, getting valid access token",
+            );
 
+            // Get valid access token
+            const accessToken = await this.getValidAccessToken(connection);
+            console.log("[SlackService] Valid access token obtained");
+
+            // Create and send message
             const message = createArticleMessage(translation, article.url);
-            console.log("[SlackService] Sending message:", message);
+            console.log("[SlackService] Sending message to Slack:", {
+                channelId: channel.channel_identifier_id,
+                messageLength: JSON.stringify(message).length,
+            });
+
             const response = await axios.post(
                 "https://slack.com/api/chat.postMessage",
                 {
@@ -152,20 +207,52 @@ export class SlackService {
                     },
                 },
             );
-            console.log("response", response.data);
+
+            console.log("[SlackService] Slack API response:", {
+                ok: response.data.ok,
+                error: response.data.error,
+                warning: response.data.warning,
+                messageTs: response.data.ts,
+            });
+
             if (!response.data.ok) {
-                console.error(
-                    "[SlackService] Error sending message:",
-                    response.data.error,
-                );
+                console.error("[SlackService] Slack API error:", {
+                    error: response.data.error,
+                    warning: response.data.warning,
+                    responseData: response.data,
+                });
                 throw new Error(
                     response.data.error || "Failed to send message",
                 );
             }
 
+            console.log("[SlackService] Message sent successfully");
             return { success: true };
         } catch (error) {
-            console.error("[SlackService] Error sending message:", error);
+            // Enhanced error logging
+            if (axios.isAxiosError(error)) {
+                console.error("[SlackService] Axios error details:", {
+                    status: error.response?.status,
+                    statusText: error.response?.statusText,
+                    data: error.response?.data,
+                    headers: error.response?.headers,
+                    config: {
+                        url: error.config?.url,
+                        method: error.config?.method,
+                        baseURL: error.config?.baseURL,
+                        headers: error.config?.headers,
+                    },
+                });
+            }
+            console.error("[SlackService] Error in sendMessage:", {
+                error: error instanceof Error
+                    ? {
+                        message: error.message,
+                        name: error.name,
+                        stack: error.stack,
+                    }
+                    : error,
+            });
             return {
                 success: false,
                 error: error instanceof Error ? error.message : "Unknown error",
