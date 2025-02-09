@@ -3,6 +3,7 @@ import type {
     NotificationPlatformService,
 } from "@/types/notification-platform";
 import { SlackPlatform } from "./slack";
+import { DiscordPlatform } from "./discord";
 
 export function createPlatform(
     platform: NotificationPlatform,
@@ -11,8 +12,7 @@ export function createPlatform(
         case "slack":
             return new SlackPlatform();
         case "discord":
-            // TODO: Implement DiscordPlatform
-            throw new Error("Discord platform not implemented");
+            return new DiscordPlatform();
         default:
             throw new Error(`Unsupported platform: ${platform}`);
     }

@@ -31,9 +31,9 @@ const getEnvVars = () => {
     appDomain: Deno.env.get("APP_DOMAIN") ?? "localhost:5173",
   };
 
-  Object.entries(vars).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(vars)) {
     if (!value) throw new Error(`Missing ${key}`);
-  });
+  }
 
   return vars as Record<string, string>;
 };
@@ -100,7 +100,7 @@ Deno.serve(handleWithCors(async (req) => {
     const guildId = url.searchParams.get("guild_id");
 
     console.log("URL parameters:", {
-      code: code?.substring(0, 4) + "...",
+      code: `${code?.substring(0, 4)}...`,
       state,
       guildId,
     });

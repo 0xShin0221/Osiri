@@ -80,7 +80,7 @@ export default function AppIntegrationPage() {
 
     const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${
       import.meta.env.VITE_DISCORD_CLIENT_ID
-    }&permissions=274877925380&response_type=code&redirect_uri=${encodeURIComponent(
+    }&permissions=274877925376&response_type=code&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&state=${encodeURIComponent(
       combinedParam
