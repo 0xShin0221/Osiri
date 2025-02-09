@@ -1,6 +1,6 @@
 import { supabase } from "./db/client.ts";
 import { LANGUAGE_EMOJIS } from "./languages.ts";
-import {
+import type {
   NotificationTemplate,
   SlackPayload,
   TemplateConfigs,
