@@ -6,8 +6,8 @@ import type {
     ProcessorStats,
 } from "../interfaces/notification-processor.interface";
 
-import { Database } from "../../../types/database.types";
-import { PlatformConfig } from "../interfaces/platform-config.interface.ts";
+import type { Database } from "../../../types/database.types";
+import type { PlatformConfig } from "../interfaces/platform-config.interface.ts";
 
 type NotificationLog = Database["public"]["Tables"]["notification_logs"]["Row"];
 type NotificationStatus = Database["public"]["Enums"]["notification_status"];

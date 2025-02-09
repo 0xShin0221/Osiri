@@ -1,6 +1,6 @@
 // src/services/notification/notification.service.ts
 import type { NotificationRepository } from "../../repositories/notification.repository";
-import { Database } from "../../types/database.types";
+import type { Database } from "../../types/database.types";
 import type { ServiceResponse } from "../../types/models";
 import type { NotificationProcessor } from "./interfaces/notification-processor.interface";
 

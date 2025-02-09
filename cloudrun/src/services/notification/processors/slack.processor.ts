@@ -2,7 +2,7 @@
 import type { NotificationRepository } from "../../../repositories/notification.repository";
 import type { SlackService } from "../../platform/slack.service";
 import { BaseNotificationProcessor } from "./base.processor";
-import { Database } from "../../../types/database.types";
+import type { Database } from "../../../types/database.types";
 import { PLATFORM_CONFIGS } from "../../platform/platform.config";
 
 type NotificationLog = Database["public"]["Tables"]["notification_logs"]["Row"];

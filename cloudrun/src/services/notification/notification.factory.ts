@@ -5,7 +5,7 @@ import type { NotificationRepository } from "../../repositories/notification.rep
 import type { SlackService } from "../platform/slack.service";
 import { SlackNotificationProcessor } from "./processors/slack.processor";
 import { NotificationService } from "./notification.service";
-import { Database } from "../../types/database.types";
+import type { Database } from "../../types/database.types";
 
 type NotificationPlatform =
     Database["public"]["Enums"]["notification_platform"];
