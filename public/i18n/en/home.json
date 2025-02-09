@@ -253,6 +253,11 @@
   },
   "team": {
     "members": {
+      "hiroshi": {
+        "description": "A master of over 40 languages, using linguistic power to take over the Osiri from Shin.",
+        "name": "Hiroshi",
+        "position": "Supreme Language Operator"
+      },
       "leo": {
         "description": "Highly motivated Frontend Developer with a passion for crafting exceptional user experiences.",
         "name": "Leopoldo Miranda",

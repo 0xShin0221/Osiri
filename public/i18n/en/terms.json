@@ -1,133 +1,133 @@
 {
-  "title": "Terms of Service",
   "introduction": "These Terms of Service (hereinafter referred to as 'Terms') set forth the terms and conditions for the use of services (hereinafter referred to as 'Service') provided by Osiri (hereinafter referred to as 'Company') on this website. Users (hereinafter referred to as 'Users') shall use the Service in accordance with these Terms.",
+  "lastUpdated": "Revised on January 17, 2025",
   "section1": {
-    "title": "Article 1 (Application)",
     "items": {
       "agreement": "These Terms shall apply to all relationships between Users and the Company regarding the use of the Service.",
-      "regulations": "The Company may establish various rules and regulations (hereinafter referred to as 'Individual Regulations') in addition to these Terms. These Individual Regulations shall constitute part of these Terms regardless of their name.",
-      "priority": "In the event of any conflict between these Terms and Individual Regulations, the provisions of the Individual Regulations shall prevail unless otherwise specified in the Individual Regulations."
-    }
+      "priority": "In the event of any conflict between these Terms and Individual Regulations, the provisions of the Individual Regulations shall prevail unless otherwise specified in the Individual Regulations.",
+      "regulations": "The Company may establish various rules and regulations (hereinafter referred to as 'Individual Regulations') in addition to these Terms. These Individual Regulations shall constitute part of these Terms regardless of their name."
+    },
+    "title": "Article 1 (Application)"
+  },
+  "section10": {
+    "content": "The Company may change or discontinue the contents of the Service without notice to Users and shall not be liable for any damage caused to Users thereby.",
+    "title": "Article 10 (Changes to Service)"
+  },
+  "section11": {
+    "content": "The Company may change these Terms at any time without notice to Users when it deems necessary. Users shall be deemed to have agreed to the changed Terms when they start using the Service after the changes.",
+    "title": "Article 11 (Changes to Terms)"
+  },
+  "section12": {
+    "content": "The Company shall properly handle personal information obtained through the use of the Service in accordance with the Company's Privacy Policy.",
+    "title": "Article 12 (Handling of Personal Information)"
+  },
+  "section13": {
+    "content": "Notifications or communications between Users and the Company shall be made in the manner specified by the Company. The Company shall deem the currently registered contact information valid and send notifications or communications to such contact information unless it receives a change notification in accordance with the format separately specified by the Company, and these shall be deemed to have reached Users at the time of sending.",
+    "title": "Article 13 (Notifications)"
+  },
+  "section14": {
+    "content": "Users may not transfer their position under the usage contract or rights or obligations under these Terms to any third party or provide them as security without the prior written consent of the Company.",
+    "title": "Article 14 (Prohibition of Transfer of Rights)"
+  },
+  "section15": {
+    "items": {
+      "jurisdiction": "The court having jurisdiction over the location of the Company's head office shall have exclusive jurisdiction over any disputes regarding the Service.",
+      "law": "These Terms shall be interpreted under the laws of Japan."
+    },
+    "title": "Article 15 (Governing Law and Jurisdiction)"
+  },
+  "section16": {
+    "content": "Campaigns in the Company's application are conducted independently by the Company and have no relation to Apple Inc.",
+    "title": "Article 16 (Application)"
   },
   "section2": {
-    "title": "Article 2 (Registration)",
     "items": {
       "registration": "Registration for the Service shall be completed when the applicant agrees to these Terms, applies for registration in the manner prescribed by the Company, and the Company approves such application.",
       "rejection": "The Company may not approve an application for registration if it determines that the applicant falls under any of the following cases, and shall not be obligated to disclose the reason thereof."
     },
     "subitems": {
       "false_info": "When false information is submitted in the application for registration",
-      "violation": "When the application is from a person who has violated these Terms in the past",
-      "inappropriate": "In other cases where the Company deems the registration inappropriate"
-    }
+      "inappropriate": "In other cases where the Company deems the registration inappropriate",
+      "violation": "When the application is from a person who has violated these Terms in the past"
+    },
+    "title": "Article 2 (Registration)"
   },
   "section3": {
-    "title": "Article 3 (User ID and Password Management)",
     "items": {
-      "responsibility": "Users shall properly manage their user ID and password for the Service at their own responsibility.",
       "no_sharing": "Users shall not transfer, lend, or share their user ID and password with any third party under any circumstances. The Company shall consider any access using the combination of user ID and password registered by a User as access by that User.",
+      "responsibility": "Users shall properly manage their user ID and password for the Service at their own responsibility.",
       "security": "The Company shall not be liable for any damages caused by third party use of user ID and password, except in cases of willful misconduct or gross negligence by the Company."
-    }
+    },
+    "title": "Article 3 (User ID and Password Management)"
   },
   "section4": {
-    "title": "Article 4 (Usage Fees and Payment)",
     "items": {
-      "payment": "Users shall pay the usage fees displayed on this website for the paid portions of the Service using the method specified by the Company.",
-      "late_fees": "If a User delays payment of the usage fees, the User shall pay a late payment charge at an annual rate of 14.6%."
-    }
+      "late_fees": "If a User delays payment of the usage fees, the User shall pay a late payment charge at an annual rate of 14.6%.",
+      "payment": "Users shall pay the usage fees displayed on this website for the paid portions of the Service using the method specified by the Company."
+    },
+    "title": "Article 4 (Usage Fees and Payment)"
   },
   "section5": {
-    "title": "Article 5 (Prohibited Actions)",
     "introduction": "Users shall not engage in the following actions when using the Service:",
     "items": {
-      "illegal": "Actions that violate laws or public order and morals",
-      "criminal": "Actions related to criminal activities",
-      "ip_violation": "Actions that infringe intellectual property rights including copyrights and trademarks contained in the Service",
-      "interference": "Actions that destroy or interfere with the functions of servers or networks of the Company, other Users, or third parties",
-      "commercial": "Actions that use information obtained through the Service for commercial purposes",
-      "disruption": "Actions that may interfere with the operation of the Company's services",
-      "unauthorized": "Actions to attempt or make unauthorized access",
-      "data_collection": "Actions to collect or accumulate personal information about other Users",
-      "malicious": "Actions to use the Service with malicious intent",
-      "harmful": "Actions that cause disadvantage, damage, or discomfort to other Users or third parties",
-      "impersonation": "Actions to impersonate other Users",
       "advertising": "Advertising, promotion, solicitation, or business activities on the Service without the Company's permission",
-      "dating": "Actions aimed at meeting members of the opposite sex whom you have never met",
       "antisocial": "Actions that directly or indirectly benefit anti-social forces in relation to the Company's services",
-      "other_prohibited": "Other actions that the Company deems inappropriate"
-    }
+      "commercial": "Actions that use information obtained through the Service for commercial purposes",
+      "criminal": "Actions related to criminal activities",
+      "data_collection": "Actions to collect or accumulate personal information about other Users",
+      "dating": "Actions aimed at meeting members of the opposite sex whom you have never met",
+      "disruption": "Actions that may interfere with the operation of the Company's services",
+      "harmful": "Actions that cause disadvantage, damage, or discomfort to other Users or third parties",
+      "illegal": "Actions that violate laws or public order and morals",
+      "impersonation": "Actions to impersonate other Users",
+      "interference": "Actions that destroy or interfere with the functions of servers or networks of the Company, other Users, or third parties",
+      "ip_violation": "Actions that infringe intellectual property rights including copyrights and trademarks contained in the Service",
+      "malicious": "Actions to use the Service with malicious intent",
+      "other_prohibited": "Other actions that the Company deems inappropriate",
+      "unauthorized": "Actions to attempt or make unauthorized access"
+    },
+    "title": "Article 5 (Prohibited Actions)"
   },
   "section6": {
-    "title": "Article 6 (Suspension of Service)",
     "items": {
-      "suspension": "The Company may suspend or interrupt all or part of the Service without prior notice to Users if it determines that any of the following circumstances exist:",
-      "no_compensation": "The Company shall not be liable for any disadvantage or damage suffered by Users or third parties due to the suspension or interruption of the Service."
+      "no_compensation": "The Company shall not be liable for any disadvantage or damage suffered by Users or third parties due to the suspension or interruption of the Service.",
+      "suspension": "The Company may suspend or interrupt all or part of the Service without prior notice to Users if it determines that any of the following circumstances exist:"
     },
     "subitems": {
-      "maintenance": "When performing maintenance or updates on the computer system for the Service",
       "force_majeure": "When the provision of the Service becomes difficult due to force majeure such as earthquakes, lightning, fire, power outages, or natural disasters",
-      "technical": "When computers or communication lines stop due to accidents",
-      "other": "When the Company otherwise determines that it is difficult to provide the Service"
-    }
+      "maintenance": "When performing maintenance or updates on the computer system for the Service",
+      "other": "When the Company otherwise determines that it is difficult to provide the Service",
+      "technical": "When computers or communication lines stop due to accidents"
+    },
+    "title": "Article 6 (Suspension of Service)"
   },
   "section7": {
-    "title": "Article 7 (Usage Restrictions and Deregistration)",
     "items": {
-      "restriction": "The Company may restrict all or part of the Service use or deregister Users without prior notice if Users fall under any of the following:",
-      "no_liability": "The Company shall not be liable for any damage caused to Users by actions taken by the Company based on this article."
+      "no_liability": "The Company shall not be liable for any damage caused to Users by actions taken by the Company based on this article.",
+      "restriction": "The Company may restrict all or part of the Service use or deregister Users without prior notice if Users fall under any of the following:"
     },
     "subitems": {
-      "violation": "When violating any provision of these Terms",
       "false_info": "When it is found that false information was provided in the registration details",
-      "payment": "When there is a default in payment obligations",
-      "no_response": "When there is no response to communications from the Company for a certain period",
       "inactive": "When there has been no use of the Service for a certain period after the last use",
-      "other": "When the Company otherwise determines that use of the Service is inappropriate"
-    }
+      "no_response": "When there is no response to communications from the Company for a certain period",
+      "other": "When the Company otherwise determines that use of the Service is inappropriate",
+      "payment": "When there is a default in payment obligations",
+      "violation": "When violating any provision of these Terms"
+    },
+    "title": "Article 7 (Usage Restrictions and Deregistration)"
   },
   "section8": {
-    "title": "Article 8 (Withdrawal)",
-    "content": "Users may withdraw from the Service through the withdrawal procedure specified by the Company."
+    "content": "Users may withdraw from the Service through the withdrawal procedure specified by the Company.",
+    "title": "Article 8 (Withdrawal)"
   },
   "section9": {
-    "title": "Article 9 (Disclaimers)",
     "items": {
-      "no_warranty": "The Company makes no express or implied warranties that the Service is free from defects in fact or in law (including defects related to safety, reliability, accuracy, completeness, effectiveness, fitness for a particular purpose, security, bugs, infringement of rights, etc.).",
-      "no_liability": "The Company shall not be liable for any damages incurred by Users arising from the Service.",
+      "disputes": "The Company shall not be liable for any transactions, communications, or disputes between Users and other Users or third parties regarding the Service.",
       "limited_liability": "Notwithstanding the preceding paragraph, this shall not apply to damages caused by the Company's intentional or gross negligence. However, if the contract between the Company and Users regarding the Service (including these Terms) constitutes a consumer contract as defined in the Consumer Contract Act, this disclaimer shall not apply.",
-      "disputes": "The Company shall not be liable for any transactions, communications, or disputes between Users and other Users or third parties regarding the Service."
-    }
+      "no_liability": "The Company shall not be liable for any damages incurred by Users arising from the Service.",
+      "no_warranty": "The Company makes no express or implied warranties that the Service is free from defects in fact or in law (including defects related to safety, reliability, accuracy, completeness, effectiveness, fitness for a particular purpose, security, bugs, infringement of rights, etc.)."
+    },
+    "title": "Article 9 (Disclaimers)"
   },
-  "section10": {
-    "title": "Article 10 (Changes to Service)",
-    "content": "The Company may change or discontinue the contents of the Service without notice to Users and shall not be liable for any damage caused to Users thereby."
-  },
-  "section11": {
-    "title": "Article 11 (Changes to Terms)",
-    "content": "The Company may change these Terms at any time without notice to Users when it deems necessary. Users shall be deemed to have agreed to the changed Terms when they start using the Service after the changes."
-  },
-  "section12": {
-    "title": "Article 12 (Handling of Personal Information)",
-    "content": "The Company shall properly handle personal information obtained through the use of the Service in accordance with the Company's Privacy Policy."
-  },
-  "section13": {
-    "title": "Article 13 (Notifications)",
-    "content": "Notifications or communications between Users and the Company shall be made in the manner specified by the Company. The Company shall deem the currently registered contact information valid and send notifications or communications to such contact information unless it receives a change notification in accordance with the format separately specified by the Company, and these shall be deemed to have reached Users at the time of sending."
-  },
-  "section14": {
-    "title": "Article 14 (Prohibition of Transfer of Rights)",
-    "content": "Users may not transfer their position under the usage contract or rights or obligations under these Terms to any third party or provide them as security without the prior written consent of the Company."
-  },
-  "section15": {
-    "title": "Article 15 (Governing Law and Jurisdiction)",
-    "items": {
-      "law": "These Terms shall be interpreted under the laws of Japan.",
-      "jurisdiction": "The court having jurisdiction over the location of the Company's head office shall have exclusive jurisdiction over any disputes regarding the Service."
-    }
-  },
-  "section16": {
-    "title": "Article 16 (Application)",
-    "content": "Campaigns in the Company's application are conducted independently by the Company and have no relation to Apple Inc."
-  },
-  "lastUpdated": "Revised on January 17, 2024"
+  "title": "Terms of Service"
 }

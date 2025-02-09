@@ -1,0 +1,18 @@
+# Exclude everything by default
+*
+
+# Then explicitly include what we want
+!cloudbuild.yaml
+!cloudrun/**/*
+
+# Exclude node_modules even in cloudrun directory
+cloudrun/**/node_modules
+cloudrun/**/dist
+cloudrun/**/.env*
+
+# Exclude any git related files
+.git
+.gitignore
+
+# Exclude any logs
+**/*.log

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Plus, RssIcon, Loader2 } from "lucide-react";
+import { RefreshCw, Plus, RssIcon } from "lucide-react";
 import { AddChannelForm } from "@/components/channel/AddChannelForm";
 import { ChannelCard } from "@/components/channel/ChannelCard";
 import { ChannelSettings } from "@/components/channel/ChannelSettings";
@@ -12,6 +12,11 @@ import { useChannels } from "@/hooks/useChannels";
 import { useWorkspaceConnections } from "@/hooks/useWorkspaceConnections";
 import { useNotificationSchedules } from "@/hooks/useNotificationSchedules";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  ChannelListSkeleton,
+  NoChannelsState,
+  ErrorState,
+} from "@/components/channel/ChannelSkeltons";
 
 type NotificationChannel = Tables<"notification_channels"> & {
   notification_channel_feeds: {
@@ -50,11 +55,18 @@ export default function ChannelSettingsPage() {
     toggleChannelFeed,
   } = useChannels();
 
-  const { followingFeeds: organizationFeeds, isLoading: feedsLoading } =
-    useFeeds({ itemsPerPage: 100 });
+  const {
+    followingFeeds: organizationFeeds,
+    isInitialLoading: isInitialFeedLoading,
+  } = useFeeds({
+    itemsPerPage: 100,
+  });
 
-  const loading =
-    channelsLoading || connectionsLoading || feedsLoading || schedulesLoading;
+  const isLoading =
+    channelsLoading ||
+    connectionsLoading ||
+    schedulesLoading ||
+    isInitialFeedLoading;
   const error = channelsError || connectionsError || schedulesError;
 
   const handleSelectChannel = (channel: NotificationChannel) => {
@@ -96,24 +108,73 @@ export default function ChannelSettingsPage() {
   ) => {
     try {
       await toggleChannelFeed(channelId, feedId, isAdding);
-
-      const updateFeeds = (channel: NotificationChannel) => {
+      setSelectedChannel((prev) => {
+        if (!prev) return null;
         const updatedFeeds = isAdding
-          ? [...(channel.notification_channel_feeds || []), { feed_id: feedId }]
-          : channel.notification_channel_feeds.filter(
-              (f) => f.feed_id !== feedId
-            );
-
-        return {
-          ...channel,
-          notification_channel_feeds: updatedFeeds,
-        };
-      };
-
-      setSelectedChannel((prev) => (prev ? updateFeeds(prev) : null));
+          ? [...(prev.notification_channel_feeds || []), { feed_id: feedId }]
+          : prev.notification_channel_feeds.filter((f) => f.feed_id !== feedId);
+        return { ...prev, notification_channel_feeds: updatedFeeds };
+      });
     } catch (err) {
       console.error("Error toggling feed:", err);
     }
+  };
+
+  const renderContent = () => {
+    if (isLoading) {
+      return <ChannelListSkeleton />;
+    }
+
+    if (error) {
+      return <ErrorState message={error} />;
+    }
+
+    if (channels.length === 0) {
+      return <NoChannelsState message={t("noChannels")} />;
+    }
+
+    if (organizationFeeds.length === 0) {
+      return (
+        <Card>
+          <CardContent className="p-8 text-center space-y-4">
+            <div className="flex justify-center">
+              <RssIcon className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <h3 className="font-medium text-lg">{t("feeds.noFeeds.title")}</h3>
+            <p className="text-muted-foreground pb-4">
+              {t("feeds.noFeeds.description")}
+            </p>
+            <a href={`/${currentLang}/feeds`}>
+              <Button>
+                <RssIcon className="h-4 w-4 mr-2" />
+                {t("feeds.noFeeds.action")}
+              </Button>
+            </a>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return channels.map((channel) => (
+      <div key={channel.id} className="space-y-4">
+        <ChannelCard
+          channel={channel as NotificationChannel}
+          selected={selectedChannel?.id === channel.id}
+          onSelect={handleSelectChannel}
+          onUpdate={handleUpdateChannel}
+        />
+        {selectedChannel?.id === channel.id && (
+          <ChannelSettings
+            channel={selectedChannel}
+            feeds={organizationFeeds}
+            schedules={schedules}
+            onUpdate={handleUpdateChannel}
+            onDelete={handleDeleteChannel}
+            onToggleFeed={handleToggleFeed}
+          />
+        )}
+      </div>
+    ));
   };
 
   return (
@@ -124,9 +185,13 @@ export default function ChannelSettingsPage() {
           <p className="text-muted-foreground">{t("page.description")}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={fetchChannels} disabled={loading}>
+          <Button
+            variant="outline"
+            onClick={fetchChannels}
+            disabled={isLoading}
+          >
             <RefreshCw
-              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
             />
             {t("feeds.refreshText")}
           </Button>
@@ -138,72 +203,7 @@ export default function ChannelSettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-8">
-        <div className="space-y-4">
-          {loading ? (
-            <Card>
-              <CardContent className="p-8 flex justify-center items-center">
-                <Loader2 className="h-8 w-8 animate-spin" />
-              </CardContent>
-            </Card>
-          ) : error ? (
-            <Card>
-              <CardContent className="p-8 text-center text-red-600">
-                {error}
-              </CardContent>
-            </Card>
-          ) : channels.length > 0 ? (
-            <>
-              {organizationFeeds.length === 0 ? (
-                <Card>
-                  <CardContent className="p-8 text-center space-y-4">
-                    <div className="flex justify-center">
-                      <RssIcon className="h-12 w-12 text-muted-foreground" />
-                    </div>
-                    <h3 className="font-medium text-lg">
-                      {t("feeds.noFeeds.title")}
-                    </h3>
-                    <p className="text-muted-foreground pb-4">
-                      {t("feeds.noFeeds.description")}
-                    </p>
-                    <a href={`/${currentLang}/feeds`}>
-                      <Button>
-                        <RssIcon className="h-4 w-4 mr-2" />
-                        {t("feeds.noFeeds.action")}
-                      </Button>
-                    </a>
-                  </CardContent>
-                </Card>
-              ) : (
-                channels.map((channel) => (
-                  <div key={channel.id} className="space-y-4">
-                    <ChannelCard
-                      channel={channel as NotificationChannel}
-                      selected={selectedChannel?.id === channel.id}
-                      onSelect={handleSelectChannel}
-                      onUpdate={handleUpdateChannel}
-                    />
-                    {selectedChannel?.id === channel.id && (
-                      <ChannelSettings
-                        channel={selectedChannel}
-                        feeds={organizationFeeds}
-                        schedules={schedules}
-                        onUpdate={handleUpdateChannel}
-                        onDelete={handleDeleteChannel}
-                        onToggleFeed={handleToggleFeed}
-                      />
-                    )}
-                  </div>
-                ))
-              )}
-            </>
-          ) : (
-            <Card>
-              <CardContent className="p-8 text-center text-muted-foreground">
-                {t("noChannels")}
-              </CardContent>
-            </Card>
-          )}
-        </div>
+        <div className="space-y-4">{renderContent()}</div>
       </div>
 
       <AddChannelForm

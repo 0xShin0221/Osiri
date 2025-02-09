@@ -54,7 +54,7 @@ export const frTemplate = (data?: Record<string, any>) => {
             <a href="https://o-siri.com" class="cta-button">Visitez notre site</a>
             
             <div class="footer">
-              <p>© 2024 Osiri by Dig Da Tech LLC. Tous droits réservés.</p>
+              <p>© 2025 Osiri by Dig Da Tech LLC. Tous droits réservés.</p>
               <p>Pour toute question, contactez-nous à support@o-siri.com.</p>
             </div>
           </div>

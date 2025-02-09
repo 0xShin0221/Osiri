@@ -138,7 +138,7 @@ export const Footer = () => {
       </section>
 
       <section className="container pb-14 text-center">
-        <h3>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</h3>
+        <h3>© 2025 Osiri by Dig Da Tech LLC. All rights reserved.</h3>
       </section>
     </footer>
   );

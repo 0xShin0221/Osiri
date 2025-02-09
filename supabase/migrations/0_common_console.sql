@@ -1,0 +1,31 @@
+-- -- 1.CRON for invoke-notifications-process every 3 minutes
+-- select
+--   cron.schedule(
+--     'invoke-notifications-process-3m', -- Unique name for the schedule
+--     '*/3 * * * *', -- Every 3 minutes
+--     $$
+--     select
+--       net.http_post(
+--           url:='https://project-ref.supabase.co/functions/v1/invoke-notifications-process',
+--           headers:='{"Content-Type": "application/json", "Authorization": "Bearer YOUR_ANON_KEY"}'::jsonb
+--       ) as request_id;
+--     $$
+--   );
+
+-- -- 2.CRON for invoke-batch-run every 10 minutes
+-- select
+--   cron.schedule(
+--     'invoke-batch-run-10m', -- Unique name for the schedule
+--     '*/10 * * * *', -- Every 10 minutes
+--     $$
+--     select
+--       net.http_post(
+--           url:='https://project-ref.supabase.co/functions/v1/invoke-batch-run',
+--           headers:='{"Content-Type": "application/json", "Authorization": "Bearer YOUR_ANON_KEY"}'::jsonb,
+--           body:=concat('{"time": "', now(), '"}')::jsonb
+--       ) as request_id;
+--     $$
+--   );
+-- Unscheduling the cron jobs
+-- SELECT cron.unschedule('invoke-notifications-process-3m');
+-- SELECT cron.unschedule('invoke-batch-run-10m');

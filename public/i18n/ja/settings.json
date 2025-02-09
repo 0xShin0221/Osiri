@@ -3,11 +3,34 @@
     "cancel": "キャンセル",
     "loading": "読み込み中..."
   },
+  "customerPortal": {
+    "title": "お支払い管理ポータル",
+    "description": "サブスクリプション、お支払い方法、請求履歴をまとめて管理できます。",
+    "openPortal": "ポータルを開く",
+    "features": {
+      "payment": {
+        "title": "お支払い方法",
+        "description": "クレジットカード情報の更新や支払い方法を安全に管理できます"
+      },
+      "billing": {
+        "title": "請求履歴",
+        "description": "過去の請求書や明細書の閲覧・ダウンロードが可能です"
+      },
+      "subscription": {
+        "title": "プラン管理",
+        "description": "現在のプランの確認、アップグレード、サブスクリプション設定の管理ができます"
+      }
+    },
+    "security": {
+      "title": "セキュアアクセス",
+      "description": "セキュリティのため、ポータルへのアクセスにはメールアドレスの確認が必要です。ログインリンクは1回限り有効です。"
+    }
+  },
   "organization": {
     "create": {
       "button": "組織を作成",
       "description": "チームと設定を管理するための新しい組織を作成します。",
-      "require": "このサービスを継続して利用するには組織が必要です。",
+      "require": "このサービスを利用するには組織の登録が必要です。",
       "title": "組織の作成"
     },
     "members": {
@@ -35,8 +58,51 @@
     "description": "組織の設定とチームメンバーを管理します。",
     "title": "設定"
   },
+  "subscription": {
+    "billingPeriod": "請求期間",
+    "cancelDate": "キャンセル日",
+    "changePlan": "プランを変更する",
+    "currentPlan": "現在のプラン",
+    "description": "サブスクリプションの管理と更新",
+    "descriptionSelect": "ニーズに合わせて最適なプランをお選びください。別途+プランの契約で無制限となります。",
+    "error": {
+      "unknown": "エラーが発生しました"
+    },
+    "features": "含まれる機能",
+    "free": "無料",
+    "freePlan": "無料プラン",
+    "manageBilling": "支払い管理",
+    "notApplicable": "適用なし",
+    "notificationsPerDay": "1日あたり{{count}}件の通知",
+    "notificationsPerDay_0": "{{count}}件/日の通知",
+    "payAsYouGo": "追加使用分は従量課金",
+    "perMonth": "/月",
+    "plan": "プラン",
+    "processing": "処理中...",
+    "selectPlan": "プランを選択してください",
+    "selectPlanDescription": "以下のプランをお選び下さい。お支払いはクレジットカードにてお支払いとなります。",
+    "selectPlanTitle": "プラン一覧",
+    "settings": {
+      "description": "サブスクリプションと支払い方法の管理",
+      "title": "サブスクリプション設定"
+    },
+    "status": {
+      "active": "有効",
+      "pastDue": "支払い期限超過",
+      "trial": "トライアル",
+      "trialExpired": "トライアル終了"
+    },
+    "title": "サブスクリプション",
+    "titleUpgrade": "プランのアップグレード",
+    "trialEnds": "トライアル終了日",
+    "upgrade": "アップグレード",
+    "upgradePlan": "プランをアップグレード",
+    "usage": "利用状況"
+  },
   "tabs": {
+    "billing": "請求管理",
     "members": "メンバー",
-    "organization": "組織"
+    "organization": "組織",
+    "subscription": "サブスクリプション"
   }
 }

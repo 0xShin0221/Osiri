@@ -227,7 +227,7 @@
         "benefit5": "カスタムフィード",
         "button": "利用を開始",
         "description": "全機能を使いたいプロフェッショナル向け",
-        "price": "¥900",
+        "price": "¥980",
         "title": "プロ"
       },
       "trial": {
@@ -237,7 +237,7 @@
         "benefit4": "メールサポート",
         "benefit5": "7日間のアクセス",
         "button": "無料で始める",
-        "description": "Osiriの機能を7日間体験できます",
+        "description": "Osiriのプロ機能を7日間体験できます",
         "price": "¥0",
         "title": "無料トライアル"
       }
@@ -256,6 +256,11 @@
   },
   "team": {
     "members": {
+      "hiroshi": {
+        "description": "40以上の言語を操る言語の達人。ミスリード連発でShinからOsiriを乗っ取ろうとしている。",
+        "name": "Hiroshi",
+        "position": "最高言語操縦車"
+      },
       "leo": {
         "description": "フリーランスエンジニアとして、フルスタックに開発、OSSコントリビューター。",
         "name": "レオポルド ミランダ",
@@ -263,7 +268,7 @@
       },
       "shin": {
         "description": "3度の起業経験と10年以上のフルスタック開発経験。グローバルなテック情報を誰でも身近に。",
-        "name": "シン",
+        "name": "Shin",
         "position": "プロダクトオーナー"
       }
     },

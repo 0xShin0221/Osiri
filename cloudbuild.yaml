@@ -1,0 +1,66 @@
+steps:
+  # Install dependencies
+  - name: node:20
+    entrypoint: npm
+    dir: "cloudrun"
+    args: ["install"]
+    id: install-dependencies
+
+  # Build and push Docker images
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      &build_args [
+        "build",
+        "-t",
+        "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
+        "-f",
+        "cloudrun/docker/server.Dockerfile",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
+      ]
+
+  # Deploy to Cloud Run
+  - name: google/cloud-sdk
+    args:
+      &deploy_args [
+        "gcloud",
+        "run",
+        "deploy",
+        "${_IMAGE_NAME}-$BRANCH_NAME",
+        "--port=3000",
+        "--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
+        "--region",
+        "${_REGION}",
+        "--update-secrets=APP_SECRETS=${_IMAGE_NAME}-$BRANCH_NAME-app-secrets:latest",
+        "--update-env-vars",
+        "${_LANGCHAIN_ENV_VARS}",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+        "--no-cpu-throttling",
+      ]
+    secretEnv: ["APP_SECRETS"]
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${_GCP_PROJECT_NUMBER}/secrets/${_IMAGE_NAME}-$BRANCH_NAME-app-secrets/versions/latest
+      env: APP_SECRETS
+
+substitutions:
+  _REPO_NAME: osiri-repository
+  _IMAGE_NAME: osiri-image
+  _GCP_PROJECT_NUMBER: "671459818925"
+  _REGION: us-central1
+  _LANGCHAIN_ENV_VARS: >-
+    LANGCHAIN_TRACING_V2=true,
+    LANGSMITH_TRACING=true
+
+options:
+  logging: "CLOUD_LOGGING_ONLY"
+  automapSubstitutions: true
+  dynamicSubstitutions: true

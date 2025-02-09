@@ -13,6 +13,8 @@ import type { ReactElement } from "react";
 import { AuthCallback } from "@/components/auth/AuthCallback";
 import AppSettingsPage from "@/pages/AppSettings";
 import LegalNotice from "@/pages/LegalNotice";
+import OrgSettings from "@/pages/OrgSettings";
+import SubscriptionSettings from "@/pages/SubscriptionSettings";
 
 interface RouteConfig {
   path: string;
@@ -59,5 +61,17 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
     element: <AppSettingsPage />,
     protected: true,
     requireOrg: false,
+  },
+  {
+    path: "settings/organization",
+    element: <OrgSettings />,
+    protected: true,
+    requireOrg: false,
+  },
+  {
+    path: "settings/subscription",
+    element: <SubscriptionSettings />,
+    protected: true,
+    requireOrg: true,
   },
 ];

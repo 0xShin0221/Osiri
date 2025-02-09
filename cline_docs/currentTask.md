@@ -9,9 +9,21 @@
 
 #### Objectives
 
-1. Enhance channel configuration system
-2. Implement channel settings management
-3. Create platform connection controls
+1. サブスクリプション状態の管理
+バックエンド
+   サブスクの状態での slack メッセージ
+   トライアル終了前の通知（メール、アプリ内通知）
+   アップグレードへの誘導
+フロントエンド
+   ダウングレードの処理
+   支払い履歴の表示
+   請求書のダウンロード
+   解約処理と解約後のデータ保持ポリシー
+
+
+アプリ連携Discord
+実アカウントでの運用
+ユーザーの招待機能
 
 #### Implementation Tasks
 

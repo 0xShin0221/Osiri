@@ -14,11 +14,14 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { Database } from "@/types/database.types";
 
-type Organization = Database["public"]["Tables"]["organizations"]["Row"];
+type OrganizationSubscriptionStatusRow =
+  Database["public"]["Views"]["organization_subscription_status"]["Row"];
 
 interface CreateOrganizationProps {
   error?: string | null;
-  onCreateOrganization: (name: string) => Promise<Organization | null>;
+  onCreateOrganization: (
+    name: string
+  ) => Promise<OrganizationSubscriptionStatusRow | null>;
 }
 
 export function CreateOrganization({

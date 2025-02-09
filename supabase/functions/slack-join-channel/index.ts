@@ -1,6 +1,7 @@
 // supabase/functions/slack-join-channel/index.ts
 import { corsHeaders } from "../_shared/cors.ts";
 import { supabase } from "../_shared/db/client.ts";
+import { refreshSlackToken } from "../_shared/slack.ts";
 
 const joinSlackChannel = async (accessToken: string, channelId: string) => {
   try {
@@ -32,7 +33,6 @@ const joinSlackChannel = async (accessToken: string, channelId: string) => {
 };
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     // Get workspace connection
     const { data: workspace, error: workspaceError } = await supabase
       .from("workspace_connections")
-      .select("access_token")
+      .select("*")
       .eq("id", workspace_id)
       .single();
 
@@ -55,7 +55,17 @@ Deno.serve(async (req) => {
       throw new Error("Workspace not found or missing access token");
     }
 
-    const result = await joinSlackChannel(workspace.access_token, channel_id);
+    // Always refresh token before using
+    let accessToken: string;
+    try {
+      accessToken = await refreshSlackToken(workspace);
+      console.log("Successfully refreshed Slack token");
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      throw new Error("Failed to refresh Slack token");
+    }
+
+    const result = await joinSlackChannel(accessToken, channel_id);
 
     return new Response(
       JSON.stringify(result),
@@ -83,12 +93,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-// Usage example:
-// curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/slack-join-channel' \
-//   --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' \
-//   --header 'Content-Type: application/json' \
-//   --data '{
-//     "workspace_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-//     "channel_id": "CHANNEL_ID"
-//   }'

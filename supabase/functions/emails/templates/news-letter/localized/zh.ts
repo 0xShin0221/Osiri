@@ -52,7 +52,7 @@ export const zhTemplate = (
               <p>敬请期待我们的下一次更新！</p>
               <a href="https://o-siri.com" class="cta-button">访问我们的网站</a>
               <div class="footer">
-                <p>© 2024 Osiri by Dig Da Tech LLC. 版权所有。</p>
+                <p>© 2025 Osiri by Dig Da Tech LLC. 版权所有。</p>
                <p>如果您希望取消订阅，请 <a href="${unsubscribeUrl}">点击此处</a>。</p>
                 <p>如有任何问题，请通过 support@o-siri.com 与我们联系</p>
               </div>

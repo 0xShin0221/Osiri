@@ -1,0 +1,21 @@
+{
+  "active": {
+    "manage": "Manage Subscription",
+    "title": "Active Subscription"
+  },
+  "cancelScheduled": {
+    "description": "Your subscription will be cancelled at the end of the current billing period. You can reactivate your subscription anytime before then.",
+    "manage": "Manage Plan",
+    "title": "Cancellation Scheduled"
+  },
+  "pastDue": {
+    "description": "Your payment couldn't be processed. Please update your payment method to continue using the service.",
+    "manage": "Update Payment",
+    "title": "Payment Required"
+  },
+  "trial": {
+    "description": "Your trial period will end {{timeLeft}}. Upgrade now to continue using all features.",
+    "title": "Trial Period Active",
+    "upgrade": "Upgrade Plan"
+  }
+}

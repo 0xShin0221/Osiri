@@ -6,7 +6,7 @@ import {
 import { supabase } from "@/lib/supabase";
 
 interface UseTranslationsOptions {
-    organizationId?: string;
+    organizationId?: string | null;
 }
 
 export function useTranslations({ organizationId }: UseTranslationsOptions) {

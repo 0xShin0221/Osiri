@@ -1,68 +1,73 @@
 {
-  "title": "Privacy Policy",
+  "contact": {
+    "address": "Iwakuni, Yamaguchi Japan",
+    "address_label": "Address: ",
+    "company": "Osiri",
+    "company_label": "Company Name: ",
+    "department": "Customer Support",
+    "department_label": "Department: ",
+    "email": "support@o-siri.com",
+    "email_label": "Email: ",
+    "info": "For inquiries regarding this Policy, please contact:",
+    "title": "Article 10 (Contact Information)"
+  },
   "introduction": "Osiri (hereinafter referred to as 'Company') sets forth this Privacy Policy (hereinafter referred to as 'Policy') regarding the handling of user information in the services provided on this website (hereinafter referred to as 'Service').",
-
+  "lastUpdated": "Revised on January 17, 2025",
   "section1": {
-    "title": "Article 1 (Personal Information)",
-    "content": "'Personal Information' refers to 'personal information' as defined in the Personal Information Protection Act and means information about a living individual that can identify the specific individual by name, date of birth, address, phone number, contact information or other descriptions contained in the information, as well as data concerning appearance, fingerprint, voiceprint, and health insurance subscriber numbers that can identify the specific individual (personal identification information)."
+    "content": "'Personal Information' refers to 'personal information' as defined in the Personal Information Protection Act and means information about a living individual that can identify the specific individual by name, date of birth, address, phone number, contact information or other descriptions contained in the information, as well as data concerning appearance, fingerprint, voiceprint, and health insurance subscriber numbers that can identify the specific individual (personal identification information).",
+    "title": "Article 1 (Personal Information)"
   },
-
   "section2": {
-    "title": "Article 2 (Collection Method)",
-    "content": "The Company may ask for personal information such as name, date of birth, address, telephone number, email address, bank account number, credit card number, and driver's license number when Users register for use. The Company may also collect information about transaction records and settlements containing Users' personal information from our business partners (including information providers, advertisers, and advertising distributors, hereinafter referred to as 'Partners')."
+    "content": "The Company may ask for personal information such as name, date of birth, address, telephone number, email address, bank account number, credit card number, and driver's license number when Users register for use. The Company may also collect information about transaction records and settlements containing Users' personal information from our business partners (including information providers, advertisers, and advertising distributors, hereinafter referred to as 'Partners').",
+    "title": "Article 2 (Collection Method)"
   },
-
   "section3": {
-    "title": "Article 3 (Purpose of Collection and Use)",
     "intro": "The Company collects and uses personal information for the following purposes:",
     "items": {
+      "additional": "For purposes incidental to the above purposes",
+      "billing": "To bill Users for paid services",
+      "maintenance": "To contact Users when necessary, such as for maintenance and important notices",
+      "management": "To allow Users to view, modify, or delete their registration information and view usage status",
+      "prevention": "To identify Users who violate the Terms of Service or attempt to use the Service for improper purposes, and to deny their use",
       "service": "To provide and operate the Company's services",
       "support": "To respond to inquiries from Users (including identity verification)",
-      "updates": "To send emails about new features, updates, campaigns of the Service in use, and other services provided by the Company",
-      "maintenance": "To contact Users when necessary, such as for maintenance and important notices",
-      "prevention": "To identify Users who violate the Terms of Service or attempt to use the Service for improper purposes, and to deny their use",
-      "management": "To allow Users to view, modify, or delete their registration information and view usage status",
-      "billing": "To bill Users for paid services",
-      "additional": "For purposes incidental to the above purposes"
-    }
+      "updates": "To send emails about new features, updates, campaigns of the Service in use, and other services provided by the Company"
+    },
+    "title": "Article 3 (Purpose of Collection and Use)"
   },
-
   "section4": {
-    "title": "Article 4 (Change of Purpose)",
     "items": {
       "change": "The Company shall change the purpose of use of personal information only when the changed purpose is reasonably considered to be related to the previous purpose.",
       "notification": "When changing the purpose of use, the Company shall notify Users or announce on this website the changed purpose in the manner prescribed by the Company."
-    }
+    },
+    "title": "Article 4 (Change of Purpose)"
   },
-
   "section5": {
-    "title": "Article 5 (Provision to Third Parties)",
     "items": {
-      "main": "The Company shall not provide personal information to third parties without obtaining prior consent from Users, except in the following cases and cases permitted by the Personal Information Protection Act and other laws and regulations:",
-      "exceptions": "Notwithstanding the preceding paragraph, the following cases shall not be considered as provision to third parties:"
+      "exceptions": "Notwithstanding the preceding paragraph, the following cases shall not be considered as provision to third parties:",
+      "main": "The Company shall not provide personal information to third parties without obtaining prior consent from Users, except in the following cases and cases permitted by the Personal Information Protection Act and other laws and regulations:"
     },
     "subitems": {
-      "life": "When necessary for protecting human life, body, or property, and when it is difficult to obtain the consent of the individual",
-      "health": "When especially necessary for improving public health or promoting the sound growth of children, and when it is difficult to obtain the consent of the individual",
       "cooperation": "When necessary to cooperate with a national government organ, a local government, or an individual or entity entrusted by either a national government organ or local government to execute affairs prescribed by laws and regulations, and when obtaining the consent of the individual might impede the execution of such affairs",
-      "disclosure": "When the following information has been notified or announced in advance and the Company has filed a notification with the Personal Information Protection Commission"
+      "disclosure": "When the following information has been notified or announced in advance and the Company has filed a notification with the Personal Information Protection Commission",
+      "health": "When especially necessary for improving public health or promoting the sound growth of children, and when it is difficult to obtain the consent of the individual",
+      "life": "When necessary for protecting human life, body, or property, and when it is difficult to obtain the consent of the individual"
+    },
+    "subitems2": {
+      "joint": "When personal information is used jointly with specific individuals or entities, and this fact, as well as the items of personal information to be used jointly, the scope of joint users, the purpose of use by users, and the name or title of the person responsible for the management of the personal information is notified to the individual in advance or placed in a readily accessible condition for the individual",
+      "outsourcing": "When the Company outsources all or part of the handling of personal information within the scope necessary to achieve the purpose of use",
+      "succession": "When personal information is provided due to business succession caused by merger or other reasons"
     },
     "subsubitems": {
-      "purpose": "That the purpose of use includes provision to third parties",
       "items": "Items of data to be provided to third parties",
       "method": "Method or means of provision to third parties",
       "optout": "That provision to third parties will be stopped at the individual's request",
-      "process": "Method of accepting the individual's request"
+      "process": "Method of accepting the individual's request",
+      "purpose": "That the purpose of use includes provision to third parties"
     },
-    "subitems2": {
-      "outsourcing": "When the Company outsources all or part of the handling of personal information within the scope necessary to achieve the purpose of use",
-      "succession": "When personal information is provided due to business succession caused by merger or other reasons",
-      "joint": "When personal information is used jointly with specific individuals or entities, and this fact, as well as the items of personal information to be used jointly, the scope of joint users, the purpose of use by users, and the name or title of the person responsible for the management of the personal information is notified to the individual in advance or placed in a readily accessible condition for the individual"
-    }
+    "title": "Article 5 (Provision to Third Parties)"
   },
-
   "section6": {
-    "title": "Article 6 (Disclosure)",
     "items": {
       "disclosure": "When requested by an individual to disclose their personal information, the Company shall disclose it to the individual without delay. However, the Company may decide not to disclose all or part of the information if disclosure falls under any of the following cases, and shall notify the individual of such decision without delay. Please note that a fee of 1,000 yen per case will be charged for disclosure of personal information.",
       "limitation": "Notwithstanding the preceding paragraph, in principle, we will not disclose information other than personal information such as history information and characteristic information."
@@ -71,48 +76,32 @@
       "harm": "When disclosure may harm the life, body, property, or other rights or interests of the individual or a third party",
       "interference": "When disclosure may significantly interfere with the proper execution of the Company's business",
       "violation": "When disclosure would violate other laws and regulations"
-    }
+    },
+    "title": "Article 6 (Disclosure)"
   },
-
   "section7": {
-    "title": "Article 7 (Correction and Deletion)",
     "items": {
-      "request": "Users may request the Company to correct, add, or delete their personal information (hereinafter referred to as 'Correction, etc.') in accordance with the procedure established by the Company when such information held by the Company is incorrect.",
+      "notification": "When the Company has made the Correction, etc. based on the provisions of the preceding paragraph, or has decided not to make the Correction, etc., the Company shall notify the User of this without delay.",
       "process": "When the Company receives a request from a User pursuant to the preceding paragraph and determines that it is necessary to respond to the request, the Company shall make the Correction, etc. of the personal information without delay.",
-      "notification": "When the Company has made the Correction, etc. based on the provisions of the preceding paragraph, or has decided not to make the Correction, etc., the Company shall notify the User of this without delay."
-    }
+      "request": "Users may request the Company to correct, add, or delete their personal information (hereinafter referred to as 'Correction, etc.') in accordance with the procedure established by the Company when such information held by the Company is incorrect."
+    },
+    "title": "Article 7 (Correction and Deletion)"
   },
-
   "section8": {
-    "title": "Article 8 (Suspension of Use)",
     "items": {
+      "alternative": "Notwithstanding the preceding two paragraphs, when the Suspension of Use, etc. requires a large expense or is otherwise difficult, and it is possible to take alternative measures necessary to protect the rights and interests of Users, the Company shall take such alternative measures.",
       "investigation": "When requested by an individual to suspend or delete the use of their personal information (hereinafter referred to as 'Suspension of Use, etc.') on the grounds that the information is being handled beyond the scope of the purpose of use or that it was acquired by improper means, the Company shall conduct necessary investigation without delay.",
-      "suspension": "Based on the results of the investigation under the preceding paragraph, when it is determined necessary to respond to the request, the Company shall suspend the use of the personal information without delay.",
       "notification": "When the Company has made the Suspension of Use, etc. based on the provisions of the preceding paragraph, or has decided not to make the Suspension of Use, etc., the Company shall notify the User of this without delay.",
-      "alternative": "Notwithstanding the preceding two paragraphs, when the Suspension of Use, etc. requires a large expense or is otherwise difficult, and it is possible to take alternative measures necessary to protect the rights and interests of Users, the Company shall take such alternative measures."
-    }
+      "suspension": "Based on the results of the investigation under the preceding paragraph, when it is determined necessary to respond to the request, the Company shall suspend the use of the personal information without delay."
+    },
+    "title": "Article 8 (Suspension of Use)"
   },
-
   "section9": {
-    "title": "Article 9 (Changes to Privacy Policy)",
     "items": {
       "changes": "The contents of this Policy may be changed without notification to Users, except for matters stipulated by laws and regulations and other matters specified in this Policy.",
       "effectiveness": "Unless otherwise specified by the Company, the amended Privacy Policy shall become effective from the time it is posted on this website."
-    }
+    },
+    "title": "Article 9 (Changes to Privacy Policy)"
   },
-
-  "contact": {
-    "title": "Article 10 (Contact Information)",
-    "info": "For inquiries regarding this Policy, please contact:",
-    "address_label": "Address: ",
-    "company_label": "Company Name: ",
-    "department_label": "Department: ",
-    "email_label": "Email: ",
-    "address": "Iwakuni, Yamaguchi Japan",
-    "company": "Osiri",
-    "department": "Customer Support",
-    "email": "support@o-siri.com"
-  },
-
-  "lastUpdated": "Revised on January 17, 2024"
+  "title": "Privacy Policy"
 }

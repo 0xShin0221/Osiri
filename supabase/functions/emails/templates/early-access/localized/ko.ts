@@ -54,7 +54,7 @@ export const koTemplate = (data?: Record<string, any>) => {
             <a href="https://o-siri.com" class="cta-button">웹사이트 방문하기</a>
             
             <div class="footer">
-              <p>© 2024 Osiri by Dig Da Tech LLC. All rights reserved.</p>
+              <p>© 2025 Osiri by Dig Da Tech LLC. All rights reserved.</p>
               <p>문의 사항이 있으시면 support@o-siri.com로 연락해 주세요.</p>
             </div>
           </div>

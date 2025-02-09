@@ -1,9 +1,10 @@
+// supabase/functions/slack-channels/index.ts
 import { corsHeaders } from "../_shared/cors.ts";
 import { supabase } from "../_shared/db/client.ts";
+import { refreshSlackToken } from "../_shared/slack.ts";
 
 const getSlackChannels = async (accessToken: string) => {
   try {
-    // Create URL with query parameters
     const params = new URLSearchParams({
       types: "public_channel,private_channel",
       exclude_archived: "true",
@@ -46,7 +47,7 @@ Deno.serve(async (req) => {
     // Get workspace connection
     const { data: workspace, error: workspaceError } = await supabase
       .from("workspace_connections")
-      .select("access_token")
+      .select("*")
       .eq("id", workspace_id)
       .single();
 
@@ -54,7 +55,17 @@ Deno.serve(async (req) => {
       throw new Error("Workspace not found");
     }
 
-    const slackData = await getSlackChannels(workspace.access_token);
+    // Always refresh token before using
+    let accessToken: string;
+    try {
+      accessToken = await refreshSlackToken(workspace);
+      console.log("Successfully refreshed Slack token");
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      throw new Error("Failed to refresh Slack token");
+    }
+
+    const slackData = await getSlackChannels(accessToken);
 
     // Transform channels data
     const channels = slackData.channels
@@ -90,13 +101,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-// 1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-// 2. Make an HTTP request:
-
-// curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/slack-channels' \
-//   --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-//   --header 'Content-Type: application/json' \
-//  --data '{
-//     "workspace_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-//   }'
