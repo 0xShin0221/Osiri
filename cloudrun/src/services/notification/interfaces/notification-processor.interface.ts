@@ -1,4 +1,4 @@
-import { Database } from "../../../types/database.types";
+import type { Database } from "../../../types/database.types";
 
 type NotificationLog = Database["public"]["Tables"]["notification_logs"]["Row"];
 type NotificationStatus = Database["public"]["Enums"]["notification_status"];
