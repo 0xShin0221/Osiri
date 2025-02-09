@@ -176,10 +176,6 @@ export class SlackService {
                 throw new Error("Workspace connection not found or invalid");
             }
             console.log(
-                "[SlackService] Workspace connection found,",
-                connection,
-            );
-            console.log(
                 "[SlackService] Workspace connection found, getting valid access token",
             );
 
