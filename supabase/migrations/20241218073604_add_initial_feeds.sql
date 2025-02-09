@@ -208,14 +208,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  false,
  array['tech_news', 'startup_news', 'business_strategy']::feed_category[]
 ),
-('Forbes - Leadership', 
- 'Leadership insights and strategies', 
- 'https://www.forbes.com/favicon.ico', 
- 'https://www.forbes.com/leadership/feed/', 
- 'en', 
- false,
- array['leadership', 'business_strategy', 'personal_development']::feed_category[]
-);
 -- Products & Ideas Category
 insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
 ('Product Hunt', 
