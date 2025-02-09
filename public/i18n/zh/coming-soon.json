@@ -4,16 +4,16 @@
   "getCoupon": "获取优惠券",
   "incentives": {
     "earlyAccess": {
-      "description": "前期注册用户可享受3个月50%折扣！",
-      "title": "50%折扣"
+      "description": "7天免费试用",
+      "title": "标准计划"
     },
     "earlyAccessAnnually": {
-      "description": "原价每月980日元，前期注册用户可享受3个月免费！",
-      "title": "年省3000日元以上"
+      "description": "PRO功能免费试用30天！",
+      "title": "特别优惠"
     },
     "earlyAccessLifetime": {
-      "description": "所有高级功能均可享受优惠价格",
-      "title": "完整访问权限"
+      "description": "所有高级功能享受折扣价",
+      "title": "完整访问"
     }
   },
   "input": {

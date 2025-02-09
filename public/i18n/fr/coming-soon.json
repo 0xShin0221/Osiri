@@ -4,16 +4,16 @@
   "getCoupon": "Obtenir un coupon",
   "incentives": {
     "earlyAccess": {
-      "description": "Les premiers inscrits bénéficient de 50% de réduction pendant 3 mois !",
-      "title": "50% de réduction"
+      "description": "Essai gratuit de 7 jours",
+      "title": "Plan Standard"
     },
     "earlyAccessAnnually": {
-      "description": "Normalement 980€/mois, les premiers inscrits obtiennent 3 mois gratuits !",
-      "title": "Économisez plus de 3000€ par an"
+      "description": "30 jours de fonctionnalités PRO gratuits !",
+      "title": "Offre Spéciale"
     },
     "earlyAccessLifetime": {
-      "description": "Accédez à toutes les fonctionnalités premium à un prix réduit",
-      "title": "Accès complet"
+      "description": "Accès à toutes les fonctionnalités premium à prix réduit",
+      "title": "Accès Complet"
     }
   },
   "input": {

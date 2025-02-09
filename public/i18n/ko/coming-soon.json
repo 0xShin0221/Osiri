@@ -4,15 +4,15 @@
   "getCoupon": "쿠폰 받기",
   "incentives": {
     "earlyAccess": {
-      "description": "선착순 등록자는 3개월간 50% 할인!",
-      "title": "50% 할인"
+      "description": "7일 무료 체험",
+      "title": "기본 플랜"
     },
     "earlyAccessAnnually": {
-      "description": "일반 월 980엔인 곳, 선착순 등록자는 3개월 무료!",
-      "title": "연간 3,000엔 이상 할인"
+      "description": "프로 기능 30일 무료!",
+      "title": "특별 혜택"
     },
     "earlyAccessLifetime": {
-      "description": "모든 프리미엄 기능을 할인가로 이용 가능",
+      "description": "모든 프리미엄 기능을 할인된 가격으로 이용",
       "title": "풀 액세스"
     }
   },
