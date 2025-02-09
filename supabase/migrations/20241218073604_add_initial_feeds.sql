@@ -969,15 +969,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
   array['venture_capital', 'startup_news', 'tech_news']::feed_category[]
 ),
 (
-  'BW VENTURES',
-  'Showcases entrepreneurial insights, technical tips and strategies for young startups. Focuses on adapting and launching commercially successful innovations.',
-  'https://i1.feedspot.com/5673506.jpg?t=1695023773',
-  'https://www.bw.ventures/blog',
-  'en',
-  false,
-  array['venture_capital', 'entrepreneurship', 'startup_news']::feed_category[]
-),
-(
   'Red Rocket Ventures',
   'A strategic playbook with actionable how-to lessons on startup topics including business strategy, sales, marketing, technology, and fund raising.',
   'https://i1.feedspot.com/3404865.jpg',
