@@ -1,10 +1,10 @@
+// supabase/functions/slack-channels/index.ts
 import { corsHeaders } from "../_shared/cors.ts";
 import { supabase } from "../_shared/db/client.ts";
 import { refreshSlackToken } from "../_shared/slack.ts";
 
 const getSlackChannels = async (accessToken: string) => {
   try {
-    // Create URL with query parameters
     const params = new URLSearchParams({
       types: "public_channel,private_channel",
       exclude_archived: "true",
@@ -54,19 +54,17 @@ Deno.serve(async (req) => {
     if (workspaceError || !workspace) {
       throw new Error("Workspace not found");
     }
-    let accessToken = workspace.access_token;
-    if (workspace.token_expires_at) {
-      const expiresAt = new Date(workspace.token_expires_at);
-      if (
-        expiresAt.getTime() - Date.now() <= 3600000 && workspace.refresh_token
-      ) {
-        try {
-          accessToken = await refreshSlackToken(workspace);
-        } catch (error) {
-          console.error("Token refresh failed, using existing token:", error);
-        }
-      }
+
+    // Always refresh token before using
+    let accessToken: string;
+    try {
+      accessToken = await refreshSlackToken(workspace);
+      console.log("Successfully refreshed Slack token");
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      throw new Error("Failed to refresh Slack token");
     }
+
     const slackData = await getSlackChannels(accessToken);
 
     // Transform channels data
@@ -103,13 +101,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-// 1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-// 2. Make an HTTP request:
-
-// curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/slack-channels' \
-//   --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-//   --header 'Content-Type: application/json' \
-//  --data '{
-//     "workspace_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-//   }'
