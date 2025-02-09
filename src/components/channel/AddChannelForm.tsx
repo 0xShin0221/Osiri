@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/select";
 import { DiscordIcon, EmailIcon, SlackIcon } from "../PlatformIcons";
 import { useTranslation } from "react-i18next";
-
 import { useAuth } from "@/hooks/useAuth";
 import type { Database, Tables } from "@/types/database.types";
 import { ChannelSelector } from "./ChannelSelector";
@@ -30,32 +29,23 @@ import { Alert, AlertDescription } from "../ui/alert";
 import { MultiFeedSelect } from "./ChannelMultiCombobox";
 import ScheduleSelector from "./ScheduleSelector";
 import { useFilteredSchedules } from "@/hooks/useNotificationSchedules";
-import type { NotificationPlatform } from "@/types/notification-platform";
+import type {
+  NotificationPlatform,
+  Channel,
+} from "@/types/notification-platform";
 import { createPlatform } from "@/services/platforms/platform-factory";
-
 import { NotificationLanguageSelector } from "./NotificationLanguageSelector";
+
 type RssFeed = Tables<"rss_feeds">;
 type NotificationSchedule = Tables<"notification_schedules">;
 type WorkspaceConnection = Tables<"workspace_connections">;
 type FeedLanguage = Database["public"]["Enums"]["feed_language"];
-
-interface SlackChannel {
-  id: string;
-  workspace_name?: string;
-  name: string;
-}
 
 interface NotificationChannelWithFeeds extends Tables<"notification_channels"> {
   notification_channel_feeds?: {
     feed_id: string;
   }[];
 }
-
-const mockDiscordChannels = [
-  { id: "dc1", name: "#general" },
-  { id: "dc2", name: "#announcements" },
-  { id: "dc3", name: "#feed-updates" },
-];
 
 interface AddChannelFormProps {
   open: boolean;
@@ -90,6 +80,7 @@ export function AddChannelForm({
   const organizationId = user?.organization_id;
   const currentLang = i18n.resolvedLanguage;
   const availablePlatforms = workspaceConnections.map((conn) => conn.platform);
+
   const [platform, setPlatform] = useState<NotificationPlatform | "">("");
   const [notificationLanguage, setNotificationLanguage] =
     useState<FeedLanguage>(currentLang as FeedLanguage);
@@ -99,15 +90,15 @@ export function AddChannelForm({
   const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
   const [scheduleId, setScheduleId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [slackChannels, setSlackChannels] = useState<SlackChannel[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
   const [channelLoadError, setChannelLoadError] = useState<string | null>(null);
 
   const { filteredSchedules, defaultScheduleId, userTimezone } =
     useFilteredSchedules(schedules, platform);
 
-  // Get available Slack workspaces
-  const slackWorkspaces = workspaceConnections.filter(
-    (conn) => conn.platform === "slack" && conn.is_active
+  // Get available workspaces for the selected platform
+  const workspaces = workspaceConnections.filter(
+    (conn) => conn.platform === platform && conn.is_active
   );
 
   // Initialize platform
@@ -118,9 +109,15 @@ export function AddChannelForm({
     setSelectedWorkspaceId("");
   }, [workspaceConnections]);
 
-  // Load Slack channels when workspace is selected
+  // Load channels when workspace is selected
   useEffect(() => {
-    if (!organizationId || !selectedWorkspaceId || platform !== "slack") return;
+    if (
+      !organizationId ||
+      !selectedWorkspaceId ||
+      !platform ||
+      platform === "email"
+    )
+      return;
 
     const loadChannels = async () => {
       setIsLoadingChannels(true);
@@ -128,19 +125,21 @@ export function AddChannelForm({
 
       try {
         const platformService = createPlatform(platform);
-        const channels = await platformService.getChannels(selectedWorkspaceId);
-        setSlackChannels(channels);
+        const loadedChannels = await platformService.getChannels(
+          selectedWorkspaceId
+        );
+        setChannels(loadedChannels);
       } catch (error) {
-        console.error("Error loading Slack channels:", error);
+        console.error(`Error loading ${platform} channels:`, error);
         setChannelLoadError(t("addChannel.errorLoadingChannels"));
-        setSlackChannels([]); // Reset channels on error
+        setChannels([]); // Reset channels on error
       } finally {
         setIsLoadingChannels(false);
       }
     };
 
     // Clear existing channels before loading new ones
-    setSlackChannels([]);
+    setChannels([]);
     setChannelId("");
     loadChannels();
   }, [platform, organizationId, selectedWorkspaceId, t]);
@@ -158,17 +157,15 @@ export function AddChannelForm({
     setLoading(true);
 
     try {
+      const selectedChannel = channels.find((c) => c.id === channelId);
+
       await onSubmit({
         organization_id: organizationId,
         platform,
         workspace_connection_id: selectedWorkspaceId,
         channel_identifier_id: platform === "email" ? null : channelId,
         channel_identifier:
-          platform === "email"
-            ? channelId
-            : platform === "slack"
-            ? slackChannels.find((c) => c.id === channelId)?.name
-            : mockDiscordChannels.find((c) => c.id === channelId)?.name,
+          platform === "email" ? channelId : selectedChannel?.name,
         schedule_id: scheduleId,
         is_active: true,
         category_ids: [],
@@ -190,6 +187,7 @@ export function AddChannelForm({
       setLoading(false);
     }
   };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
@@ -283,46 +281,42 @@ export function AddChannelForm({
                   )}
                 </div>
 
-                {/* Workspace Selection for Slack */}
-                {platform === "slack" && slackWorkspaces.length > 0 && (
-                  <div className="grid gap-2">
-                    <Label>{t("addChannel.workspace")}</Label>
-                    <Select
-                      value={selectedWorkspaceId}
-                      onValueChange={setSelectedWorkspaceId}
-                    >
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={t("addChannel.selectWorkspace")}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {slackWorkspaces.map((workspace) => (
-                          <SelectItem key={workspace.id} value={workspace.id}>
-                            {workspace.workspace_name || workspace.workspace_id}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
+                {/* Workspace Selection for Slack/Discord */}
+                {(platform === "slack" || platform === "discord") &&
+                  workspaces.length > 0 && (
+                    <div className="grid gap-2">
+                      <Label>{t("addChannel.workspace")}</Label>
+                      <Select
+                        value={selectedWorkspaceId}
+                        onValueChange={setSelectedWorkspaceId}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t("addChannel.selectWorkspace")}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {workspaces.map((workspace) => (
+                            <SelectItem key={workspace.id} value={workspace.id}>
+                              {workspace.workspace_name ||
+                                workspace.workspace_id}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
 
                 {/* Channel Selection */}
-                {platform === "slack" && selectedWorkspaceId ? (
+                {(platform === "slack" || platform === "discord") &&
+                selectedWorkspaceId ? (
                   <ChannelSelector
-                    platform="slack"
-                    channels={slackChannels}
+                    platform={platform}
+                    channels={channels}
                     value={channelId}
                     onChange={setChannelId}
                     error={channelLoadError}
                     isLoading={isLoadingChannels}
-                  />
-                ) : platform === "discord" ? (
-                  <ChannelSelector
-                    platform="discord"
-                    channels={mockDiscordChannels}
-                    value={channelId}
-                    onChange={setChannelId}
                   />
                 ) : platform === "email" ? (
                   <div className="grid gap-2">
@@ -387,7 +381,8 @@ export function AddChannelForm({
                       !channelId ||
                       selectedFeeds.length === 0 ||
                       !scheduleId ||
-                      (platform === "slack" && !selectedWorkspaceId)
+                      ((platform === "slack" || platform === "discord") &&
+                        !selectedWorkspaceId)
                     }
                   >
                     {loading ? t("common.adding") : t("common.add")}

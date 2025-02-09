@@ -8,7 +8,7 @@ const currentDir = process.cwd();
 console.log("Current Directory:", currentDir);
 
 // Define env path consistently for both reading and writing
-const envPath = path.resolve(currentDir, "../.env");
+const envPath = path.resolve(currentDir, ".env");
 console.log("Env Path:", envPath);
 
 // Function to update environment variables

@@ -4,15 +4,15 @@
   "getCoupon": "Dapatkan Kupon",
   "incentives": {
     "earlyAccess": {
-      "description": "Pendaftar pertama mendapat diskon 50% selama 3 bulan!",
-      "title": "Diskon 50%"
+      "description": "Coba gratis selama 7 hari",
+      "title": "Paket Standar"
     },
     "earlyAccessAnnually": {
-      "description": "Biasanya Rp130.000 per bulan, pendaftar pertama dapat 3 bulan gratis!",
-      "title": "Hemat Rp390.000+ per tahun"
+      "description": "Dapatkan fitur PRO gratis 30 hari!",
+      "title": "Penawaran Khusus"
     },
     "earlyAccessLifetime": {
-      "description": "Semua fitur premium tersedia dengan harga diskon",
+      "description": "Akses semua fitur premium dengan harga diskon",
       "title": "Akses Penuh"
     }
   },

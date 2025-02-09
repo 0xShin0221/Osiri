@@ -94,18 +94,37 @@ export interface RSSFeedUpdateResult {
 
 export interface SlackOAuthResponse {
   ok: boolean;
-  app_id: string;
-  authed_user: {
-    id: string;
-  };
-  scope: string;
-  token_type: "bot";
   access_token: string;
-  bot_user_id: string;
+  token_type: "bot" | "user";
+  scope: string;
+  bot_user_id?: string;
+  app_id: string;
   team: {
     id: string;
     name: string;
   };
-  enterprise: null | object;
+  enterprise: any;
+  authed_user?: {
+    id: string;
+    scope: string;
+    access_token: string;
+    token_type: "user";
+    expires_in?: number; // Token Rotation enabled
+    refresh_token?: string; // Token Rotation enabled
+  };
+  expires_in?: number; // Token Rotation enabled
+  refresh_token?: string; // Token Rotation enabled
   is_enterprise_install: boolean;
+}
+
+export interface DiscordOAuthResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token: string;
+  guild_id: string;
+  guild: {
+    id: string;
+    name: string;
+  };
 }

@@ -4,15 +4,15 @@
   "getCoupon": "Get a coupon",
   "incentives": {
     "earlyAccess": {
-      "description": "First subscribers get 50% off for the 3 months",
-      "title": "50% Discount"
+      "description": "Try all features free for 7 days",
+      "title": "Standard Plan"
     },
     "earlyAccessAnnually": {
-      "description": "Regular $9/mo, early birds get 3 times free",
-      "title": "Save $27/year"
+      "description": "Get 30 days of PRO features free!",
+      "title": "Special Offer"
     },
     "earlyAccessLifetime": {
-      "description": "All premium features included in the discount",
+      "description": "Access all premium features at a discounted rate",
       "title": "Full Access"
     }
   },

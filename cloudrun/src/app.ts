@@ -2,7 +2,7 @@ import express from "express";
 import feedRoutes from "./routes/feeds";
 import contentRoutes from "./routes/content";
 import healthRouter from "./routes/health";
-import notificationRouter from "./routes/notifications";
+import notificationRouter from "./routes/batch/notifications";
 import batchRoutes from "./routes/batch";
 import { requireApiKey } from "./middleware/auth";
 

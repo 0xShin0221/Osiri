@@ -4,15 +4,15 @@
   "getCoupon": "Gutschein sichern",
   "incentives": {
     "earlyAccess": {
-      "description": "Erste Registrierungen erhalten 50% Rabatt für 3 Monate!",
-      "title": "50% Rabatt"
+      "description": "7 Tage kostenlos testen",
+      "title": "Standard-Plan"
     },
     "earlyAccessAnnually": {
-      "description": "Statt regulär €10 pro Monat, erhalten erste Registrierungen 3 Monate kostenlos!",
-      "title": "Über €30 Ersparnis pro Jahr"
+      "description": "30 Tage PRO-Funktionen kostenlos!",
+      "title": "Sonderangebot"
     },
     "earlyAccessLifetime": {
-      "description": "Alle Premium-Funktionen zum Vorzugspreis verfügbar",
+      "description": "Alle Premium-Funktionen zum Vorzugspreis",
       "title": "Vollzugriff"
     }
   },

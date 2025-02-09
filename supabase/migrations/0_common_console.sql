@@ -26,3 +26,6 @@
 --       ) as request_id;
 --     $$
 --   );
+-- Unscheduling the cron jobs
+-- SELECT cron.unschedule('invoke-notifications-process-3m');
+-- SELECT cron.unschedule('invoke-batch-run-10m');

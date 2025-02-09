@@ -4,12 +4,12 @@
   "getCoupon": "クーポンを取得する",
   "incentives": {
     "earlyAccess": {
-      "description": "先着登録者は3か月間50%オフ！",
-      "title": "50%割引"
+      "description": "まずは7日間無料でお試し",
+      "title": "通常プラン"
     },
     "earlyAccessAnnually": {
-      "description": "通常月額980円のところ、先着登録者は3か月無料！",
-      "title": "年間3000円以上お得"
+      "description": "プロ機能が30日間無料！",
+      "title": "クーポン特典"
     },
     "earlyAccessLifetime": {
       "description": "すべてのプレミアム機能を割引価格で利用可能",

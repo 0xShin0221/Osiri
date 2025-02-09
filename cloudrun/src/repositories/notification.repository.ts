@@ -16,6 +16,9 @@ type CreatePendingResult = {
   newNotifications: NotificationLog[];
 };
 
+const DEFAULT_DAILY_LIMIT = 5; // Default limit for free plan
+const TRIAL_DAILY_LIMIT = 30;
+
 export class NotificationRepository extends BaseRepository {
   private readonly channelsTable = "notification_channels";
   private readonly logsTable = "notification_logs";
@@ -535,6 +538,149 @@ export class NotificationRepository extends BaseRepository {
         channelId: data.channel_id,
       });
       return { success: true, data: result };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async updateOrganizationLimitNotification(
+    organizationId: string,
+  ): Promise<ServiceResponse<void>> {
+    try {
+      const { error } = await this.client
+        .from("organizations")
+        .update({
+          last_limit_notification_at: new Date().toISOString(),
+        })
+        .eq("id", organizationId);
+
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+  async getOrganizationSubscriptionStatus(
+    organizationId: string,
+  ): Promise<
+    ServiceResponse<
+      Database["public"]["Views"]["organization_subscription_status"]["Row"]
+    >
+  > {
+    try {
+      const { data, error } = await this.client
+        .from("organization_subscription_status")
+        .select()
+        .eq("id", organizationId)
+        .single();
+
+      if (data && data.base_notifications_per_day === null) {
+        data.base_notifications_per_day = DEFAULT_DAILY_LIMIT;
+      }
+      if (
+        data &&
+        data.trial_end_date &&
+        new Date(data.trial_end_date) > new Date()
+      ) {
+        data.base_notifications_per_day = TRIAL_DAILY_LIMIT;
+      }
+      if (error) throw error;
+      return { success: true, data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async getNotificationsUsedToday(organizationId: string): Promise<number> {
+    try {
+      const { data: org } = await this.client
+        .from("organizations")
+        .select("notifications_used_this_month, last_usage_reset")
+        .eq("id", organizationId)
+        .single();
+
+      if (!org) return 0;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // If the last reset is not today, return 0
+      if (!org.last_usage_reset || new Date(org.last_usage_reset) < today) {
+        return 0;
+      }
+
+      return org.notifications_used_this_month || 0;
+    } catch (error) {
+      console.error(
+        "[NotificationRepository] Error getting notifications count:",
+        error,
+      );
+      return 0;
+    }
+  }
+
+  async shouldSendLimitNotification(
+    organizationId: string,
+  ): Promise<ServiceResponse<boolean>> {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const { data, error } = await this.client
+        .from("organizations")
+        .select("last_limit_notification_at")
+        .eq("id", organizationId)
+        .single();
+
+      if (error) throw error;
+
+      return {
+        success: true,
+        data: !data.last_limit_notification_at ||
+          new Date(data.last_limit_notification_at) < today,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+  async incrementNotificationCount(organizationId: string): Promise<void> {
+    try {
+      await this.client.rpc("increment_notification_count", {
+        p_organization_id: organizationId,
+      });
+    } catch (error) {
+      console.error("Error incrementing notification count:", error);
+    }
+  }
+
+  async updateWorkspaceConnectionTokens(
+    id: string,
+    updates: {
+      access_token: string;
+      refresh_token: string;
+      token_expires_at: string;
+    },
+  ): Promise<ServiceResponse<void>> {
+    try {
+      const { error } = await this.client
+        .from("workspace_connections")
+        .update(updates)
+        .eq("id", id);
+
+      if (error) throw error;
+      return { success: true };
     } catch (error) {
       return {
         success: false,

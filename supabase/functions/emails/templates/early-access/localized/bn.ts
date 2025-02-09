@@ -54,7 +54,7 @@ export const bnTemplate = (data?: Record<string, any>) => {
             <a href="https://o-siri.com" class="cta-button">ওয়েবসাইট দেখুন</a>
             
             <div class="footer">
-              <p>© 2024 Osiri by Dig Da Tech LLC. সর্বস্বত্ব সংরক্ষিত।</p>
+              <p>© 2025 Osiri by Dig Da Tech LLC. সর্বস্বত্ব সংরক্ষিত।</p>
               <p>যদি আপনার কোনও প্রশ্ন থাকে, দয়া করে support@o-siri.com-এ যোগাযোগ করুন।</p>
             </div>
           </div>

@@ -246,27 +246,38 @@ export class ContentTranslationStep implements StepProcessor {
       throw new Error(translateResult.error || "Translation failed");
     }
 
-    return translateResult;
+    return translateResult.data;
   }
 
   private async saveTranslationResult(
     articleId: string,
-    translateResult: any,
+    translateResult: {
+      titleTranslated: string;
+      titleOriginal: string;
+      translation: string;
+      key_points: string[];
+      summary: string;
+    },
     targetLanguage: FeedLanguage,
   ): Promise<void> {
     const saveResult = await this.translationRepository.saveTranslation(
       articleId,
       {
-        title: translateResult.data.title,
-        content: translateResult.data.translation,
-        key_points: translateResult.data.key_points,
-        summary: translateResult.data.summary,
+        title: translateResult.titleTranslated + " - " +
+          translateResult.titleOriginal,
+        content: translateResult.translation,
+        key_points: translateResult.key_points,
+        summary: translateResult.summary,
         target_language: targetLanguage,
       },
     );
 
     if (!saveResult.success) {
-      throw new Error(saveResult.error || "Failed to save translation");
+      throw new Error(
+        `Failed to save translation for article ${articleId}: ${
+          saveResult.error || "Unknown error"
+        }`,
+      );
     }
   }
 

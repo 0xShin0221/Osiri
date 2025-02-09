@@ -40,9 +40,9 @@ export function useProfile({
 
         if (userProfile) {
           setProfile(userProfile);
-          if (redirectToOnboarding && !userProfile.onboarding_completed) {
-            navigate("/onboarding");
-          }
+          // if (redirectToOnboarding && !userProfile.onboarding_completed) {
+          //   navigate("/onboarding");
+          // }
         }
       } catch (error) {
         console.error("Failed to load profile:", error);

@@ -131,7 +131,7 @@ export class SubscriptionService {
             const { data, error } = await supabase.functions.invoke<
                 PortalSession
             >(
-                "create-portal-session",
+                "stripe-create-portal-session",
                 {
                     body: { organizationId },
                 },

@@ -20,6 +20,33 @@ export class NotificationBatchProcessor {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
+    private async checkNotificationLimit(
+        channel: NotificationChannel,
+    ): Promise<{
+        isWithinLimit: boolean;
+        shouldNotify: boolean;
+    }> {
+        const { data: status } = await this.notificationRepo
+            .getOrganizationSubscriptionStatus(channel.organization_id);
+
+        if (!status?.base_notifications_per_day) {
+            return { isWithinLimit: true, shouldNotify: false };
+        }
+
+        const usedToday = await this.notificationRepo
+            .getNotificationsUsedToday(channel.organization_id);
+
+        const isWithinLimit = usedToday < status.base_notifications_per_day;
+
+        if (!isWithinLimit) {
+            const { data: shouldNotify } = await this.notificationRepo
+                .shouldSendLimitNotification(channel.organization_id);
+            return { isWithinLimit, shouldNotify: shouldNotify || false };
+        }
+
+        return { isWithinLimit: true, shouldNotify: false };
+    }
+
     private async updateNotificationWithChannel(
         logId: string,
         status: NotificationStatus,
@@ -45,6 +72,12 @@ export class NotificationBatchProcessor {
             channel.platform,
             channel.organization_id,
         );
+
+        if (status === "success") {
+            await this.notificationRepo.incrementNotificationCount(
+                channel.organization_id,
+            );
+        }
     }
 
     async processNotifications(): Promise<ServiceResponse<void>> {
@@ -88,9 +121,25 @@ export class NotificationBatchProcessor {
                     }
 
                     for (const channel of channels) {
+                        const { isWithinLimit, shouldNotify } = await this
+                            .checkNotificationLimit(channel);
+
                         try {
                             switch (channel.platform) {
                                 case "slack": {
+                                    if (!isWithinLimit) {
+                                        if (shouldNotify) {
+                                            await this.slackService
+                                                .sendLimitNotification(
+                                                    channel,
+                                                );
+                                            await this.notificationRepo
+                                                .updateOrganizationLimitNotification(
+                                                    channel.organization_id,
+                                                );
+                                        }
+                                        break;
+                                    }
                                     const {
                                         data: notifLog,
                                         error: createError,

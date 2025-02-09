@@ -11,13 +11,18 @@ import { Rss, Plus } from "lucide-react";
 import FeedCard from "@/components/rssFeed/FeedCard";
 import { Badge } from "@/components/ui/badge";
 import {
-  AddFeedRequestDialog,
+  // AddFeedRequestDialog,
   CategoryFilter,
   FeedList,
   FeedSearch,
 } from "@/components/rssFeed";
 import { CATEGORY_GROUPS } from "@/mocks/categoryData";
 import { useFeeds } from "@/hooks/useFeeds";
+import {
+  CategoryFilterSkeleton,
+  FeedListSkeleton,
+  SearchFiltersSkeleton,
+} from "@/components/rssFeed/FeedSkeltons";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -48,11 +53,11 @@ export default function FeedsPage() {
             <h1 className="text-3xl font-bold mb-2">{t("title")}</h1>
             <p className="text-muted-foreground">{t("description")}</p>
           </div>
-          <AddFeedRequestDialog
+          {/* <AddFeedRequestDialog
             onSubmit={async (request) => {
               console.log("Feed request:", request);
             }}
-          />
+          /> */}
         </div>
 
         {/* Following Feeds Section */}
@@ -64,7 +69,9 @@ export default function FeedsPage() {
                   <CardTitle className="flex items-center gap-2">
                     <Rss className="w-5 h-5" />
                     {t("following.title")}
-                    <Badge variant="secondary">{followingFeeds.length}</Badge>
+                    <Badge variant="secondary">
+                      {isLoading ? "-" : followingFeeds.length}
+                    </Badge>
                   </CardTitle>
                   <CardDescription>
                     {t("following.description")}
@@ -84,7 +91,9 @@ export default function FeedsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              {followingFeeds.length > 0 ? (
+              {isLoading ? (
+                <FeedListSkeleton />
+              ) : followingFeeds.length > 0 ? (
                 <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
                   {followingFeeds.map((feed) => (
                     <FeedCard
@@ -138,29 +147,36 @@ export default function FeedsPage() {
             </CardHeader>
             <CardContent className="space-y-8">
               {/* Categories */}
-              <CategoryFilter
-                categoryFilter={categoryFilter}
-                onCategoryChange={handleCategoryChange}
-                categoryGroups={CATEGORY_GROUPS}
-              />
+              {isLoading ? (
+                <CategoryFilterSkeleton />
+              ) : (
+                <CategoryFilter
+                  categoryFilter={categoryFilter}
+                  onCategoryChange={handleCategoryChange}
+                  categoryGroups={CATEGORY_GROUPS}
+                />
+              )}
 
               {/* Available Feeds */}
               <div className="space-y-4">
                 {/* Global Search & Filters */}
-                <FeedSearch
-                  searchQuery={searchQuery}
-                  onSearchChange={setSearchQuery}
-                  languageFilter={languageFilter}
-                  onLanguageChange={setLanguageFilter}
-                  languages={languages}
-                />
+                {isLoading ? (
+                  <SearchFiltersSkeleton />
+                ) : (
+                  <FeedSearch
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    languageFilter={languageFilter}
+                    onLanguageChange={setLanguageFilter}
+                    languages={languages}
+                  />
+                )}
+
                 <h3 className="text-lg font-medium">
                   {t("discover.availableFeeds")}
                 </h3>
                 {isLoading ? (
-                  <div className="text-center py-4 text-muted-foreground">
-                    {t("loading")}
-                  </div>
+                  <FeedListSkeleton />
                 ) : (
                   <FeedList
                     feeds={discoverFeeds}

@@ -54,7 +54,7 @@ export const idTemplate = (data?: Record<string, any>) => {
             <a href="https://o-siri.com" class="cta-button">Kunjungi Situs</a>
             
             <div class="footer">
-              <p>© 2024 Osiri by Dig Da Tech LLC. Hak cipta dilindungi undang-undang.</p>
+              <p>© 2025 Osiri by Dig Da Tech LLC. Hak cipta dilindungi undang-undang.</p>
               <p>Jika ada pertanyaan, silakan hubungi kami di support@o-siri.com.</p>
             </div>
           </div>

@@ -32,7 +32,7 @@ steps:
         "run",
         "deploy",
         "${_IMAGE_NAME}-$BRANCH_NAME",
-        "--port=8080",
+        "--port=3000",
         "--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}-$BRANCH_NAME/${_IMAGE_NAME}:${SHORT_SHA}",
         "--region",
         "${_REGION}",

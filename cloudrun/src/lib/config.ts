@@ -8,6 +8,9 @@ export interface AppSecrets {
     LANGSMITH_API_KEY: string;
     LANGSMITH_PROJECT_NAME: string;
     API_KEYS: string;
+    GOOGLE_API_KEY: string;
+    SLACK_CLIENT_ID: string;
+    SLACK_CLIENT_SECRET: string;
 }
 
 export interface AppConfig {
@@ -50,6 +53,9 @@ export class ConfigManager {
                 "LANGSMITH_API_KEY",
                 "LANGSMITH_PROJECT_NAME",
                 "API_KEYS",
+                "GOOGLE_API_KEY",
+                "SLACK_CLIENT_ID",
+                "SLACK_CLIENT_SECRET",
             ];
 
             const secrets: Partial<AppSecrets> = {};
@@ -82,6 +88,9 @@ export class ConfigManager {
             "SUPABASE_SERVICE_KEY",
             "LANGCHAIN_API_KEY", // LangChain API Key
             "LANGSMITH_API_KEY", // LangSmith API Key
+            "GOOGLE_API_KEY",
+            "SLACK_CLIENT_ID", // Add Slack client ID
+            "SLACK_CLIENT_SECRET", // Add Slack client secret
         ];
 
         const missingKeys = requiredKeys.filter((key) => !this.get(key));
@@ -124,11 +133,24 @@ export class ConfigManager {
         };
     }
 
+    public getSlackConfig() {
+        return {
+            clientId: this.getOrThrow("SLACK_CLIENT_ID"),
+            clientSecret: this.getOrThrow("SLACK_CLIENT_SECRET"),
+        };
+    }
+
     // Helper method for Supabase configuration
     public getSupabaseConfig() {
         return {
             url: this.getOrThrow("SUPABASE_URL"),
             serviceKey: this.getOrThrow("SUPABASE_SERVICE_KEY"),
+        };
+    }
+
+    public getGoogleGeminiConfig() {
+        return {
+            apiKey: this.getOrThrow("GOOGLE_API_KEY"),
         };
     }
 }

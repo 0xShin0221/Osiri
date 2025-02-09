@@ -24,15 +24,15 @@ export const OrgAuthContainer = ({ children }: OrgAuthContainerProps) => {
       return;
     }
 
-    const isValid =
-      organization.subscription_status === "active" ||
-      (organization.subscription_status === "trialing" &&
-        organization.trial_end_date &&
-        new Date(organization.trial_end_date) > new Date());
+    // const isValid =
+    //   organization.subscription_status === "active" ||
+    //   (organization.subscription_status === "trialing" &&
+    //     organization.trial_end_date &&
+    //     new Date(organization.trial_end_date) > new Date());
 
-    if (!isValid) {
-      navigate(`/${currentLang}/settings`, { replace: true });
-    }
+    // if (!isValid) {
+    //   navigate(`/${currentLang}/settings`, { replace: true });
+    // }
   }, [session, organization, isLoading, navigate, currentLang]);
 
   if (isLoading) return <PageLoading />;
