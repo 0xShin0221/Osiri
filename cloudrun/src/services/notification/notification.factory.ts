@@ -6,6 +6,8 @@ import type { SlackService } from "../platform/slack.service";
 import { SlackNotificationProcessor } from "./processors/slack.processor";
 import { NotificationService } from "./notification.service";
 import type { Database } from "../../types/database.types";
+import { DiscordNotificationProcessor } from "./processors/discord.processor";
+import type { DiscordService } from "../platform/discord.service";
 
 type NotificationPlatform =
     Database["public"]["Enums"]["notification_platform"];
@@ -14,7 +16,7 @@ export class NotificationFactory {
     constructor(
         private readonly notificationRepo: NotificationRepository,
         private readonly slackService: SlackService,
-        // Add other platform services here
+        private readonly discordService: DiscordService,
     ) {}
 
     createProcessor(platform: NotificationPlatform): NotificationProcessor {
@@ -24,7 +26,11 @@ export class NotificationFactory {
                     this.slackService,
                     this.notificationRepo,
                 );
-            // Add other platform processors here
+            case "discord":
+                return new DiscordNotificationProcessor(
+                    this.discordService,
+                    this.notificationRepo,
+                );
             default:
                 throw new Error(`Unsupported platform: ${platform}`);
         }

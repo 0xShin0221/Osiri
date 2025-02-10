@@ -1,8 +1,12 @@
 import { useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { DiscordIcon, EmailIcon, SlackIcon } from "@/components/PlatformIcons";
-import { useNavigate } from "react-router-dom";
+import {
+  DiscordIcon,
+  // EmailIcon,
+  SlackIcon,
+} from "@/components/PlatformIcons";
+// import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { IntegrationCard } from "@/components/integration/IntegrationCard";
@@ -19,7 +23,7 @@ export default function AppIntegrationPage() {
   const { i18n } = useTranslation();
   const currentLang = i18n.resolvedLanguage;
   const [userId, setUserId] = useState<string | null>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -89,9 +93,9 @@ export default function AppIntegrationPage() {
     window.location.href = discordAuthUrl;
   };
 
-  const handleEmailConnect = () => {
-    navigate(`/${currentLang}/settings/email`);
-  };
+  // const handleEmailConnect = () => {
+  //   navigate(`/${currentLang}/settings/email`);
+  // };
 
   const handleDisconnect = async (connectionId: string) => {
     try {
@@ -195,7 +199,7 @@ export default function AppIntegrationPage() {
           />
 
           {/* Email */}
-          <IntegrationCard
+          {/* <IntegrationCard
             title="Email"
             description={t("email.description")}
             icon={<EmailIcon />}
@@ -204,7 +208,7 @@ export default function AppIntegrationPage() {
             onConnect={handleEmailConnect}
             onDisconnect={handleDisconnect}
             onToggle={handleToggle}
-          />
+          /> */}
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { NotificationFactory } from "../../services/notification/notification.fa
 import { NotificationRepository } from "../../repositories/notification.repository";
 import { SlackService } from "../../services/platform/slack.service";
 import { validateAndMergeOptions } from "../../services/notification/batch.config";
+import { DiscordService } from "../../services/platform/discord.service";
 
 interface NotificationBatchOptions {
     batchSize?: number;
@@ -16,10 +17,15 @@ interface NotificationBatchOptions {
 const router = Router();
 const notificationRepo = new NotificationRepository();
 const slackService = new SlackService();
+const discordService = new DiscordService();
 // Add other platform services here
 
-// Create notification factory and service
-const factory = new NotificationFactory(notificationRepo, slackService);
+const factory = new NotificationFactory(
+    notificationRepo,
+    slackService,
+    discordService,
+);
+
 const notificationService = factory.createNotificationService();
 
 // Send a direct message to a specific channel

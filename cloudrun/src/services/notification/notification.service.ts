@@ -219,9 +219,20 @@ export class NotificationService {
             for (const notification of notifications) {
                 this.logger.debug(`Processing notification ${notification.id}`);
 
+                if (!notification.article_id) {
+                    this.logger.warn(
+                        `Notification ${notification.id} has no article_id`,
+                    );
+                    status.errors.push({
+                        stage: "article_fetch",
+                        error: "No article_id found",
+                    });
+                    continue;
+                }
+
                 const { data: channels, error: channelsError } = await this
                     .notificationRepo
-                    .getActiveChannelsFromArticleId(notification.article_id!);
+                    .getActiveChannelsFromArticleId(notification.article_id);
 
                 if (channelsError) {
                     this.logger.error(
@@ -231,7 +242,7 @@ export class NotificationService {
                     status.errors.push({
                         stage: "channel_fetch",
                         error: channelsError,
-                        articleId: notification.article_id!,
+                        articleId: notification.article_id,
                     });
                     continue;
                 }
@@ -243,7 +254,7 @@ export class NotificationService {
                     status.errors.push({
                         stage: "channel_fetch",
                         error: "No active channels found",
-                        articleId: notification.article_id!,
+                        articleId: notification.article_id,
                     });
                     continue;
                 }
