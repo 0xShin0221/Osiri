@@ -1,6 +1,6 @@
-import { FeedRepository } from '../../repositories/feed.repository';
-import { ArticleRepository } from '../../repositories/article.repository';
-import { ServiceResponse } from '../../types/models';
+import type { FeedRepository } from "../../repositories/feed.repository";
+import type { ArticleRepository } from "../../repositories/article.repository";
+import type { ServiceResponse } from "../../types/models";
 
 interface CollectionResult {
   processedFeeds: number;
@@ -14,17 +14,17 @@ interface CollectionResult {
 export class FeedCollector {
   constructor(
     private readonly feedRepository: FeedRepository,
-    private readonly articleRepository: ArticleRepository
+    private readonly articleRepository: ArticleRepository,
   ) {}
 
   async collectFeeds(): Promise<ServiceResponse<CollectionResult>> {
     try {
       const feeds = await this.feedRepository.getActiveBatch();
-      
+
       const result: CollectionResult = {
         processedFeeds: feeds.length,
         successCount: 0,
-        failedFeeds: []
+        failedFeeds: [],
       };
 
       for (const feed of feeds) {
@@ -34,20 +34,20 @@ export class FeedCollector {
         } catch (error) {
           result.failedFeeds.push({
             url: feed.url,
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: error instanceof Error ? error.message : "Unknown error",
           });
         }
       }
 
-      return { 
-        success: true, 
-        data: result 
+      return {
+        success: true,
+        data: result,
       };
     } catch (error) {
-      console.error('Feed collection error:', error);
+      console.error("Feed collection error:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
