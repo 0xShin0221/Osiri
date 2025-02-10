@@ -20,13 +20,32 @@ export class SlackService {
             Database["public"]["Tables"]["workspace_connections"]["Row"],
     ): Promise<string> {
         try {
-            // Validate token existence
+            // Token validation check
             if (!connection.access_token) {
                 throw new Error("No access token available");
             }
             if (!connection.refresh_token) {
                 throw new Error("No refresh token available");
             }
+
+            // Check if current token is still valid
+            const tokenExpiresAt = connection.token_expires_at
+                ? new Date(connection.token_expires_at)
+                : null;
+
+            // Add buffer time (5 minutes) to ensure token refresh before expiration
+            const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+            if (
+                tokenExpiresAt &&
+                tokenExpiresAt.getTime() - bufferTime > Date.now()
+            ) {
+                console.log("[SlackService] Current token is still valid");
+                return connection.access_token;
+            }
+
+            console.log(
+                "[SlackService] Token needs refresh, starting refresh process",
+            );
 
             // Prepare form data for token refresh
             const params = new URLSearchParams({
@@ -36,58 +55,105 @@ export class SlackService {
                 refresh_token: connection.refresh_token,
             });
 
+            // Log request details (excluding sensitive data)
+            console.log("[SlackService] Refreshing token for workspace:", {
+                connectionId: connection.id,
+                workspaceId: connection.workspace_id,
+                currentExpiry: connection.token_expires_at,
+            });
+
             // Request new token from Slack OAuth endpoint
             const response = await axios.post<{
                 ok: boolean;
                 access_token: string;
                 refresh_token: string;
                 expires_in: number;
+                error?: string;
             }>("https://slack.com/api/oauth.v2.access", params, {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
             });
 
-            // Check if token refresh was successful
+            // Enhanced error handling for Slack API response
             if (!response.data.ok) {
-                console.error(
-                    "[SlackService] Token refresh response:",
-                    response.data,
-                );
+                console.error("[SlackService] Token refresh failed:", {
+                    error: response.data.error,
+                    responseData: response.data,
+                });
                 throw new Error(
-                    `Failed to refresh token: ${"Unknown error"}`,
+                    `Slack API Error: ${
+                        response.data.error || "Unknown API error"
+                    }`,
                 );
             }
 
-            // Update tokens in database
-            await this.repository.updateWorkspaceConnectionTokens(
-                connection.id,
-                {
-                    access_token: response.data.access_token,
-                    refresh_token: response.data.refresh_token,
-                    token_expires_at: new Date(
-                        Date.now() + response.data.expires_in * 1000,
-                    ).toISOString(),
-                },
+            // Calculate new expiration time
+            const newExpiresAt = new Date(
+                Date.now() + response.data.expires_in * 1000,
+            ).toISOString();
+
+            console.log(
+                "[SlackService] Token refresh successful, updating database",
             );
 
+            // Update tokens in database
+            const updateResult = await this.repository
+                .updateWorkspaceConnectionTokens(
+                    connection.id,
+                    {
+                        access_token: response.data.access_token,
+                        refresh_token: response.data.refresh_token,
+                        token_expires_at: newExpiresAt,
+                    },
+                );
+
+            if (!updateResult.success) {
+                console.error(
+                    "[SlackService] Failed to update tokens in database:",
+                    updateResult.error,
+                );
+                throw new Error("Failed to update tokens in database");
+            }
+
+            console.log(
+                "[SlackService] Token refresh process completed successfully",
+            );
             return response.data.access_token;
         } catch (error) {
-            // Enhanced error logging for debugging
+            // Enhanced error logging
             if (axios.isAxiosError(error)) {
-                console.error("[SlackService] HTTP Error:", {
+                console.error("[SlackService] HTTP Error in token refresh:", {
                     status: error.response?.status,
+                    statusText: error.response?.statusText,
                     data: error.response?.data,
+                    headers: error.response?.headers,
                     config: {
                         url: error.config?.url,
                         method: error.config?.method,
-                        headers: error.config?.headers,
+                        baseURL: error.config?.baseURL,
                     },
                 });
-            } else {
-                console.error("[SlackService] Non-HTTP Error:", error);
+                throw new Error(
+                    `Token refresh failed: ${
+                        error.response?.data?.error || error.message
+                    }`,
+                );
             }
-            throw error;
+
+            console.error("[SlackService] Non-HTTP Error in token refresh:", {
+                error: error instanceof Error
+                    ? {
+                        message: error.message,
+                        name: error.name,
+                        stack: error.stack,
+                    }
+                    : error,
+            });
+
+            throw error instanceof Error
+                ? error
+                : new Error("Unknown error during token refresh");
         }
     }
 
