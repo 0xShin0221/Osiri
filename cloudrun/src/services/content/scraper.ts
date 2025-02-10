@@ -1,6 +1,10 @@
 import { ContentCleaner } from "./cleaner";
 import type { ScrapedContent, ServiceResponse } from "../../types/models";
-import { Browser, BrowserContext, chromium } from "playwright-chromium";
+import {
+  type Browser,
+  type BrowserContext,
+  chromium,
+} from "playwright-chromium";
 
 export interface ScraperOptions {
   timeout?: number;
