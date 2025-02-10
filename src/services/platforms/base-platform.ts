@@ -19,6 +19,7 @@ export abstract class BasePlatform implements NotificationPlatformService {
         const { data, error } = await supabase
             .from("workspace_connections")
             .select("*")
+            .neq("is_disconnected", true)
             .eq("id", workspaceId)
             .eq("platform", this.platform)
             .single();
