@@ -381,7 +381,7 @@ CREATE POLICY "Service role can select workspace connections"
 CREATE POLICY "Service role can update workspace connections"
   ON workspace_connections FOR UPDATE
   TO service_role
-  USING (true)
+  USING (true);
 
 CREATE POLICY "Service role can create organization members"
   ON organization_members FOR INSERT

@@ -141,7 +141,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  false,
  array['engineering_general', 'leadership', 'system_design']::feed_category[]
 );
-
 -- Tech News Category
 insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
 ('Fast Company', 
@@ -199,7 +198,7 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  'en', 
  false,
  array['tech_news', 'startup_news', 'business_strategy']::feed_category[]
-),
+);
 -- Products & Ideas Category
 insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
 ('Product Hunt', 
@@ -234,7 +233,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  false,
  array['product_management', 'entrepreneurship', 'business_strategy']::feed_category[]
 );
-
 -- Engineering Blogs Category
 insert into rss_feeds (name, description, site_icon, url, language, is_active, categories) values
 ('The Pragmatic Engineer', 
