@@ -15,7 +15,7 @@ export async function setupWebhooks(baseUrl: string) {
 
         // Create new webhook
         const endpoint = await stripe.webhookEndpoints.create({
-            url: `${baseUrl}/stripe-webhook`,
+            url: `${baseUrl}/functions/v1/stripe-webhook`,
             enabled_events: [
                 "checkout.session.completed",
                 "customer.subscription.created",
@@ -34,9 +34,9 @@ export async function setupWebhooks(baseUrl: string) {
         });
 
         const envContent = await fs.readFile("../.env", "utf-8");
-        const newEnvContent = envContent +
-            `\nSTRIPE_WEBHOOK_SECRET=${endpoint.secret}`;
-        await fs.writeFile(".env", newEnvContent);
+        // const newEnvContent = envContent +
+        //     `\nSTRIPE_WEBHOOK_SECRET=${endpoint.secret}`;
+        // await fs.writeFile(".env", newEnvContent);
         console.log("Added webhook secret to .env file");
 
         return endpoint;

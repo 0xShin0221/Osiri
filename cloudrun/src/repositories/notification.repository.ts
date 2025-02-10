@@ -82,6 +82,7 @@ export class NotificationRepository extends BaseRepository {
         .from(this.connectionsTable)
         .select()
         .eq("id", connectionId)
+        .neq("is_disconnected", true)
         .single();
       if (error) throw error;
       return { success: true, data };

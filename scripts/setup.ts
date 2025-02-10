@@ -1,7 +1,7 @@
 import path from "path";
 import * as dotenv from "dotenv";
 import { promises as fs } from "fs";
-import { StripeResult } from "./types/models";
+import type { StripeResult } from "./types/models";
 
 // Debug: Print current working directory and env path
 const currentDir = process.cwd();
@@ -10,45 +10,6 @@ console.log("Current Directory:", currentDir);
 // Define env path consistently for both reading and writing
 const envPath = path.resolve(currentDir, ".env");
 console.log("Env Path:", envPath);
-
-// Function to update environment variables
-async function updateEnvFile(newVars: Record<string, string>): Promise<void> {
-    try {
-        // Read existing .env content
-        let envContent = "";
-        try {
-            envContent = await fs.readFile(envPath, "utf-8");
-        } catch (error) {
-            console.log("No existing .env file, creating new one");
-        }
-
-        // Parse existing variables
-        const envVars = dotenv.parse(envContent);
-
-        // Merge with new variables
-        const updatedVars = { ...envVars, ...newVars };
-
-        // Convert to .env format
-        const newEnvContent = Object.entries(updatedVars)
-            .map(([key, value]) => `${key}=${value}`)
-            .join("\n");
-
-        // Write back to .env file
-        await fs.writeFile(envPath, newEnvContent);
-        console.log("Environment variables updated successfully");
-    } catch (error) {
-        console.error("Error updating .env file:", error);
-        throw error;
-    }
-}
-
-// Try to read .env file directly
-try {
-    const envContent = await fs.readFile(envPath, "utf-8");
-    console.log(".env file exists. Content loaded successfully");
-} catch (error) {
-    console.error("Error reading .env file:", error);
-}
 
 // Load environment variables
 const result = dotenv.config({ path: envPath });
@@ -60,7 +21,7 @@ console.log("Dotenv Result:", {
 // Debug: Print environment variables (safely)
 console.log("Environment variables after loading:", {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
-        ? "exists (length: " + process.env.STRIPE_SECRET_KEY.length + ")"
+        ? `exists (length: ${process.env.STRIPE_SECRET_KEY.length})`
         : "undefined",
     BASE_URL: process.env.STRIPE_WEBHOOK_BASE_URL,
 });
@@ -131,17 +92,6 @@ class StripeSetupManager {
             throw error;
         }
     }
-
-    async updateEnvironmentVariables(
-        variables: Record<string, string>,
-    ): Promise<void> {
-        try {
-            await updateEnvFile(variables);
-        } catch (error) {
-            console.error("Error updating environment variables:", error);
-            throw error;
-        }
-    }
 }
 
 async function main() {
@@ -151,10 +101,10 @@ async function main() {
 
     try {
         // Update environment variables if needed
-        await setupManager.updateEnvironmentVariables({
-            STRIPE_WEBHOOK_BASE_URL: BASE_URL,
-            // Add other variables as needed
-        });
+        // await setupManager.updateEnvironmentVariables({
+        //     STRIPE_WEBHOOK_BASE_URL: BASE_URL,
+        //     // Add other variables as needed
+        // });
 
         // 1. Register plans to Stripe
         await setupManager.registerPlansToStripe();
