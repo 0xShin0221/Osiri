@@ -66,16 +66,21 @@ router.post("/send", async (req, res) => {
                 error: logError,
             });
         }
-
+        if (!notificationLog) {
+            return res.status(500).json({
+                success: false,
+                error: "Failed to create notification log",
+            });
+        }
         // Process notification
         const result = await processor.processNotification(
-            notificationLog!,
+            notificationLog,
             channel,
         );
 
         // Update notification status
         await processor.updateStatus(
-            notificationLog!.id,
+            notificationLog.id,
             result.success ? "success" : "failed",
             channel,
             result.error,
