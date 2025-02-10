@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
     //   throw new Error("Failed to refresh Slack token");
     // }
 
-    const result = await joinSlackChannel(workspace.accessToken, channel_id);
+    const result = await joinSlackChannel(workspace.access_token, channel_id);
 
     return new Response(
       JSON.stringify(result),

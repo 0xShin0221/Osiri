@@ -5,13 +5,16 @@ import { supabase } from "../_shared/db/client.ts";
 
 const getSlackChannels = async (accessToken: string) => {
   try {
+    if (!accessToken) {
+      throw new Error("Slack access token not provided");
+    }
     const params = new URLSearchParams({
       types: "public_channel,private_channel",
       exclude_archived: "true",
       limit: "200",
     });
 
-    const url = `https://slack.com/api/conversations.list?${params}`;
+    const url = `https://slack.com/api/conversations.list?${params.toString()}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -55,7 +58,7 @@ Deno.serve(async (req) => {
       throw new Error("Workspace not found");
     }
 
-    const slackData = await getSlackChannels(workspace.accessToken);
+    const slackData = await getSlackChannels(workspace.access_token);
 
     // Transform channels data
     const channels = slackData.channels
