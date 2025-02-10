@@ -95,14 +95,25 @@ export default function AppIntegrationPage() {
 
   const handleDisconnect = async (connectionId: string) => {
     try {
-      const { error } = await supabase
+      // Begin transaction
+      // 1. Deactivate workspace connection
+      const { error: workspaceError } = await supabase
         .from("workspace_connections")
         .update({
           is_disconnected: true,
           is_active: false,
         })
         .eq("id", connectionId);
-      if (error) throw error;
+      if (workspaceError) throw workspaceError;
+
+      // 2. Deactivate all related notification channels
+      const { error: channelError } = await supabase
+        .from("notification_channels")
+        .update({ is_active: false })
+        .eq("workspace_connection_id", connectionId);
+      if (channelError) throw channelError;
+
+      // Update local state
       setConnections((prev) =>
         prev.map((conn) =>
           conn.id === connectionId
@@ -117,11 +128,23 @@ export default function AppIntegrationPage() {
 
   const handleToggle = async (connectionId: string, isEnabled: boolean) => {
     try {
-      const { error } = await supabase
+      // 1. Update workspace connection status
+      const { error: workspaceError } = await supabase
         .from("workspace_connections")
         .update({ is_active: isEnabled })
         .eq("id", connectionId);
-      if (error) throw error;
+      if (workspaceError) throw workspaceError;
+
+      // 2. If workspace is being deactivated, deactivate all related channels
+      if (!isEnabled) {
+        const { error: channelError } = await supabase
+          .from("notification_channels")
+          .update({ is_active: false })
+          .eq("workspace_connection_id", connectionId);
+        if (channelError) throw channelError;
+      }
+
+      // Update local state
       setConnections((prev) =>
         prev.map((conn) =>
           conn.id === connectionId ? { ...conn, is_active: isEnabled } : conn

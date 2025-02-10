@@ -398,6 +398,11 @@ CREATE POLICY "Service role can select notification channels"
   TO service_role
   USING (true);
 
+CREATE POLICY "Service role can update notification channels"
+  ON notification_channels FOR UPDATE
+  TO service_role
+  USING (true);
+
 CREATE POLICY "Service role can create notification logs"
   ON notification_logs FOR INSERT
   TO service_role
