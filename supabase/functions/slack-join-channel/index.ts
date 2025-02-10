@@ -1,7 +1,7 @@
 // supabase/functions/slack-join-channel/index.ts
 import { corsHeaders } from "../_shared/cors.ts";
 import { supabase } from "../_shared/db/client.ts";
-import { refreshSlackToken } from "../_shared/slack.ts";
+// import { refreshSlackToken } from "../_shared/slack.ts";
 
 const joinSlackChannel = async (accessToken: string, channelId: string) => {
   try {
@@ -56,16 +56,16 @@ Deno.serve(async (req) => {
     }
 
     // Always refresh token before using
-    let accessToken: string;
-    try {
-      accessToken = await refreshSlackToken(workspace);
-      console.log("Successfully refreshed Slack token");
-    } catch (error) {
-      console.error("Token refresh failed:", error);
-      throw new Error("Failed to refresh Slack token");
-    }
+    // let accessToken: string;
+    // try {
+    //   accessToken = await refreshSlackToken(workspace);
+    //   console.log("Successfully refreshed Slack token");
+    // } catch (error) {
+    //   console.error("Token refresh failed:", error);
+    //   throw new Error("Failed to refresh Slack token");
+    // }
 
-    const result = await joinSlackChannel(accessToken, channel_id);
+    const result = await joinSlackChannel(workspace.access_token, channel_id);
 
     return new Response(
       JSON.stringify(result),

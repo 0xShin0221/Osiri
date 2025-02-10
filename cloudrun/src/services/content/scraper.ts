@@ -1,6 +1,10 @@
 import { ContentCleaner } from "./cleaner";
 import type { ScrapedContent, ServiceResponse } from "../../types/models";
-import { Browser, BrowserContext, chromium } from "playwright-chromium";
+import {
+  type Browser,
+  type BrowserContext,
+  chromium,
+} from "playwright-chromium";
 
 export interface ScraperOptions {
   timeout?: number;
@@ -27,6 +31,7 @@ export class ContentScraper {
   private cleaner: ContentCleaner;
   private browser: Browser | null = null;
   private browserContext: BrowserContext | null = null;
+  private readonly cleanupHandlers: Array<() => void> = [];
 
   private readonly defaultOptions: Required<ScraperOptions> = {
     timeout: 30000,
@@ -44,9 +49,40 @@ export class ContentScraper {
 
   constructor() {
     this.cleaner = new ContentCleaner();
-    process.on("exit", () => this.cleanup());
-    process.on("SIGTERM", () => this.cleanup());
-    process.on("SIGINT", () => this.cleanup());
+
+    const exitHandler = () => this.cleanup();
+    const sigtermHandler = () => this.cleanup();
+    const sigintHandler = () => this.cleanup();
+
+    process.on("exit", exitHandler);
+    process.on("SIGTERM", sigtermHandler);
+    process.on("SIGINT", sigintHandler);
+
+    this.cleanupHandlers.push(
+      () => process.removeListener("exit", exitHandler),
+      () => process.removeListener("SIGTERM", sigtermHandler),
+      () => process.removeListener("SIGINT", sigintHandler),
+    );
+  }
+
+  async cleanup(): Promise<void> {
+    try {
+      if (this.browserContext) {
+        await this.browserContext.close();
+        this.browserContext = null;
+      }
+      if (this.browser) {
+        await this.browser.close();
+        this.browser = null;
+      }
+
+      for (const handler of this.cleanupHandlers) {
+        handler();
+      }
+      this.cleanupHandlers.length = 0;
+    } catch (error) {
+      console.error("Cleanup error:", error);
+    }
   }
 
   private async initBrowser(): Promise<Browser> {
@@ -292,20 +328,5 @@ export class ContentScraper {
     }
 
     return results;
-  }
-
-  async cleanup(): Promise<void> {
-    try {
-      if (this.browserContext) {
-        await this.browserContext.close();
-        this.browserContext = null;
-      }
-      if (this.browser) {
-        await this.browser.close();
-        this.browser = null;
-      }
-    } catch (error) {
-      console.error("Cleanup error:", error);
-    }
   }
 }

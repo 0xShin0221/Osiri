@@ -20,9 +20,9 @@ const getEnvVars = () => {
     appDomain: Deno.env.get("APP_DOMAIN") ?? "loalhost:5173",
   };
 
-  Object.entries(vars).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(vars)) {
     if (!value) throw new Error(`Missing ${key}`);
-  });
+  }
 
   return vars as Record<string, string>;
 };
@@ -84,18 +84,14 @@ Deno.serve(handleWithCors(async (req) => {
 
     const existingOrg = await getOrganizationByUserId(userId);
     if (existingOrg.length > 0 && existingOrg[0].organization_id) {
-      const tokenExpiresAt = slackData.expires_in
-        ? new Date(Date.now() + slackData.expires_in * 1000).toISOString()
-        : null;
-
       await addWorkspaceConnection(
         existingOrg[0].organization_id,
         "slack",
         slackData.team.id,
         slackData.team.name,
         slackData.access_token,
-        slackData.refresh_token || null,
-        tokenExpiresAt,
+        null,
+        null,
       );
     } else {
       const org = await createOrganization(slackData.team.name);

@@ -321,8 +321,14 @@ export function AddChannelForm({
                 ) : platform === "email" ? (
                   <div className="grid gap-2">
                     <Label>{t("addChannel.emailAddress")}</Label>
+                    <Alert className="mt-4">
+                      <AlertDescription>
+                        Email notifications are currently unavailable.
+                      </AlertDescription>
+                    </Alert>
                     <Input
                       type="email"
+                      disabled={true} // TODO: Add email channel
                       value={channelId}
                       onChange={(e) => setChannelId(e.target.value)}
                       placeholder={t("addChannel.emailPlaceholder")}

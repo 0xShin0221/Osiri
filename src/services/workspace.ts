@@ -10,6 +10,7 @@ export class WorkspaceService {
         const { data, error } = await supabase
             .from("workspace_connections")
             .select("*")
+            .neq("is_disconnected", true)
             .order("created_at", { ascending: false });
 
         if (error) throw error;

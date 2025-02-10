@@ -11,6 +11,9 @@ export interface AppSecrets {
     GOOGLE_API_KEY: string;
     SLACK_CLIENT_ID: string;
     SLACK_CLIENT_SECRET: string;
+    DISCORD_CLIENT_ID: string;
+    DISCORD_CLIENT_SECRET: string;
+    DISCORD_BOT_TOKEN: string;
 }
 
 export interface AppConfig {
@@ -56,14 +59,17 @@ export class ConfigManager {
                 "GOOGLE_API_KEY",
                 "SLACK_CLIENT_ID",
                 "SLACK_CLIENT_SECRET",
+                "DISCORD_CLIENT_ID",
+                "DISCORD_CLIENT_SECRET",
+                "DISCORD_BOT_TOKEN",
             ];
 
             const secrets: Partial<AppSecrets> = {};
-            secretKeys.forEach((key) => {
+            for (const key of secretKeys) {
                 if (process.env[key]) {
                     secrets[key] = process.env[key] as string;
                 }
-            });
+            }
 
             // Set APP_SECRETS environment variable
             process.env.APP_SECRETS = JSON.stringify(secrets);
@@ -91,6 +97,9 @@ export class ConfigManager {
             "GOOGLE_API_KEY",
             "SLACK_CLIENT_ID", // Add Slack client ID
             "SLACK_CLIENT_SECRET", // Add Slack client secret
+            "DISCORD_CLIENT_ID", // Add Discord client ID
+            "DISCORD_CLIENT_SECRET", // Add Discord client secret
+            "DISCORD_BOT_TOKEN", // Add Discord bot token
         ];
 
         const missingKeys = requiredKeys.filter((key) => !this.get(key));
@@ -151,6 +160,14 @@ export class ConfigManager {
     public getGoogleGeminiConfig() {
         return {
             apiKey: this.getOrThrow("GOOGLE_API_KEY"),
+        };
+    }
+
+    public getDiscordConfig() {
+        return {
+            clientId: this.getOrThrow("DISCORD_CLIENT_ID"),
+            clientSecret: this.getOrThrow("DISCORD_CLIENT_SECRET"),
+            botToken: this.getOrThrow("DISCORD_BOT_TOKEN"),
         };
     }
 }

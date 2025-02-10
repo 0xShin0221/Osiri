@@ -1,8 +1,12 @@
 import { useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { DiscordIcon, EmailIcon, SlackIcon } from "@/components/PlatformIcons";
-import { useNavigate } from "react-router-dom";
+import {
+  DiscordIcon,
+  // EmailIcon,
+  SlackIcon,
+} from "@/components/PlatformIcons";
+// import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { IntegrationCard } from "@/components/integration/IntegrationCard";
@@ -19,7 +23,7 @@ export default function AppIntegrationPage() {
   const { i18n } = useTranslation();
   const currentLang = i18n.resolvedLanguage;
   const [userId, setUserId] = useState<string | null>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -89,20 +93,31 @@ export default function AppIntegrationPage() {
     window.location.href = discordAuthUrl;
   };
 
-  const handleEmailConnect = () => {
-    navigate(`/${currentLang}/settings/email`);
-  };
+  // const handleEmailConnect = () => {
+  //   navigate(`/${currentLang}/settings/email`);
+  // };
 
   const handleDisconnect = async (connectionId: string) => {
     try {
-      const { error } = await supabase
+      // Begin transaction
+      // 1. Deactivate workspace connection
+      const { error: workspaceError } = await supabase
         .from("workspace_connections")
         .update({
           is_disconnected: true,
           is_active: false,
         })
         .eq("id", connectionId);
-      if (error) throw error;
+      if (workspaceError) throw workspaceError;
+
+      // 2. Deactivate all related notification channels
+      const { error: channelError } = await supabase
+        .from("notification_channels")
+        .update({ is_active: false })
+        .eq("workspace_connection_id", connectionId);
+      if (channelError) throw channelError;
+
+      // Update local state
       setConnections((prev) =>
         prev.map((conn) =>
           conn.id === connectionId
@@ -117,11 +132,23 @@ export default function AppIntegrationPage() {
 
   const handleToggle = async (connectionId: string, isEnabled: boolean) => {
     try {
-      const { error } = await supabase
+      // 1. Update workspace connection status
+      const { error: workspaceError } = await supabase
         .from("workspace_connections")
         .update({ is_active: isEnabled })
         .eq("id", connectionId);
-      if (error) throw error;
+      if (workspaceError) throw workspaceError;
+
+      // 2. If workspace is being deactivated, deactivate all related channels
+      if (!isEnabled) {
+        const { error: channelError } = await supabase
+          .from("notification_channels")
+          .update({ is_active: false })
+          .eq("workspace_connection_id", connectionId);
+        if (channelError) throw channelError;
+      }
+
+      // Update local state
       setConnections((prev) =>
         prev.map((conn) =>
           conn.id === connectionId ? { ...conn, is_active: isEnabled } : conn
@@ -172,7 +199,7 @@ export default function AppIntegrationPage() {
           />
 
           {/* Email */}
-          <IntegrationCard
+          {/* <IntegrationCard
             title="Email"
             description={t("email.description")}
             icon={<EmailIcon />}
@@ -181,7 +208,7 @@ export default function AppIntegrationPage() {
             onConnect={handleEmailConnect}
             onDisconnect={handleDisconnect}
             onToggle={handleToggle}
-          />
+          /> */}
         </div>
       </div>
     </div>
