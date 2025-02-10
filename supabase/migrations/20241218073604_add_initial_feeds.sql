@@ -175,14 +175,6 @@ insert into rss_feeds (name, description, site_icon, url, language, is_active, c
  false,
  array['tech_news', 'artificial_intelligence', 'startup_news']::feed_category[]
 ),
-('The Verge', 
- 'Technology, science, art, and culture', 
- 'https://www.theverge.com/favicon.ico', 
- 'http://www.theverge.com/rss/full.xml', 
- 'en', 
- false,
- array['tech_news', 'product_design', 'artificial_intelligence']::feed_category[]
-),
 ('Engadget', 
  'Latest technology news and gadgets', 
  'https://www.engadget.com/favicon.ico', 
