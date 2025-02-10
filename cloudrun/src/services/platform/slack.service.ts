@@ -15,147 +15,147 @@ export class SlackService {
     constructor() {
         this.repository = new NotificationRepository();
     }
-    private async getValidAccessToken(
-        connection:
-            Database["public"]["Tables"]["workspace_connections"]["Row"],
-    ): Promise<string> {
-        try {
-            // Token validation check
-            if (!connection.access_token) {
-                throw new Error("No access token available");
-            }
-            if (!connection.refresh_token) {
-                throw new Error("No refresh token available");
-            }
+    // private async getValidAccessToken(
+    //     connection:
+    //         Database["public"]["Tables"]["workspace_connections"]["Row"],
+    // ): Promise<string> {
+    //     try {
+    //         // Token validation check
+    //         if (!connection.access_token) {
+    //             throw new Error("No access token available");
+    //         }
+    //         if (!connection.refresh_token) {
+    //             throw new Error("No refresh token available");
+    //         }
 
-            // Check if current token is still valid
-            const tokenExpiresAt = connection.token_expires_at
-                ? new Date(connection.token_expires_at)
-                : null;
+    //         // Check if current token is still valid
+    //         const tokenExpiresAt = connection.token_expires_at
+    //             ? new Date(connection.token_expires_at)
+    //             : null;
 
-            // Add buffer time (5 minutes) to ensure token refresh before expiration
-            const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
-            if (
-                tokenExpiresAt &&
-                tokenExpiresAt.getTime() - bufferTime > Date.now()
-            ) {
-                console.log("[SlackService] Current token is still valid");
-                return connection.access_token;
-            }
+    //         // Add buffer time (5 minutes) to ensure token refresh before expiration
+    //         const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+    //         if (
+    //             tokenExpiresAt &&
+    //             tokenExpiresAt.getTime() - bufferTime > Date.now()
+    //         ) {
+    //             console.log("[SlackService] Current token is still valid");
+    //             return connection.access_token;
+    //         }
 
-            console.log(
-                "[SlackService] Token needs refresh, starting refresh process",
-            );
+    //         console.log(
+    //             "[SlackService] Token needs refresh, starting refresh process",
+    //         );
 
-            // Prepare form data for token refresh
-            const params = new URLSearchParams({
-                client_id: this.config.clientId,
-                client_secret: this.config.clientSecret,
-                grant_type: "refresh_token",
-                refresh_token: connection.refresh_token,
-            });
+    //         // Prepare form data for token refresh
+    //         const params = new URLSearchParams({
+    //             client_id: this.config.clientId,
+    //             client_secret: this.config.clientSecret,
+    //             grant_type: "refresh_token",
+    //             refresh_token: connection.refresh_token,
+    //         });
 
-            // Log request details (excluding sensitive data)
-            console.log("[SlackService] Refreshing token for workspace:", {
-                connectionId: connection.id,
-                workspaceId: connection.workspace_id,
-                currentExpiry: connection.token_expires_at,
-            });
+    //         // Log request details (excluding sensitive data)
+    //         console.log("[SlackService] Refreshing token for workspace:", {
+    //             connectionId: connection.id,
+    //             workspaceId: connection.workspace_id,
+    //             currentExpiry: connection.token_expires_at,
+    //         });
 
-            // Request new token from Slack OAuth endpoint
-            const response = await axios.post<{
-                ok: boolean;
-                access_token: string;
-                refresh_token: string;
-                expires_in: number;
-                error?: string;
-            }>("https://slack.com/api/oauth.v2.access", params, {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-            });
+    //         // Request new token from Slack OAuth endpoint
+    //         const response = await axios.post<{
+    //             ok: boolean;
+    //             access_token: string;
+    //             refresh_token: string;
+    //             expires_in: number;
+    //             error?: string;
+    //         }>("https://slack.com/api/oauth.v2.access", params, {
+    //             headers: {
+    //                 "Content-Type": "application/x-www-form-urlencoded",
+    //             },
+    //         });
 
-            // Enhanced error handling for Slack API response
-            if (!response.data.ok) {
-                console.error("[SlackService] Token refresh failed:", {
-                    error: response.data.error,
-                    responseData: response.data,
-                });
-                throw new Error(
-                    `Slack API Error: ${
-                        response.data.error || "Unknown API error"
-                    }`,
-                );
-            }
+    //         // Enhanced error handling for Slack API response
+    //         if (!response.data.ok) {
+    //             console.error("[SlackService] Token refresh failed:", {
+    //                 error: response.data.error,
+    //                 responseData: response.data,
+    //             });
+    //             throw new Error(
+    //                 `Slack API Error: ${
+    //                     response.data.error || "Unknown API error"
+    //                 }`,
+    //             );
+    //         }
 
-            // Calculate new expiration time
-            const newExpiresAt = new Date(
-                Date.now() + response.data.expires_in * 1000,
-            ).toISOString();
+    //         // Calculate new expiration time
+    //         const newExpiresAt = new Date(
+    //             Date.now() + response.data.expires_in * 1000,
+    //         ).toISOString();
 
-            console.log(
-                "[SlackService] Token refresh successful, updating database",
-            );
+    //         console.log(
+    //             "[SlackService] Token refresh successful, updating database",
+    //         );
 
-            // Update tokens in database
-            const updateResult = await this.repository
-                .updateWorkspaceConnectionTokens(
-                    connection.id,
-                    {
-                        access_token: response.data.access_token,
-                        refresh_token: response.data.refresh_token,
-                        token_expires_at: newExpiresAt,
-                    },
-                );
+    //         // Update tokens in database
+    //         const updateResult = await this.repository
+    //             .updateWorkspaceConnectionTokens(
+    //                 connection.id,
+    //                 {
+    //                     access_token: response.data.access_token,
+    //                     refresh_token: response.data.refresh_token,
+    //                     token_expires_at: newExpiresAt,
+    //                 },
+    //             );
 
-            if (!updateResult.success) {
-                console.error(
-                    "[SlackService] Failed to update tokens in database:",
-                    updateResult.error,
-                );
-                throw new Error("Failed to update tokens in database");
-            }
+    //         if (!updateResult.success) {
+    //             console.error(
+    //                 "[SlackService] Failed to update tokens in database:",
+    //                 updateResult.error,
+    //             );
+    //             throw new Error("Failed to update tokens in database");
+    //         }
 
-            console.log(
-                "[SlackService] Token refresh process completed successfully",
-            );
-            return response.data.access_token;
-        } catch (error) {
-            // Enhanced error logging
-            if (axios.isAxiosError(error)) {
-                console.error("[SlackService] HTTP Error in token refresh:", {
-                    status: error.response?.status,
-                    statusText: error.response?.statusText,
-                    data: error.response?.data,
-                    headers: error.response?.headers,
-                    config: {
-                        url: error.config?.url,
-                        method: error.config?.method,
-                        baseURL: error.config?.baseURL,
-                    },
-                });
-                throw new Error(
-                    `Token refresh failed: ${
-                        error.response?.data?.error || error.message
-                    }`,
-                );
-            }
+    //         console.log(
+    //             "[SlackService] Token refresh process completed successfully",
+    //         );
+    //         return response.data.access_token;
+    //     } catch (error) {
+    //         // Enhanced error logging
+    //         if (axios.isAxiosError(error)) {
+    //             console.error("[SlackService] HTTP Error in token refresh:", {
+    //                 status: error.response?.status,
+    //                 statusText: error.response?.statusText,
+    //                 data: error.response?.data,
+    //                 headers: error.response?.headers,
+    //                 config: {
+    //                     url: error.config?.url,
+    //                     method: error.config?.method,
+    //                     baseURL: error.config?.baseURL,
+    //                 },
+    //             });
+    //             throw new Error(
+    //                 `Token refresh failed: ${
+    //                     error.response?.data?.error || error.message
+    //                 }`,
+    //             );
+    //         }
 
-            console.error("[SlackService] Non-HTTP Error in token refresh:", {
-                error: error instanceof Error
-                    ? {
-                        message: error.message,
-                        name: error.name,
-                        stack: error.stack,
-                    }
-                    : error,
-            });
+    //         console.error("[SlackService] Non-HTTP Error in token refresh:", {
+    //             error: error instanceof Error
+    //                 ? {
+    //                     message: error.message,
+    //                     name: error.name,
+    //                     stack: error.stack,
+    //                 }
+    //                 : error,
+    //         });
 
-            throw error instanceof Error
-                ? error
-                : new Error("Unknown error during token refresh");
-        }
-    }
+    //         throw error instanceof Error
+    //             ? error
+    //             : new Error("Unknown error during token refresh");
+    //     }
+    // }
 
     async sendMessage(
         articleId: string,
@@ -246,7 +246,7 @@ export class SlackService {
             );
 
             // Get valid access token
-            const accessToken = await this.getValidAccessToken(connection);
+            // const accessToken = await this.getValidAccessToken(connection);
             console.log("[SlackService] Valid access token obtained");
 
             // Create and send message
@@ -264,7 +264,7 @@ export class SlackService {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        Authorization: `Bearer ${connection.access_token}`,
                         "Content-Type": "application/json; charset=utf-8",
                     },
                 },
@@ -348,7 +348,7 @@ export class SlackService {
                 throw new Error("Workspace connection not found or invalid");
             }
 
-            const accessToken = await this.getValidAccessToken(connection);
+            // const accessToken = await this.getValidAccessToken(connection);
 
             const message = createLimitNotificationMessage(
                 status,
@@ -363,7 +363,7 @@ export class SlackService {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        Authorization: `Bearer ${connection.access_token}`,
                         "Content-Type": "application/json; charset=utf-8",
                     },
                 },
