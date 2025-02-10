@@ -11,7 +11,7 @@ const getSlackChannels = async (accessToken: string) => {
       limit: "200",
     });
 
-    const url = `https://slack.com/api/conversations.list?${params.toString()}`;
+    const url = `https://slack.com/api/conversations.list?${params}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
