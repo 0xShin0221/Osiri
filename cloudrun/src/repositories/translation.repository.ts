@@ -22,16 +22,37 @@ export class TranslationRepository extends BaseRepository {
   private readonly table = "translations";
 
   async findArticlesForTranslation(
-    limit: number = 50,
+    limit = 50,
   ): Promise<ServiceResponse<ArticleForTranslation[]>> {
     try {
+      // Execute direct SQL query instead of RPC
       const { data, error } = await this.client
-        .rpc("get_articles_for_translation", {
-          max_articles: limit,
-        });
+        .from("articles")
+        .select(`
+          id,
+          title,
+          content,
+          feed:rss_feeds(language)
+        `)
+        .eq("scraping_status", "completed")
+        .not("content", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(limit);
 
-      if (error) throw error;
-      return { success: true, data };
+      if (error) {
+        console.log("Error fetching articles for translation", error);
+        throw error;
+      }
+      console.log("Fetched articles for translation", data);
+
+      // Map the results to the expected format
+      const articles = data?.map((article) => ({
+        id: article.id,
+        title: article.title,
+        content: article.content,
+        source_language: article.feed.language,
+      })) || [];
+      return { success: true, data: articles as ArticleForTranslation[] };
     } catch (error) {
       return {
         success: false,

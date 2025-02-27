@@ -48,6 +48,31 @@ export abstract class BaseNotificationProcessor
         );
 
         try {
+            if (notification.article_id) {
+                const { isDuplicate, existingNotification } = await this
+                    .notificationRepo.checkDuplicateNotification(
+                        notification.article_id,
+                        channel.id,
+                        notification.id,
+                    );
+
+                if (isDuplicate) {
+                    this.logger.warn(
+                        `Duplicate notification detected for article ${notification.article_id} and channel ${channel.id}`,
+                        {
+                            existingNotificationId: existingNotification?.id,
+                            currentNotificationId: notification.id,
+                            existingStatus: existingNotification?.status,
+                        },
+                    );
+                    return {
+                        success: false,
+                        error: "Duplicate notification detected",
+                        retryable: false,
+                    };
+                }
+            }
+
             const { isWithinLimit, shouldNotify } = await this
                 .checkNotificationLimit(channel);
 
