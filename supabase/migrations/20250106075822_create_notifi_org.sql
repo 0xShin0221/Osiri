@@ -429,6 +429,10 @@ CREATE POLICY "Service role can select notification channel feeds"
   TO service_role
   USING (true);
 
+CREATE POLICY "Service role can update notification channel feeds"
+  ON notification_channel_feeds FOR UPDATE
+  TO service_role
+  USING (true);
 
 -- Add comments
 comment on table organizations is 'Organizations using the notification system';

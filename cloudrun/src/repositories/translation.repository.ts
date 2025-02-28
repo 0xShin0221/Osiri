@@ -62,19 +62,109 @@ export class TranslationRepository extends BaseRepository {
   }
 
   async createTranslationTasks(
-    articles: ArticleForTranslation[],
+    articleIds: string[],
   ): Promise<ServiceResponse<void>> {
     try {
-      const articleIds = articles.map((article) => article.id);
+      // Step 1: Get articles with their source language
+      const { data: articles, error: articlesError } = await this.client
+        .from("articles")
+        .select(`
+        id,
+        rss_feeds!inner (
+          id,
+          language
+        )
+      `)
+        .in("id", articleIds);
 
-      const { error } = await this.client
-        .rpc("create_smart_translation_tasks_with_logging", {
-          p_article_ids: articleIds,
-        });
+      if (articlesError) throw articlesError;
+      if (!articles || articles.length === 0) {
+        return { success: true }; // No articles to process
+      }
 
-      if (error) throw error;
+      // Step 2: Get notification channels for these articles
+      const { data: channelFeeds, error: channelError } = await this.client
+        .from("notification_channel_feeds")
+        .select(`
+        feed_id,
+        channel_id,
+        notification_channels!inner (
+          id,
+          notification_language,
+          is_active
+        )
+      `)
+        .in("feed_id", articles.map((article) => article.rss_feeds.id));
+
+      if (channelError) throw channelError;
+
+      // Map feed_id to active notification languages
+      const feedLanguageMap = new Map<string, Set<FeedLanguage>>();
+
+      for (const cf of channelFeeds) {
+        const channel = cf.notification_channels;
+        if (channel?.is_active) {
+          const feedId = cf.feed_id;
+          if (feedId) {
+            // Get or create target language set for this feed
+            if (!feedLanguageMap.has(feedId)) {
+              feedLanguageMap.set(feedId, new Set<FeedLanguage>());
+            }
+            feedLanguageMap.get(feedId)?.add(channel.notification_language);
+          }
+        }
+      }
+
+      // Prepare translation tasks
+      const translationTasks: TranslationInsert[] = [];
+      const now = new Date().toISOString();
+
+      // Process each article
+      for (const article of articles) {
+        const sourceLanguage = article.rss_feeds.language;
+        const feedId = article.rss_feeds.id;
+        const targetLanguageSet = feedLanguageMap.get(feedId) ||
+          new Set<FeedLanguage>();
+
+        // Create translation tasks for target languages different from source
+        for (const targetLang of targetLanguageSet) {
+          if (targetLang !== sourceLanguage) {
+            translationTasks.push({
+              article_id: article.id,
+              target_language: targetLang,
+              status: "pending",
+              attempt_count: 0,
+              created_at: now,
+              updated_at: now,
+            });
+          }
+        }
+      }
+
+      // Insert tasks if any exist
+      if (translationTasks.length > 0) {
+        const { error: insertError } = await this.client
+          .from(this.table)
+          .upsert(translationTasks, {
+            onConflict: "article_id,target_language",
+            ignoreDuplicates: true,
+          });
+
+        if (insertError) throw insertError;
+
+        // Optional: Log for monitoring
+        console.log(
+          `Created ${translationTasks.length} translation tasks for ${articleIds.length} articles`,
+        );
+      } else {
+        console.log(
+          `No translation tasks needed for ${articleIds.length} articles`,
+        );
+      }
+
       return { success: true };
     } catch (error) {
+      console.error("Error creating translation tasks:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
