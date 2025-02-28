@@ -13,6 +13,7 @@ export interface ScraperOptions {
   delayBetweenBatches?: number;
   maxRetries?: number;
   retryDelay?: number;
+  maxConcurrent?: number;
 }
 
 interface MetaTags {
@@ -32,19 +33,19 @@ export class ContentScraper {
   private browser: Browser | null = null;
   private browserContext: BrowserContext | null = null;
   private readonly cleanupHandlers: Array<() => void> = [];
+  private activePages = 0;
 
   private readonly defaultOptions: Required<ScraperOptions> = {
     timeout: 30000,
     waitUntil: "domcontentloaded",
-    // TODO: Performance optimization considerations
-    // - batchSize: Limited by server worker memory (current limit ~512MB on basic dyno)
-    //   Can be increased with higher dyno tiers (e.g., Standard-2X: 1GB)
-    batchSize: 3,
-    // - delayBetweenBatches: Prevents memory spikes and worker overload
-    //   Adjust based on server capacity and monitoring results
-    delayBetweenBatches: 800, // Limited by Server Worker
+    // Reduced batch size to prevent memory issues
+    batchSize: 2,
+    // Increased delay between batches for memory cleanup
+    delayBetweenBatches: 2000,
     maxRetries: 3,
     retryDelay: 2000,
+    // Maximum concurrent operations
+    maxConcurrent: 10,
   };
 
   constructor() {
@@ -63,6 +64,22 @@ export class ContentScraper {
       () => process.removeListener("SIGTERM", sigtermHandler),
       () => process.removeListener("SIGINT", sigintHandler),
     );
+
+    // Set up memory monitoring interval for logging only (no automatic restart)
+    const memoryCheckInterval = setInterval(() => {
+      // Get current memory usage
+      const memoryUsage = process.memoryUsage();
+      const usedHeapSize = memoryUsage.heapUsed / 1024 / 1024;
+      const totalHeapSize = memoryUsage.heapTotal / 1024 / 1024;
+
+      console.log(
+        `Memory usage - Used: ${usedHeapSize.toFixed(2)}MB / Total: ${
+          totalHeapSize.toFixed(2)
+        }MB (${(usedHeapSize / totalHeapSize * 100).toFixed(2)}%)`,
+      );
+    }, 60000); // Check every minute
+
+    this.cleanupHandlers.push(() => clearInterval(memoryCheckInterval));
   }
 
   async cleanup(): Promise<void> {
@@ -85,6 +102,23 @@ export class ContentScraper {
     }
   }
 
+  // Explicit browser restart method
+  async restartBrowser(): Promise<void> {
+    console.log("Restarting browser to free memory...");
+    await this.cleanup();
+    this.activePages = 0;
+
+    // Force garbage collection if available
+    if (global.gc) {
+      try {
+        global.gc();
+        console.log("Garbage collection triggered.");
+      } catch (e) {
+        console.log("Failed to trigger garbage collection.");
+      }
+    }
+  }
+
   private async initBrowser(): Promise<Browser> {
     if (!this.browser) {
       try {
@@ -95,6 +129,14 @@ export class ContentScraper {
             "--disable-dev-shm-usage",
             "--no-sandbox",
             "--disable-setuid-sandbox",
+            // Use less memory
+            "--disable-gpu",
+            "--disable-software-rasterizer",
+            "--disable-extensions",
+            "--mute-audio",
+            // Additional memory management flags
+            "--js-flags=--max-old-space-size=512",
+            // Reduced process count
             "--single-process",
             "--no-zygote",
           ],
@@ -114,13 +156,17 @@ export class ContentScraper {
         userAgent:
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         viewport: { width: 1280, height: 720 },
+        // Disable unnecessary features to save memory
+        hasTouch: false,
+        isMobile: false,
+        javaScriptEnabled: true,
       });
     }
     return this.browserContext;
   }
 
   private log(
-    type: "start" | "success" | "error" | "batch",
+    type: "start" | "success" | "error" | "batch" | "memory",
     url: string,
     details?: string,
   ) {
@@ -156,8 +202,12 @@ export class ContentScraper {
 
         if (attempt === retries) break;
 
-        await this.cleanup();
-        await this.delay(delay);
+        // If we encounter errors, restart the browser more aggressively
+        if (attempt > 1) {
+          await this.restartBrowser();
+        } else {
+          await this.delay(delay);
+        }
       }
     }
 
@@ -169,7 +219,7 @@ export class ContentScraper {
       const getContent = (selectors: string[]): string | null => {
         for (const selector of selectors) {
           const element = document.querySelector(selector);
-          if (element && element.getAttribute("content")) {
+          if (element?.getAttribute("content")) {
             return element.getAttribute("content");
           }
         }
@@ -203,12 +253,27 @@ export class ContentScraper {
     });
   }
 
+  // Semaphore implementation to limit concurrent operations
+  private async acquireSemaphore(maxConcurrent: number): Promise<void> {
+    while (this.activePages >= maxConcurrent) {
+      await this.delay(100);
+    }
+    this.activePages++;
+  }
+
+  private releaseSemaphore(): void {
+    this.activePages--;
+  }
+
   async scrape(
     url: string,
     options?: ScraperOptions,
   ): Promise<ServiceResponse<ScrapedContent>> {
     this.log("start", url);
     const opts = { ...this.defaultOptions, ...options };
+
+    // Wait until we can process this URL (concurrency control)
+    await this.acquireSemaphore(opts.maxConcurrent);
 
     try {
       const result = await this.withRetry(
@@ -217,15 +282,29 @@ export class ContentScraper {
           const page = await context.newPage();
 
           try {
-            // Block unnecessary resources
+            // Block unnecessary resources more aggressively
             await page.route(
-              "**/*.{png,jpg,jpeg,gif,css,svg,woff,woff2,eot,ttf,otf}",
+              "**/*.{png,jpg,jpeg,gif,css,svg,woff,woff2,eot,ttf,otf,mp4,webm,ogg,mp3,wav}",
               (route) => route.abort(),
             );
+
+            // Block more resource types
             await page.route("**/*", (route) => {
+              const resourceType = route.request().resourceType();
               if (
-                route.request().resourceType() === "xhr" ||
-                route.request().resourceType() === "fetch"
+                [
+                  "xhr",
+                  "fetch",
+                  "websocket",
+                  "eventsource",
+                  "manifest",
+                  "other",
+                ].includes(resourceType) ||
+                route.request().url().includes("google-analytics") ||
+                route.request().url().includes("facebook") ||
+                route.request().url().includes("youtube") ||
+                route.request().url().includes("twitter") ||
+                route.request().url().includes("ads")
               ) {
                 route.abort();
               } else {
@@ -233,6 +312,7 @@ export class ContentScraper {
               }
             });
 
+            // Set a shorter navigation timeout
             await page.goto(url, {
               waitUntil: opts.waitUntil
                 ? waitUntilMapping[opts.waitUntil]
@@ -242,9 +322,12 @@ export class ContentScraper {
 
             const content = await page.content();
             const metaTags = await this.getMetaTags(page);
-            const cleanedContent = this.cleaner.clean(content);
 
+            // Close page as soon as possible to free memory
             await page.close();
+
+            // Clean content after page is closed to reduce memory pressure
+            const cleanedContent = this.cleaner.clean(content);
 
             return {
               success: true,
@@ -270,6 +353,8 @@ export class ContentScraper {
         : "Failed to scrape content";
       this.log("error", url, errorMessage);
       return { success: false, error: errorMessage };
+    } finally {
+      this.releaseSemaphore();
     }
   }
 
@@ -291,12 +376,18 @@ export class ContentScraper {
         `Processing ${batch.length} URLs`,
       );
 
-      const batchPromises = batch.map(async (url) => {
+      // Process URLs one at a time in each batch to better control memory usage
+      const batchResults = [];
+      for (const url of batch) {
         try {
-          return await this.scrape(url, {
+          const result = await this.scrape(url, {
             ...opts,
             timeout: Math.min(opts.timeout, 30000),
           });
+          batchResults.push(result);
+
+          // Add a small delay between individual scrapes within a batch
+          await this.delay(500);
         } catch (error) {
           this.log(
             "error",
@@ -305,17 +396,26 @@ export class ContentScraper {
               error instanceof Error ? error.message : "Unknown error"
             }`,
           );
-          return {
+          batchResults.push({
             success: false,
             error: error instanceof Error
               ? error.message
               : "Unknown batch processing error",
-          };
+          });
         }
-      });
+      }
 
-      const batchResults = await Promise.all(batchPromises);
       results.push(...batchResults);
+
+      // Log memory usage after each batch
+      const memoryUsage = process.memoryUsage();
+      this.log(
+        "memory",
+        `Batch ${batchNumber}`,
+        `Heap used: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)}MB / ${
+          (memoryUsage.heapTotal / 1024 / 1024).toFixed(2)
+        }MB`,
+      );
 
       if (i + opts.batchSize < urls.length) {
         this.log(
@@ -323,6 +423,12 @@ export class ContentScraper {
           `Batch ${batchNumber}`,
           `Waiting ${opts.delayBetweenBatches}ms before next batch`,
         );
+
+        // After each batch, check if we need to restart the browser
+        if (batchNumber % 3 === 0) { // Every 3 batches
+          await this.restartBrowser();
+        }
+
         await this.delay(opts.delayBetweenBatches);
       }
     }
