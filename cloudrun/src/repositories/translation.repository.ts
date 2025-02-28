@@ -83,7 +83,7 @@ export class TranslationRepository extends BaseRepository {
   }
 
   async getPendingTranslations(
-    limit: number = 50,
+    limit = 50,
   ): Promise<ServiceResponse<PendingTranslation[]>> {
     try {
       const { data, error } = await this.client
