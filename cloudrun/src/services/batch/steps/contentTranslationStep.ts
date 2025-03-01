@@ -2,7 +2,11 @@ import type { BatchResults } from "../../../types/batch";
 import type { ContentTranslator } from "../../content/translator";
 import type { StepProcessor, StepResult } from "./stepProcessor.types";
 import { TranslationRepository } from "../../../repositories/translation.repository";
-import type { FeedLanguage, TranslationStatus } from "../../../types/models";
+import type {
+  ArticleForTranslation,
+  FeedLanguage,
+  TranslationStatus,
+} from "../../../types/models";
 
 export class ContentTranslationStep implements StepProcessor {
   private readonly translationRepository: TranslationRepository;
@@ -95,9 +99,12 @@ export class ContentTranslationStep implements StepProcessor {
     };
   }
 
-  private async createTranslationTasks(articles: any[]): Promise<void> {
+  private async createTranslationTasks(
+    articles: ArticleForTranslation[],
+  ): Promise<void> {
+    const articleIds = articles.map((article) => article.id);
     const createTasksResponse = await this.translationRepository
-      .createTranslationTasks(articles);
+      .createTranslationTasks(articleIds);
     if (!createTasksResponse.success) {
       console.error(
         "Failed to create translation tasks:",
