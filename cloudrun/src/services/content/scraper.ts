@@ -45,7 +45,7 @@ export class ContentScraper {
     maxRetries: 3,
     retryDelay: 2000,
     // Maximum concurrent operations
-    maxConcurrent: 5,
+    maxConcurrent: 2,
   };
 
   constructor() {

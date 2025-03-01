@@ -8,7 +8,7 @@ export class ContentScrapingStep implements StepProcessor {
   private readonly API_DELAY_MS = 1000; // 1 second between requests
 
   // Maximum number of concurrent scraping operations
-  private readonly MAX_CONCURRENT = 5; // Only process 10 articles at a time
+  private readonly MAX_CONCURRENT = 2; // Only process 2 articles at a time
 
   // Delay between batches to allow memory to be released
   private readonly BATCH_DELAY_MS = 3000; // 3 seconds between batches
