@@ -22,16 +22,37 @@ export class TranslationRepository extends BaseRepository {
   private readonly table = "translations";
 
   async findArticlesForTranslation(
-    limit: number = 50,
+    limit = 50,
   ): Promise<ServiceResponse<ArticleForTranslation[]>> {
     try {
+      // Execute direct SQL query instead of RPC
       const { data, error } = await this.client
-        .rpc("get_articles_for_translation", {
-          max_articles: limit,
-        });
+        .from("articles")
+        .select(`
+          id,
+          title,
+          content,
+          feed:rss_feeds(language)
+        `)
+        .eq("scraping_status", "completed")
+        .not("content", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(limit);
 
-      if (error) throw error;
-      return { success: true, data };
+      if (error) {
+        console.log("Error fetching articles for translation", error);
+        throw error;
+      }
+      console.log("Fetched articles for translation", data);
+
+      // Map the results to the expected format
+      const articles = data?.map((article) => ({
+        id: article.id,
+        title: article.title,
+        content: article.content,
+        source_language: article.feed.language,
+      })) || [];
+      return { success: true, data: articles as ArticleForTranslation[] };
     } catch (error) {
       return {
         success: false,
@@ -41,28 +62,195 @@ export class TranslationRepository extends BaseRepository {
   }
 
   async createTranslationTasks(
-    articles: ArticleForTranslation[],
+    articleIds: string[],
   ): Promise<ServiceResponse<void>> {
     try {
-      const articleIds = articles.map((article) => article.id);
+      console.log(
+        `[TranslationService] Starting translation tasks for ${articleIds.length} articles: ${
+          articleIds.slice(0, 3).join(", ")
+        }${articleIds.length > 3 ? "..." : ""}`,
+      );
 
-      const { error } = await this.client
-        .rpc("create_smart_translation_tasks_with_logging", {
-          p_article_ids: articleIds,
-        });
+      // Step 1: Get articles with their source language
+      const { data: articles, error: articlesError } = await this.client
+        .from("articles")
+        .select(`
+      id,
+      rss_feeds!inner (
+        id,
+        language
+      )
+    `)
+        .in("id", articleIds);
 
-      if (error) throw error;
+      if (articlesError) {
+        console.error(
+          `[TranslationService] Error fetching articles: ${articlesError.message}`,
+        );
+        throw articlesError;
+      }
+
+      if (!articles || articles.length === 0) {
+        console.log(
+          `[TranslationService] No articles found for IDs: ${
+            articleIds.join(", ")
+          }`,
+        );
+        return { success: true }; // No articles to process
+      }
+
+      console.log(
+        `[TranslationService] Found ${articles.length} articles to process`,
+      );
+
+      // Step 2: Get notification channels for these articles
+      const feedIds = articles.map((article) => article.rss_feeds.id);
+      console.log(
+        `[TranslationService] Fetching notification channels for feed IDs: ${
+          feedIds.slice(0, 3).join(", ")
+        }${feedIds.length > 3 ? "..." : ""}`,
+      );
+
+      const { data: channelFeeds, error: channelError } = await this.client
+        .from("notification_channel_feeds")
+        .select(`
+      feed_id,
+      channel_id,
+      notification_channels!inner (
+        id,
+        notification_language,
+        is_active
+      )
+    `)
+        .in("feed_id", feedIds);
+
+      if (channelError) {
+        console.error(
+          `[TranslationService] Error fetching notification channels: ${channelError.message}`,
+        );
+        throw channelError;
+      }
+
+      console.log(
+        `[TranslationService] Found ${channelFeeds.length} channel-feed relations`,
+      );
+
+      // Map feed_id to active notification languages
+      const feedLanguageMap = new Map<string, Set<FeedLanguage>>();
+
+      for (const cf of channelFeeds) {
+        const channel = cf.notification_channels;
+        if (channel?.is_active) {
+          const feedId = cf.feed_id;
+          if (feedId) {
+            // Get or create target language set for this feed
+            if (!feedLanguageMap.has(feedId)) {
+              feedLanguageMap.set(feedId, new Set<FeedLanguage>());
+            }
+            feedLanguageMap.get(feedId)?.add(channel.notification_language);
+          }
+        }
+      }
+
+      console.log(
+        `[TranslationService] Created language map for ${feedLanguageMap.size} feeds`,
+      );
+
+      // Debug log for language mappings
+      feedLanguageMap.forEach((languages, feedId) => {
+        console.log(
+          `[TranslationService] Feed ${feedId} requires translations to: ${
+            Array.from(languages).join(", ")
+          }`,
+        );
+      });
+
+      // Prepare translation tasks
+      const translationTasks: TranslationInsert[] = [];
+      const now = new Date().toISOString();
+
+      // Process each article
+      for (const article of articles) {
+        const sourceLanguage = article.rss_feeds.language;
+        const feedId = article.rss_feeds.id;
+        const targetLanguageSet = feedLanguageMap.get(feedId) ||
+          new Set<FeedLanguage>();
+
+        console.log(
+          `[TranslationService] Article ${article.id} from feed ${feedId} (source: ${sourceLanguage}) needs translation to ${
+            Array.from(targetLanguageSet).length
+          } languages`,
+        );
+
+        // Create translation tasks for target languages different from source
+        for (const targetLang of targetLanguageSet) {
+          if (targetLang !== sourceLanguage) {
+            translationTasks.push({
+              article_id: article.id,
+              target_language: targetLang,
+              status: "pending",
+              attempt_count: 0,
+              created_at: now,
+              updated_at: now,
+            });
+            console.log(
+              `[TranslationService] Created task: Article ${article.id} → ${targetLang}`,
+            );
+          } else {
+            console.log(
+              `[TranslationService] Skipping translation for article ${article.id} to ${targetLang} (same as source)`,
+            );
+          }
+        }
+      }
+
+      // Insert tasks if any exist
+      if (translationTasks.length > 0) {
+        console.log(
+          `[TranslationService] Inserting ${translationTasks.length} translation tasks to database`,
+        );
+
+        const { error: insertError } = await this.client
+          .from(this.table)
+          .upsert(translationTasks, {
+            onConflict: "article_id,target_language",
+            ignoreDuplicates: true,
+          });
+
+        if (insertError) {
+          console.error(
+            `[TranslationService] Error inserting translation tasks: ${insertError.message}`,
+          );
+          throw insertError;
+        }
+
+        console.log(
+          `[TranslationService] Successfully created ${translationTasks.length} translation tasks for ${articleIds.length} articles`,
+        );
+      } else {
+        console.log(
+          `[TranslationService] No translation tasks needed for ${articleIds.length} articles - either all languages match source or no channels configured`,
+        );
+      }
+
       return { success: true };
     } catch (error) {
+      const errorMessage = error instanceof Error
+        ? error.message
+        : "Unknown error";
+      console.error(
+        `[TranslationService] Error creating translation tasks: ${errorMessage}`,
+        error,
+      );
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: errorMessage,
       };
     }
   }
 
   async getPendingTranslations(
-    limit: number = 50,
+    limit = 50,
   ): Promise<ServiceResponse<PendingTranslation[]>> {
     try {
       const { data, error } = await this.client

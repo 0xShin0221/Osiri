@@ -36,13 +36,8 @@ export class ContentScraper {
   private readonly defaultOptions: Required<ScraperOptions> = {
     timeout: 30000,
     waitUntil: "domcontentloaded",
-    // TODO: Performance optimization considerations
-    // - batchSize: Limited by server worker memory (current limit ~512MB on basic dyno)
-    //   Can be increased with higher dyno tiers (e.g., Standard-2X: 1GB)
     batchSize: 3,
-    // - delayBetweenBatches: Prevents memory spikes and worker overload
-    //   Adjust based on server capacity and monitoring results
-    delayBetweenBatches: 800, // Limited by Server Worker
+    delayBetweenBatches: 800,
     maxRetries: 3,
     retryDelay: 2000,
   };
@@ -63,10 +58,28 @@ export class ContentScraper {
       () => process.removeListener("SIGTERM", sigtermHandler),
       () => process.removeListener("SIGINT", sigintHandler),
     );
+
+    const memoryCheckInterval = setInterval(() => {
+      const memoryUsage = process.memoryUsage();
+      const usedHeapSize = memoryUsage.heapUsed / 1024 / 1024;
+      const totalHeapSize = memoryUsage.heapTotal / 1024 / 1024;
+
+      this.log(
+        "memory",
+        "MemoryCheck",
+        `Used: ${usedHeapSize.toFixed(2)}MB / Total: ${
+          totalHeapSize.toFixed(2)
+        }MB (${(usedHeapSize / totalHeapSize * 100).toFixed(2)}%)`,
+      );
+    }, 60000);
+
+    this.cleanupHandlers.push(() => clearInterval(memoryCheckInterval));
   }
 
   async cleanup(): Promise<void> {
     try {
+      this.log("info", "Cleanup", "Starting browser cleanup...");
+
       if (this.browserContext) {
         await this.browserContext.close();
         this.browserContext = null;
@@ -80,6 +93,8 @@ export class ContentScraper {
         handler();
       }
       this.cleanupHandlers.length = 0;
+
+      this.log("info", "Cleanup", "Browser cleanup completed");
     } catch (error) {
       console.error("Cleanup error:", error);
     }
@@ -88,6 +103,8 @@ export class ContentScraper {
   private async initBrowser(): Promise<Browser> {
     if (!this.browser) {
       try {
+        this.log("info", "Browser", "Initializing browser...");
+
         this.browser = await chromium.launch({
           headless: true,
           chromiumSandbox: false,
@@ -99,8 +116,16 @@ export class ContentScraper {
             "--no-zygote",
           ],
         });
+
+        this.log("info", "Browser", "Browser initialized successfully");
       } catch (error) {
-        console.error("Failed to launch browser:", error);
+        this.log(
+          "error",
+          "Browser",
+          `Failed to launch browser: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
         throw error;
       }
     }
@@ -109,6 +134,8 @@ export class ContentScraper {
 
   private async getContext(): Promise<BrowserContext> {
     if (!this.browserContext) {
+      this.log("info", "Browser", "Creating new browser context");
+
       const browser = await this.initBrowser();
       this.browserContext = await browser.newContext({
         userAgent:
@@ -120,7 +147,15 @@ export class ContentScraper {
   }
 
   private log(
-    type: "start" | "success" | "error" | "batch",
+    type:
+      | "start"
+      | "success"
+      | "error"
+      | "batch"
+      | "info"
+      | "memory"
+      | "debug"
+      | "warn",
     url: string,
     details?: string,
   ) {
@@ -145,7 +180,10 @@ export class ContentScraper {
 
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        return await operation();
+        this.log("debug", "Retry", `Attempt ${attempt}/${retries} starting`);
+        const result = await operation();
+        this.log("debug", "Retry", `Attempt ${attempt}/${retries} succeeded`);
+        return result;
       } catch (error) {
         lastError = error as Error;
         this.log(
@@ -156,6 +194,11 @@ export class ContentScraper {
 
         if (attempt === retries) break;
 
+        this.log(
+          "info",
+          "Retry",
+          `Cleaning up browser before retrying in ${delay}ms`,
+        );
         await this.cleanup();
         await this.delay(delay);
       }
@@ -165,6 +208,8 @@ export class ContentScraper {
   }
 
   private async getMetaTags(page: any): Promise<MetaTags> {
+    this.log("debug", "MetaTags", "Extracting meta tags from page");
+
     return await page.evaluate(() => {
       const getContent = (selectors: string[]): string | null => {
         for (const selector of selectors) {
@@ -215,37 +260,50 @@ export class ContentScraper {
         async () => {
           const context = await this.getContext();
           const page = await context.newPage();
+          this.log("debug", url, "Page created");
 
           try {
-            // Block unnecessary resources
+            this.log("debug", url, "Setting up resource blocking");
             await page.route(
-              "**/*.{png,jpg,jpeg,gif,css,svg,woff,woff2,eot,ttf,otf}",
+              "**/*.{png,jpg,jpeg,gif,svg,woff,woff2,eot,ttf,otf}",
               (route) => route.abort(),
             );
+
             await page.route("**/*", (route) => {
-              if (
-                route.request().resourceType() === "xhr" ||
-                route.request().resourceType() === "fetch"
-              ) {
+              const resourceType = route.request().resourceType();
+              if (resourceType === "xhr" || resourceType === "fetch") {
                 route.abort();
               } else {
                 route.continue();
               }
             });
 
+            this.log(
+              "debug",
+              url,
+              `Navigating to page with timeout ${opts.timeout}ms and waitUntil: ${opts.waitUntil}`,
+            );
             await page.goto(url, {
               waitUntil: opts.waitUntil
                 ? waitUntilMapping[opts.waitUntil]
                 : "domcontentloaded",
               timeout: opts.timeout,
             });
+            this.log("debug", url, "Navigation complete");
 
+            this.log("debug", url, "Getting page content");
             const content = await page.content();
+
+            this.log("debug", url, "Extracting meta tags");
             const metaTags = await this.getMetaTags(page);
+
+            this.log("debug", url, "Cleaning content");
             const cleanedContent = this.cleaner.clean(content);
 
+            this.log("debug", url, "Closing page");
             await page.close();
 
+            this.log("debug", url, "Content successfully scraped");
             return {
               success: true,
               data: {
@@ -254,6 +312,13 @@ export class ContentScraper {
               },
             };
           } catch (error) {
+            this.log(
+              "error",
+              url,
+              `Error during scraping: ${
+                error instanceof Error ? error.message : String(error)
+              }`,
+            );
             await page.close();
             throw error;
           }
@@ -291,31 +356,59 @@ export class ContentScraper {
         `Processing ${batch.length} URLs`,
       );
 
-      const batchPromises = batch.map(async (url) => {
-        try {
-          return await this.scrape(url, {
-            ...opts,
-            timeout: Math.min(opts.timeout, 30000),
-          });
-        } catch (error) {
-          this.log(
-            "error",
-            url,
-            `Batch processing error: ${
-              error instanceof Error ? error.message : "Unknown error"
-            }`,
-          );
-          return {
-            success: false,
-            error: error instanceof Error
-              ? error.message
-              : "Unknown batch processing error",
-          };
-        }
-      });
+      if (opts.batchSize > 2) {
+        const batchPromises = batch.map(async (url) => {
+          try {
+            return await this.scrape(url, {
+              ...opts,
+              timeout: Math.min(opts.timeout, 30000),
+            });
+          } catch (error) {
+            this.log(
+              "error",
+              url,
+              `Batch processing error: ${
+                error instanceof Error ? error.message : "Unknown error"
+              }`,
+            );
+            return {
+              success: false,
+              error: error instanceof Error
+                ? error.message
+                : "Unknown batch processing error",
+            };
+          }
+        });
 
-      const batchResults = await Promise.all(batchPromises);
-      results.push(...batchResults);
+        const batchResults = await Promise.all(batchPromises);
+        results.push(...batchResults);
+      } else {
+        for (const url of batch) {
+          try {
+            const result = await this.scrape(url, {
+              ...opts,
+              timeout: Math.min(opts.timeout, 30000),
+            });
+            results.push(result);
+          } catch (error) {
+            this.log(
+              "error",
+              url,
+              `Sequential batch processing error: ${
+                error instanceof Error ? error.message : "Unknown error"
+              }`,
+            );
+            results.push({
+              success: false,
+              error: error instanceof Error
+                ? error.message
+                : "Unknown batch processing error",
+            });
+          }
+
+          await this.delay(500);
+        }
+      }
 
       if (i + opts.batchSize < urls.length) {
         this.log(
@@ -323,6 +416,18 @@ export class ContentScraper {
           `Batch ${batchNumber}`,
           `Waiting ${opts.delayBetweenBatches}ms before next batch`,
         );
+
+        const memoryUsage = process.memoryUsage();
+        this.log(
+          "memory",
+          `Batch ${batchNumber}`,
+          `Heap used: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)}MB / ${
+            (memoryUsage.heapTotal / 1024 / 1024).toFixed(2)
+          }MB (${
+            (memoryUsage.heapUsed / memoryUsage.heapTotal * 100).toFixed(2)
+          }%)`,
+        );
+
         await this.delay(opts.delayBetweenBatches);
       }
     }

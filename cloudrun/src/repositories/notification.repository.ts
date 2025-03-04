@@ -502,8 +502,8 @@ export class NotificationRepository extends BaseRepository {
         .match({
           article_id: data.article_id,
           channel_id: data.channel_id,
-          status: "success",
         })
+        .in("status", ["success", "pending"])
         .maybeSingle();
 
       if (existingError) throw existingError;
@@ -687,6 +687,66 @@ export class NotificationRepository extends BaseRepository {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
       };
+    }
+  }
+
+  /**
+   * Check if a duplicate notification exists for the given article and channel
+   * @param articleId Article ID to check
+   * @param channelId Channel ID to check
+   * @param excludeNotificationId Optional notification ID to exclude from check (useful for checking during processing)
+   * @returns Object containing duplicate status and existing notification details if found
+   */
+  async checkDuplicateNotification(
+    articleId: string,
+    channelId: string,
+    excludeNotificationId?: string,
+  ): Promise<{
+    isDuplicate: boolean;
+    existingNotification?: Pick<
+      NotificationLog,
+      "id" | "status" | "created_at"
+    >;
+  }> {
+    try {
+      // Build base query to check for duplicates
+      let query = this.client
+        .from(this.logsTable)
+        .select("id, status, created_at")
+        .match({
+          article_id: articleId,
+          channel_id: channelId,
+        })
+        .in("status", ["success"]);
+
+      // Exclude current notification if ID provided
+      if (excludeNotificationId) {
+        query = query.neq("id", excludeNotificationId);
+      }
+
+      const { data: existingNotification, error } = await query
+        .order("created_at", { ascending: false })
+        .maybeSingle();
+
+      if (error) {
+        console.error(
+          "[NotificationRepository] Error checking for duplicate notification:",
+          error,
+        );
+        throw error;
+      }
+
+      return {
+        isDuplicate: !!existingNotification,
+        existingNotification: existingNotification || undefined,
+      };
+    } catch (error) {
+      console.error(
+        "[NotificationRepository] Failed to check for duplicate notification:",
+        error,
+      );
+      // Default to no duplicate in case of error (safer than blocking)
+      return { isDuplicate: false };
     }
   }
 }
