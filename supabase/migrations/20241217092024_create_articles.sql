@@ -72,6 +72,10 @@ create policy "Service role can insert articles"
   on articles for insert
   with check (true);
 
+create policy "Service role can update articles"
+  on articles for update
+  with check (true);
+
 
 create extension if not exists "pg_net" with schema "public" version '0.13.0';
 
