@@ -140,6 +140,17 @@ export class NotificationService {
                     result.error,
                 );
 
+                if (result.error === "Duplicate notification detected") {
+                    await this.notificationRepo.updateNotificationStatus(
+                        notification.id,
+                        "failed",
+                        channel.channel_identifier,
+                        result.error,
+                        channel.platform,
+                        channel.organization_id,
+                    );
+                }
+
                 // Update stats
                 const platformStat =
                     status.platformStats[platform as NotificationPlatform];

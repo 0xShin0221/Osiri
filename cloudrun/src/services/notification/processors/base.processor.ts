@@ -65,6 +65,14 @@ export abstract class BaseNotificationProcessor
                             existingStatus: existingNotification?.status,
                         },
                     );
+                    await this.updateStatus(
+                        notification.id,
+                        "failed",
+                        channel,
+                        "Duplicate notification detected",
+                    );
+
+                    this.stats.failed++;
                     return {
                         success: false,
                         error: "Duplicate notification detected",

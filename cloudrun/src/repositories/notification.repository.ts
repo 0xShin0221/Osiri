@@ -521,6 +521,7 @@ export class NotificationRepository extends BaseRepository {
         return {
           success: false,
           error: "Notification already exists and was successful",
+          data: existingLogs,
         };
       }
 
@@ -717,7 +718,7 @@ export class NotificationRepository extends BaseRepository {
           article_id: articleId,
           channel_id: channelId,
         })
-        .in("status", ["success"]);
+        .in("status", ["success", "pending"]);
 
       // Exclude current notification if ID provided
       if (excludeNotificationId) {
